@@ -17,6 +17,9 @@ Graph : [ZedGraph][4]<br>
  - FanControl은 GNU GPLv3 라이센스를 가진 무료 소프트웨어입니다.<br>
  - 이 소프트웨어를 사용하여 고장 나거나 작동하지 않는 하드웨어에 대해 책임을 지지 않습니다.<br>
  - 현재 모든 종류의 하드웨어를 지원하지 않습니다.<br>
+ 
+## Portable
+다운로드 : [FanControl_Portable_v1.0.0.zip][6]
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/akmadian/NZXTSharp
@@ -24,3 +27,4 @@ Graph : [ZedGraph][4]<br>
 [3]: https://www.newtonsoft.com/json
 [4]: http://zedgraph.sourceforge.net/samples.html
 [5]: https://github.com/lich426/FanControl/blob/master/LICENSE
+[6]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_Portable_v1.0.0.zip
