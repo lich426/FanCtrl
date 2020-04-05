@@ -10,7 +10,7 @@ USB 통신 : [HidLibrary][2]<br>
 Json : [Newtonsoft Json][3]<br>
 Graph : [ZedGraph][4]<br>
 
-## Licence
+## License
 [GNU General Public License v3.0][5]
 
 ## 주의사항
