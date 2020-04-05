@@ -373,7 +373,7 @@ namespace FanControl
             int fanIndex = mFanComboBox.SelectedIndex;
 
             var sensor = HardwareManager.getInstance().SensorList[sensorIndex];
-            var fan = HardwareManager.getInstance().FanList[fanIndex];
+            var fan = HardwareManager.getInstance().ControlList[fanIndex];
 
             var controlData = this.getControlData(sensorIndex);
             if(controlData == null)
