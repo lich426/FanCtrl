@@ -74,7 +74,7 @@ namespace FanControl
 
             for (int i = 0; i < hardwareManager.FanList.Count; i++)
             {
-                mFanComboBox.Items.Add(hardwareManager.FanList[i].getName());
+                mFanComboBox.Items.Add(hardwareManager.ControlList[i].getName());
             }
 
             if (mSensorComboBox.Items.Count > 0)

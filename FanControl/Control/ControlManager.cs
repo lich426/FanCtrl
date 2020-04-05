@@ -218,7 +218,7 @@ namespace FanControl
                 HardwareManager hardwareManager = HardwareManager.getInstance();
 
                 var sensorList = hardwareManager.SensorList;
-                var fanList = hardwareManager.FanList;
+                var fanList = hardwareManager.ControlList;
 
                 for (int i = 0; i < mControlDataList.Count; i++)
                 {
