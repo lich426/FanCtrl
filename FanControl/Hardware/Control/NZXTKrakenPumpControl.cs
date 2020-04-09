@@ -51,6 +51,7 @@ namespace FanControl
                 Value = value;
             }
             mKrakenX.SetPumpSpeed(Value);
+            LastValue = Value;
             return Value;
         }
     }

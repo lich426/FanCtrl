@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanControl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationVersion>1.0.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -84,6 +84,15 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gigabyte.Engine">
+      <HintPath>dll\Gigabyte.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Gigabyte.Engine.EnvironmentControl">
+      <HintPath>dll\Gigabyte.Engine.EnvironmentControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Gigabyte.EnvironmentControl.Common">
+      <HintPath>dll\Gigabyte.EnvironmentControl.Common.dll</HintPath>
+    </Reference>
     <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\HidLibrary.dll</HintPath>
@@ -103,6 +112,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -181,10 +191,12 @@
     <Compile Include="FanControl\Control\FanData.cs" />
     <Compile Include="FanControl\Control\ControlData.cs" />
     <Compile Include="FanControl\Hardware\Control\BaseControl.cs" />
+    <Compile Include="FanControl\Hardware\Control\GigabyteFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\HardwareControl.cs" />
     <Compile Include="FanControl\Hardware\Control\NZXTKrakenFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\NZXTKrakenPumpControl.cs" />
     <Compile Include="FanControl\Hardware\HardwareManager.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\GigabyteFanSpeed.cs" />
     <Compile Include="FanControl\Option\OptionManager.cs" />
     <Compile Include="FanControl\Hardware\Sensor\BaseSensor.cs" />
     <Compile Include="FanControl\Hardware\Sensor\HardwareFanSpeed.cs" />

@@ -45,7 +45,9 @@ namespace FanControl
         public void setControlDataList(List<ControlData> controlData)
         {
             Monitor.Enter(mLock);
-            mControlDataList = controlData;
+            mControlDataList.Clear();
+            for (int i = 0; i < controlData.Count; i++)
+                mControlDataList.Add(controlData[i].clone());
             Monitor.Exit(mLock);
         }
 
@@ -107,20 +109,37 @@ namespace FanControl
                 var controlList = rootObject.Value<JArray>("control");
                 for(int i =0; i < controlList.Count; i++)
                 {
-                    var controlObject = controlList[i];
+                    var controlObject = (JObject)controlList[i];
 
-                    var controlData = new ControlData(controlObject.Value<int>("index"),
-                                                        controlObject.Value<string>("name"));                    
+                    if (controlObject.ContainsKey("index") == false ||
+                        controlObject.ContainsKey("name") == false)
+                    {
+                        continue;
+                    }
+
+                    int sensorIndex = controlObject.Value<int>("index");
+                    string sensorName = controlObject.Value<string>("name");
+
+                    var controlData = new ControlData(sensorIndex, sensorName);                    
 
                     // FanData
                     var fanList = controlObject.Value<JArray>("fan");
                     for(int j = 0; j < fanList.Count; j++)
                     {
-                        var fanObject = fanList[j];
+                        var fanObject = (JObject)fanList[j];
 
-                        var fanData = new FanData(fanObject.Value<int>("index"),
-                                                    fanObject.Value<string>("name"),
-                                                    fanObject.Value<bool>("step"));
+                        if (fanObject.ContainsKey("index") == false ||
+                            fanObject.ContainsKey("name") == false)
+                        {
+                            continue;
+                        }
+
+                        int fanIndex = fanObject.Value<int>("index");
+                        string fanName = fanObject.Value<string>("name");
+                        bool isStep = (fanObject.ContainsKey("step") == true) ? fanObject.Value<bool>("step") : true;
+                        int hysteresis = (fanObject.ContainsKey("hysteresis") == true) ? fanObject.Value<int>("hysteresis") : 0;
+
+                        var fanData = new FanData(fanIndex, fanName, isStep, hysteresis);
                         
                         // Percent value
                         var valueList = fanObject.Value<JArray>("value");
@@ -182,6 +201,7 @@ namespace FanControl
                         fanObject["name"] = fanData.Name;
                         fanObject["index"] = fanData.Index;
                         fanObject["step"] = fanData.IsStep;
+                        fanObject["hysteresis"] = fanData.Hysteresis;
 
                         var valueList = new JArray();
                         for (int k = 0; k < FanData.MAX_FAN_VALUE_SIZE; k++)
@@ -218,13 +238,14 @@ namespace FanControl
                 HardwareManager hardwareManager = HardwareManager.getInstance();
 
                 var sensorList = hardwareManager.SensorList;
-                var fanList = hardwareManager.ControlList;
+                var controlList = hardwareManager.ControlList;
 
                 for (int i = 0; i < mControlDataList.Count; i++)
                 {
                     var controlData = mControlDataList[i];
                     if(controlData.Name.Equals(sensorList[controlData.Index].getName()) == false)
                     {
+                        mControlDataList.Clear();
                         Monitor.Exit(mLock);
                         return false;
                     }
@@ -233,8 +254,9 @@ namespace FanControl
                     for(int j = 0; j < fanDataList.Count; j++)
                     {
                         var fanData = fanDataList[j];
-                        if(fanData.Name.Equals(fanList[fanData.Index].getName()) == false)
+                        if(fanData.Name.Equals(controlList[fanData.Index].getName()) == false)
                         {
+                            mControlDataList.Clear();
                             Monitor.Exit(mLock);
                             return false;
                         }
@@ -243,6 +265,7 @@ namespace FanControl
             }
             catch(Exception e)
             {
+                mControlDataList.Clear();
                 Monitor.Exit(mLock);
                 return false;
             }

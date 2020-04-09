@@ -39,13 +39,17 @@
             this.mFanListView = new System.Windows.Forms.ListView();
             this.mFanComboBox = new System.Windows.Forms.ComboBox();
             this.mGraphGroupBox = new System.Windows.Forms.GroupBox();
+            this.mHysLabel = new System.Windows.Forms.Label();
             this.mStepCheckBox = new System.Windows.Forms.CheckBox();
             this.mGraph = new ZedGraph.ZedGraphControl();
             this.mOKButton = new System.Windows.Forms.Button();
             this.mApplyButton = new System.Windows.Forms.Button();
+            this.mHysNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.mDebugLabel = new System.Windows.Forms.Label();
             this.mSensorGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // mEnableCheckBox
@@ -133,19 +137,29 @@
             // 
             // mGraphGroupBox
             // 
+            this.mGraphGroupBox.Controls.Add(this.mHysLabel);
             this.mGraphGroupBox.Controls.Add(this.mStepCheckBox);
             this.mGraphGroupBox.Controls.Add(this.mGraph);
             this.mGraphGroupBox.Location = new System.Drawing.Point(227, 49);
             this.mGraphGroupBox.Name = "mGraphGroupBox";
             this.mGraphGroupBox.Size = new System.Drawing.Size(493, 267);
-            this.mGraphGroupBox.TabIndex = 3;
+            this.mGraphGroupBox.TabIndex = 0;
             this.mGraphGroupBox.TabStop = false;
             this.mGraphGroupBox.Text = "Graph";
+            // 
+            // mHysLabel
+            // 
+            this.mHysLabel.AutoSize = true;
+            this.mHysLabel.Location = new System.Drawing.Point(306, 1);
+            this.mHysLabel.Name = "mHysLabel";
+            this.mHysLabel.Size = new System.Drawing.Size(73, 12);
+            this.mHysLabel.TabIndex = 5;
+            this.mHysLabel.Text = "Hysteresis :";
             // 
             // mStepCheckBox
             // 
             this.mStepCheckBox.AutoSize = true;
-            this.mStepCheckBox.Location = new System.Drawing.Point(414, 25);
+            this.mStepCheckBox.Location = new System.Drawing.Point(434, 1);
             this.mStepCheckBox.Name = "mStepCheckBox";
             this.mStepCheckBox.Size = new System.Drawing.Size(49, 16);
             this.mStepCheckBox.TabIndex = 4;
@@ -188,12 +202,30 @@
             this.mApplyButton.UseVisualStyleBackColor = true;
             this.mApplyButton.Click += new System.EventHandler(this.onApplyButtonClick);
             // 
+            // mHysNumericUpDown
+            // 
+            this.mHysNumericUpDown.Location = new System.Drawing.Point(608, 46);
+            this.mHysNumericUpDown.Name = "mHysNumericUpDown";
+            this.mHysNumericUpDown.Size = new System.Drawing.Size(38, 21);
+            this.mHysNumericUpDown.TabIndex = 5;
+            // 
+            // mDebugLabel
+            // 
+            this.mDebugLabel.AutoSize = true;
+            this.mDebugLabel.Location = new System.Drawing.Point(412, 20);
+            this.mDebugLabel.Name = "mDebugLabel";
+            this.mDebugLabel.Size = new System.Drawing.Size(38, 12);
+            this.mDebugLabel.TabIndex = 6;
+            this.mDebugLabel.Text = "label1";
+            // 
             // FanControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(732, 364);
+            this.Controls.Add(this.mDebugLabel);
+            this.Controls.Add(this.mHysNumericUpDown);
             this.Controls.Add(this.mApplyButton);
             this.Controls.Add(this.mOKButton);
             this.Controls.Add(this.mGraphGroupBox);
@@ -211,6 +243,7 @@
             this.mFanGroupBox.ResumeLayout(false);
             this.mGraphGroupBox.ResumeLayout(false);
             this.mGraphGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -231,5 +264,8 @@
         private System.Windows.Forms.CheckBox mStepCheckBox;
         private System.Windows.Forms.Button mOKButton;
         private System.Windows.Forms.Button mApplyButton;
+        private System.Windows.Forms.NumericUpDown mHysNumericUpDown;
+        private System.Windows.Forms.Label mHysLabel;
+        private System.Windows.Forms.Label mDebugLabel;
     }
 }

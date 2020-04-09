@@ -16,9 +16,10 @@ namespace FanControl
         private List<Label> mFanLabelList = new List<Label>();
         private List<TextBox> mControlTextBoxList = new List<TextBox>();
         private List<Label> mControlLabelList = new List<Label>();
-
+        
         private FanControlForm mFanControlForm = null;
-        private Timer mUpdateTimer = new Timer();
+
+        private Timer mTimer = new Timer();
 
         public MainForm()
         {
@@ -52,10 +53,10 @@ namespace FanControl
             {
                 MessageBox.Show(StringLib.Not_Match);
             }
-            
-            mUpdateTimer.Interval = OptionManager.getInstance().Interval;
-            mUpdateTimer.Tick += onUpdateTimer;
-            mUpdateTimer.Start();
+
+            mTimer.Tick += onUpdateTimer;
+            mTimer.Interval = OptionManager.getInstance().Interval;
+            mTimer.Start();
         }
 
         private void localizeComponent()
@@ -73,7 +74,7 @@ namespace FanControl
 
         private void onClosing(object sender, FormClosingEventArgs e)
         {
-            if(mFanControlForm != null)
+            if (mFanControlForm != null)
             {
                 mFanControlForm.Close();
                 mFanControlForm = null;
@@ -105,14 +106,14 @@ namespace FanControl
 
         private void onTrayMenuExit(object sender, EventArgs e)
         {
+            mTimer.Stop();
+
             if (mFanControlForm != null)
             {
                 mFanControlForm.Close();
                 mFanControlForm = null;
             }
 
-            mUpdateTimer.Stop();
-            mUpdateTimer.Dispose();
             HardwareManager.getInstance().stop();
 
             mSensorLabelList.Clear();
@@ -281,6 +282,9 @@ namespace FanControl
                     mControlTextBoxList[i].Text = controlList[i].Value.ToString();
                 }
             }
+
+            if (mFanControlForm != null)
+                mFanControlForm.onUpdateTimer();
         }
         
 
@@ -289,7 +293,6 @@ namespace FanControl
             var form = new OptionForm();
             if(form.ShowDialog() == DialogResult.OK)
             {
-                mUpdateTimer.Interval = OptionManager.getInstance().Interval;
                 HardwareManager.getInstance().restartTimer(OptionManager.getInstance().Interval);
             }
         }

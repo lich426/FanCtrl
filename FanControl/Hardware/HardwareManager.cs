@@ -4,6 +4,9 @@ using System.Timers;
 using System.Threading;
 using LibreHardwareMonitor.Hardware;
 using NZXTSharp.KrakenX;
+using Gigabyte.Engine.EnvironmentControl.CoolingDevice.Fan;
+using Gigabyte.Engine.ServiceProcess;
+using Gigabyte.Engine;
 
 namespace FanControl
 {
@@ -22,6 +25,11 @@ namespace FanControl
 
         // NZXT Kraken
         private KrakenX mKrakenX = null;
+
+        // Gigabyte
+        private bool mIsGigabyte = false;
+        private EngineServiceController mGigabyteEngineServiceController = null;
+        private SmartGuardianFanControlModule mGigabyteSmartGuardianFanControlModule = null;
 
         // Temperature sensor List
         private List<BaseSensor> mSensorList = new List<BaseSensor>();
@@ -48,10 +56,14 @@ namespace FanControl
             ////////////////////////// LibreHardwareMonitor //////////////////////////
             mComputer = new Computer();
             mComputer.IsCpuEnabled = true;
-            mComputer.IsMotherboardEnabled = true;
-            mComputer.IsMemoryEnabled = true;
             mComputer.IsGpuEnabled = true;
             mComputer.IsControllerEnabled = true;
+
+            // createGigabyte
+            this.createGigabyte();
+
+            mComputer.IsMotherboardEnabled = !mIsGigabyte;
+
             mComputer.Open();
             mComputer.Accept(this);
 
@@ -92,22 +104,17 @@ namespace FanControl
         {
             if (mIsStart == false)
                 return;
-            mIsStart = false;
+            mIsStart = false;           
 
             Monitor.Enter(mUpdateTimerLock);
             mUpdateTimer.Stop();
-            mUpdateTimer.Dispose();
             Monitor.Exit(mUpdateTimerLock);
 
-            if(mComputer != null)
+            if (mComputer != null)
             {
                 mComputer.Close();
                 mComputer = null;
             }
-
-            mSensorList.Clear();
-            mFanList.Clear();
-            mControlList.Clear();            
 
             try
             {
@@ -117,7 +124,18 @@ namespace FanControl
                     mKrakenX = null;
                 }
             }
-            catch (Exception e){}
+            catch (Exception e) { }
+
+            if(mGigabyteEngineServiceController != null)
+            {
+                mGigabyteEngineServiceController.Dispose();
+                mGigabyteEngineServiceController = null;
+            }
+            if (mGigabyteSmartGuardianFanControlModule != null)
+            {
+                mGigabyteSmartGuardianFanControlModule.Dispose();
+                mGigabyteSmartGuardianFanControlModule = null;
+            }
         }
 
         public void restartTimer(int interval)
@@ -127,6 +145,49 @@ namespace FanControl
             mUpdateTimer.Interval = interval;
         }
         
+        private void createGigabyte()
+        {
+            try
+            {
+                mGigabyteEngineServiceController = new EngineServiceController("EasyTuneEngineService");
+                if(mGigabyteEngineServiceController.IsInstall() == false)
+                {
+                    mGigabyteEngineServiceController.Dispose();
+                    mGigabyteEngineServiceController = null;
+                    return;
+                }
+
+                if(mGigabyteEngineServiceController.Status != System.ServiceProcess.ServiceControllerStatus.Running)
+                {
+                    mGigabyteEngineServiceController.Start();
+                }
+
+                mGigabyteSmartGuardianFanControlModule = new SmartGuardianFanControlModule();
+                if (mGigabyteSmartGuardianFanControlModule.IsSupported == false)
+                {
+                    mGigabyteSmartGuardianFanControlModule.Dispose();
+                    mGigabyteSmartGuardianFanControlModule = null;
+                    return;
+                }
+
+                mIsGigabyte = true;
+                return;
+            }
+            catch(Exception e)
+            {
+                if (mGigabyteEngineServiceController != null)
+                {
+                    mGigabyteEngineServiceController.Dispose();
+                    mGigabyteEngineServiceController = null;
+                }
+                if (mGigabyteSmartGuardianFanControlModule != null)
+                {
+                    mGigabyteSmartGuardianFanControlModule.Dispose();
+                    mGigabyteSmartGuardianFanControlModule = null;
+                }
+            }
+        }
+
         private void createTemp()
         {
             IHardware[] hardwareList = mComputer.Hardware;
@@ -144,6 +205,23 @@ namespace FanControl
 
         private void createFan()
         {
+            if (mIsGigabyte == true)
+            {
+                if (mGigabyteSmartGuardianFanControlModule != null)
+                {
+                    for (int i = 0; i < mGigabyteSmartGuardianFanControlModule.FanControlCount; i++)
+                    {
+                        string name;
+                        mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out name);
+                        if (name.Equals("PCH") == true)
+                            continue;
+
+                        GigabyteFanSpeed fan = new GigabyteFanSpeed(name, i, mGigabyteSmartGuardianFanControlModule);
+                        mFanList.Add(fan);
+                    }
+                }
+            }
+
             IHardware[] hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
@@ -174,6 +252,24 @@ namespace FanControl
 
         private void createControl()
         {
+            if (mIsGigabyte == true)
+            {
+                if (mGigabyteSmartGuardianFanControlModule != null)
+                {
+                    for (int i = 0; i < mGigabyteSmartGuardianFanControlModule.FanControlCount; i++)
+                    {
+                        string name;
+                        mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out name);
+                        if (name.Equals("PCH") == true)
+                            continue;
+
+                        GigabyteFanControl control = new GigabyteFanControl(name, i, mGigabyteSmartGuardianFanControlModule);
+                        mControlList.Add(control);
+                        control.setSpeed(control.getMinSpeed());
+                    }
+                }
+            }
+
             IHardware[] hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
@@ -215,19 +311,26 @@ namespace FanControl
 
             if (Monitor.TryEnter(mUpdateTimerLock))
             {
-                mComputer.Accept(this);
+                mComputer.Accept(this);                
+                Thread.Sleep(10);
+
                 for (int i = 0; i < mSensorList.Count; i++)
                 {
                     mSensorList[i].update();
                 }
+                Thread.Sleep(10);
+
                 for (int i = 0; i < mFanList.Count; i++)
                 {
                     mFanList[i].update();
                 }
+                Thread.Sleep(10);
+
                 for (int i = 0; i < mControlList.Count; i++)
                 {
                     mControlList[i].update();
                 }
+                Thread.Sleep(10);
 
                 // Control
                 var controlManager = ControlManager.getInstance();
@@ -256,6 +359,7 @@ namespace FanControl
                         }
                     }
                 }
+
                 Monitor.Exit(mUpdateTimerLock);
             }
         }

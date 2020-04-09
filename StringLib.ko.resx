@@ -147,6 +147,9 @@
   <data name="Graph" xml:space="preserve">
     <value>그래프</value>
   </data>
+  <data name="Hysteresis" xml:space="preserve">
+    <value>  이력 온도 : </value>
+  </data>
   <data name="Interval" xml:space="preserve">
     <value>주기 설정</value>
   </data>

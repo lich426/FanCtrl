@@ -151,6 +151,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Hysteresis : 과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Hysteresis {
+            get {
+                return ResourceManager.GetString("Hysteresis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Interval과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Interval {

@@ -16,6 +16,7 @@ namespace FanControl
         {
             mSensor = sensor;
             Value = 30;
+            LastValue = 30;
         }
         
         public override string getName()
@@ -28,6 +29,7 @@ namespace FanControl
             double temp = (mSensor.Value != null) ? (double)mSensor.Value : 0.0f;
             temp = Math.Round(temp);
             Value = (int)temp;
+            LastValue = (int)temp;
         }
 
         public override int getMinSpeed()
@@ -43,6 +45,7 @@ namespace FanControl
         public override int setSpeed(int value)
         {
             mSensor.Control.SetSoftware((float)value);
+            LastValue = (int)value;
             return value;
         }
     }

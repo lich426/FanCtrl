@@ -147,6 +147,9 @@
   <data name="Graph" xml:space="preserve">
     <value>Graph</value>
   </data>
+  <data name="Hysteresis" xml:space="preserve">
+    <value>Hysteresis : </value>
+  </data>
   <data name="Interval" xml:space="preserve">
     <value>Interval</value>
   </data>

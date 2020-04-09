@@ -23,22 +23,17 @@ namespace FanControl
         private List<ControlData> mControlDataList = null;
         private FanData mSelectedFanData = null;
 
-        private Timer mUpdateTimer = new Timer();
-
         public FanControlForm()
         {
             InitializeComponent();
             this.localizeComponent();
 
+            mDebugLabel.Visible = false;
+
             mControlDataList = ControlManager.getInstance().getCloneControlDataList();
 
-            this.FormClosing += onClosing;
             this.initControl();
             this.initGraph();
-
-            mUpdateTimer.Interval = 1000;
-            mUpdateTimer.Tick += onUpdateTimer;
-            mUpdateTimer.Start();
         }
 
         private void localizeComponent()
@@ -50,6 +45,7 @@ namespace FanControl
             mAddButton.Text = StringLib.Add;
             mRemoveButton.Text = StringLib.Remove;
             mGraphGroupBox.Text = StringLib.Graph;
+            mHysLabel.Text = StringLib.Hysteresis;
             mStepCheckBox.Text = StringLib.Step;
             mOKButton.Text = StringLib.OK;
             mApplyButton.Text = StringLib.Apply;
@@ -66,6 +62,8 @@ namespace FanControl
             mFanListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             mFanListView.GridLines = true;
             mFanListView.SelectedIndexChanged += onFanListViewIndexChanged;
+
+            mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
 
             for (int i = 0; i < hardwareManager.SensorList.Count; i++)
             {
@@ -137,21 +135,18 @@ namespace FanControl
             mLineItem.Symbol.Size = 10.0f;
             mLineItem.Symbol.Fill = new Fill(Color.White);
 
-            
-
             mGraph.Visible = false;
             mStepCheckBox.Visible = false;
-        }
-
-        private void onClosing(object sender, FormClosingEventArgs e)
-        {
-            mUpdateTimer.Stop();
+            mHysLabel.Visible = false;
+            mHysNumericUpDown.Visible = false;
         }
 
         private void onSensorComboBoxIndexChanged(object sender, EventArgs e)
         {
             mGraph.Visible = false;
             mStepCheckBox.Visible = false;
+            mHysLabel.Visible = false;
+            mHysNumericUpDown.Visible = false;
             mSelectedFanData = null;
 
             mFanListView.BeginUpdate();
@@ -183,6 +178,7 @@ namespace FanControl
             }
 
             mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
+            mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
             mGraph.Refresh();
         }
 
@@ -266,7 +262,7 @@ namespace FanControl
             mGraph.Refresh();
         }
 
-        private void onUpdateTimer(object sender, EventArgs e)
+        public void onUpdateTimer()
         {
             if (mSensorComboBox.Items.Count == 0 ||
                 mFanComboBox.Items.Count == 0 ||
@@ -281,8 +277,48 @@ namespace FanControl
             var control = hardwareManager.ControlList[mSelectedFanData.Index];
 
             mNowPoint[0].X = (double)sensor.Value;
-            mNowPoint[0].Y = (double)control.Value;
+            mNowPoint[0].Y = (double)control.LastValue;
             mGraph.Refresh();
+
+            if(mDebugLabel.Visible == true)
+            {
+                var items = mFanListView.SelectedItems;
+                if (items == null || items.Count == 0)
+                    return;
+
+                var controlManager = ControlManager.getInstance();
+                var item = items[0];
+                int sensorIndex = mSensorComboBox.SelectedIndex;
+                ControlData controlData = null;
+                for (int i = 0; i < ControlManager.getInstance().Count(); i++)
+                {
+                    var tempControlData = ControlManager.getInstance().getControlData(i);
+                    if (tempControlData == null)
+                        return;
+
+                    if (tempControlData.Index == sensorIndex)
+                    {
+                        controlData = tempControlData;
+                        break;
+                    }
+                }
+                if (controlData == null)
+                    return;
+
+                FanData fanData = null;
+                for (int i = 0; i < controlData.FanDataList.Count; i++)
+                {
+                    var tempFanData = controlData.FanDataList[i];
+                    if (tempFanData.Name.Equals(item.Text) == true)
+                    {
+                        fanData = tempFanData;
+                        break;
+                    }
+                }
+                if (fanData == null)
+                    return;
+                mDebugLabel.Text = "Last temp : " + fanData.LastChangedTemp.ToString();
+            }
         }
 
         private ControlData getControlData(int sensorIndex)
@@ -345,12 +381,16 @@ namespace FanControl
             {
                 mGraph.Visible = false;
                 mStepCheckBox.Visible = false;
+                mHysLabel.Visible = false;
+                mHysNumericUpDown.Visible = false;
                 mSelectedFanData = null;
                 return;
             }
 
             mGraph.Visible = true;
             mStepCheckBox.Visible = true;
+            mHysLabel.Visible = true;
+            mHysNumericUpDown.Visible = true;
 
             var item = items[0];
             mSelectedFanData = this.getFanData(mSensorComboBox.SelectedIndex, item.Text);
@@ -361,7 +401,19 @@ namespace FanControl
 
             mStepCheckBox.Checked = mSelectedFanData.IsStep;
             mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
+            mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
+            mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
+
             mGraph.Refresh();
+        }
+
+        private void onHysNumericValueChanged(object sender, EventArgs e)
+        {
+            if (mHysNumericUpDown.Value > 20)       mHysNumericUpDown.Value = 20;
+            else if (mHysNumericUpDown.Value < 0)   mHysNumericUpDown.Value = 0;
+
+            if (mSelectedFanData != null)
+                mSelectedFanData.Hysteresis = Decimal.ToInt32(mHysNumericUpDown.Value);
         }
 
         private void onAddButtonClick(object sender, EventArgs e)
@@ -387,7 +439,7 @@ namespace FanControl
             var fanData = this.getFanData(sensorIndex, fanIndex);
             if(fanData == null)
             {
-                fanData = new FanData(fanIndex, fan.getName(), true);
+                fanData = new FanData(fanIndex, fan.getName(), true, 0);
                 controlData.FanDataList.Add(fanData);
 
                 mFanListView.Items.Add(fanData.Name);
@@ -420,19 +472,27 @@ namespace FanControl
             mFanListView.EndUpdate();
         }
 
-        private void onOKButtonClick(object sender, EventArgs e)
-        {
-            ControlManager.getInstance().setControlDataList(mControlDataList);
-            ControlManager.getInstance().IsEnable = mEnableCheckBox.Checked;
-            ControlManager.getInstance().write();
-            this.Close();
-        }
-
         private void onApplyButtonClick(object sender, EventArgs e)
         {
+            for (int i = 0; i < mControlDataList.Count; i++)
+            {
+                for (int j = 0; j < mControlDataList[i].FanDataList.Count; j++)
+                {
+                    mControlDataList[i].FanDataList[j].LastChangedTemp = 0;
+                    mControlDataList[i].FanDataList[j].LastChangedValue = 0;
+                }
+            }
+
             ControlManager.getInstance().setControlDataList(mControlDataList);
             ControlManager.getInstance().IsEnable = mEnableCheckBox.Checked;
             ControlManager.getInstance().write();
         }
+
+        private void onOKButtonClick(object sender, EventArgs e)
+        {
+            this.onApplyButtonClick(sender, e);
+            this.Close();
+        }
+        
     }
 }
