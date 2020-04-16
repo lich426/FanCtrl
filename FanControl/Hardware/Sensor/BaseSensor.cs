@@ -26,6 +26,13 @@ namespace FanControl
         // Value
         public int Value { get; set; }
 
+        protected int mIncorrectValueCount = 0;
+
+        public bool IsIncorrectValue
+        {
+            get { return (mIncorrectValueCount >= 5); }
+        }
+
         public BaseSensor(SENSOR_TYPE type)
         {
             Type = type;

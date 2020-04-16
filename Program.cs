@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -37,7 +39,15 @@ namespace FanControl
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            bool isNew = true;
+            Mutex mutex = new Mutex(true, "FanControl", out isNew);
+
+            if (isNew == false)
+                return;
+
             Application.Run(new MainForm());
+            mutex.ReleaseMutex();
         }
 
         public static bool IsAdministrator()

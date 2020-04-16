@@ -73,12 +73,18 @@ namespace FanControl
             double temp = 0.0f;
             for (int i = 0; i < mList.Count; i++)
             {
-                temp = temp + ((mList[i].Value != null) ? Math.Round((double)mList[i].Value) : 0);
+                temp = temp + ((mList[i].Value.HasValue == true) ? Math.Round((double)mList[i].Value) : 0);
             }
+
             if (temp > 0.0f)
             {
                 temp = temp / mList.Count;
                 Value = (int)temp;
+                mIncorrectValueCount = 0;
+            }
+            else
+            {
+                mIncorrectValueCount++;
             }
         }
 

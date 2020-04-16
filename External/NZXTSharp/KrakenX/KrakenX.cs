@@ -85,15 +85,21 @@ namespace NZXTSharp.KrakenX
         private KrakenXChannel _Ring;
         private Version _FirmwareVersion;
 
-        private object Lock = new object();
+        private object mLock = new object();
+        private System.Timers.Timer mTimer = null;
 
-        private Thread PumpOverrideThread;
-        private bool StopPumpOverrideLoop = false;
+        private int mPumpSpeed = 50;
+        private int mFanPercent = 25;
+        private int mLastPumpSpeed = 0;
+        private int mLastFanPercent = 0;
 
-        private Thread FanOverrideThread;
-        private bool StopFanOverrideLoop = false;
+        private long mPumpLastSendTime = 0;
+        private long mFanLastSendTime = 0;
 
         private USBController _COMController;
+
+        private HidReport mLastReport = null;
+        private object mLastReportLock = new object();
 
         /// <summary>
         /// The <see cref="HIDDeviceID"/> of the <see cref="KrakenX"/> device. Will always be <see cref="HIDDeviceID.KrakenX"/>.
@@ -142,8 +148,24 @@ namespace NZXTSharp.KrakenX
         private void Initialize()
         {
             InitializeChannels();
+            mLastReport = null;
             _COMController = new USBController(Type);
+            _COMController.ReportCallback += onReport;
+            _COMController.Initialize();
             InitializeDeviceInfo();
+
+            mPumpSpeed = 50;
+            mFanPercent = 25;
+            mLastPumpSpeed = 0;
+            mLastFanPercent = 0;
+
+            mPumpLastSendTime = 0;
+            mFanLastSendTime = 0;
+
+            mTimer = new System.Timers.Timer();
+            mTimer.Interval = 100;
+            mTimer.Elapsed += onTimer;
+            mTimer.Start();
         }
 
         private void InitializeChannels()
@@ -165,34 +187,6 @@ namespace NZXTSharp.KrakenX
         public void WriteCustom(byte[] Buffer)
         {
             _COMController.Write(Buffer);
-        }
-
-        /// <summary>
-        /// Stops the thread overriding a given <paramref name="Thread"/>, using a given <paramref name="StopType"/>.
-        /// </summary>
-        /// <param name="Thread">Which <see cref="OverrideThread"/> to stop.</param>
-        /// <param name="StopType">How to stop the given <paramref name="Thread"/>.</param>
-        public void StopOverrideThread(OverrideThread Thread, ThreadStopType StopType = ThreadStopType.Flag)
-        {
-            switch (Thread) // Which thread to stop
-            {
-                case OverrideThread.Fan: 
-                    if (StopType == ThreadStopType.Abort) {
-                        FanOverrideThread?.Abort();
-                    }
-                    else if (StopType == ThreadStopType.Flag) {
-                        StopFanOverrideLoop = true;
-                    }
-                    break;
-                case OverrideThread.Pump:
-                    if (StopType == ThreadStopType.Abort){
-                        PumpOverrideThread?.Abort();
-                    }
-                    else if (StopType == ThreadStopType.Flag){
-                        StopPumpOverrideLoop = true;
-                    }
-                    break;
-            }
         }
 
         /// <summary>
@@ -253,15 +247,15 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported pump speed in RPM.</returns>
         public int GetPumpSpeed()
         {
-            if (_COMController.LastReport != null)
+            Monitor.Enter(mLastReportLock);
+            if (mLastReport != null)
             {
-                HidReport report = _COMController.LastReport;
-                return report.Data[4] << 8 | report.Data[5];
+                int speed = (int)(mLastReport.Data[4] << 8 | mLastReport.Data[5]);
+                Monitor.Exit(mLastReportLock);
+                return speed;
             }
-            else
-            {
-                return 0;
-            }
+            Monitor.Exit(mLastReportLock);
+            return 0;
         }
 
         /// <summary>
@@ -270,24 +264,13 @@ namespace NZXTSharp.KrakenX
         /// <param name="Speed">
         /// The speed value to set. Must be 50-100 (inclusive).
         /// </param>
-        public void SetPumpSpeed(int Speed)
+        public void SetPumpSpeed(int speed)
         {
-            Monitor.Enter(Lock);
-            if (PumpOverrideThread != null)
-            {
-                StopPumpOverrideLoop = true;
-                PumpOverrideThread.Join();
-                PumpOverrideThread = null;
-            }
-
-            if (Speed > 100)        Speed = 100;
-            else if (Speed < 50)    Speed = 50;
-
-            byte[] command = new byte[] { 0x02, 0x4d, 0x40, 0x00, Convert.ToByte(Speed) };
-            this.StopPumpOverrideLoop = false;
-            PumpOverrideThread = new Thread(new ParameterizedThreadStart(PumpSpeedOverrideLoop));
-            PumpOverrideThread.Start(command);
-            Monitor.Exit(Lock);
+            Monitor.Enter(mLock);
+            if (speed > 100)        speed = 100;
+            else if (speed < 50)    speed = 50;
+            mPumpSpeed = speed;
+            Monitor.Exit(mLock);
         }
 
         /// <summary>
@@ -296,39 +279,28 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported fan speed in RPM.</returns>
         public int GetFanSpeed()
         {
-            if (_COMController.LastReport != null)
+            Monitor.Enter(mLastReportLock);
+            if (mLastReport != null)
             {
-                HidReport report = _COMController.LastReport;
-                return report.Data[2] << 8 | report.Data[3];
+                int speed = (int)(mLastReport.Data[2] << 8 | mLastReport.Data[3]);
+                Monitor.Exit(mLastReportLock);
+                return speed;
             }
-            else
-            {
-                return 0;
-            }
+            Monitor.Exit(mLastReportLock);
+            return 0;
         }
 
         /// <summary>
         /// Sets all fans connected to the <see cref="KrakenX"/> device to a given <paramref name="Percent"/>.
         /// </summary>
         /// <param name="Percent">The percentage to set the fans to. Must be 25-100 (inclusive).</param>
-        public void SetFanSpeed(int Percent)
+        public void SetFanSpeed(int percent)
         {
-            Monitor.Enter(Lock);
-            if (FanOverrideThread != null)
-            {
-                StopFanOverrideLoop = true;
-                FanOverrideThread.Join();
-                FanOverrideThread = null;
-            }
-
-            if (Percent > 100)      Percent = 100;
-            else if (Percent < 25)  Percent = 25;
-
-            byte[] command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(Percent) };
-            this.StopFanOverrideLoop = false;
-            FanOverrideThread = new Thread(new ParameterizedThreadStart(FanSpeedOverrideLoop));
-            FanOverrideThread.Start(command);
-            Monitor.Exit(Lock);
+            Monitor.Enter(mLock);
+            if (percent > 100)      percent = 100;
+            else if (percent < 50)  percent = 25;
+            mFanPercent = percent;
+            Monitor.Exit(mLock);
         }
 
         /// <summary>
@@ -338,24 +310,15 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported liquid temp as a rounded integer, in degrees C.</returns>
         public int? GetLiquidTemp(bool AsFarenheit = false)
         {
-            if (_COMController.LastReport != null)
+            Monitor.Enter(mLastReportLock);
+            if (mLastReport != null)
             {
-                HidReport report = _COMController.LastReport;
-                double temp = (report.Data[0] + (report.Data[1] * 0.1));
+                double temp = (mLastReport.Data[0] + (mLastReport.Data[1] * 0.1));
+                Monitor.Exit(mLastReportLock);
                 return AsFarenheit ? temp.Round().DegreesCtoF() : temp.Round();
-            } else
-            {
-                return 0;
             }
-        }
-
-        /// <summary>
-        /// Gets the last HID report received from the KrakenX device.
-        /// </summary>
-        /// <returns>An <see cref="HidReport"/>.</returns>
-        public HidReport GetLastReport()
-        {
-            return _COMController.LastReport;
+            Monitor.Exit(mLastReportLock);
+            return 0;
         }
         
         /// <summary>
@@ -364,36 +327,37 @@ namespace NZXTSharp.KrakenX
         /// <returns>A <see cref="System.Version"/> object.</returns>
         public Version GetFirmwareVersion()
         {
-            while (_COMController.LastReport == null)
+            int major = 0;
+            int minor = 0;
+            while (true)
             {
-                Thread.Sleep(25);
-            }
+                Monitor.Enter(mLastReportLock);
+                if(mLastReport == null)
+                {
+                    Monitor.Exit(mLastReportLock);
+                    Thread.Sleep(25);
+                    continue;
+                }
 
-            HidReport report = _COMController.LastReport;
-            int Major = report.Data[10];
-            int Minor = report.Data[12].ConcatenateInt(report.Data[13]);
-            return new Version(Major, Minor);
+                major = mLastReport.Data[10];
+                minor = mLastReport.Data[12].ConcatenateInt(mLastReport.Data[13]);
+                Monitor.Exit(mLastReportLock);
+                break;
+            }
+            return new Version(major, minor);
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            Monitor.Enter(Lock);
-            StopPumpOverrideLoop = true;
-            StopFanOverrideLoop = true;
-
-            if (PumpOverrideThread != null)
+            Monitor.Enter(mLock);
+            if(mTimer != null)
             {
-                PumpOverrideThread.Join();
-                PumpOverrideThread = null;
-            }
-
-            if (FanOverrideThread != null)
-            {
-                FanOverrideThread.Join();
-                FanOverrideThread = null;
-            }
-            Monitor.Exit(Lock);
+                mTimer.Enabled = false;
+                mTimer.Stop();
+                mTimer = null;
+            }            
+            Monitor.Exit(mLock);
 
             _COMController?.Dispose();
 
@@ -411,49 +375,42 @@ namespace NZXTSharp.KrakenX
             Initialize();
         }
 
-        /// <summary>
-        /// Starts a thread that sends pump speed override packets.
-        /// </summary>
-        /// <param name="Buffer"></param>
-        internal void PumpSpeedOverrideLoop(object Buffer)
+        private void onReport(object sender, EventArgs e)
         {
-            while (!this.StopPumpOverrideLoop)
-            {
-                _COMController.Write((byte[])Buffer);
-
-                long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                while (!this.StopPumpOverrideLoop)
-                {
-                    Thread.Sleep(100);
-                    long nowTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                    long delayTime = nowTime - startTime;
-                    if (delayTime >= 5000)
-                        break;
-                }
-            }
+            Monitor.Enter(mLastReportLock);
+            mLastReport = (HidReport)sender;
+            Monitor.Exit(mLastReportLock);
         }
 
-        /// <summary>
-        /// Starts a thread that starts fan speed override packets.
-        /// </summary>
-        /// <param name="Buffer"></param>
-        internal void FanSpeedOverrideLoop(object Buffer)
+        private void onTimer(object sender, EventArgs e)
         {
-            while (!this.StopFanOverrideLoop)
-            {
-                _COMController.Write((byte[])Buffer);
+            if (Monitor.TryEnter(mLock) == false)
+                return;
 
-                long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                while (!this.StopFanOverrideLoop)
-                {
-                    Thread.Sleep(100);
-                    long nowTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                    long delayTime = nowTime - startTime;
-                    if (delayTime >= 5000)
-                        break;
-                }
+            long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            // pump
+            if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= 5000)
+            {
+                mLastPumpSpeed = mPumpSpeed;
+                mPumpLastSendTime = startTime;
+
+                var command = new byte[] { 0x02, 0x4d, 0x40, 0x00, Convert.ToByte(mPumpSpeed) };
+                _COMController.Write(command);
             }
+
+            // fan
+            if (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= 5000)
+            {
+                mLastFanPercent = mFanPercent;
+                mFanLastSendTime = startTime;
+
+                var command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(mFanPercent) };
+                _COMController.Write(command);
+            }
+            Monitor.Exit(mLock);
         }
+
         #endregion
     }
 }

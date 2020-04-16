@@ -39,9 +39,10 @@ namespace NZXTSharp.COM {
         private HIDDeviceID _ID;
         private int CurrProductID;
         private readonly HIDDeviceID _VendorID = HIDDeviceID.VendorID;
-        private HidReport _LastReport;
         private bool _IsAttached = false;
         private HidDevice _Device;
+
+        public event EventHandler ReportCallback;
 
         /// <summary>
         /// The type of device the <see cref="USBController"/> is connected to.
@@ -59,11 +60,6 @@ namespace NZXTSharp.COM {
         public HIDDeviceID DeviceID { get => _ID; }
 
         /// <summary>
-        /// The last <see cref="HidReport"/> received from the connected <see cref="HidDevice"/>.
-        /// </summary>
-        public HidReport LastReport { get => _LastReport; }
-
-        /// <summary>
         /// Whether or not the <see cref="USBController"/> is currently connected to its <see cref="HidDevice"/>.
         /// </summary>
         public bool IsAttached { get => IsAttached; }
@@ -76,7 +72,6 @@ namespace NZXTSharp.COM {
         public USBController(NZXTDeviceType Type) {
             this._Type = Type;
             ResolveDeviceID();
-            Initialize();
         }
 
         /// <summary>
@@ -109,8 +104,8 @@ namespace NZXTSharp.COM {
         /// <param name="Report"></param>
         internal void OnReport(HidReport Report)
         {
-            this._LastReport = Report;
-            _Device.ReadReport(OnReport);
+            ReportCallback(Report, EventArgs.Empty);
+            _Device.ReadReport(OnReport);            
         }
 
         /// <summary>

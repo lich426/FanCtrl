@@ -22,6 +22,7 @@ namespace FanControl
 
         // LibreHardwareMonitorLib
         private Computer mComputer = null;
+        private List<IHardware> mHardwareList = new List<IHardware>();
 
         // NZXT Kraken
         private KrakenX mKrakenX = null;
@@ -44,10 +45,16 @@ namespace FanControl
         public List<BaseControl> ControlList { get { return mControlList; } }
 
         // update timer
+        private object mUpdateTimerLock = new object();
         private System.Timers.Timer mUpdateTimer = new System.Timers.Timer();
-        private readonly object mUpdateTimerLock = new object();
+        public event UpdateTimerEventHandler UpdateCallback;
 
-        public void start(int interval)
+        public delegate void UpdateTimerEventHandler(bool isOK);
+
+        // restart timer
+        private System.Timers.Timer mRestartTimer = new System.Timers.Timer();
+
+        public void start()
         {
             if (mIsStart == true)
                 return;
@@ -94,8 +101,7 @@ namespace FanControl
             }
             catch(Exception e){}
 
-            // start update timer
-            mUpdateTimer.Interval = interval;
+            mUpdateTimer.Interval = OptionManager.getInstance().Interval;
             mUpdateTimer.Elapsed += onUpdateTimer;
             mUpdateTimer.Start();
         }
@@ -107,6 +113,7 @@ namespace FanControl
             mIsStart = false;           
 
             Monitor.Enter(mUpdateTimerLock);
+            mUpdateTimer.Enabled = false;
             mUpdateTimer.Stop();
             Monitor.Exit(mUpdateTimerLock);
 
@@ -142,7 +149,10 @@ namespace FanControl
         {
             if (mIsStart == false)
                 return;
+
+            Monitor.Enter(mUpdateTimerLock);
             mUpdateTimer.Interval = interval;
+            Monitor.Exit(mUpdateTimerLock);
         }
         
         private void createGigabyte()
@@ -199,6 +209,7 @@ namespace FanControl
                 {
                     HardwareTemp sensor = new HardwareTemp(hardwareList[i]);
                     mSensorList.Add(sensor);
+                    mHardwareList.Add(hardwareList[i]);
                 }
             }
         }
@@ -225,6 +236,7 @@ namespace FanControl
             IHardware[] hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
+                bool isExist = false;
                 ISensor[] sensorList = hardwareList[i].Sensors;
                 for (int j = 0; j < sensorList.Length; j++)
                 {
@@ -232,11 +244,18 @@ namespace FanControl
                     {
                         HardwareFanSpeed fan = new HardwareFanSpeed(sensorList[j]);
                         mFanList.Add(fan);
+                        isExist = true;
                     }
                 }
+                if(isExist == true)
+                {
+                    mHardwareList.Add(hardwareList[i]);
+                }
+
                 IHardware[] subHardwareList = hardwareList[i].SubHardware;
                 for (int j = 0; j < subHardwareList.Length; j++)
                 {
+                    bool isExist2 = false;
                     ISensor[] subSensorList = subHardwareList[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
@@ -244,7 +263,12 @@ namespace FanControl
                         {
                             HardwareFanSpeed fan = new HardwareFanSpeed(subSensorList[k]);
                             mFanList.Add(fan);
+                            isExist2 = true;
                         }
+                    }
+                    if(isExist2 == true)
+                    {
+                        mHardwareList.Add(subHardwareList[j]);
                     }
                 }
             }
@@ -273,6 +297,7 @@ namespace FanControl
             IHardware[] hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
+                bool isExist = false;
                 ISensor[] sensorList = hardwareList[i].Sensors;
                 for (int j = 0; j < sensorList.Length; j++)
                 {
@@ -282,12 +307,19 @@ namespace FanControl
                         {
                             HardwareControl control = new HardwareControl(sensorList[j]);
                             mControlList.Add(control);
+                            isExist = true;
                         }
                     }
                 }
+                if(isExist == true)
+                {
+                    mHardwareList.Add(hardwareList[i]);
+                }
+
                 IHardware[] subHardwareList = hardwareList[i].SubHardware;
                 for (int j = 0; j < subHardwareList.Length; j++)
                 {
+                    bool isExist2 = false;
                     ISensor[] subSensorList = subHardwareList[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
@@ -297,71 +329,82 @@ namespace FanControl
                             {
                                 HardwareControl control = new HardwareControl(subSensorList[k]);
                                 mControlList.Add(control);
+                                isExist2 = true;
                             }
                         }
+                    }
+                    if(isExist2 == true)
+                    {
+                        mHardwareList.Add(subHardwareList[j]);
                     }
                 }
             }
         }
 
-        private void onUpdateTimer(object sender, ElapsedEventArgs e)
+        private void onUpdateTimer(object sender, EventArgs e)
         {
-            if (mIsStart == false)
+            if (Monitor.TryEnter(mUpdateTimerLock) == false)
                 return;
 
-            if (Monitor.TryEnter(mUpdateTimerLock))
+            bool isOK = true;
+            for (int i = 0; i < mHardwareList.Count; i++)
             {
-                mComputer.Accept(this);                
-                Thread.Sleep(10);
+                mHardwareList[i].Update();
+                if (i != 0 && i % 5 == 0)
+                    Thread.Sleep(10);
+            }
 
-                for (int i = 0; i < mSensorList.Count; i++)
+            for (int i = 0; i < mSensorList.Count; i++)
+            {
+                mSensorList[i].update();
+                if(mSensorList[i].IsIncorrectValue == true)
                 {
-                    mSensorList[i].update();
+                    isOK = false;
                 }
-                Thread.Sleep(10);
+            }
 
-                for (int i = 0; i < mFanList.Count; i++)
-                {
-                    mFanList[i].update();
-                }
-                Thread.Sleep(10);
+            for (int i = 0; i < mFanList.Count; i++)
+            {
+                mFanList[i].update();
+            }
 
-                for (int i = 0; i < mControlList.Count; i++)
-                {
-                    mControlList[i].update();
-                }
-                Thread.Sleep(10);
+            for (int i = 0; i < mControlList.Count; i++)
+            {
+                mControlList[i].update();
+            }
 
-                // Control
-                var controlManager = ControlManager.getInstance();
-                if(controlManager.IsEnable == true)
+            // Control
+            var controlManager = ControlManager.getInstance();
+            if (controlManager.IsEnable == true)
+            {
+                for (int i = 0; i < controlManager.Count(); i++)
                 {
-                    for (int i = 0; i < controlManager.Count(); i++)
+                    var controlData = controlManager.getControlData(i);
+                    if (controlData == null)
+                        break;
+
+                    int sensorIndex = controlData.Index;
+                    int temperature = mSensorList[sensorIndex].Value;
+
+                    for (int j = 0; j < controlData.FanDataList.Count; j++)
                     {
-                        var controlData = controlManager.getControlData(i);
-                        if (controlData == null)
-                            break;
+                        var fanData = controlData.FanDataList[j];
+                        int controlIndex = fanData.Index;
+                        int percent = fanData.getValue(temperature);
 
-                        int sensorIndex = controlData.Index;
-                        int temperature = mSensorList[sensorIndex].Value;
-
-                        for (int j = 0; j < controlData.FanDataList.Count; j++)
+                        var control = mControlList[controlIndex];
+                        if (control.Value != percent)
                         {
-                            var fanData = controlData.FanDataList[j];
-                            int controlIndex = fanData.Index;
-                            int percent = fanData.getValue(temperature);
-
-                            var control = mControlList[controlIndex];
-                            if(control.Value != percent)
-                            {
-                                control.setSpeed(percent);
-                            }
+                            control.setSpeed(percent);
                         }
                     }
                 }
-
-                Monitor.Exit(mUpdateTimerLock);
             }
+
+            if (UpdateCallback != null)
+                UpdateCallback(isOK);
+
+            Monitor.Exit(mUpdateTimerLock);
         }
 
         /////////////////////////// Visitor ///////////////////////////

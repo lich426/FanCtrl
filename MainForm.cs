@@ -19,8 +19,6 @@ namespace FanControl
         
         private FanControlForm mFanControlForm = null;
 
-        private Timer mTimer = new Timer();
-
         public MainForm()
         {
             InitializeComponent();
@@ -44,7 +42,8 @@ namespace FanControl
                 this.ShowInTaskbar = false;
             }
 
-            HardwareManager.getInstance().start(OptionManager.getInstance().Interval);
+            HardwareManager.getInstance().UpdateCallback += onUpdate;
+            HardwareManager.getInstance().start();
             this.createComponent();
             this.ActiveControl = mFanControlButton;
 
@@ -53,10 +52,6 @@ namespace FanControl
             {
                 MessageBox.Show(StringLib.Not_Match);
             }
-
-            mTimer.Tick += onUpdateTimer;
-            mTimer.Interval = OptionManager.getInstance().Interval;
-            mTimer.Start();
         }
 
         private void localizeComponent()
@@ -106,8 +101,6 @@ namespace FanControl
 
         private void onTrayMenuExit(object sender, EventArgs e)
         {
-            mTimer.Stop();
-
             if (mFanControlForm != null)
             {
                 mFanControlForm.Close();
@@ -258,33 +251,44 @@ namespace FanControl
             }
         }
 
-        private void onUpdateTimer(object sender, EventArgs e)
+        private void onUpdate(bool isOK)
         {
-            var hardwareManager = HardwareManager.getInstance();
-            var sensorList = hardwareManager.SensorList;
-            var fanList = hardwareManager.FanList;
-            var controlList = hardwareManager.ControlList;
-
-            for (int i = 0; i < sensorList.Count; i++)
+            this.BeginInvoke(new Action(delegate ()
             {
-                mSensorLabelList[i].Text = sensorList[i].getString();
-            }
+                var hardwareManager = HardwareManager.getInstance();
 
-            for (int i = 0; i < fanList.Count; i++)
-            {
-                mFanLabelList[i].Text = fanList[i].getString();
-            }
-
-            for (int i = 0; i < controlList.Count; i++)
-            {
-                if (mControlTextBoxList[i].Focused == false)
+                if (isOK == false)
                 {
-                    mControlTextBoxList[i].Text = controlList[i].Value.ToString();
+                    hardwareManager.stop();
+                    hardwareManager.start();
+                    return;
                 }
-            }
+                
+                var sensorList = hardwareManager.SensorList;
+                var fanList = hardwareManager.FanList;
+                var controlList = hardwareManager.ControlList;
 
-            if (mFanControlForm != null)
-                mFanControlForm.onUpdateTimer();
+                for (int i = 0; i < sensorList.Count; i++)
+                {
+                    mSensorLabelList[i].Text = sensorList[i].getString();
+                }
+
+                for (int i = 0; i < fanList.Count; i++)
+                {
+                    mFanLabelList[i].Text = fanList[i].getString();
+                }
+
+                for (int i = 0; i < controlList.Count; i++)
+                {
+                    if (mControlTextBoxList[i].Focused == false)
+                    {
+                        mControlTextBoxList[i].Text = controlList[i].Value.ToString();
+                    }
+                }
+
+                if (mFanControlForm != null && mFanControlForm.IsDisposed == false)
+                    mFanControlForm.onUpdateTimer();
+            }));
         }
         
 
@@ -315,7 +319,6 @@ namespace FanControl
             mFanControlForm = new FanControlForm();
             mFanControlForm.StartPosition = FormStartPosition.Manual;
             mFanControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
-
             mFanControlForm.Show(this);
         }
     }

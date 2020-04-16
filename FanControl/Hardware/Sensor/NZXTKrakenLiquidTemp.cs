@@ -30,7 +30,7 @@ namespace FanControl
             try
             {
                 var temp = mKrakenX.GetLiquidTemp();
-                Value = (temp != null) ? (int)temp : 0;
+                Value = (temp.HasValue == true) ? (int)temp : 0;
             }
             catch (Exception e) { }
         }

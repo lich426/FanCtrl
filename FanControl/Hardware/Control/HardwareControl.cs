@@ -26,7 +26,7 @@ namespace FanControl
 
         public override void update()
         {
-            double temp = (mSensor.Value != null) ? (double)mSensor.Value : 0.0f;
+            double temp = (mSensor.Value.HasValue == true) ? (double)mSensor.Value : 0.0f;
             temp = Math.Round(temp);
             Value = (int)temp;
             LastValue = (int)temp;

@@ -30,7 +30,7 @@ namespace FanControl
 
         public override void update()
         {
-            Value = (mSensor.Value != null) ? (int)mSensor.Value : Value;
+            Value = (mSensor.Value.HasValue == true) ? (int)mSensor.Value : Value;
         }
 
     }
