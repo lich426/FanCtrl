@@ -20,7 +20,7 @@ Graph : [ZedGraph][4]<br>
  - 현재 모든 종류의 하드웨어를 지원하지 않습니다.<br>
  
 ## Portable
-다운로드 : [FanControl_v1.0.2.zip][6]
+다운로드 : [FanControl_v1.0.3.zip][6]
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/akmadian/NZXTSharp
@@ -28,4 +28,4 @@ Graph : [ZedGraph][4]<br>
 [3]: https://www.newtonsoft.com/json
 [4]: http://zedgraph.sourceforge.net/samples.html
 [5]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[6]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.2.zip
+[6]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.3.zip
