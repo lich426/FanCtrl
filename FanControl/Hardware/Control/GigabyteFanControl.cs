@@ -9,15 +9,22 @@ namespace FanControl
 {
     public class GigabyteFanControl : BaseControl
     {
+        public delegate void OnSetSpeedHandler(int index, int value);
+        public event OnSetSpeedHandler onSetSpeedCallback;
+
         private string mName;
         private int mIndex = -1;
-        private SmartGuardianFanControlModule mGigabyteSmartGuardianFanControlModule = null;
+        private int mMinSpeed = 0;
+        private int mMaxSpeed = 100;
 
-        public GigabyteFanControl(string name, int index, SmartGuardianFanControlModule module) : base()
+        public GigabyteFanControl(string name, int index, int value) : base()
         {
             mName = name;
             mIndex = index;
-            mGigabyteSmartGuardianFanControlModule = module;
+            Value = value;
+            LastValue = Value;
+            if (value < mMinSpeed)
+                mMinSpeed = value;
         }
 
         public override string getName()
@@ -32,33 +39,31 @@ namespace FanControl
 
         public override int getMinSpeed()
         {
-            return 30;
+            return mMinSpeed;
         }
 
         public override int getMaxSpeed()
         {
-            return 100;
+            return mMaxSpeed;
         }
 
         public override int setSpeed(int value)
         {
-            if (value > 100)
+            if (value > mMaxSpeed)
             {
-                Value = 100;
+                Value = mMaxSpeed;
             }
-            else if (value < 30)
+            else if (value < mMinSpeed)
             {
-                Value = 30;
+                Value = mMinSpeed;
             }
             else
             {
                 Value = value;
             }
+            
+            onSetSpeedCallback(mIndex, Value);
 
-            if (mGigabyteSmartGuardianFanControlModule != null && mGigabyteSmartGuardianFanControlModule.IsDisposed == false)
-            {
-                mGigabyteSmartGuardianFanControlModule.SetCalibrationPwm(mIndex, (byte)Value);
-            }
             LastValue = Value;
             return Value;
         }

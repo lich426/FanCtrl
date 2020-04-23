@@ -590,6 +590,7 @@ namespace NZXTSharp
                     };
                 case DeviceLoadFilter.KrakenM: return new int[] { 0x1715 };
                 case DeviceLoadFilter.KrakenX: return new int[] { 0x170e };
+                case DeviceLoadFilter.KrakenX3: return new int[] { 0x2007 };
                 default:
                     return Array.Empty<int>();
             }
@@ -606,7 +607,9 @@ namespace NZXTSharp
             switch (ID)
             {
                 case 0x170e:
-                    return new KrakenX.KrakenX();
+                    return new KrakenX.KrakenX(NZXTDeviceType.KrakenX);
+                case 0x2007:
+                    return new KrakenX.KrakenX(NZXTDeviceType.KrakenX3);
                 default:
                     throw new Exception(); // TODO
             }

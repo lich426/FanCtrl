@@ -68,10 +68,10 @@ namespace NZXTSharp
 
         #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         KrakenM22 = 7,
-        KrakenX42 = 8,
-        KrakenX52 = 9,
-        KrakenX62 = 10,
-        KrakenX72 = 11,
+        KrakenX3 = 8,
+        //KrakenX52 = 9,
+        //KrakenX62 = 10,
+        //KrakenX72 = 11,
         #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 

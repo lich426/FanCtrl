@@ -62,6 +62,7 @@ namespace NZXTSharp
         /// Any KrakenX Device
         /// </summary>
         KrakenX = 6,
+        KrakenX3 = 13,
 
         /// <summary>
         /// Any Grid Device

@@ -77,7 +77,8 @@ namespace NZXTSharp.KrakenX
             DeviceLoadFilter.All,
             DeviceLoadFilter.Coolers,
             DeviceLoadFilter.Kraken,
-            DeviceLoadFilter.KrakenX
+            DeviceLoadFilter.KrakenX,
+            DeviceLoadFilter.KrakenX3
         };
 
         private KrakenXChannel _Both;
@@ -87,6 +88,12 @@ namespace NZXTSharp.KrakenX
 
         private object mLock = new object();
         private System.Timers.Timer mTimer = null;
+
+        private long mDelayTime = 5000;
+
+        private int mLastLiquidTemp = 0;
+        private int mLastFanRPM = 0;
+        private int mLastPumpRPM = 0;
 
         private int mPumpSpeed = 50;
         private int mFanPercent = 25;
@@ -104,15 +111,17 @@ namespace NZXTSharp.KrakenX
         /// <summary>
         /// The <see cref="HIDDeviceID"/> of the <see cref="KrakenX"/> device. Will always be <see cref="HIDDeviceID.KrakenX"/>.
         /// </summary>
-        public HIDDeviceID DeviceID { get => HIDDeviceID.KrakenX; }
+        //public HIDDeviceID DeviceID { get => HIDDeviceID.KrakenX; }
 
         /// <summary>
         /// The <see cref="NZXTDeviceType"/> of the <see cref="KrakenX"/> device. Will always be <see cref="NZXTDeviceType.KrakenX"/>.
         /// </summary>
-        public NZXTDeviceType Type { get => NZXTDeviceType.KrakenX; }
+        private NZXTDeviceType mType = NZXTDeviceType.KrakenX;
+        public NZXTDeviceType Type { get => mType; }
 
         /// <inheritdoc/>
-        public int ID { get => 0x170e; }
+        private int mID = 0x170e;
+        public int ID { get => mID; }
 
         /// <summary>
         /// Represents both the <see cref="Logo"/>, and <see cref="Ring"/> channels.
@@ -139,8 +148,23 @@ namespace NZXTSharp.KrakenX
         /// <summary>
         /// Constructs an instance of a <see cref="KrakenX"/> device.
         /// </summary>
-        public KrakenX()
+        public KrakenX(NZXTDeviceType type)
         {
+            mType = type;
+            switch (type)
+            {
+                case NZXTDeviceType.KrakenX:
+                    mID = 0x170e;
+                    mDelayTime = 5000;
+                    break;
+
+                case NZXTDeviceType.KrakenX3:
+                    mID = 0x2007;
+                    mDelayTime = 10000;
+                    break;
+                default:
+                    throw new Exception();
+            }
             Initialize();
         }
 
@@ -248,14 +272,9 @@ namespace NZXTSharp.KrakenX
         public int GetPumpSpeed()
         {
             Monitor.Enter(mLastReportLock);
-            if (mLastReport != null)
-            {
-                int speed = (int)(mLastReport.Data[4] << 8 | mLastReport.Data[5]);
-                Monitor.Exit(mLastReportLock);
-                return speed;
-            }
+            int speed = mLastPumpRPM;
             Monitor.Exit(mLastReportLock);
-            return 0;
+            return speed;
         }
 
         /// <summary>
@@ -280,14 +299,9 @@ namespace NZXTSharp.KrakenX
         public int GetFanSpeed()
         {
             Monitor.Enter(mLastReportLock);
-            if (mLastReport != null)
-            {
-                int speed = (int)(mLastReport.Data[2] << 8 | mLastReport.Data[3]);
-                Monitor.Exit(mLastReportLock);
-                return speed;
-            }
+            int speed = mLastFanRPM;
             Monitor.Exit(mLastReportLock);
-            return 0;
+            return speed;
         }
 
         /// <summary>
@@ -308,17 +322,12 @@ namespace NZXTSharp.KrakenX
         /// </summary>
         /// <param name="AsFarenheit">Whether or not to return the temp value in degrees F.</param>
         /// <returns>The last reported liquid temp as a rounded integer, in degrees C.</returns>
-        public int? GetLiquidTemp(bool AsFarenheit = false)
+        public int GetLiquidTemp()
         {
             Monitor.Enter(mLastReportLock);
-            if (mLastReport != null)
-            {
-                double temp = (mLastReport.Data[0] + (mLastReport.Data[1] * 0.1));
-                Monitor.Exit(mLastReportLock);
-                return AsFarenheit ? temp.Round().DegreesCtoF() : temp.Round();
-            }
+            int temp = mLastLiquidTemp;
             Monitor.Exit(mLastReportLock);
-            return 0;
+            return temp;
         }
         
         /// <summary>
@@ -378,7 +387,31 @@ namespace NZXTSharp.KrakenX
         private void onReport(object sender, EventArgs e)
         {
             Monitor.Enter(mLastReportLock);
-            mLastReport = (HidReport)sender;
+            try
+            {
+                mLastReport = (HidReport)sender;
+
+                if(this.Type == NZXTDeviceType.KrakenX)
+                {
+                    int temp = (int)Math.Round(mLastReport.Data[0] + (mLastReport.Data[1] * 0.1));
+                    mLastLiquidTemp = (temp != 0) ? temp : mLastLiquidTemp;
+
+                    int pump = (int)(mLastReport.Data[4] << 8 | mLastReport.Data[5]);
+                    mLastPumpRPM = (pump != 0) ? pump : mLastPumpRPM;
+
+                    int fan = (int)(mLastReport.Data[2] << 8 | mLastReport.Data[3]);
+                    mLastFanRPM = (fan != 0) ? fan : mLastFanRPM;
+                }
+                else
+                {
+                    int temp = (int)Math.Round(mLastReport.Data[14] + (mLastReport.Data[15] * 0.1));
+                    mLastLiquidTemp = (temp != 0) ? temp : mLastLiquidTemp;
+
+                    int pump = (int)(mLastReport.Data[17] << 8 | mLastReport.Data[16]);
+                    mLastPumpRPM = (pump != 0) ? pump : mLastPumpRPM;
+                }                
+            }
+            catch { }
             Monitor.Exit(mLastReportLock);
         }
 
@@ -386,28 +419,48 @@ namespace NZXTSharp.KrakenX
         {
             if (Monitor.TryEnter(mLock) == false)
                 return;
-
-            long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
-            // pump
-            if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= 5000)
+            try
             {
-                mLastPumpSpeed = mPumpSpeed;
-                mPumpLastSendTime = startTime;
+                long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-                var command = new byte[] { 0x02, 0x4d, 0x40, 0x00, Convert.ToByte(mPumpSpeed) };
-                _COMController.Write(command);
+                // pump
+                if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= mDelayTime)
+                {
+                    mLastPumpSpeed = mPumpSpeed;
+                    mPumpLastSendTime = startTime;
+
+                    if (this.Type == NZXTDeviceType.KrakenX)
+                    {
+                        var command = new byte[] { 0x02, 0x4d, 0x40, 0x00, Convert.ToByte(mPumpSpeed) };
+                        _COMController.Write(command);
+                    }
+                    else
+                    {
+                        var commandList = new List<byte>();
+                        commandList.Add(0x72);
+                        commandList.Add(0x01);
+                        commandList.Add(0x00);
+                        commandList.Add(0x00);
+                        for (int i = 0; i < 40; i++)
+                        {
+                            commandList.Add(Convert.ToByte(mPumpSpeed));
+                        }
+                        _COMController.Write(commandList.ToArray());
+                    }                        
+                }
+
+                // fan
+                if ((this.Type == NZXTDeviceType.KrakenX) &&
+                    (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= mDelayTime))
+                {
+                    mLastFanPercent = mFanPercent;
+                    mFanLastSendTime = startTime;
+
+                    var command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(mFanPercent) };
+                    _COMController.Write(command);
+                }
             }
-
-            // fan
-            if (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= 5000)
-            {
-                mLastFanPercent = mFanPercent;
-                mFanLastSendTime = startTime;
-
-                var command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(mFanPercent) };
-                _COMController.Write(command);
-            }
+            catch { }
             Monitor.Exit(mLock);
         }
 

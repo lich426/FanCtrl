@@ -48,7 +48,12 @@ namespace NZXTSharp
         /// A KrakenX Device.
         /// </summary>
         KrakenX   = 0x170e,
-        
+
+        /// <summary>
+        /// A KrakenX3 Series Device.
+        /// </summary>
+        KrakenX3 = 0x2007,
+
         // Hue Devices
         /// <summary>
         /// A Hue 2 Device

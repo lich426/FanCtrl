@@ -50,7 +50,7 @@ namespace FanControl
                 IsMinimized = rootObject.Value<bool>("minimized");
                 IsStartUp = rootObject.Value<bool>("startup");
             }
-            catch(Exception e)
+            catch
             {
                 return false;
             }
@@ -67,7 +67,7 @@ namespace FanControl
                 rootObject["startup"] = IsStartUp;
                 File.WriteAllText(cOptionFileName, rootObject.ToString());
             }
-            catch (Exception e) {}
+            catch {}
         }
 
     }

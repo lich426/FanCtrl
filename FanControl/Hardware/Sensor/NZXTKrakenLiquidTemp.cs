@@ -27,12 +27,7 @@ namespace FanControl
         }
         public override void update()
         {
-            try
-            {
-                var temp = mKrakenX.GetLiquidTemp();
-                Value = (temp.HasValue == true) ? (int)temp : 0;
-            }
-            catch (Exception e) { }
+            Value = mKrakenX.GetLiquidTemp();
         }
     }
 }

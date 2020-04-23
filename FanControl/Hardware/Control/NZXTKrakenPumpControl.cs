@@ -38,13 +38,16 @@ namespace FanControl
 
         public override int setSpeed(int value)
         {
-            if (value > 100)
+            int min = this.getMinSpeed();
+            int max = this.getMaxSpeed();
+
+            if (value > max)
             {
-                Value = 100;
+                Value = max;
             }
-            else if (value < 50)
+            else if (value < min)
             {
-                Value = 50;
+                Value = min;
             }
             else
             {

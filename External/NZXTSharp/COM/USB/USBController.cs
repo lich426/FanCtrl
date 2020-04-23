@@ -158,9 +158,11 @@ namespace NZXTSharp.COM {
                 case NZXTDeviceType.KrakenX:
                     this._ID = HIDDeviceID.KrakenX;
                     break;
-                case NZXTDeviceType.KrakenX42:
-                    this._ID = HIDDeviceID.KrakenX;
+                case NZXTDeviceType.KrakenX3:
+                    this._ID = HIDDeviceID.KrakenX3;
                     break;
+
+                    /*
                 case NZXTDeviceType.KrakenX52:
                     this._ID = HIDDeviceID.KrakenX;
                     break;
@@ -170,7 +172,7 @@ namespace NZXTSharp.COM {
                 case NZXTDeviceType.KrakenX72:
                     this._ID = HIDDeviceID.KrakenX;
                     break;
-
+                    */
                 // Hue Devices
                 case NZXTDeviceType.Hue2:
                     this._ID = HIDDeviceID.Hue2;

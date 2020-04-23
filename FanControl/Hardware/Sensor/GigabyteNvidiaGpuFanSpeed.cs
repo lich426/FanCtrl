@@ -1,4 +1,4 @@
-﻿using Gigabyte.Engine.EnvironmentControl.CoolingDevice.Fan;
+﻿using Gigabyte.Engine.GraphicsCard.Nvidia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace FanControl
 {
-    public class GigabyteFanSpeed : BaseSensor
+    public class GigabyteNvidiaFanSpeed : BaseSensor
     {
         private string mName;
-        private int mIndex = -1;
+        private NvidiaGeforceGraphicsModule mModule = null;
         
-        public GigabyteFanSpeed(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
+        public GigabyteNvidiaFanSpeed(NvidiaGeforceGraphicsModule module, int num) : base(SENSOR_TYPE.TEMPERATURE)
         {
-            mName = name;
-            mIndex = index;
+            mName = "GPU Fan #" + num;
+            mModule = module;
         }
 
         public override string getName()
@@ -31,7 +31,8 @@ namespace FanControl
 
         public override void update()
         {
-            float speed = HardwareManager.getInstance().GigabyteFanSpeedList[mIndex];
+            float speed = 0.0f;
+            mModule.GetFanSpeed(ref speed);
             Value = (int)Math.Round(speed);
         }
         

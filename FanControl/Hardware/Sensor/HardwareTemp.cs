@@ -80,11 +80,6 @@ namespace FanControl
             {
                 temp = temp / mList.Count;
                 Value = (int)temp;
-                mIncorrectValueCount = 0;
-            }
-            else
-            {
-                mIncorrectValueCount++;
             }
         }
 

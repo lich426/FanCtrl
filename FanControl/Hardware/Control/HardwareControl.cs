@@ -15,8 +15,8 @@ namespace FanControl
         public HardwareControl(ISensor sensor) : base()
         {
             mSensor = sensor;
-            Value = 30;
-            LastValue = 30;
+            Value = 0;
+            LastValue = 0;
         }
         
         public override string getName()

@@ -65,14 +65,22 @@ namespace FanControl
 
             mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
 
-            for (int i = 0; i < hardwareManager.SensorList.Count; i++)
+            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
             {
-                mSensorComboBox.Items.Add(hardwareManager.SensorList[i].getName());
+                var sensor = hardwareManager.getSensor(i);
+                if (sensor == null)
+                    break;
+
+                mSensorComboBox.Items.Add(sensor.getName());
             }
 
-            for (int i = 0; i < hardwareManager.ControlList.Count; i++)
+            for (int i = 0; i < hardwareManager.getControlCount(); i++)
             {
-                mFanComboBox.Items.Add(hardwareManager.ControlList[i].getName());
+                var contorl = hardwareManager.getControl(i);
+                if (contorl == null)
+                    break;
+
+                mFanComboBox.Items.Add(contorl.getName());
             }
 
             if (mSensorComboBox.Items.Count > 0)
@@ -273,8 +281,10 @@ namespace FanControl
             }
 
             var hardwareManager = HardwareManager.getInstance();
-            var sensor = hardwareManager.SensorList[mSensorComboBox.SelectedIndex];
-            var control = hardwareManager.ControlList[mSelectedFanData.Index];
+            var sensor = hardwareManager.getSensor(mSensorComboBox.SelectedIndex);
+            var control = hardwareManager.getControl(mSelectedFanData.Index);
+            if (sensor == null || control == null)
+                return;
 
             mNowPoint[0].X = (double)sensor.Value;
             mNowPoint[0].Y = (double)control.LastValue;
@@ -405,6 +415,8 @@ namespace FanControl
             mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
 
             mGraph.Refresh();
+
+            this.onUpdateTimer();
         }
 
         private void onHysNumericValueChanged(object sender, EventArgs e)
@@ -424,8 +436,11 @@ namespace FanControl
             int sensorIndex = mSensorComboBox.SelectedIndex;
             int fanIndex = mFanComboBox.SelectedIndex;
 
-            var sensor = HardwareManager.getInstance().SensorList[sensorIndex];
-            var fan = HardwareManager.getInstance().ControlList[fanIndex];
+            var hardwareManager = HardwareManager.getInstance();
+            var sensor = hardwareManager.getSensor(sensorIndex);
+            var fan = hardwareManager.getControl(fanIndex);
+            if (sensor == null || fan == null)
+                return;
 
             var controlData = this.getControlData(sensorIndex);
             if(controlData == null)

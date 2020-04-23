@@ -17,7 +17,7 @@ namespace FanControl
             InitializeComponent();
             this.localizeComponent();
 
-            mToolTip.SetToolTip(mIntervalTextBox, "100 ≤ value ≤ 9999");
+            mToolTip.SetToolTip(mIntervalTextBox, "100 ≤ value ≤ 5000");
 
             mIntervalTextBox.KeyPress += onTextBoxKeyPress;
             mIntervalTextBox.Text = OptionManager.getInstance().Interval.ToString();
@@ -41,9 +41,9 @@ namespace FanControl
             {
                 interval = 100;
             }
-            else if (interval > 9999)
+            else if (interval > 5000)
             {
-                interval = 9999;
+                interval = 5000;
             }
 
             OptionManager.getInstance().Interval = interval;

@@ -93,7 +93,7 @@ namespace FanControl
             {
                 jsonString = File.ReadAllText(cControlFileName);
             }
-            catch(Exception e)
+            catch
             {
                 mIsEnable = false;
                 Monitor.Exit(mLock);
@@ -162,7 +162,7 @@ namespace FanControl
                     mControlDataList.Add(controlData);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 mIsEnable = false;
                 mControlDataList.Clear();
@@ -222,7 +222,7 @@ namespace FanControl
 
                 File.WriteAllText(cControlFileName, rootObject.ToString());
             }
-            catch (Exception e)
+            catch
             {
                 mIsEnable = false;
                 mControlDataList.Clear();
@@ -236,14 +236,11 @@ namespace FanControl
             try
             {                
                 HardwareManager hardwareManager = HardwareManager.getInstance();
-
-                var sensorList = hardwareManager.SensorList;
-                var controlList = hardwareManager.ControlList;
-
+                
                 for (int i = 0; i < mControlDataList.Count; i++)
                 {
                     var controlData = mControlDataList[i];
-                    if(controlData.Name.Equals(sensorList[controlData.Index].getName()) == false)
+                    if(controlData.Name.Equals(hardwareManager.getSensor(controlData.Index).getName()) == false)
                     {
                         mControlDataList.Clear();
                         Monitor.Exit(mLock);
@@ -254,7 +251,7 @@ namespace FanControl
                     for(int j = 0; j < fanDataList.Count; j++)
                     {
                         var fanData = fanDataList[j];
-                        if(fanData.Name.Equals(controlList[fanData.Index].getName()) == false)
+                        if(fanData.Name.Equals(hardwareManager.getControl(fanData.Index).getName()) == false)
                         {
                             mControlDataList.Clear();
                             Monitor.Exit(mLock);
@@ -263,7 +260,7 @@ namespace FanControl
                     }
                 }
             }
-            catch(Exception e)
+            catch
             {
                 mControlDataList.Clear();
                 Monitor.Exit(mLock);

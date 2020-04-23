@@ -28,11 +28,7 @@ namespace FanControl
         }
         public override void update()
         {
-            try
-            {
-                Value = mKrakenX.GetFanSpeed();
-            }
-            catch (Exception e) { }
+            Value = mKrakenX.GetFanSpeed();
         }
     }
 }

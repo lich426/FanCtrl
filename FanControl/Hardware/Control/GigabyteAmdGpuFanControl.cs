@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NZXTSharp.KrakenX;
+using Gigabyte.Engine.EnvironmentControl.CoolingDevice.Fan;
+using Gigabyte.Engine.GraphicsCard.Amd;
+using Gigabyte.GraphicsCard.Common;
 
 namespace FanControl
 {
-    public class NZXTKrakenFanControl : BaseControl
+    public class GigabyteAmdGpuFanControl : BaseControl
     {
-        private KrakenX mKrakenX = null;
+        private string mName;
+        private AmdRadeonGraphicsModule mModule = null;
 
-        public NZXTKrakenFanControl(KrakenX krakenX) : base()
+        public GigabyteAmdGpuFanControl(AmdRadeonGraphicsModule module, int num) : base()
         {
-            mKrakenX = krakenX;
+            mName = "GPU Fan #" + num;
+            mModule = module;
         }
 
         public override string getName()
         {
-            return "NZXT Kraken Fan";
+            return mName;
         }
 
         public override void update()
@@ -28,12 +32,16 @@ namespace FanControl
 
         public override int getMinSpeed()
         {
-            return 25;
+            var info = new GraphicsFanSpeedInfo();
+            mModule.GetFanSpeedInfo(ref info);
+            return info.MinPercent;
         }
 
         public override int getMaxSpeed()
         {
-            return 100;
+            var info = new GraphicsFanSpeedInfo();
+            mModule.GetFanSpeedInfo(ref info);
+            return info.MaxPercent;
         }
 
         public override int setSpeed(int value)
@@ -53,7 +61,8 @@ namespace FanControl
             {
                 Value = value;
             }
-            mKrakenX.SetFanSpeed(Value);
+
+            mModule.SetFanSpeed(Value);
             LastValue = Value;
             return Value;
         }

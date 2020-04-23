@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanControl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.2.0</ApplicationVersion>
+    <ApplicationVersion>1.0.3.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -88,14 +88,27 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gigabyte">
+      <HintPath>dll\Gigabyte.dll</HintPath>
+    </Reference>
     <Reference Include="Gigabyte.Engine">
       <HintPath>dll\Gigabyte.Engine.dll</HintPath>
     </Reference>
     <Reference Include="Gigabyte.Engine.EnvironmentControl">
       <HintPath>dll\Gigabyte.Engine.EnvironmentControl.dll</HintPath>
     </Reference>
+    <Reference Include="Gigabyte.Engine.GraphicsCard">
+      <HintPath>dll\Gigabyte.Engine.GraphicsCard.dll</HintPath>
+    </Reference>
     <Reference Include="Gigabyte.EnvironmentControl.Common">
       <HintPath>dll\Gigabyte.EnvironmentControl.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Gigabyte.GraphicsCard">
+      <HintPath>dll\Gigabyte.GraphicsCard.dll</HintPath>
+    </Reference>
+    <Reference Include="Gigabyte.GraphicsCard.Common, Version=8.0.0.20, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\Gigabyte.GraphicsCard.Common.dll</HintPath>
     </Reference>
     <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -195,12 +208,19 @@
     <Compile Include="FanControl\Control\FanData.cs" />
     <Compile Include="FanControl\Control\ControlData.cs" />
     <Compile Include="FanControl\Hardware\Control\BaseControl.cs" />
+    <Compile Include="FanControl\Hardware\Control\GigabyteAmdGpuFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\GigabyteFanControl.cs" />
+    <Compile Include="FanControl\Hardware\Control\GigabyteNvidiaGpuFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\HardwareControl.cs" />
     <Compile Include="FanControl\Hardware\Control\NZXTKrakenFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\NZXTKrakenPumpControl.cs" />
     <Compile Include="FanControl\Hardware\HardwareManager.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\GigabyteAmdGpuFanSpeed.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\GigabyteAmdGpuTemp.cs" />
     <Compile Include="FanControl\Hardware\Sensor\GigabyteFanSpeed.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\GigabyteNvidiaGpuFanSpeed.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\GigabyteNvidiaGpuTemp.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\GigabyteTemp.cs" />
     <Compile Include="FanControl\Option\OptionManager.cs" />
     <Compile Include="FanControl\Hardware\Sensor\BaseSensor.cs" />
     <Compile Include="FanControl\Hardware\Sensor\HardwareFanSpeed.cs" />

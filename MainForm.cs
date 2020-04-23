@@ -35,14 +35,26 @@ namespace FanControl
                 OptionManager.getInstance().write();
             }
 
-            if(OptionManager.getInstance().IsMinimized == true)
+            if (OptionManager.getInstance().Interval < 100)
+            {
+                OptionManager.getInstance().Interval = 100;
+            }
+            else if (OptionManager.getInstance().Interval > 5000)
+            {
+                OptionManager.getInstance().Interval = 5000;
+            }
+
+            if (OptionManager.getInstance().IsMinimized == true)
             {
                 this.Visible = false;
                 this.WindowState = FormWindowState.Minimized;
                 this.ShowInTaskbar = false;
             }
+        }
 
-            HardwareManager.getInstance().UpdateCallback += onUpdate;
+        protected override void OnLoad(EventArgs e)
+        {
+            HardwareManager.getInstance().onUpdateCallback += onUpdate;
             HardwareManager.getInstance().start();
             this.createComponent();
             this.ActiveControl = mFanControlButton;
@@ -108,12 +120,7 @@ namespace FanControl
             }
 
             HardwareManager.getInstance().stop();
-
-            mSensorLabelList.Clear();
-            mFanLabelList.Clear();
-            mControlTextBoxList.Clear();
-            mControlLabelList.Clear();
-
+            
             mTrayIcon.Visible = false;
 
             Application.ExitThread();
@@ -125,34 +132,34 @@ namespace FanControl
             var hardwareManager = HardwareManager.getInstance();
 
             // temperature
-            for (int i = 0; i < hardwareManager.SensorList.Count; i++)
+            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
             {
                 var label = new Label();
                 label.Location = new System.Drawing.Point(15, 25 + i * 25);
                 label.Name = "sensorLabel" + i.ToString();
-                label.Size = new System.Drawing.Size(mTempGroupBox.Width - 20, 23);
+                label.Size = new System.Drawing.Size(mTempGroupBox.Width - 18, 23);
                 label.Text = "";
                 mTempGroupBox.Controls.Add(label);
                 mSensorLabelList.Add(label);
 
-                if (i < hardwareManager.SensorList.Count - 1)
+                if (i < hardwareManager.getSensorCount() - 1)
                 {
                     mTempGroupBox.Height = mTempGroupBox.Height + 25;
                 }
             }
 
             // fan
-            for (int i = 0; i < hardwareManager.FanList.Count; i++)
+            for (int i = 0; i < hardwareManager.getFanCount(); i++)
             {
                 var label = new Label();
                 label.Location = new System.Drawing.Point(15, 25 + i * 25);
                 label.Name = "fanLabel" + i.ToString();
-                label.Size = new System.Drawing.Size(mFanGroupBox.Width - 20, 23);
+                label.Size = new System.Drawing.Size(mFanGroupBox.Width - 18, 23);
                 label.Text = "";
                 mFanGroupBox.Controls.Add(label);
                 mFanLabelList.Add(label);
 
-                if (i < hardwareManager.FanList.Count - 1)
+                if (i < hardwareManager.getFanCount() - 1)
                 {
                     mFanGroupBox.Height = mFanGroupBox.Height + 25;
                 }
@@ -165,7 +172,7 @@ namespace FanControl
                 mFanGroupBox.Height = mTempGroupBox.Height;
 
             // control
-            for (int i = 0; i < hardwareManager.ControlList.Count; i++)
+            for (int i = 0; i < hardwareManager.getControlCount(); i++)
             {
                 var textBox = new TextBox();
                 textBox.Location = new System.Drawing.Point(15, 20 + i * 25);
@@ -173,14 +180,14 @@ namespace FanControl
                 textBox.Size = new System.Drawing.Size(40, 23);
                 textBox.Multiline = false;
                 textBox.MaxLength = 3;
-                textBox.Text = "" + hardwareManager.ControlList[i].Value;
+                textBox.Text = "" + hardwareManager.getControl(i).Value;
                 textBox.KeyPress += onTextBoxKeyPress;
                 textBox.TextChanged += onTextBoxChanges;
                 mControlGroupBox.Controls.Add(textBox);
                 mControlTextBoxList.Add(textBox);
 
-                int minValue = hardwareManager.ControlList[i].getMinSpeed();
-                int maxValue = hardwareManager.ControlList[i].getMaxSpeed();
+                int minValue = hardwareManager.getControl(i).getMinSpeed();
+                int maxValue = hardwareManager.getControl(i).getMaxSpeed();
                 var tooltipString = minValue + " ≤  value ≤ " + maxValue;
                 mToolTip.SetToolTip(textBox, tooltipString);
 
@@ -188,11 +195,11 @@ namespace FanControl
                 label.Location = new System.Drawing.Point(textBox.Width + 20, 25 + i * 25);
                 label.Name = "controlLabel" + i.ToString();
                 label.Size = new System.Drawing.Size(mControlGroupBox.Width - textBox.Left - textBox.Width - 20, 23);
-                label.Text = "% (" + hardwareManager.ControlList[i].getName() + ")";
+                label.Text = "% (" + hardwareManager.getControl(i).getName() + ")";
                 mControlGroupBox.Controls.Add(label);
                 mControlLabelList.Add(label);
 
-                if (i < hardwareManager.ControlList.Count - 1)
+                if (i < hardwareManager.getControlCount() - 1)
                 {
                     mControlGroupBox.Height = mControlGroupBox.Height + 25;
                 }
@@ -230,17 +237,18 @@ namespace FanControl
             if (textBox.Focused == false)
                 return;
 
+            var hardwareManager = HardwareManager.getInstance();
             int value = int.Parse(textBox.Text);
             for (int i = 0; i < mControlTextBoxList.Count; i++)
             {
                 if (mControlTextBoxList[i].Equals(sender) == true)
                 {
-                    int minValue = HardwareManager.getInstance().ControlList[i].getMinSpeed();
-                    int maxValue = HardwareManager.getInstance().ControlList[i].getMaxSpeed();
+                    int minValue = hardwareManager.getControl(i).getMinSpeed();
+                    int maxValue = hardwareManager.getControl(i).getMaxSpeed();
 
                     if(value >= minValue && value <= maxValue)
                     {
-                        int changeValue = HardwareManager.getInstance().ControlList[i].setSpeed(value);
+                        int changeValue = hardwareManager.addChangeValue(value, hardwareManager.getControl(i));
                         if (changeValue != value)
                         {
                             textBox.Text = changeValue.ToString();
@@ -251,38 +259,39 @@ namespace FanControl
             }
         }
 
-        private void onUpdate(bool isOK)
+        private void onUpdate()
         {
             this.BeginInvoke(new Action(delegate ()
             {
                 var hardwareManager = HardwareManager.getInstance();
-
-                if (isOK == false)
-                {
-                    hardwareManager.stop();
-                    hardwareManager.start();
-                    return;
-                }
                 
-                var sensorList = hardwareManager.SensorList;
-                var fanList = hardwareManager.FanList;
-                var controlList = hardwareManager.ControlList;
-
-                for (int i = 0; i < sensorList.Count; i++)
+                for (int i = 0; i < hardwareManager.getSensorCount(); i++)
                 {
-                    mSensorLabelList[i].Text = sensorList[i].getString();
+                    var sensor = hardwareManager.getSensor(i);
+                    if (sensor == null)
+                        break;
+
+                    mSensorLabelList[i].Text = sensor.getString();
                 }
 
-                for (int i = 0; i < fanList.Count; i++)
+                for (int i = 0; i < hardwareManager.getFanCount(); i++)
                 {
-                    mFanLabelList[i].Text = fanList[i].getString();
+                    var fan = hardwareManager.getFan(i);
+                    if (fan == null)
+                        break;
+
+                    mFanLabelList[i].Text = fan.getString();
                 }
 
-                for (int i = 0; i < controlList.Count; i++)
+                for (int i = 0; i < hardwareManager.getControlCount(); i++)
                 {
+                    var control = hardwareManager.getControl(i);
+                    if (control == null)
+                        break;
+
                     if (mControlTextBoxList[i].Focused == false)
                     {
-                        mControlTextBoxList[i].Text = controlList[i].Value.ToString();
+                        mControlTextBoxList[i].Text = control.Value.ToString();
                     }
                 }
 
