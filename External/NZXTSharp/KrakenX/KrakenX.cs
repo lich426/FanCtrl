@@ -28,6 +28,8 @@ using NZXTSharp.COM;
 using NZXTSharp.Exceptions;
 
 using HidLibrary;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace NZXTSharp.KrakenX
 {
@@ -71,6 +73,8 @@ namespace NZXTSharp.KrakenX
     /// </summary>
     public class KrakenX : INZXTDevice
     {
+        private const string cKrakenFileName = "Kraken.json";
+
         #region Fields and Properties
         internal DeviceLoadFilter[] LoadFilters = new DeviceLoadFilter[]
         {
@@ -89,7 +93,7 @@ namespace NZXTSharp.KrakenX
         private object mLock = new object();
         private System.Timers.Timer mTimer = null;
 
-        private long mDelayTime = 5000;
+        private long mSendDelayTime = 5000;
 
         private int mLastLiquidTemp = 0;
         private int mLastFanRPM = 0;
@@ -102,6 +106,9 @@ namespace NZXTSharp.KrakenX
 
         private long mPumpLastSendTime = 0;
         private long mFanLastSendTime = 0;
+
+        private bool mIsSendCustomData = false;
+        private List<byte[]> mCustomDataList = new List<byte[]>();
 
         private USBController _COMController;
 
@@ -155,17 +162,22 @@ namespace NZXTSharp.KrakenX
             {
                 case NZXTDeviceType.KrakenX:
                     mID = 0x170e;
-                    mDelayTime = 5000;
+                    mSendDelayTime = 5000;
                     break;
 
                 case NZXTDeviceType.KrakenX3:
                     mID = 0x2007;
-                    mDelayTime = 10000;
+                    mSendDelayTime = 10000;
                     break;
                 default:
                     throw new Exception();
             }
             Initialize();
+
+            if(this.read() == true)
+            {
+                mIsSendCustomData = (mCustomDataList.Count > 0);
+            }
         }
 
         #region Methods
@@ -202,6 +214,78 @@ namespace NZXTSharp.KrakenX
         private void InitializeDeviceInfo()
         {
             this._FirmwareVersion = GetFirmwareVersion();
+        }
+
+        public bool read()
+        {
+            Monitor.Enter(mLock);
+            try
+            {
+                var jsonString = File.ReadAllText(cKrakenFileName);
+                var rootObject = JObject.Parse(jsonString);
+
+                var listObject = rootObject.Value<JArray>("list");
+                for(int i = 0; i < listObject.Count; i++)
+                {
+                    var hexString = listObject[i].Value<string>();
+                    mCustomDataList.Add(this.getHexBytes(hexString));
+                }
+            }
+            catch
+            {
+                Monitor.Exit(mLock);
+                return false;
+            }
+            Monitor.Exit(mLock);
+            return true;
+        }
+
+        public void write()
+        {
+            Monitor.Enter(mLock);
+            try
+            {
+                var rootObject = new JObject();
+                var listObject = new JArray();
+                for(int i = 0; i <mCustomDataList.Count; i++)
+                {
+                    string hexString = this.getHexString(mCustomDataList[i]);
+                    listObject.Add(hexString);
+                }
+                rootObject["list"] = listObject;
+                File.WriteAllText(cKrakenFileName, rootObject.ToString());
+            }
+            catch { }
+            Monitor.Exit(mLock);
+        }
+
+        public void setCustomDataList(List<string> hexStringList)
+        {
+            Monitor.Enter(mLock);
+            if (hexStringList.Count == 0)
+            {
+                Monitor.Exit(mLock);
+                return;
+            }
+            mCustomDataList.Clear();
+            for (int i = 0; i < hexStringList.Count; i++)
+            {
+                mCustomDataList.Add(this.getHexBytes(hexStringList[i]));
+            }
+            mIsSendCustomData = (mCustomDataList.Count > 0);
+            Monitor.Exit(mLock);
+        }
+
+        public List<string> getCustomDataList()
+        {
+            Monitor.Enter(mLock);
+            var hexStringList = new List<string>();
+            for(int i = 0; i < mCustomDataList.Count; i++)
+            {
+                hexStringList.Add(this.getHexString(mCustomDataList[i]));
+            }
+            Monitor.Exit(mLock);
+            return hexStringList;
         }
 
         /// <summary>
@@ -405,10 +489,13 @@ namespace NZXTSharp.KrakenX
                 else
                 {
                     int temp = (int)Math.Round(mLastReport.Data[14] + (mLastReport.Data[15] * 0.1));
-                    mLastLiquidTemp = (temp != 0) ? temp : mLastLiquidTemp;
-
                     int pump = (int)(mLastReport.Data[17] << 8 | mLastReport.Data[16]);
-                    mLastPumpRPM = (pump != 0) ? pump : mLastPumpRPM;
+
+                    if(temp != 0 && pump != 0)
+                    {
+                        mLastLiquidTemp = temp;
+                        mLastPumpRPM = pump;
+                    }
                 }                
             }
             catch { }
@@ -424,7 +511,7 @@ namespace NZXTSharp.KrakenX
                 long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
                 // pump
-                if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= mDelayTime)
+                if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= mSendDelayTime)
                 {
                     mLastPumpSpeed = mPumpSpeed;
                     mPumpLastSendTime = startTime;
@@ -451,7 +538,7 @@ namespace NZXTSharp.KrakenX
 
                 // fan
                 if ((this.Type == NZXTDeviceType.KrakenX) &&
-                    (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= mDelayTime))
+                    (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= mSendDelayTime))
                 {
                     mLastFanPercent = mFanPercent;
                     mFanLastSendTime = startTime;
@@ -459,9 +546,46 @@ namespace NZXTSharp.KrakenX
                     var command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(mFanPercent) };
                     _COMController.Write(command);
                 }
+
+                if(mIsSendCustomData == true && mCustomDataList.Count > 0)
+                {
+                    for(int i = 0; i < mCustomDataList.Count; i++)
+                    {
+                        _COMController.Write(mCustomDataList[i]);
+                    }
+                    mIsSendCustomData = false;
+                }
             }
             catch { }
             Monitor.Exit(mLock);
+        }
+
+        private byte[] getHexBytes(string hexString)
+        {
+            try
+            {
+                int length = hexString.Length;
+                var bytes = new byte[length / 2];
+                for (int i = 0; i < length; i += 2)
+                {
+                    bytes[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
+                }
+                return bytes;
+            }
+            catch {}
+            return null;
+        }
+
+        private string getHexString(byte[] datas)
+        {
+            try
+            {
+                string hexString = string.Empty;
+                hexString = string.Concat(Array.ConvertAll(datas, byt => byt.ToString("X2")));
+                return hexString;
+            }
+            catch { }
+            return "";           
         }
 
         #endregion

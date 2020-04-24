@@ -153,6 +153,9 @@
   <data name="Interval" xml:space="preserve">
     <value>Interval</value>
   </data>
+  <data name="Kraken_Setting" xml:space="preserve">
+    <value>Kraken Setting</value>
+  </data>
   <data name="Made" xml:space="preserve">
     <value>Made by Lich (lich426@gmail.com)</value>
   </data>

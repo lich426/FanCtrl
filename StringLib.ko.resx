@@ -153,6 +153,9 @@
   <data name="Interval" xml:space="preserve">
     <value>주기 설정</value>
   </data>
+  <data name="Kraken_Setting" xml:space="preserve">
+    <value>크라켄 설정</value>
+  </data>
   <data name="Made" xml:space="preserve">
     <value>Made by 똥고집 (lich426@gmail.com)</value>
   </data>

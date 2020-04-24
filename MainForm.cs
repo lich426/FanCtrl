@@ -18,6 +18,7 @@ namespace FanControl
         private List<Label> mControlLabelList = new List<Label>();
         
         private FanControlForm mFanControlForm = null;
+        private KrakenForm mKrakenForm = null;
 
         public MainForm()
         {
@@ -29,6 +30,7 @@ namespace FanControl
             mTrayIcon.Visible = true;
             mTrayIcon.MouseDoubleClick += onTrayIconDBClicked;
             mTrayIcon.ContextMenuStrip = mTrayMenuStrip;
+            //mKrakenButton.Visible = false;
 
             if (OptionManager.getInstance().read() == false)
             {
@@ -58,6 +60,7 @@ namespace FanControl
             HardwareManager.getInstance().start();
             this.createComponent();
             this.ActiveControl = mFanControlButton;
+            mKrakenButton.Visible = (HardwareManager.getInstance().getKrakenX() != null);
 
             ControlManager.getInstance().read();
             if (ControlManager.getInstance().checkData() == false)
@@ -76,6 +79,7 @@ namespace FanControl
             mControlGroupBox.Text = StringLib.Fan_control;
             mOptionButton.Text = StringLib.Option;
             mFanControlButton.Text = StringLib.Auto_Fan_Control;
+            mKrakenButton.Text = StringLib.Kraken_Setting;
             mMadeLabel.Text = StringLib.Made;
         }
 
@@ -85,6 +89,12 @@ namespace FanControl
             {
                 mFanControlForm.Close();
                 mFanControlForm = null;
+            }
+
+            if(mKrakenForm != null)
+            {
+                mKrakenForm.Close();
+                mKrakenForm = null;
             }
 
             this.Visible = false;
@@ -117,6 +127,12 @@ namespace FanControl
             {
                 mFanControlForm.Close();
                 mFanControlForm = null;
+            }
+
+            if(mKrakenForm != null)
+            {
+                mKrakenForm.Close();
+                mKrakenForm = null;
             }
 
             HardwareManager.getInstance().stop();
@@ -219,6 +235,7 @@ namespace FanControl
             // position
             mOptionButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 6;            
             mFanControlButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 6;
+            mKrakenButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 6;
             mMadeLabel.Top = mFanGroupBox.Top + mFanGroupBox.Height + 20;
             this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;
         }
@@ -329,6 +346,27 @@ namespace FanControl
             mFanControlForm.StartPosition = FormStartPosition.Manual;
             mFanControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
             mFanControlForm.Show(this);
+        }
+
+        private void mKrakenButton_Click(object sender, EventArgs e)
+        {
+            if(mKrakenForm != null)
+            {
+                if (mKrakenForm.IsDisposed == true)
+                {
+                    mKrakenForm = null;
+                }
+                else
+                {
+                    mKrakenForm.Focus();
+                    return;
+                }
+            }
+
+            mKrakenForm = new KrakenForm(HardwareManager.getInstance().getKrakenX());
+            mKrakenForm.StartPosition = FormStartPosition.Manual;
+            mKrakenForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
+            mKrakenForm.Show(this);
         }
     }
 }

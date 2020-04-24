@@ -21,10 +21,10 @@ namespace FanControl
     public class HardwareManager : IVisitor
     {
         // Singletone
-        private HardwareManager() { }
+        private HardwareManager(){}
         private static HardwareManager sManager = new HardwareManager();
         public static HardwareManager getInstance() { return sManager; }
-        
+
         // Start state
         private bool mIsStart = false;
 
@@ -44,6 +44,7 @@ namespace FanControl
 
         // NZXT Kraken
         private KrakenX mKrakenX = null;
+        public KrakenX getKrakenX() { return mKrakenX; }
 
         // Gigabyte
         private bool mIsGigabyte = false;
@@ -170,7 +171,10 @@ namespace FanControl
                     this.addChangeValue(pumpControl.getMinSpeed(), pumpControl);                    
                 }                
             }
-            catch { }
+            catch
+            {
+                mKrakenX = null;
+            }
 
             UpdateInterval = OptionManager.getInstance().Interval;
             mUpdateThreadState = true;

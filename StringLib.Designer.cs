@@ -169,6 +169,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Kraken Setting과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Kraken_Setting {
+            get {
+                return ResourceManager.GetString("Kraken_Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Made by Lich (lich426@gmail.com)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Made {

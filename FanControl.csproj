@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanControl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.3.0</ApplicationVersion>
+    <ApplicationVersion>1.0.4.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -229,6 +229,12 @@
     <Compile Include="FanControl\Hardware\Sensor\NZXTKrakenLiquidTemp.cs" />
     <Compile Include="FanControl\Hardware\Sensor\NZXTKrakenPumpSpeed.cs" />
     <Compile Include="FanControl\Option\StartupControl.cs" />
+    <Compile Include="KrakenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KrakenForm.Designer.cs">
+      <DependentUpon>KrakenForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -250,6 +256,9 @@
     </Compile>
     <EmbeddedResource Include="FanControlForm.resx">
       <DependentUpon>FanControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KrakenForm.resx">
+      <DependentUpon>KrakenForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

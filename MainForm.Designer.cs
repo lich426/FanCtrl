@@ -41,6 +41,7 @@
             this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mMadeLabel = new System.Windows.Forms.Label();
+            this.mKrakenButton = new System.Windows.Forms.Button();
             this.mTrayMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -132,12 +133,23 @@
             this.mMadeLabel.TabIndex = 7;
             this.mMadeLabel.Text = "Made by Lich (lich426@gmail.com)";
             // 
+            // mKrakenButton
+            // 
+            this.mKrakenButton.Location = new System.Drawing.Point(290, 71);
+            this.mKrakenButton.Name = "mKrakenButton";
+            this.mKrakenButton.Size = new System.Drawing.Size(136, 38);
+            this.mKrakenButton.TabIndex = 8;
+            this.mKrakenButton.Text = "Kraken Setting";
+            this.mKrakenButton.UseVisualStyleBackColor = true;
+            this.mKrakenButton.Click += new System.EventHandler(this.mKrakenButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(719, 117);
+            this.Controls.Add(this.mKrakenButton);
             this.Controls.Add(this.mMadeLabel);
             this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mFanControlButton);
@@ -169,6 +181,7 @@
         private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Label mMadeLabel;
+        private System.Windows.Forms.Button mKrakenButton;
     }
 }
 
