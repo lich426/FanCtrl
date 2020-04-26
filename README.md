@@ -3,6 +3,7 @@
 FanControl is a software that allows you to automatically control the fan speed on your PC.<br>
 Requires .NET framework 4.6 or higher.<br>
 Gigabyte board : App Center installation is required (https://www.gigabyte.com/Support/Utility/Motherboard)<br>
+NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
