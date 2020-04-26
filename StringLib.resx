@@ -144,6 +144,9 @@
   <data name="Fan_speed" xml:space="preserve">
     <value>Fan speed</value>
   </data>
+  <data name="Game" xml:space="preserve">
+    <value>Game</value>
+  </data>
   <data name="Graph" xml:space="preserve">
     <value>Graph</value>
   </data>
@@ -159,6 +162,12 @@
   <data name="Made" xml:space="preserve">
     <value>Made by Lich (lich426@gmail.com)</value>
   </data>
+  <data name="Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
   <data name="Not_Match" xml:space="preserve">
     <value>The hardware and Control.json file do not match!</value>
   </data>
@@ -168,11 +177,17 @@
   <data name="Option" xml:space="preserve">
     <value>Option</value>
   </data>
+  <data name="Performance" xml:space="preserve">
+    <value>Performance</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>Sensor</value>
+  </data>
+  <data name="Silence" xml:space="preserve">
+    <value>Silence</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>Start minimized</value>

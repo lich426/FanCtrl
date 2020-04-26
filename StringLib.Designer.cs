@@ -142,6 +142,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Game과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Game {
+            get {
+                return ResourceManager.GetString("Game", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Graph과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Graph {
@@ -187,6 +196,24 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Mode과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Mode {
+            get {
+                return ResourceManager.GetString("Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Normal과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Normal {
+            get {
+                return ResourceManager.GetString("Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   The hardware and Control.json file do not match!과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Not_Match {
@@ -214,6 +241,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Performance과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Performance {
+            get {
+                return ResourceManager.GetString("Performance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Remove과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Remove {
@@ -228,6 +264,15 @@ namespace FanControl {
         internal static string Sensor {
             get {
                 return ResourceManager.GetString("Sensor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Silence과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Silence {
+            get {
+                return ResourceManager.GetString("Silence", resourceCulture);
             }
         }
         

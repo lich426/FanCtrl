@@ -144,6 +144,9 @@
   <data name="Fan_speed" xml:space="preserve">
     <value>팬 속도</value>
   </data>
+  <data name="Game" xml:space="preserve">
+    <value>게임</value>
+  </data>
   <data name="Graph" xml:space="preserve">
     <value>그래프</value>
   </data>
@@ -159,6 +162,12 @@
   <data name="Made" xml:space="preserve">
     <value>Made by 똥고집 (lich426@gmail.com)</value>
   </data>
+  <data name="Mode" xml:space="preserve">
+    <value>모드</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>일반</value>
+  </data>
   <data name="Not_Match" xml:space="preserve">
     <value>하드웨어와 저장된 설정 파일(Config.json) 내용이 일치하지 않습니다!</value>
   </data>
@@ -168,11 +177,17 @@
   <data name="Option" xml:space="preserve">
     <value>옵션</value>
   </data>
+  <data name="Performance" xml:space="preserve">
+    <value>퍼포먼스</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>제거</value>
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>센서</value>
+  </data>
+  <data name="Silence" xml:space="preserve">
+    <value>사일런스</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>최소화 모드로 시작</value>

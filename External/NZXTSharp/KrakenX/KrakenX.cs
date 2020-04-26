@@ -478,13 +478,15 @@ namespace NZXTSharp.KrakenX
                 if(this.Type == NZXTDeviceType.KrakenX)
                 {
                     int temp = (int)Math.Round(mLastReport.Data[0] + (mLastReport.Data[1] * 0.1));
-                    mLastLiquidTemp = (temp != 0) ? temp : mLastLiquidTemp;
-
                     int pump = (int)(mLastReport.Data[4] << 8 | mLastReport.Data[5]);
-                    mLastPumpRPM = (pump != 0) ? pump : mLastPumpRPM;
-
                     int fan = (int)(mLastReport.Data[2] << 8 | mLastReport.Data[3]);
-                    mLastFanRPM = (fan != 0) ? fan : mLastFanRPM;
+
+                    if(temp > 0 && temp < 100 && pump > 0 && pump < 10000 && fan > 0 && fan < 10000)
+                    {
+                        mLastLiquidTemp = temp;
+                        mLastPumpRPM = pump;
+                        mLastFanRPM = fan;
+                    }
                 }
                 else
                 {

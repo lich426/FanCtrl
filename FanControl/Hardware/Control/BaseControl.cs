@@ -12,11 +12,14 @@ namespace FanControl
         // Value
         public int Value { get; set; }
 
+        public int NextValue { get; set; }
+
         public int LastValue { get; set; }
 
         public BaseControl()
         {
             Value = 0;
+            NextValue = 0;
             LastValue = 0;
         }
 

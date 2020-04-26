@@ -20,7 +20,8 @@ namespace FanControl
         private PointPairList mNowPoint = null;
         private LineItem mNowPointLineItem = null;
 
-        private List<ControlData> mControlDataList = null;
+        private int mModeIndex = 0;
+        private List<List<ControlData>> mControlDataList = new List<List<ControlData>>();
         private FanData mSelectedFanData = null;
 
         public FanControlForm()
@@ -28,9 +29,11 @@ namespace FanControl
             InitializeComponent();
             this.localizeComponent();
 
-            mDebugLabel.Visible = false;
-
-            mControlDataList = ControlManager.getInstance().getCloneControlDataList();
+            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(0));
+            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(1));
+            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(2));
+            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(3));
+            mModeIndex = ControlManager.getInstance().ModeIndex;
 
             this.initControl();
             this.initGraph();
@@ -40,6 +43,11 @@ namespace FanControl
         {
             this.Text = StringLib.Auto_Fan_Control;
             mEnableCheckBox.Text = StringLib.Enable_automatic_fan_control;
+            mModeGroupBox.Text = StringLib.Mode;
+            mNormalRadioButton.Text = StringLib.Normal;
+            mSilenceRadioButton.Text = StringLib.Silence;
+            mPerformanceRadioButton.Text = StringLib.Performance;
+            mGameRadioButton.Text = StringLib.Game;
             mSensorGroupBox.Text = StringLib.Sensor;
             mFanGroupBox.Text = StringLib.Fan;
             mAddButton.Text = StringLib.Add;
@@ -56,6 +64,41 @@ namespace FanControl
             HardwareManager hardwareManager = HardwareManager.getInstance();
 
             mEnableCheckBox.Checked = ControlManager.getInstance().IsEnable;
+
+            if (mModeIndex == 0)
+            {
+                mNormalRadioButton.Checked = true;
+                mSilenceRadioButton.Checked = false;
+                mPerformanceRadioButton.Checked = false;
+                mGameRadioButton.Checked = false;
+            }
+            else if (mModeIndex == 1)
+            {
+                mNormalRadioButton.Checked = false;
+                mSilenceRadioButton.Checked = true;
+                mPerformanceRadioButton.Checked = false;
+                mGameRadioButton.Checked = false;
+            }
+            else if (mModeIndex == 2)
+            {
+                mNormalRadioButton.Checked = false;
+                mSilenceRadioButton.Checked = false;
+                mPerformanceRadioButton.Checked = true;
+                mGameRadioButton.Checked = false;
+            }
+            else
+            {
+                mNormalRadioButton.Checked = false;
+                mSilenceRadioButton.Checked = false;
+                mPerformanceRadioButton.Checked = false;
+                mGameRadioButton.Checked = true;
+            }
+
+            mNormalRadioButton.Click += onRadioButtonClick;
+            mSilenceRadioButton.Click += onRadioButtonClick;
+            mPerformanceRadioButton.Click += onRadioButtonClick;
+            mGameRadioButton.Click += onRadioButtonClick;
+
             mSensorComboBox.SelectedIndexChanged += onSensorComboBoxIndexChanged;
 
             mFanListView.Columns.Add("MyColumn", -2, HorizontalAlignment.Center);
@@ -147,6 +190,50 @@ namespace FanControl
             mStepCheckBox.Visible = false;
             mHysLabel.Visible = false;
             mHysNumericUpDown.Visible = false;
+        }
+
+        private void onRadioButtonClick(object sender, EventArgs e)
+        {
+            int index = -1;
+            if(sender == mNormalRadioButton)            index = 0;
+            else if (sender == mSilenceRadioButton)     index = 1;
+            else if (sender == mPerformanceRadioButton) index = 2;
+            else                                         index = 3;
+            if (index == mModeIndex)
+                return;
+
+            mModeIndex = index;
+
+            if (mModeIndex == 0)
+            {
+                mNormalRadioButton.Checked = true;
+                mSilenceRadioButton.Checked = false;
+                mPerformanceRadioButton.Checked = false;
+                mGameRadioButton.Checked = false;
+            }
+            else if (mModeIndex == 1)
+            {
+                mNormalRadioButton.Checked = false;
+                mSilenceRadioButton.Checked = true;
+                mPerformanceRadioButton.Checked = false;
+                mGameRadioButton.Checked = false;
+            }
+            else if (mModeIndex == 2)
+            {
+                mNormalRadioButton.Checked = false;
+                mSilenceRadioButton.Checked = false;
+                mPerformanceRadioButton.Checked = true;
+                mGameRadioButton.Checked = false;
+            }
+            else
+            {
+                mNormalRadioButton.Checked = false;
+                mSilenceRadioButton.Checked = false;
+                mPerformanceRadioButton.Checked = false;
+                mGameRadioButton.Checked = true;
+            }
+
+            this.onSensorComboBoxIndexChanged(null, EventArgs.Empty);
         }
 
         private void onSensorComboBoxIndexChanged(object sender, EventArgs e)
@@ -289,54 +376,14 @@ namespace FanControl
             mNowPoint[0].X = (double)sensor.Value;
             mNowPoint[0].Y = (double)control.LastValue;
             mGraph.Refresh();
-
-            if(mDebugLabel.Visible == true)
-            {
-                var items = mFanListView.SelectedItems;
-                if (items == null || items.Count == 0)
-                    return;
-
-                var controlManager = ControlManager.getInstance();
-                var item = items[0];
-                int sensorIndex = mSensorComboBox.SelectedIndex;
-                ControlData controlData = null;
-                for (int i = 0; i < ControlManager.getInstance().Count(); i++)
-                {
-                    var tempControlData = ControlManager.getInstance().getControlData(i);
-                    if (tempControlData == null)
-                        return;
-
-                    if (tempControlData.Index == sensorIndex)
-                    {
-                        controlData = tempControlData;
-                        break;
-                    }
-                }
-                if (controlData == null)
-                    return;
-
-                FanData fanData = null;
-                for (int i = 0; i < controlData.FanDataList.Count; i++)
-                {
-                    var tempFanData = controlData.FanDataList[i];
-                    if (tempFanData.Name.Equals(item.Text) == true)
-                    {
-                        fanData = tempFanData;
-                        break;
-                    }
-                }
-                if (fanData == null)
-                    return;
-                mDebugLabel.Text = "Last temp : " + fanData.LastChangedTemp.ToString();
-            }
         }
 
         private ControlData getControlData(int sensorIndex)
         {
             ControlData controlData = null;
-            for (int i = 0; i < mControlDataList.Count; i++)
+            for (int i = 0; i < mControlDataList[mModeIndex].Count; i++)
             {
-                var tempControlData = mControlDataList[i];
+                var tempControlData = mControlDataList[mModeIndex][i];
                 if (tempControlData.Index == sensorIndex)
                 {
                     controlData = tempControlData;
@@ -446,7 +493,7 @@ namespace FanControl
             if(controlData == null)
             {
                 controlData = new ControlData(sensorIndex, sensor.getName());
-                mControlDataList.Add(controlData);
+                mControlDataList[mModeIndex].Add(controlData);
             }
 
             mFanListView.BeginUpdate();
@@ -491,14 +538,17 @@ namespace FanControl
         {
             for (int i = 0; i < mControlDataList.Count; i++)
             {
-                for (int j = 0; j < mControlDataList[i].FanDataList.Count; j++)
+                for (int j = 0; j < mControlDataList[i].Count; j++)
                 {
-                    mControlDataList[i].FanDataList[j].LastChangedTemp = 0;
-                    mControlDataList[i].FanDataList[j].LastChangedValue = 0;
+                    for (int k = 0; k < mControlDataList[i][j].FanDataList.Count; k++)
+                    {
+                        mControlDataList[i][j].FanDataList[k].LastChangedTemp = 0;
+                        mControlDataList[i][j].FanDataList[k].LastChangedValue = 0;
+                    }
                 }
+                ControlManager.getInstance().setControlDataList(i, mControlDataList[i]);
             }
-
-            ControlManager.getInstance().setControlDataList(mControlDataList);
+            ControlManager.getInstance().ModeIndex = mModeIndex;
             ControlManager.getInstance().IsEnable = mEnableCheckBox.Checked;
             ControlManager.getInstance().write();
         }

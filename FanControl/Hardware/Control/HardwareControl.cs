@@ -45,7 +45,8 @@ namespace FanControl
         public override int setSpeed(int value)
         {
             mSensor.Control.SetSoftware((float)value);
-            LastValue = (int)value;
+            Value = value;
+            LastValue = value;
             return value;
         }
     }

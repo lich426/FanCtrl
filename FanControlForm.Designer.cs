@@ -45,17 +45,22 @@
             this.mOKButton = new System.Windows.Forms.Button();
             this.mApplyButton = new System.Windows.Forms.Button();
             this.mHysNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.mDebugLabel = new System.Windows.Forms.Label();
+            this.mModeGroupBox = new System.Windows.Forms.GroupBox();
+            this.mNormalRadioButton = new System.Windows.Forms.RadioButton();
+            this.mSilenceRadioButton = new System.Windows.Forms.RadioButton();
+            this.mPerformanceRadioButton = new System.Windows.Forms.RadioButton();
+            this.mGameRadioButton = new System.Windows.Forms.RadioButton();
             this.mSensorGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).BeginInit();
+            this.mModeGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // mEnableCheckBox
             // 
             this.mEnableCheckBox.AutoSize = true;
-            this.mEnableCheckBox.Location = new System.Drawing.Point(15, 17);
+            this.mEnableCheckBox.Location = new System.Drawing.Point(19, 29);
             this.mEnableCheckBox.Name = "mEnableCheckBox";
             this.mEnableCheckBox.Size = new System.Drawing.Size(185, 16);
             this.mEnableCheckBox.TabIndex = 0;
@@ -65,7 +70,7 @@
             // mSensorGroupBox
             // 
             this.mSensorGroupBox.Controls.Add(this.mSensorComboBox);
-            this.mSensorGroupBox.Location = new System.Drawing.Point(12, 49);
+            this.mSensorGroupBox.Location = new System.Drawing.Point(12, 61);
             this.mSensorGroupBox.Name = "mSensorGroupBox";
             this.mSensorGroupBox.Size = new System.Drawing.Size(208, 51);
             this.mSensorGroupBox.TabIndex = 1;
@@ -87,7 +92,7 @@
             this.mFanGroupBox.Controls.Add(this.mAddButton);
             this.mFanGroupBox.Controls.Add(this.mFanListView);
             this.mFanGroupBox.Controls.Add(this.mFanComboBox);
-            this.mFanGroupBox.Location = new System.Drawing.Point(12, 106);
+            this.mFanGroupBox.Location = new System.Drawing.Point(12, 118);
             this.mFanGroupBox.Name = "mFanGroupBox";
             this.mFanGroupBox.Size = new System.Drawing.Size(208, 210);
             this.mFanGroupBox.TabIndex = 2;
@@ -140,7 +145,7 @@
             this.mGraphGroupBox.Controls.Add(this.mHysLabel);
             this.mGraphGroupBox.Controls.Add(this.mStepCheckBox);
             this.mGraphGroupBox.Controls.Add(this.mGraph);
-            this.mGraphGroupBox.Location = new System.Drawing.Point(227, 49);
+            this.mGraphGroupBox.Location = new System.Drawing.Point(227, 61);
             this.mGraphGroupBox.Name = "mGraphGroupBox";
             this.mGraphGroupBox.Size = new System.Drawing.Size(493, 267);
             this.mGraphGroupBox.TabIndex = 0;
@@ -184,7 +189,7 @@
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(585, 322);
+            this.mOKButton.Location = new System.Drawing.Point(585, 334);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(135, 33);
             this.mOKButton.TabIndex = 4;
@@ -194,7 +199,7 @@
             // 
             // mApplyButton
             // 
-            this.mApplyButton.Location = new System.Drawing.Point(444, 322);
+            this.mApplyButton.Location = new System.Drawing.Point(444, 334);
             this.mApplyButton.Name = "mApplyButton";
             this.mApplyButton.Size = new System.Drawing.Size(135, 33);
             this.mApplyButton.TabIndex = 5;
@@ -204,27 +209,75 @@
             // 
             // mHysNumericUpDown
             // 
-            this.mHysNumericUpDown.Location = new System.Drawing.Point(608, 46);
+            this.mHysNumericUpDown.Location = new System.Drawing.Point(608, 58);
             this.mHysNumericUpDown.Name = "mHysNumericUpDown";
             this.mHysNumericUpDown.Size = new System.Drawing.Size(38, 21);
             this.mHysNumericUpDown.TabIndex = 5;
             // 
-            // mDebugLabel
+            // mModeGroupBox
             // 
-            this.mDebugLabel.AutoSize = true;
-            this.mDebugLabel.Location = new System.Drawing.Point(412, 20);
-            this.mDebugLabel.Name = "mDebugLabel";
-            this.mDebugLabel.Size = new System.Drawing.Size(38, 12);
-            this.mDebugLabel.TabIndex = 6;
-            this.mDebugLabel.Text = "label1";
+            this.mModeGroupBox.Controls.Add(this.mGameRadioButton);
+            this.mModeGroupBox.Controls.Add(this.mPerformanceRadioButton);
+            this.mModeGroupBox.Controls.Add(this.mSilenceRadioButton);
+            this.mModeGroupBox.Controls.Add(this.mNormalRadioButton);
+            this.mModeGroupBox.Location = new System.Drawing.Point(227, 9);
+            this.mModeGroupBox.Name = "mModeGroupBox";
+            this.mModeGroupBox.Size = new System.Drawing.Size(493, 46);
+            this.mModeGroupBox.TabIndex = 6;
+            this.mModeGroupBox.TabStop = false;
+            this.mModeGroupBox.Text = "Mode";
+            // 
+            // mNormalRadioButton
+            // 
+            this.mNormalRadioButton.AutoSize = true;
+            this.mNormalRadioButton.Location = new System.Drawing.Point(41, 20);
+            this.mNormalRadioButton.Name = "mNormalRadioButton";
+            this.mNormalRadioButton.Size = new System.Drawing.Size(64, 16);
+            this.mNormalRadioButton.TabIndex = 0;
+            this.mNormalRadioButton.TabStop = true;
+            this.mNormalRadioButton.Text = "Normal";
+            this.mNormalRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // mSilenceRadioButton
+            // 
+            this.mSilenceRadioButton.AutoSize = true;
+            this.mSilenceRadioButton.Location = new System.Drawing.Point(146, 20);
+            this.mSilenceRadioButton.Name = "mSilenceRadioButton";
+            this.mSilenceRadioButton.Size = new System.Drawing.Size(65, 16);
+            this.mSilenceRadioButton.TabIndex = 1;
+            this.mSilenceRadioButton.TabStop = true;
+            this.mSilenceRadioButton.Text = "Silence";
+            this.mSilenceRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // mPerformanceRadioButton
+            // 
+            this.mPerformanceRadioButton.AutoSize = true;
+            this.mPerformanceRadioButton.Location = new System.Drawing.Point(255, 20);
+            this.mPerformanceRadioButton.Name = "mPerformanceRadioButton";
+            this.mPerformanceRadioButton.Size = new System.Drawing.Size(95, 16);
+            this.mPerformanceRadioButton.TabIndex = 2;
+            this.mPerformanceRadioButton.TabStop = true;
+            this.mPerformanceRadioButton.Text = "Performance";
+            this.mPerformanceRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // mGameRadioButton
+            // 
+            this.mGameRadioButton.AutoSize = true;
+            this.mGameRadioButton.Location = new System.Drawing.Point(384, 20);
+            this.mGameRadioButton.Name = "mGameRadioButton";
+            this.mGameRadioButton.Size = new System.Drawing.Size(57, 16);
+            this.mGameRadioButton.TabIndex = 3;
+            this.mGameRadioButton.TabStop = true;
+            this.mGameRadioButton.Text = "Game";
+            this.mGameRadioButton.UseVisualStyleBackColor = true;
             // 
             // FanControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(732, 364);
-            this.Controls.Add(this.mDebugLabel);
+            this.ClientSize = new System.Drawing.Size(732, 375);
+            this.Controls.Add(this.mModeGroupBox);
             this.Controls.Add(this.mHysNumericUpDown);
             this.Controls.Add(this.mApplyButton);
             this.Controls.Add(this.mOKButton);
@@ -244,6 +297,8 @@
             this.mGraphGroupBox.ResumeLayout(false);
             this.mGraphGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).EndInit();
+            this.mModeGroupBox.ResumeLayout(false);
+            this.mModeGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -266,6 +321,10 @@
         private System.Windows.Forms.Button mApplyButton;
         private System.Windows.Forms.NumericUpDown mHysNumericUpDown;
         private System.Windows.Forms.Label mHysLabel;
-        private System.Windows.Forms.Label mDebugLabel;
+        private System.Windows.Forms.GroupBox mModeGroupBox;
+        private System.Windows.Forms.RadioButton mGameRadioButton;
+        private System.Windows.Forms.RadioButton mPerformanceRadioButton;
+        private System.Windows.Forms.RadioButton mSilenceRadioButton;
+        private System.Windows.Forms.RadioButton mNormalRadioButton;
     }
 }

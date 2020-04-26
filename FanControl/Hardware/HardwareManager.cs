@@ -15,6 +15,7 @@ using Gigabyte.Engine.GraphicsCard.Amd;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Gigabyte.EnvironmentControl.Common.CoolingDevice.Fan;
+using System.Collections;
 
 namespace FanControl
 {
@@ -625,31 +626,6 @@ namespace FanControl
         private void onSetGigabyteFanSpeed(int index, int value)
         {
             mGigabyteSmartGuardianFanControlModule.SetCalibrationPwm(index, value);
-
-            /*
-            var config = new SmartFanControlConfig();
-            mGigabyteSmartGuardianFanControlModule.Get(index, ref config);
-
-            double pwm = (double)value;
-            pwm = Math.Round(pwm / 100.0f * 255.0f);
-            config.FanConfig.StartPWM = (byte)pwm;
-
-            config.FanConfig.Slope = 0;
-            config.FanConfig.TemperatureLimitValueOfFanStart = 100;
-            config.FanConfig.TemperatureLimitValueOfFanFullSpeed = 100;
-
-            if(config.ExtraVectorConfigs.Count == 3)
-            {
-                config.ExtraVectorConfigs[0].Slope = 0;
-                config.ExtraVectorConfigs[0].StartLimit = 100;
-                config.ExtraVectorConfigs[1].Slope = 0;
-                config.ExtraVectorConfigs[1].StartLimit = 100;
-                config.ExtraVectorConfigs[2].Slope = 0;
-                config.ExtraVectorConfigs[2].StartLimit = 100;
-            }
-
-            mGigabyteSmartGuardianFanControlModule.Set(index, config);
-            */
         }
 
         private void onUpdateThread()
@@ -733,9 +709,12 @@ namespace FanControl
                 var controlManager = ControlManager.getInstance();
                 if (controlManager.IsEnable == true && isExistChange == false)
                 {
-                    for (int i = 0; i < controlManager.Count(); i++)
+                    var controlDictionary = new Dictionary<int, BaseControl>();
+                    int modeIndex = controlManager.ModeIndex;
+
+                    for (int i = 0; i < controlManager.Count(modeIndex); i++)
                     {
-                        var controlData = controlManager.getControlData(i);
+                        var controlData = controlManager.getControlData(modeIndex, i);
                         if (controlData == null)
                             break;
 
@@ -749,12 +728,26 @@ namespace FanControl
                             int percent = fanData.getValue(temperature);
 
                             var control = mControlList[controlIndex];
-                            if (control.Value != percent)
+                           
+                            if (controlDictionary.ContainsKey(controlIndex) == false)
                             {
-                                control.setSpeed(percent);
-                                Thread.Sleep(100);
+                                controlDictionary[controlIndex] = control;
+                                control.NextValue = percent;
                             }
+                            else
+                            {
+                                control.NextValue = (control.NextValue >= percent) ? control.NextValue : percent;
+                            }                            
                         }
+                    }
+
+                    foreach(var keyPair in controlDictionary)
+                    {
+                        var control = keyPair.Value;
+                        if (control.Value == control.NextValue)
+                            continue;
+                        control.setSpeed(control.NextValue);
+                        Thread.Sleep(10);
                     }
                 }
 

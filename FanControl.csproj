@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanControl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.4.0</ApplicationVersion>
+    <ApplicationVersion>1.0.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -91,16 +91,19 @@
     <Reference Include="Gigabyte">
       <HintPath>dll\Gigabyte.dll</HintPath>
     </Reference>
-    <Reference Include="Gigabyte.Engine">
+    <Reference Include="Gigabyte.Engine, Version=8.0.8.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Gigabyte.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="Gigabyte.Engine.EnvironmentControl">
+    <Reference Include="Gigabyte.Engine.EnvironmentControl, Version=8.0.8.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Gigabyte.Engine.EnvironmentControl.dll</HintPath>
     </Reference>
     <Reference Include="Gigabyte.Engine.GraphicsCard">
       <HintPath>dll\Gigabyte.Engine.GraphicsCard.dll</HintPath>
     </Reference>
-    <Reference Include="Gigabyte.EnvironmentControl.Common">
+    <Reference Include="Gigabyte.EnvironmentControl.Common, Version=8.0.6.12, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Gigabyte.EnvironmentControl.Common.dll</HintPath>
     </Reference>
     <Reference Include="Gigabyte.GraphicsCard">
