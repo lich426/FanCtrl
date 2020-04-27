@@ -33,6 +33,7 @@ namespace FanControl
         private object mLock = new object();
 
         // Mutex
+        private bool mIsBusLock = false;
         private Mutex mISABusMutex = null;
         private Mutex mSMBusMutex = null;
         private Mutex mPCIMutex = null;
@@ -101,18 +102,6 @@ namespace FanControl
             ////////////////////////// LibreHardwareMonitor //////////////////////////
             if(mIsGigabyte == false)
             {
-                string mutexName = "Global\\Access_SMBUS.HTP.Method";
-                this.createMutex(mutexName, ref mSMBusMutex);
-
-                mutexName = "Global\\Access_PCI";
-                this.createMutex(mutexName, ref mPCIMutex);
-
-                mutexName = "Global\\Access_EC";
-                this.createMutex(mutexName, ref mECMutex);
-
-                mutexName = "Global\\Access_APIC_Clk_Measure";
-                this.createMutex(mutexName, ref mAPICMutex);
-
                 mComputer = new Computer();
                 mComputer.IsCpuEnabled = true;
                 mComputer.IsGpuEnabled = true;
@@ -258,18 +247,6 @@ namespace FanControl
                 mPCIMutex = null;
             }
 
-            if (mECMutex != null)
-            {
-                mECMutex.Close();
-                mECMutex = null;
-            }
-
-            if (mAPICMutex != null)
-            {
-                mAPICMutex.Close();
-                mAPICMutex = null;
-            }
-
             Monitor.Exit(mLock);
         }
 
@@ -290,19 +267,19 @@ namespace FanControl
             try
             {
                 string mutexName = "Global\\Access_ISABUS.HTP.Method";
-                this.createMutex(mutexName, ref mISABusMutex);
+                this.createBusMutex(mutexName, ref mISABusMutex);
 
                 mutexName = "Global\\Access_SMBUS.HTP.Method";
-                this.createMutex(mutexName, ref mSMBusMutex);
+                this.createBusMutex(mutexName, ref mSMBusMutex);
 
                 mutexName = "Global\\Access_PCI";
-                this.createMutex(mutexName, ref mPCIMutex);
+                this.createBusMutex(mutexName, ref mPCIMutex);
 
                 mutexName = "Global\\Access_EC";
-                this.createMutex(mutexName, ref mECMutex);
+                this.createBusMutex(mutexName, ref mECMutex);
 
                 mutexName = "Global\\Access_APIC_Clk_Measure";
-                this.createMutex(mutexName, ref mAPICMutex);
+                this.createBusMutex(mutexName, ref mAPICMutex);
 
                 var controller = new EngineServiceController("EasyTuneEngineService");
                 if(controller.IsInstall() == false)
@@ -325,6 +302,8 @@ namespace FanControl
                     return;
                 }
 
+                this.lockBus();
+
                 mGigabyteGraphicsCardControlModule = new GraphicsCardControlModule();
                 if(mGigabyteGraphicsCardControlModule.AmdGpuCount > 0)
                 {
@@ -341,6 +320,8 @@ namespace FanControl
                 mGigabyteSmartGuardianFanControlModule = new SmartGuardianFanControlModule();
                 var temperatureList = new List<float>();
                 mGigabyteSmartGuardianFanControlModule.GetHardwareMonitorDatas(ref temperatureList, ref mGigabyteFanSpeedList);
+
+                this.unlockBus();
 
                 mIsGigabyte = true;
             }
@@ -413,7 +394,7 @@ namespace FanControl
             mIsGigabyte = false;
         }
 
-        private void createMutex(string mutexName, ref Mutex mutex)
+        private void createBusMutex(string mutexName, ref Mutex mutex)
         {
             try
             {
@@ -434,12 +415,38 @@ namespace FanControl
             }
         }
 
+        private void lockBus()
+        {
+            if (mIsBusLock == true)
+                return;
+            mISABusMutex.WaitOne();
+            mSMBusMutex.WaitOne();
+            mPCIMutex.WaitOne();
+            mECMutex.WaitOne();
+            mAPICMutex.WaitOne();
+            mIsBusLock = true;
+        }
+
+        private void unlockBus()
+        {
+            if (mIsBusLock == false)
+                return;
+            mISABusMutex.ReleaseMutex();
+            mSMBusMutex.ReleaseMutex();
+            mPCIMutex.ReleaseMutex();
+            mECMutex.ReleaseMutex();
+            mAPICMutex.ReleaseMutex();
+            mIsBusLock = false;
+        }
+
         private void createTemp()
         {
             if(mIsGigabyte == true)
             {
+                this.lockBus();
                 var pHwMonitoredDataList = new HardwareMonitoredDataCollection();
                 mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Temperature, ref pHwMonitoredDataList);
+                this.unlockBus();
 
                 int num = 2;
                 for(int i = 0; i < pHwMonitoredDataList.Count; i++)
@@ -788,7 +795,9 @@ namespace FanControl
 
         private void onSetGigabyteFanSpeed(int index, int value)
         {
+            this.lockBus();
             mGigabyteSmartGuardianFanControlModule.SetCalibrationPwm(index, value);
+            this.unlockBus();
         }
 
         private void onUpdateThread()
@@ -818,17 +827,20 @@ namespace FanControl
 
                 if (mIsGigabyte == true)
                 {
+                    this.lockBus();
                     var tempDataList = new HardwareMonitoredDataCollection();
                     mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Temperature, ref tempDataList);
+                    
+                    var fanDataList = new HardwareMonitoredDataCollection();
+                    mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Fan, ref fanDataList);
+                    this.unlockBus();
+
                     for (int i = 0; i < tempDataList.Count; i++)
                     {
                         mGigabyteTemperatureList[i] = tempDataList[i].Value;
                     }
 
-                    var fanDataList = new HardwareMonitoredDataCollection();
-                    mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Fan, ref fanDataList);
-
-                    for(int i = 0; i < fanDataList.Count; i++)
+                    for (int i = 0; i < fanDataList.Count; i++)
                     {
                         mGigabyteFanSpeedList[i] = fanDataList[i].Value;
                     }
