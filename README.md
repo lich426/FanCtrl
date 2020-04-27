@@ -5,8 +5,8 @@ Requires .NET framework 4.6 or higher.<br>
 Gigabyte board : App Center installation is required (https://www.gigabyte.com/Support/Utility/Motherboard)<br>
 NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 
-(https://github.com/lich426/FanControl/blob/master/img/1.png)
-(https://github.com/lich426/FanControl/blob/master/img/2.png)
+[![FanControl](https://github.com/lich426/FanControl/blob/master/img/1.png)]
+[![FanControl](https://github.com/lich426/FanControl/blob/master/img/2.png)]
 
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
