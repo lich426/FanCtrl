@@ -26,15 +26,12 @@ namespace FanControl
         // Value
         public int Value { get; set; }
 
+        public string Name { get; set; }
+
         public BaseSensor(SENSOR_TYPE type)
         {
             Type = type;
             Value = 0;
-        }
-
-        public virtual string getName()
-        {
-            return "";
         }
 
         public virtual string getString()

@@ -14,11 +14,7 @@ namespace FanControl
         public NZXTKrakenFanControl(KrakenX krakenX) : base()
         {
             mKrakenX = krakenX;
-        }
-
-        public override string getName()
-        {
-            return "NZXT Kraken Fan";
+            Name = "NZXT Kraken Fan";
         }
 
         public override void update()

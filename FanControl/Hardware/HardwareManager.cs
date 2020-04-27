@@ -176,6 +176,17 @@ namespace FanControl
             {
                 mKrakenX = null;
             }
+            Monitor.Exit(mLock);
+        }
+
+        public void startUpdate()
+        {
+            Monitor.Enter(mLock);
+            if (mIsStart == false)
+            {
+                Monitor.Exit(mLock);
+                return;
+            }
 
             UpdateInterval = OptionManager.getInstance().Interval;
             mUpdateThreadState = true;
@@ -429,37 +440,90 @@ namespace FanControl
             {
                 var pHwMonitoredDataList = new HardwareMonitoredDataCollection();
                 mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Temperature, ref pHwMonitoredDataList);
+
+                int num = 2;
                 for(int i = 0; i < pHwMonitoredDataList.Count; i++)
                 {
-                    var sensor = new GigabyteTemp(pHwMonitoredDataList[i].Title, i);
+                    string name = pHwMonitoredDataList[i].Title;
+                    if (this.isExistTemp(name) == true)
+                    {
+                        name = name + " #" + num++;
+                    }
+                    var sensor = new GigabyteTemp(name, i);
                     mSensorList.Add(sensor);
+
                     mGigabyteTemperatureList.Add(pHwMonitoredDataList[i].Value);
                 }
 
-                for(int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
+                num = 2;
+                for (int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
                 {
-                    var sensor = new GigabyteAmdGpuTemp(mGigabyteAmdRadeonGraphicsModuleList[i]);
+                    string name = mGigabyteAmdRadeonGraphicsModuleList[i].ProductName;
+                    if (this.isExistTemp(name) == true)
+                    {
+                        name = name + " #" + num++;
+                    }
+                    var sensor = new GigabyteAmdGpuTemp(name, mGigabyteAmdRadeonGraphicsModuleList[i]);
                     mSensorList.Add(sensor);
                 }
 
+                num = 2;
                 for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
                 {
-                    var sensor = new GigabyteNvidiaGpuTemp(mGigabyteNvidiaGeforceGraphicsModuleList[i]);
+                    string name = mGigabyteNvidiaGeforceGraphicsModuleList[i].ProductName;
+                    if (this.isExistTemp(name) == true)
+                    {
+                        name = name + " #" + num++;
+                    }
+                    var sensor = new GigabyteNvidiaGpuTemp(name, mGigabyteNvidiaGeforceGraphicsModuleList[i]);
                     mSensorList.Add(sensor);
                 }
                 return;
             }
 
+            int cpuNum = 2;
+            int gpuAmdNum = 2;
+            int gpuNvidiaNum = 2;
             var hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
-                if (hardwareList[i].HardwareType == HardwareType.Cpu ||
-                    hardwareList[i].HardwareType == HardwareType.GpuAmd ||
-                    hardwareList[i].HardwareType == HardwareType.GpuNvidia)
+                if (hardwareList[i].HardwareType == HardwareType.Cpu)
                 {
-                    var sensor = new HardwareTemp(hardwareList[i]);
-                    mSensorList.Add(sensor);
                     mHardwareList.Add(hardwareList[i]);
+
+                    string name = hardwareList[i].Name;
+                    if (this.isExistTemp(name) == true)
+                    {
+                        name = name + " #" + cpuNum++;
+                    }
+                    var sensor = new HardwareTemp(hardwareList[i], name);
+                    mSensorList.Add(sensor);                    
+                }
+
+                else if (hardwareList[i].HardwareType == HardwareType.GpuAmd)
+                {
+                    mHardwareList.Add(hardwareList[i]);
+
+                    string name = hardwareList[i].Name;
+                    if (this.isExistTemp(name) == true)
+                    {
+                        name = name + " #" + gpuAmdNum++;
+                    }
+                    var sensor = new HardwareTemp(hardwareList[i], name);
+                    mSensorList.Add(sensor);
+                }
+
+                else if (hardwareList[i].HardwareType == HardwareType.GpuNvidia)
+                {
+                    mHardwareList.Add(hardwareList[i]);
+
+                    string name = hardwareList[i].Name;
+                    if (this.isExistTemp(name) == true)
+                    {
+                        name = name + " #" + gpuNvidiaNum++;
+                    }
+                    var sensor = new HardwareTemp(hardwareList[i], name);
+                    mSensorList.Add(sensor);
                 }
             }
         }
@@ -468,6 +532,7 @@ namespace FanControl
         {
             if (mIsGigabyte == true)
             {
+                int num = 2;
                 for (int i = 0; i < mGigabyteSmartGuardianFanControlModule.FanControlCount; i++)
                 {
                     string name;
@@ -475,25 +540,30 @@ namespace FanControl
                     if (name.Equals("PCH") == true)
                         continue;
 
+                    if (this.isExistFan(name) == true)
+                    {
+                        name = name + " #" + num++;
+                    }
                     var fan = new GigabyteFanSpeed(name, i);
                     mFanList.Add(fan);
                 }
 
-                int num = 1;
+                int gpuNum = 1;
                 for (int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
                 {
-                    var fan = new GigabyteAmdGpuFanSpeed(mGigabyteAmdRadeonGraphicsModuleList[i], num++);
+                    var fan = new GigabyteAmdGpuFanSpeed(mGigabyteAmdRadeonGraphicsModuleList[i], gpuNum++);
                     mFanList.Add(fan);
                 }
-
                 for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
                 {
-                    var fan = new GigabyteNvidiaFanSpeed(mGigabyteNvidiaGeforceGraphicsModuleList[i], num++);
+                    var fan = new GigabyteNvidiaFanSpeed(mGigabyteNvidiaGeforceGraphicsModuleList[i], gpuNum++);
                     mFanList.Add(fan);
                 }
                 return;
             }
 
+            int fanNum = 1;
+            int otherFanNum = 2;
             var hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
@@ -501,11 +571,25 @@ namespace FanControl
                 var sensorList = hardwareList[i].Sensors;
                 for (int j = 0; j < sensorList.Length; j++)
                 {
-                    if (sensorList[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Fan)
+                    if (sensorList[j].SensorType != LibreHardwareMonitor.Hardware.SensorType.Fan)
+                        continue;
+
+                    isExist = true;
+
+                    if (hardwareList[i].HardwareType == HardwareType.SuperIO)
                     {
-                        var fan = new HardwareFanSpeed(sensorList[j]);
+                        var fan = new HardwareFanSpeed(sensorList[j], "Fan #" + fanNum++);
                         mFanList.Add(fan);
-                        isExist = true;
+                    }
+                    else
+                    {
+                        string name = sensorList[j].Name;
+                        if (this.isExistFan(name) == true)
+                        {
+                            name = name + " #" + otherFanNum++;
+                        }
+                        var fan = new HardwareFanSpeed(sensorList[j], name);
+                        mFanList.Add(fan);
                     }
                 }
                 if(isExist == true)
@@ -520,11 +604,25 @@ namespace FanControl
                     var subSensorList = subHardwareList[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
-                        if (subSensorList[k].SensorType == LibreHardwareMonitor.Hardware.SensorType.Fan)
+                        if (subSensorList[k].SensorType != LibreHardwareMonitor.Hardware.SensorType.Fan)
+                            continue;
+
+                        isExist2 = true;
+
+                        if (subHardwareList[j].HardwareType == HardwareType.SuperIO)
                         {
-                            var fan = new HardwareFanSpeed(subSensorList[k]);
+                            var fan = new HardwareFanSpeed(subSensorList[k], "Fan #" + fanNum++);
                             mFanList.Add(fan);
-                            isExist2 = true;
+                        }
+                        else
+                        {
+                            string name = subSensorList[k].Name;
+                            if (this.isExistFan(name) == true)
+                            {
+                                name = name + " #" + otherFanNum++;
+                            }
+                            var fan = new HardwareFanSpeed(subSensorList[k], name);
+                            mFanList.Add(fan);
                         }
                     }
                     if(isExist2 == true)
@@ -533,18 +631,24 @@ namespace FanControl
                     }
                 }
             }
-        }
+        }        
 
         private void createControl()
         {
             if (mIsGigabyte == true)
             {
+                int num = 2;
                 for (int i = 0; i < mGigabyteSmartGuardianFanControlModule.FanControlCount; i++)
                 {
                     string name;
                     mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out name);
                     if (name.Equals("PCH") == true)
                         continue;
+
+                    if (this.isExistControl(name) == true)
+                    {
+                        name = name + " #" + num++;
+                    }
 
                     var config = new SmartFanControlConfig();
                     mGigabyteSmartGuardianFanControlModule.Get(i, ref config);
@@ -557,18 +661,17 @@ namespace FanControl
                     mControlList.Add(control);
                 }
 
-                int num = 1;
+                int gpuNum = 1;
                 for (int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
                 {
-                    var control = new GigabyteAmdGpuFanControl(mGigabyteAmdRadeonGraphicsModuleList[i], num++);
+                    var control = new GigabyteAmdGpuFanControl(mGigabyteAmdRadeonGraphicsModuleList[i], gpuNum++);
                     mControlList.Add(control);
 
                     this.addChangeValue(control.getMinSpeed(), control);
                 }
-
                 for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
                 {
-                    var control = new GigabyteNvidiaGpuFanControl(mGigabyteNvidiaGeforceGraphicsModuleList[i], num++);
+                    var control = new GigabyteNvidiaGpuFanControl(mGigabyteNvidiaGeforceGraphicsModuleList[i], gpuNum++);
                     mControlList.Add(control);
 
                     this.addChangeValue(control.getMinSpeed(), control);
@@ -576,6 +679,8 @@ namespace FanControl
                 return;
             }
 
+            int fanNum = 1;
+            int otherFanNum = 2;
             var hardwareList = mComputer.Hardware;
             for (int i = 0; i < hardwareList.Length; i++)
             {
@@ -583,14 +688,25 @@ namespace FanControl
                 var sensorList = hardwareList[i].Sensors;
                 for (int j = 0; j < sensorList.Length; j++)
                 {
-                    if (sensorList[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Control)
+                    if (sensorList[j].SensorType != LibreHardwareMonitor.Hardware.SensorType.Control || sensorList[j].Control == null)
+                        continue;
+
+                    isExist = true;
+
+                    if (hardwareList[i].HardwareType == HardwareType.SuperIO)
                     {
-                        if (sensorList[j].Control != null)
+                        var control = new HardwareControl(sensorList[j], "Fan Control #" + fanNum++);
+                        mControlList.Add(control);
+                    }
+                    else
+                    {
+                        string name = sensorList[j].Name;
+                        if (this.isExistControl(name) == true)
                         {
-                            var control = new HardwareControl(sensorList[j]);
-                            mControlList.Add(control);
-                            isExist = true;
+                            name = name + " #" + otherFanNum++;
                         }
+                        var control = new HardwareControl(sensorList[j], name);
+                        mControlList.Add(control);
                     }
                 }
                 if(isExist == true)
@@ -605,14 +721,25 @@ namespace FanControl
                     var subSensorList = subHardwareList[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
-                        if (subSensorList[k].SensorType == LibreHardwareMonitor.Hardware.SensorType.Control)
+                        if (subSensorList[k].SensorType != LibreHardwareMonitor.Hardware.SensorType.Control || subSensorList[k].Control == null)
+                            continue;
+
+                        isExist2 = true;
+
+                        if (subHardwareList[j].HardwareType == HardwareType.SuperIO)
                         {
-                            if(subSensorList[k].Control != null)
+                            var control = new HardwareControl(subSensorList[k], "Fan Control #" + fanNum++);
+                            mControlList.Add(control);
+                        }
+                        else
+                        {
+                            string name = subSensorList[k].Name;
+                            if (this.isExistControl(name) == true)
                             {
-                                var control = new HardwareControl(subSensorList[k]);
-                                mControlList.Add(control);
-                                isExist2 = true;
+                                name = name + " #" + otherFanNum++;
                             }
+                            var control = new HardwareControl(subSensorList[k], name);
+                            mControlList.Add(control);
                         }
                     }
                     if(isExist2 == true)
@@ -621,6 +748,42 @@ namespace FanControl
                     }
                 }
             }
+        }
+
+        private bool isExistTemp(string name)
+        {
+            for (int i = 0; i < mSensorList.Count; i++)
+            {
+                if (mSensorList[i].Name.Equals(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool isExistFan(string name)
+        {
+            for (int i = 0; i < mFanList.Count; i++)
+            {
+                if (mFanList[i].Name.Equals(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool isExistControl(string name)
+        {
+            for (int i = 0; i < mControlList.Count; i++)
+            {
+                if (mControlList[i].Name.Equals(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void onSetGigabyteFanSpeed(int index, int value)
@@ -712,7 +875,7 @@ namespace FanControl
                     var controlDictionary = new Dictionary<int, BaseControl>();
                     int modeIndex = controlManager.ModeIndex;
 
-                    for (int i = 0; i < controlManager.Count(modeIndex); i++)
+                    for (int i = 0; i < controlManager.getControlDataCount(modeIndex); i++)
                     {
                         var controlData = controlManager.getControlData(modeIndex, i);
                         if (controlData == null)

@@ -11,18 +11,12 @@ namespace FanControl
 {
     public class GigabyteAmdGpuFanControl : BaseControl
     {
-        private string mName;
         private AmdRadeonGraphicsModule mModule = null;
 
         public GigabyteAmdGpuFanControl(AmdRadeonGraphicsModule module, int num) : base()
         {
-            mName = "GPU Fan #" + num;
+            Name = "GPU Fan #" + num;
             mModule = module;
-        }
-
-        public override string getName()
-        {
-            return mName;
         }
 
         public override void update()

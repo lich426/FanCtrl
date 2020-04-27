@@ -38,8 +38,15 @@
             this.mOptionButton = new System.Windows.Forms.Button();
             this.mTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.mTrayMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mEnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mNormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mSilenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mPerformanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mMadeLabel = new System.Windows.Forms.Label();
             this.mKrakenButton = new System.Windows.Forms.Button();
             this.mTrayMenuStrip.SuspendLayout();
@@ -105,24 +112,76 @@
             // mTrayMenuStrip
             // 
             this.mTrayMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showToolStripMenuItem,
-            this.exitToolStripMenuItem});
+            this.mEnableToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.mNormalToolStripMenuItem,
+            this.mSilenceToolStripMenuItem,
+            this.mPerformanceToolStripMenuItem,
+            this.mGameToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.mShowToolStripMenuItem,
+            this.mExitToolStripMenuItem});
             this.mTrayMenuStrip.Name = "mTrayMenuStrip";
-            this.mTrayMenuStrip.Size = new System.Drawing.Size(105, 48);
+            this.mTrayMenuStrip.Size = new System.Drawing.Size(231, 170);
             // 
-            // showToolStripMenuItem
+            // mEnableToolStripMenuItem
             // 
-            this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-            this.showToolStripMenuItem.Text = "Show";
-            this.showToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuShow);
+            this.mEnableToolStripMenuItem.Name = "mEnableToolStripMenuItem";
+            this.mEnableToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mEnableToolStripMenuItem.Text = "Enable automatic fan control";
+            this.mEnableToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuEnableClick);
             // 
-            // exitToolStripMenuItem
+            // toolStripSeparator1
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuExit);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(227, 6);
+            // 
+            // mNormalToolStripMenuItem
+            // 
+            this.mNormalToolStripMenuItem.Name = "mNormalToolStripMenuItem";
+            this.mNormalToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mNormalToolStripMenuItem.Text = "Normal";
+            this.mNormalToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuNormalClick);
+            // 
+            // mSilenceToolStripMenuItem
+            // 
+            this.mSilenceToolStripMenuItem.Name = "mSilenceToolStripMenuItem";
+            this.mSilenceToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mSilenceToolStripMenuItem.Text = "Silence";
+            this.mSilenceToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuSilenceClick);
+            // 
+            // mPerformanceToolStripMenuItem
+            // 
+            this.mPerformanceToolStripMenuItem.Name = "mPerformanceToolStripMenuItem";
+            this.mPerformanceToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mPerformanceToolStripMenuItem.Text = "Performance";
+            this.mPerformanceToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuPerformanceClick);
+            // 
+            // mGameToolStripMenuItem
+            // 
+            this.mGameToolStripMenuItem.Name = "mGameToolStripMenuItem";
+            this.mGameToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mGameToolStripMenuItem.Text = "Game";
+            this.mGameToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuGameClick);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(227, 6);
+            // 
+            // mShowToolStripMenuItem
+            // 
+            this.mShowToolStripMenuItem.Name = "mShowToolStripMenuItem";
+            this.mShowToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mShowToolStripMenuItem.Text = "Show";
+            this.mShowToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuShow);
+            // 
+            // mExitToolStripMenuItem
+            // 
+            this.mExitToolStripMenuItem.Name = "mExitToolStripMenuItem";
+            this.mExitToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mExitToolStripMenuItem.Text = "Exit";
+            this.mExitToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuExit);
             // 
             // mMadeLabel
             // 
@@ -141,7 +200,7 @@
             this.mKrakenButton.TabIndex = 8;
             this.mKrakenButton.Text = "Kraken Setting";
             this.mKrakenButton.UseVisualStyleBackColor = true;
-            this.mKrakenButton.Click += new System.EventHandler(this.mKrakenButton_Click);
+            this.mKrakenButton.Click += new System.EventHandler(this.onKrakenButtonClick);
             // 
             // MainForm
             // 
@@ -178,10 +237,17 @@
         private System.Windows.Forms.Button mOptionButton;
         private System.Windows.Forms.NotifyIcon mTrayIcon;
         private System.Windows.Forms.ContextMenuStrip mTrayMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mShowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mExitToolStripMenuItem;
         private System.Windows.Forms.Label mMadeLabel;
         private System.Windows.Forms.Button mKrakenButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mEnableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mNormalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mSilenceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mPerformanceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mGameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

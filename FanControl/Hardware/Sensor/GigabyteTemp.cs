@@ -9,23 +9,17 @@ namespace FanControl
 {
     public class GigabyteTemp : BaseSensor
     {
-        private string mName;
         private int mIndex = -1;
 
         public GigabyteTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
         {
-            mName = name;
+            Name = name;
             mIndex = index;
-        }
-
-        public override string getName()
-        {
-            return mName;
         }
 
         public override string getString()
         {
-            return Value + " ℃ (" + this.getName() + ")";
+            return Value + " ℃";
         }
         public override void update()
         {

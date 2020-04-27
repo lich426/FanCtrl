@@ -11,22 +11,16 @@ namespace FanControl
 {
     public class GigabyteNvidiaGpuFanControl : BaseControl
     {
-        private string mName;
         private NvidiaGeforceGraphicsModule mModule = null;
 
         public GigabyteNvidiaGpuFanControl(NvidiaGeforceGraphicsModule module, int num) : base()
         {
-            mName = "GPU Fan #" + num;
+            Name = "GPU Fan #" + num;
             mModule = module;
             var info = new GraphicsCoolerSetting();
             mModule.GetFanSpeedInfo(ref info);
             info.Support = true;
             info.Manual = true;
-        }
-
-        public override string getName()
-        {
-            return mName;
         }
 
         public override void update()

@@ -396,7 +396,7 @@ namespace NZXTSharp.KrakenX
         {
             Monitor.Enter(mLock);
             if (percent > 100)      percent = 100;
-            else if (percent < 50)  percent = 25;
+            else if (percent < 25)  percent = 25;
             mFanPercent = percent;
             Monitor.Exit(mLock);
         }
@@ -493,7 +493,7 @@ namespace NZXTSharp.KrakenX
                     int temp = (int)Math.Round(mLastReport.Data[14] + (mLastReport.Data[15] * 0.1));
                     int pump = (int)(mLastReport.Data[17] << 8 | mLastReport.Data[16]);
 
-                    if(temp != 0 && pump != 0)
+                    if (temp > 0 && temp < 100 && pump > 0 && pump < 10000)
                     {
                         mLastLiquidTemp = temp;
                         mLastPumpRPM = pump;

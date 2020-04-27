@@ -19,10 +19,17 @@ namespace FanControl
         private List<TextBox> mHexTextBoxList = new List<TextBox>();
         private List<Button> mRemoveButtonList = new List<Button>();
 
+        public event EventHandler onCloseCallback;
+
         public KrakenForm(KrakenX krakenX)
         {
             InitializeComponent();
             this.localizeComponent();
+
+            this.FormClosed += (sender, e) =>
+            {
+                onCloseCallback(sender, EventArgs.Empty);
+            };
 
             mKrakenX = krakenX;
 

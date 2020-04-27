@@ -14,17 +14,13 @@ namespace FanControl
         public NZXTKrakenPumpSpeed(KrakenX krakenX) : base(SENSOR_TYPE.FAN)
         {
             mKrakenX = krakenX;
-        }
-
-        public override string getName()
-        {
-            return "NZXT Kraken Pump";
+            Name = "NZXT Kraken Pump";
         }
 
         public override string getString()
         {
             var valueString = string.Format("{0:D4}", Value);
-            return valueString + " RPM (" + this.getName() + ")";
+            return valueString + " RPM";
         }
 
         public override void update()

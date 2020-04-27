@@ -115,6 +115,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Exit과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Fan과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Fan {
@@ -264,6 +273,15 @@ namespace FanControl {
         internal static string Sensor {
             get {
                 return ResourceManager.GetString("Sensor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Show {
+            get {
+                return ResourceManager.GetString("Show", resourceCulture);
             }
         }
         

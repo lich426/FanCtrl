@@ -135,6 +135,9 @@
   <data name="Enable_automatic_fan_control" xml:space="preserve">
     <value>Enable automatic fan control</value>
   </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
   <data name="Fan" xml:space="preserve">
     <value>Fan</value>
   </data>
@@ -185,6 +188,9 @@
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>Sensor</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
   </data>
   <data name="Silence" xml:space="preserve">
     <value>Silence</value>

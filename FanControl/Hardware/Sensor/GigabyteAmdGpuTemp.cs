@@ -9,23 +9,17 @@ namespace FanControl
 {
     public class GigabyteAmdGpuTemp : BaseSensor
     {
-        private string mName;
         private AmdRadeonGraphicsModule mModule = null;
 
-        public GigabyteAmdGpuTemp(AmdRadeonGraphicsModule module) : base(SENSOR_TYPE.TEMPERATURE)
+        public GigabyteAmdGpuTemp(string name, AmdRadeonGraphicsModule module) : base(SENSOR_TYPE.TEMPERATURE)
         {
-            mName = module.ProductName;
+            Name = name;// module.ProductName;
             mModule = module;
-        }
-
-        public override string getName()
-        {
-            return mName;
         }
 
         public override string getString()
         {
-            return Value + " ℃ (" + this.getName() + ")";
+            return Value + " ℃";
         }
         public override void update()
         {

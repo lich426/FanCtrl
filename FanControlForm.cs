@@ -24,10 +24,18 @@ namespace FanControl
         private List<List<ControlData>> mControlDataList = new List<List<ControlData>>();
         private FanData mSelectedFanData = null;
 
+        public event EventHandler onApplyCallback;
+        public event EventHandler onCloseCallback;
+
         public FanControlForm()
         {
             InitializeComponent();
             this.localizeComponent();
+
+            this.FormClosed += (sender, e) =>
+            {
+                onCloseCallback(sender, EventArgs.Empty);
+            };
 
             mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(0));
             mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(1));
@@ -61,7 +69,7 @@ namespace FanControl
 
         private void initControl()
         {
-            HardwareManager hardwareManager = HardwareManager.getInstance();
+            ControlManager controlManager = ControlManager.getInstance();
 
             mEnableCheckBox.Checked = ControlManager.getInstance().IsEnable;
 
@@ -108,22 +116,14 @@ namespace FanControl
 
             mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
 
-            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
+            for (int i = 0; i < controlManager.getNameCount(0); i++)
             {
-                var sensor = hardwareManager.getSensor(i);
-                if (sensor == null)
-                    break;
-
-                mSensorComboBox.Items.Add(sensor.getName());
+                mSensorComboBox.Items.Add(controlManager.getName(0, i, false));
             }
 
-            for (int i = 0; i < hardwareManager.getControlCount(); i++)
+            for (int i = 0; i < controlManager.getNameCount(2); i++)
             {
-                var contorl = hardwareManager.getControl(i);
-                if (contorl == null)
-                    break;
-
-                mFanComboBox.Items.Add(contorl.getName());
+                mFanComboBox.Items.Add(controlManager.getName(2, i, false));
             }
 
             if (mSensorComboBox.Items.Count > 0)
@@ -253,7 +253,7 @@ namespace FanControl
                 mFanListView.EndUpdate();
                 return;
             }
-                        
+
             for (int i = 0; i < controlData.FanDataList.Count; i++)
             {
                 var fanData = controlData.FanDataList[i];
@@ -483,16 +483,14 @@ namespace FanControl
             int sensorIndex = mSensorComboBox.SelectedIndex;
             int fanIndex = mFanComboBox.SelectedIndex;
 
-            var hardwareManager = HardwareManager.getInstance();
-            var sensor = hardwareManager.getSensor(sensorIndex);
-            var fan = hardwareManager.getControl(fanIndex);
-            if (sensor == null || fan == null)
-                return;
+            var controlManager = ControlManager.getInstance();
+            var sensorName = controlManager.getName(0, sensorIndex, false);
+            var fanControlName = controlManager.getName(2, fanIndex, false);
 
             var controlData = this.getControlData(sensorIndex);
             if(controlData == null)
             {
-                controlData = new ControlData(sensorIndex, sensor.getName());
+                controlData = new ControlData(sensorIndex, sensorName);
                 mControlDataList[mModeIndex].Add(controlData);
             }
 
@@ -501,7 +499,7 @@ namespace FanControl
             var fanData = this.getFanData(sensorIndex, fanIndex);
             if(fanData == null)
             {
-                fanData = new FanData(fanIndex, fan.getName(), true, 0);
+                fanData = new FanData(fanIndex, fanControlName, true, 0);
                 controlData.FanDataList.Add(fanData);
 
                 mFanListView.Items.Add(fanData.Name);
@@ -551,6 +549,8 @@ namespace FanControl
             ControlManager.getInstance().ModeIndex = mModeIndex;
             ControlManager.getInstance().IsEnable = mEnableCheckBox.Checked;
             ControlManager.getInstance().write();
+
+            onApplyCallback(sender, e);
         }
 
         private void onOKButtonClick(object sender, EventArgs e)

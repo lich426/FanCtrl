@@ -15,9 +15,10 @@ namespace FanControl
         // SensorList
         private List<ISensor> mList = new List<ISensor>();
 
-        public HardwareTemp(IHardware hardware) : base(SENSOR_TYPE.TEMPERATURE)
+        public HardwareTemp(IHardware hardware, string name) : base(SENSOR_TYPE.TEMPERATURE)
         {
             mHardware = hardware;
+            Name = name;
         }
 
         public void setTemperatureSensor()
@@ -56,14 +57,9 @@ namespace FanControl
             }
         }
 
-        public override string getName()
-        {
-            return mHardware.Name;
-        }
-
         public override string getString()
         {
-            return Value + " ℃ (" + this.getName() + ")";
+            return Value + " ℃";
         }
         public override void update()
         {

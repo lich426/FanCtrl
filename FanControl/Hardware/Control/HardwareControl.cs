@@ -12,16 +12,12 @@ namespace FanControl
         // ISensor
         private ISensor mSensor = null;
 
-        public HardwareControl(ISensor sensor) : base()
+        public HardwareControl(ISensor sensor, string name) : base()
         {
             mSensor = sensor;
+            Name = name;
             Value = 0;
             LastValue = 0;
-        }
-        
-        public override string getName()
-        {
-            return mSensor.Name;
         }
 
         public override void update()

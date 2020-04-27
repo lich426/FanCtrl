@@ -12,20 +12,16 @@ namespace FanControl
         // ISensor
         private ISensor mSensor = null;
 
-        public HardwareFanSpeed(ISensor sensor) : base(SENSOR_TYPE.FAN)
+        public HardwareFanSpeed(ISensor sensor, string name) : base(SENSOR_TYPE.FAN)
         {
             mSensor = sensor;
-        }
-        
-        public override string getName()
-        {
-            return mSensor.Name;
+            Name = name;
         }
 
         public override string getString()
         {
             string valueString = string.Format("{0:D4}", Value);
-            return valueString + " RPM (" + this.getName() +")";
+            return valueString + " RPM";
         }
 
         public override void update()

@@ -9,24 +9,18 @@ namespace FanControl
 {
     public class GigabyteFanSpeed : BaseSensor
     {
-        private string mName;
         private int mIndex = -1;
         
         public GigabyteFanSpeed(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
         {
-            mName = name;
+            Name = name;
             mIndex = index;
-        }
-
-        public override string getName()
-        {
-            return mName;
         }
 
         public override string getString()
         {
             var valueString = string.Format("{0:D4}", Value);
-            return valueString + " RPM (" + this.getName() + ")";
+            return valueString + " RPM";
         }
 
         public override void update()

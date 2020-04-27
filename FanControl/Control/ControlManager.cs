@@ -18,14 +18,6 @@ namespace FanControl
         private static ControlManager sManager = new ControlManager();
         public static ControlManager getInstance() { return sManager; }
 
-        private ControlManager()
-        {
-            mControlDataList[0] = new List<ControlData>();
-            mControlDataList[1] = new List<ControlData>();
-            mControlDataList[2] = new List<ControlData>();
-            mControlDataList[3] = new List<ControlData>();
-        }
-
         private Object mLock = new Object();
 
         private bool mIsEnable = false;
@@ -66,6 +58,179 @@ namespace FanControl
 
         private List<ControlData>[] mControlDataList = new List<ControlData>[4];
 
+        private List<string> mSensorNameList = new List<string>();
+        private List<string> mFanNameList = new List<string>();
+        private List<string> mFanControlNameList = new List<string>();
+
+        private List<string> mOriginSensorNameList = new List<string>();
+        private List<string> mOriginFanNameList = new List<string>();
+        private List<string> mOriginFanControlNameList = new List<string>();
+
+        private ControlManager()
+        {
+            mControlDataList[0] = new List<ControlData>();
+            mControlDataList[1] = new List<ControlData>();
+            mControlDataList[2] = new List<ControlData>();
+            mControlDataList[3] = new List<ControlData>();
+        }
+
+        private void clear()
+        {
+            mIsEnable = false;
+            for (int i = 0; i < mControlDataList.Length; i++)
+                mControlDataList[i].Clear();
+
+            mModeIndex = 0;
+
+            for (int i = 0; i < mSensorNameList.Count; i++)
+                mSensorNameList[i] = mOriginSensorNameList[i];
+
+            for (int i = 0; i < mFanNameList.Count; i++)
+                mFanNameList[i] = mOriginFanNameList[i];
+
+            for (int i = 0; i < mFanControlNameList.Count; i++)
+                mFanControlNameList[i] = mOriginFanControlNameList[i];
+        }
+
+        public void setNameCount(int type, int count)
+        {
+            Monitor.Enter(mLock);
+            List<string> nameList = null;
+            List<string> nameList2 = null;
+            if (type == 0)
+            {
+                nameList = mSensorNameList;
+                nameList2 = mOriginSensorNameList;
+            }
+            else if (type == 1)
+            {
+                nameList = mFanNameList;
+                nameList2 = mOriginFanNameList;
+            }
+            else
+            {
+                nameList = mFanControlNameList;
+                nameList2 = mOriginFanControlNameList;
+            }
+
+            nameList.Clear();
+            nameList2.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                nameList.Add("");
+                nameList2.Add("");
+            }
+            Monitor.Exit(mLock);
+        }
+
+        public int getNameCount(int type)
+        {
+            Monitor.Enter(mLock);
+            List<string> nameList = null;
+            if (type == 0) nameList = mSensorNameList;
+            else if (type == 1) nameList = mFanNameList;
+            else nameList = mFanControlNameList;
+
+            int count = nameList.Count;
+            Monitor.Exit(mLock);
+            return count;
+        }
+
+        public string getName(int type, int index, bool isOrigin)
+        {
+            Monitor.Enter(mLock);
+            List<string> nameList = null;
+            if (type == 0)
+            {
+                nameList = (isOrigin == true) ? mOriginSensorNameList : mSensorNameList;
+            }
+            else if (type == 1)
+            {
+                nameList = (isOrigin == true) ? mOriginFanNameList : mFanNameList;
+            }
+            else
+            {
+                nameList = (isOrigin == true) ? mOriginFanControlNameList : mFanControlNameList;
+            }
+
+            if (index >= nameList.Count)
+            {
+                Monitor.Exit(mLock);
+                return "";
+            }
+            var valueString = nameList[index];
+            Monitor.Exit(mLock);
+            return valueString;
+        }
+
+        public void setName(int type, int index, bool isOrigin, string nameString)
+        {
+            Monitor.Enter(mLock);
+            List<string> nameList = null;
+            if (type == 0)
+            {
+                nameList = (isOrigin == true) ? mOriginSensorNameList : mSensorNameList;
+            }
+            else if (type == 1)
+            {
+                nameList = (isOrigin == true) ? mOriginFanNameList : mFanNameList;
+            }
+            else
+            {
+                nameList = (isOrigin == true) ? mOriginFanControlNameList : mFanControlNameList;
+            }
+
+            if (index >= nameList.Count)
+            {
+                Monitor.Exit(mLock);
+                return;
+            }
+            nameList[index] = nameString;
+
+            if (isOrigin == false)
+            {
+                // sensor
+                if(type == 0)
+                {
+                    for (int i = 0; i < mControlDataList.Length; i++)
+                    {
+                        for (int j = 0; j < mControlDataList[i].Count; j++)
+                        {
+                            var controlData = mControlDataList[i][j];
+                            if (controlData.Index == index)
+                            {
+                                controlData.Name = nameString;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // control
+                else if(type == 2)
+                {
+                    for (int i = 0; i < mControlDataList.Length; i++)
+                    {
+                        for (int j = 0; j < mControlDataList[i].Count; j++)
+                        {
+                            var controlData = mControlDataList[i][j];                            
+                            for(int k = 0; k < controlData.FanDataList.Count; k++)
+                            {
+                                var fanData = controlData.FanDataList[k];
+                                if(fanData.Index == index)
+                                {
+                                    fanData.Name = nameString;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }                
+            }
+
+            Monitor.Exit(mLock);
+        }
+
         public void setControlDataList(int modeIndex, List<ControlData> controlData)
         {
             Monitor.Enter(mLock);
@@ -87,7 +252,7 @@ namespace FanControl
             return controlDataList;
         }
 
-        public int Count(int modeIndex)
+        public int getControlDataCount(int modeIndex)
         {
             Monitor.Enter(mLock);
             var selectedControlDataList = mControlDataList[modeIndex];
@@ -155,6 +320,45 @@ namespace FanControl
                         mModeIndex = 0;
                 }
 
+                // name
+                if (rootObject.ContainsKey("name") == true)
+                {
+                    var nameObject = rootObject.Value<JObject>("name");
+
+                    // sensor name
+                    if (nameObject.ContainsKey("sensor") == true)
+                    {
+                        var sensorList = nameObject.Value<JArray>("sensor");
+                        for(int i = 0; i <sensorList.Count; i++)
+                        {
+                            var nameString = sensorList[i].Value<string>();
+                            mSensorNameList[i] = nameString;
+                        }
+                    }
+
+                    // fan name
+                    if (nameObject.ContainsKey("fan") == true)
+                    {
+                        var fanList = nameObject.Value<JArray>("fan");
+                        for (int i = 0; i < fanList.Count; i++)
+                        {
+                            var nameString = fanList[i].Value<string>();
+                            mFanNameList[i] = nameString;
+                        }
+                    }
+
+                    // fan control name
+                    if (nameObject.ContainsKey("control") == true)
+                    {
+                        var controlList = nameObject.Value<JArray>("control");
+                        for (int i = 0; i < controlList.Count; i++)
+                        {
+                            var nameString = controlList[i].Value<string>();
+                            mFanControlNameList[i] = nameString;
+                        }
+                    }
+                }
+
                 this.readData(rootObject, "control", ref mControlDataList[0]);
                 this.readData(rootObject, "silence", ref mControlDataList[1]);
                 this.readData(rootObject, "performance", ref mControlDataList[2]);
@@ -162,9 +366,7 @@ namespace FanControl
             }
             catch
             {
-                mIsEnable = false;
-                for (int i = 0; i < mControlDataList.Length; i++)
-                    mControlDataList[i].Clear();
+                this.clear();
                 Monitor.Exit(mLock);
                 return false;
             }
@@ -243,6 +445,35 @@ namespace FanControl
                 rootObject["enable"] = mIsEnable;
                 rootObject["modeIndex"] = mModeIndex;
 
+                // name
+                var nameObject = new JObject();
+
+                // sensor name
+                var sensorList = new JArray();
+                for(int i = 0; i < mSensorNameList.Count; i++)
+                {
+                    sensorList.Add(mSensorNameList[i]);
+                }
+                nameObject["sensor"] = sensorList;
+
+                // fan name
+                var fanList = new JArray();
+                for (int i = 0; i < mFanNameList.Count; i++)
+                {
+                    fanList.Add(mFanNameList[i]);
+                }
+                nameObject["fan"] = fanList;
+
+                // fan control name
+                var fanControlList = new JArray();
+                for (int i = 0; i < mFanControlNameList.Count; i++)
+                {
+                    fanControlList.Add(mFanControlNameList[i]);
+                }
+                nameObject["control"] = fanControlList;
+
+                rootObject["name"] = nameObject;
+
                 this.writeData(rootObject, "control", ref mControlDataList[0]);
                 this.writeData(rootObject, "silence", ref mControlDataList[1]);
                 this.writeData(rootObject, "performance", ref mControlDataList[2]);
@@ -252,9 +483,7 @@ namespace FanControl
             }
             catch
             {
-                mIsEnable = false;
-                for (int i = 0; i < mControlDataList.Length; i++)
-                    mControlDataList[i].Clear();
+                this.clear();
             }
             Monitor.Exit(mLock);
         }
@@ -311,16 +540,14 @@ namespace FanControl
                     this.checkData(ref mControlDataList[2]) == false ||
                     this.checkData(ref mControlDataList[3]) == false)
                 {
-                    for (int i = 0; i < mControlDataList.Length; i++)
-                        mControlDataList[i].Clear();
+                    this.clear();
                     Monitor.Exit(mLock);
                     return false;
                 }
             }
             catch
             {
-                for (int i = 0; i < mControlDataList.Length; i++)
-                    mControlDataList[i].Clear();
+                this.clear();
                 Monitor.Exit(mLock);
                 return false;
             }
@@ -330,11 +557,11 @@ namespace FanControl
 
         private bool checkData(ref List<ControlData> controlDataList)
         {
-            HardwareManager hardwareManager = HardwareManager.getInstance();
             for (int i = 0; i < controlDataList.Count; i++)
             {
                 var controlData = controlDataList[i];
-                if (controlData.Name.Equals(hardwareManager.getSensor(controlData.Index).getName()) == false)
+                string sensorName = mSensorNameList[controlData.Index];
+                if (controlData.Name.Equals(sensorName) == false)
                 {
                     return false;
                 }
@@ -343,7 +570,8 @@ namespace FanControl
                 for (int j = 0; j < fanDataList.Count; j++)
                 {
                     var fanData = fanDataList[j];
-                    if (fanData.Name.Equals(hardwareManager.getControl(fanData.Index).getName()) == false)
+                    string fanControlName = mFanControlNameList[fanData.Index];
+                    if (fanData.Name.Equals(fanControlName) == false)
                     {
                         return false;
                     }

@@ -14,16 +14,12 @@ namespace FanControl
         public NZXTKrakenLiquidTemp(KrakenX krakenX) : base(SENSOR_TYPE.TEMPERATURE)
         {
             mKrakenX = krakenX;
-        }
-
-        public override string getName()
-        {
-            return "NZXT Kraken Liquid";
+            Name = "NZXT Kraken Liquid";
         }
 
         public override string getString()
         {
-            return Value + " ℃ (" + this.getName() + ")";
+            return Value + " ℃";
         }
         public override void update()
         {

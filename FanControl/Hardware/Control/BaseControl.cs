@@ -16,16 +16,13 @@ namespace FanControl
 
         public int LastValue { get; set; }
 
+        public string Name { get; set; }
+
         public BaseControl()
         {
             Value = 0;
             NextValue = 0;
             LastValue = 0;
-        }
-
-        public virtual string getName()
-        {
-            return "";
         }
 
         public virtual void update()

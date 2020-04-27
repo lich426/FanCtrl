@@ -12,24 +12,18 @@ namespace FanControl
         public delegate void OnSetSpeedHandler(int index, int value);
         public event OnSetSpeedHandler onSetSpeedCallback;
 
-        private string mName;
         private int mIndex = -1;
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
         public GigabyteFanControl(string name, int index, int value) : base()
         {
-            mName = name;
+            Name = name;
             mIndex = index;
             Value = value;
             LastValue = Value;
             if (value < mMinSpeed)
                 mMinSpeed = value;
-        }
-
-        public override string getName()
-        {
-            return mName;
         }
 
         public override void update()
