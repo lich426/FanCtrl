@@ -1,26 +1,28 @@
 # FanControl
 
-FanControl은 PC에서 자동으로 팬 속도를 제어할 수 있는 소프트웨어 입니다.<br>
-닷넷 프레임워크 4.6 이상에서 정상 동작합니다.
+FanControl is a software that allows you to automatically control the fan speed on your PC.<br>
+Requires .NET framework 4.6 or higher.<br>
+Gigabyte board : App Center installation is required (https://www.gigabyte.com/Support/Utility/Motherboard)<br>
+NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 
-## 사용한 라이브러리
-센서 및 팬 제어 : [LibreHardwareMonitorLib][0]<br>
-NZXT Kraken 제어 : [NZXTSharp][1]<br>
-USB 통신 : [HidLibrary][2]<br>
+## Used Library
+Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
+NZXT Kraken Control : [NZXTSharp][1]<br>
+USB Communication : [HidLibrary][2]<br>
 Json : [Newtonsoft Json][3]<br>
 Graph : [ZedGraph][4]<br>
 
 ## License
 [GNU General Public License v3.0][5]
 
-## 주의사항
- - FanControl은 GNU GPLv3 라이센스를 가진 무료 소프트웨어입니다.<br>
- - 다른 팬 제어 프로그램이 동시에 켜져 있는 상태에서는 오동작 할 수 있습니다.<br>
- - 이 소프트웨어를 사용하여 고장 나거나 작동하지 않는 하드웨어에 대해 책임을 지지 않습니다.<br>
- - 현재 모든 종류의 하드웨어를 지원하지 않습니다.<br>
+## Precautions
+ - FanControl is free software with a GNU GPLv3 license.<br>
+ - You can malfunction while other fan control programs are on at the same time.<br>
+ - I am not responsible for hardware that has failed or is not working using this software.<br>
+ - Not all types of hardware are supported.<br>
  
 ## Portable
-다운로드 : [FanControl_v1.0.5.zip][6]
+Download : [FanControl_v1.0.5.zip][6]
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/akmadian/NZXTSharp
