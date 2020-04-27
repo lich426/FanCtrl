@@ -90,7 +90,7 @@ namespace FanControl
             var textBox = new TextBox();
             textBox.Parent = mHexDataGroupBox;
             textBox.Name = "mHexTextBox" + mHexTextBoxList.Count;
-            textBox.Size = new System.Drawing.Size(320, 21);
+            textBox.Size = new System.Drawing.Size(310, 21);
             textBox.TabIndex = 0;
             textBox.KeyDown += onTextBoxKeyDown;
             textBox.KeyPress += onTextBoxKeyPress;
@@ -99,7 +99,7 @@ namespace FanControl
             removeButton.Parent = mHexDataGroupBox;
             removeButton.Name = "mRemoveButton" + mRemoveButtonList.Count;
             removeButton.Text = StringLib.Remove;
-            removeButton.Size = new System.Drawing.Size(53, 21);
+            removeButton.Size = new System.Drawing.Size(63, 21);
             removeButton.TabIndex = 1;
             removeButton.Click += onRemoveButtonClick;
 
