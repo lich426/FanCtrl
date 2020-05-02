@@ -25,7 +25,7 @@ Graph : [ZedGraph][5]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanControl_v1.0.7.zip][7]
+Download : [FanControl_v1.0.8.zip][7]
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
@@ -34,4 +34,4 @@ Download : [FanControl_v1.0.7.zip][7]
 [4]: https://www.newtonsoft.com/json
 [5]: http://zedgraph.sourceforge.net/samples.html
 [6]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[7]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.7.zip
+[7]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.8.zip
