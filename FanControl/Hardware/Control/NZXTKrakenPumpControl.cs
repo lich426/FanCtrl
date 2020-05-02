@@ -24,12 +24,12 @@ namespace FanControl
 
         public override int getMinSpeed()
         {
-            return 50;
+            return mKrakenX.getMinPumpSpeed();
         }
 
         public override int getMaxSpeed()
         {
-            return 100;
+            return mKrakenX.getMaxPumpSpeed();
         }
 
         public override int setSpeed(int value)

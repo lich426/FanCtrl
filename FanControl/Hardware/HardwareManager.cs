@@ -146,12 +146,12 @@ namespace FanControl
                     {
                         var fanControl = new NZXTKrakenFanControl(mKrakenX);
                         mControlList.Add(fanControl);
-                        this.addChangeValue(fanControl.getMinSpeed(), fanControl);
+                        this.addChangeValue(30, fanControl);
                     }
 
                     var pumpControl = new NZXTKrakenPumpControl(mKrakenX);
                     mControlList.Add(pumpControl);
-                    this.addChangeValue(pumpControl.getMinSpeed(), pumpControl);                    
+                    this.addChangeValue(50, pumpControl);                    
                 }                
             }
             catch

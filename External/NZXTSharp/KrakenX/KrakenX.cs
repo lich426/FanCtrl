@@ -149,6 +149,33 @@ namespace NZXTSharp.KrakenX
         /// </summary>
         public Version FirmwareVersion { get => _FirmwareVersion; }
         
+        public int getMinFanSpeed()
+        {
+            return 0;
+        }
+
+        public int getMaxFanSpeed()
+        {
+            return 100;
+        }
+
+        public int getMinPumpSpeed()
+        {
+            // X3
+            if (mType == NZXTDeviceType.KrakenX3)
+            {
+                return 20;
+            }
+
+            // X2
+            return 50;
+        }
+
+        public int getMaxPumpSpeed()
+        {
+            return 100;
+        }
+
         #endregion
 
         /// <summary>
@@ -162,11 +189,15 @@ namespace NZXTSharp.KrakenX
                 case NZXTDeviceType.KrakenX:
                     mID = 0x170e;
                     mSendDelayTime = 5000;
+                    mPumpSpeed = 50;
+                    mFanPercent = 25;
                     break;
 
                 case NZXTDeviceType.KrakenX3:
                     mID = 0x2007;
                     mSendDelayTime = 10000;
+                    mPumpSpeed = 20;
+                    mFanPercent = 25;
                     break;
                 default:
                     throw new Exception();
