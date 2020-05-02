@@ -151,7 +151,7 @@ namespace NZXTSharp.KrakenX
         
         public int getMinFanSpeed()
         {
-            return 0;
+            return 25;
         }
 
         public int getMaxFanSpeed()
@@ -189,15 +189,11 @@ namespace NZXTSharp.KrakenX
                 case NZXTDeviceType.KrakenX:
                     mID = 0x170e;
                     mSendDelayTime = 5000;
-                    mPumpSpeed = 50;
-                    mFanPercent = 25;
                     break;
 
                 case NZXTDeviceType.KrakenX3:
                     mID = 0x2007;
                     mSendDelayTime = 10000;
-                    mPumpSpeed = 20;
-                    mFanPercent = 25;
                     break;
                 default:
                     throw new Exception();
@@ -400,8 +396,8 @@ namespace NZXTSharp.KrakenX
         public void SetPumpSpeed(int speed)
         {
             Monitor.Enter(mLock);
-            if (speed > 100)        speed = 100;
-            else if (speed < 50)    speed = 50;
+            if (speed > this.getMaxPumpSpeed())         speed = this.getMaxPumpSpeed();
+            else if (speed < this.getMinPumpSpeed())    speed = this.getMinPumpSpeed();
             mPumpSpeed = speed;
             Monitor.Exit(mLock);
         }
@@ -425,8 +421,8 @@ namespace NZXTSharp.KrakenX
         public void SetFanSpeed(int percent)
         {
             Monitor.Enter(mLock);
-            if (percent > 100)      percent = 100;
-            else if (percent < 25)  percent = 25;
+            if (percent > this.getMaxFanSpeed())        percent = this.getMaxFanSpeed();
+            else if (percent < this.getMinFanSpeed())   percent = this.getMinFanSpeed();
             mFanPercent = percent;
             Monitor.Exit(mLock);
         }
