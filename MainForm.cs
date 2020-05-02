@@ -467,6 +467,9 @@ namespace FanControl
 
         private void onUpdate()
         {
+            if (this.Visible == false)
+                return;
+
             this.BeginInvoke(new Action(delegate ()
             {
                 var hardwareManager = HardwareManager.getInstance();
@@ -510,7 +513,8 @@ namespace FanControl
         private void onOptionButtonClick(object sender, EventArgs e)
         {
             var form = new OptionForm();
-            if(form.ShowDialog() == DialogResult.OK)
+            form.OnExitHandler += onTrayMenuExit;
+            if (form.ShowDialog() == DialogResult.OK)
             {
                 HardwareManager.getInstance().restartTimer(OptionManager.getInstance().Interval);
             }

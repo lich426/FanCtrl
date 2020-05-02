@@ -162,6 +162,9 @@
   <data name="Kraken_Setting" xml:space="preserve">
     <value>크라켄 설정</value>
   </data>
+  <data name="Library" xml:space="preserve">
+    <value>라이브러리</value>
+  </data>
   <data name="Made" xml:space="preserve">
     <value>Made by 똥고집 (lich426@gmail.com)</value>
   </data>
@@ -179,6 +182,9 @@
   </data>
   <data name="Option" xml:space="preserve">
     <value>옵션</value>
+  </data>
+  <data name="OptionRestart" xml:space="preserve">
+    <value>라이브러리를 변경하시면 팬 설정이 초기화되고 프로그램을 재시작 해야 합니다.</value>
   </data>
   <data name="Performance" xml:space="preserve">
     <value>퍼포먼스</value>

@@ -92,6 +92,21 @@ namespace FanControl
                 mFanControlNameList[i] = mOriginFanControlNameList[i];
         }
 
+        public void reset()
+        {
+            Monitor.Enter(mLock);
+            mIsEnable = false;
+            for (int i = 0; i < mControlDataList.Length; i++)
+                mControlDataList[i].Clear();
+
+            mModeIndex = 0;
+            mSensorNameList.Clear();
+            mFanNameList.Clear();
+            mFanControlNameList.Clear();
+
+            Monitor.Exit(mLock);
+        }
+
         public void setNameCount(int type, int count)
         {
             Monitor.Enter(mLock);

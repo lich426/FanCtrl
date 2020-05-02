@@ -113,7 +113,6 @@ namespace NZXTSharp.KrakenX
         private USBController _COMController;
 
         private HidReport mLastReport = null;
-        private object mLastReportLock = new object();
 
         /// <summary>
         /// The <see cref="HIDDeviceID"/> of the <see cref="KrakenX"/> device. Will always be <see cref="HIDDeviceID.KrakenX"/>.
@@ -199,7 +198,7 @@ namespace NZXTSharp.KrakenX
             mFanLastSendTime = 0;
 
             mTimer = new System.Timers.Timer();
-            mTimer.Interval = 100;
+            mTimer.Interval = 1000;
             mTimer.Elapsed += onTimer;
             mTimer.Start();
         }
@@ -355,9 +354,9 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported pump speed in RPM.</returns>
         public int GetPumpSpeed()
         {
-            Monitor.Enter(mLastReportLock);
+            Monitor.Enter(mLock);
             int speed = mLastPumpRPM;
-            Monitor.Exit(mLastReportLock);
+            Monitor.Exit(mLock);
             return speed;
         }
 
@@ -382,9 +381,9 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported fan speed in RPM.</returns>
         public int GetFanSpeed()
         {
-            Monitor.Enter(mLastReportLock);
+            Monitor.Enter(mLock);
             int speed = mLastFanRPM;
-            Monitor.Exit(mLastReportLock);
+            Monitor.Exit(mLock);
             return speed;
         }
 
@@ -408,9 +407,9 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported liquid temp as a rounded integer, in degrees C.</returns>
         public int GetLiquidTemp()
         {
-            Monitor.Enter(mLastReportLock);
+            Monitor.Enter(mLock);
             int temp = mLastLiquidTemp;
-            Monitor.Exit(mLastReportLock);
+            Monitor.Exit(mLock);
             return temp;
         }
         
@@ -424,17 +423,17 @@ namespace NZXTSharp.KrakenX
             int minor = 0;
             while (true)
             {
-                Monitor.Enter(mLastReportLock);
+                Monitor.Enter(mLock);
                 if(mLastReport == null)
                 {
-                    Monitor.Exit(mLastReportLock);
+                    Monitor.Exit(mLock);
                     Thread.Sleep(25);
                     continue;
                 }
 
                 major = mLastReport.Data[10];
                 minor = mLastReport.Data[12].ConcatenateInt(mLastReport.Data[13]);
-                Monitor.Exit(mLastReportLock);
+                Monitor.Exit(mLock);
                 break;
             }
             return new Version(major, minor);
@@ -470,7 +469,7 @@ namespace NZXTSharp.KrakenX
 
         private void onReport(object sender, EventArgs e)
         {
-            Monitor.Enter(mLastReportLock);
+            Monitor.Enter(mLock);
             try
             {
                 mLastReport = (HidReport)sender;
@@ -501,13 +500,14 @@ namespace NZXTSharp.KrakenX
                 }                
             }
             catch { }
-            Monitor.Exit(mLastReportLock);
+            Monitor.Exit(mLock);
         }
 
         private void onTimer(object sender, EventArgs e)
         {
             if (Monitor.TryEnter(mLock) == false)
                 return;
+
             try
             {
                 long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;

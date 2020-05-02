@@ -196,6 +196,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Library과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Library {
+            get {
+                return ResourceManager.GetString("Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Made by Lich (lich426@gmail.com)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Made {
@@ -246,6 +255,15 @@ namespace FanControl {
         internal static string Option {
             get {
                 return ResourceManager.GetString("Option", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Changing the library will reset the fan settings and require the program to be restarted.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string OptionRestart {
+            get {
+                return ResourceManager.GetString("OptionRestart", resourceCulture);
             }
         }
         

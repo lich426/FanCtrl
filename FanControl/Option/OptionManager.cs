@@ -9,6 +9,12 @@ using Newtonsoft.Json.Linq;
 
 namespace FanControl
 {
+    public enum LibraryType
+    {
+        LibreHardwareMonitor = 0,
+        OpenHardwareMonitor,
+    };
+
     public class OptionManager
     {
         private const string cOptionFileName = "Option.json";
@@ -21,10 +27,13 @@ namespace FanControl
         private OptionManager()
         {
             Interval = 1000;
+            LibraryType = LibraryType.LibreHardwareMonitor;
             IsMinimized = false;
         }
         
         public int Interval { get; set; }
+
+        public LibraryType LibraryType { get; set; }
 
         public bool IsMinimized { get; set; }
 
@@ -45,10 +54,17 @@ namespace FanControl
             try 
             {
                 var jsonString = File.ReadAllText(cOptionFileName);                
-                var rootObject = JObject.Parse(jsonString);                
-                Interval = rootObject.Value<int>("interval");
-                IsMinimized = rootObject.Value<bool>("minimized");
-                IsStartUp = rootObject.Value<bool>("startup");
+                var rootObject = JObject.Parse(jsonString);
+
+                Interval = (rootObject.ContainsKey("interval") == true) ? rootObject.Value<int>("interval") : 1000;
+
+                if (rootObject.ContainsKey("library") == false)
+                    LibraryType = LibraryType.LibreHardwareMonitor;
+                else
+                    LibraryType = (rootObject.Value<int>("library") == 0) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
+
+                IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
+                IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
             }
             catch
             {
@@ -63,6 +79,7 @@ namespace FanControl
             {
                 var rootObject = new JObject();
                 rootObject["interval"] = Interval;
+                rootObject["library"] = (LibraryType == LibraryType.LibreHardwareMonitor) ? 0 : 1;
                 rootObject["minimized"] = IsMinimized;
                 rootObject["startup"] = IsStartUp;
                 File.WriteAllText(cOptionFileName, rootObject.ToString());

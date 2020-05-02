@@ -4,17 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibreHardwareMonitor.Hardware;
+using OpenHardwareMonitor.Hardware;
 
 namespace FanControl
 {
     public class HardwareControl : BaseControl
     {
         // ISensor
-        private ISensor mSensor = null;
+        private LibreHardwareMonitor.Hardware.ISensor mLHMSensor = null;
+        private OpenHardwareMonitor.Hardware.ISensor mOHMSensor = null;
 
-        public HardwareControl(ISensor sensor, string name) : base()
+        public HardwareControl(LibreHardwareMonitor.Hardware.ISensor sensor, string name) : base()
         {
-            mSensor = sensor;
+            mLHMSensor = sensor;
+            Name = name;
+            Value = 0;
+            LastValue = 0;
+        }
+
+        public HardwareControl(OpenHardwareMonitor.Hardware.ISensor sensor, string name) : base()
+        {
+            mOHMSensor = sensor;
             Name = name;
             Value = 0;
             LastValue = 0;
@@ -22,7 +32,15 @@ namespace FanControl
 
         public override void update()
         {
-            double temp = (mSensor.Value.HasValue == true) ? (double)mSensor.Value : 0.0f;
+            double temp = 0.0f;            
+            if(mLHMSensor != null)
+            {
+                temp = (mLHMSensor.Value.HasValue == true) ? (double)mLHMSensor.Value : 0.0f;
+            }
+            else if (mOHMSensor != null)
+            {
+                temp = (mOHMSensor.Value.HasValue == true) ? (double)mOHMSensor.Value : 0.0f;
+            }
             temp = Math.Round(temp);
             Value = (int)temp;
             LastValue = (int)temp;
@@ -30,17 +48,40 @@ namespace FanControl
 
         public override int getMinSpeed()
         {
-            return (int)mSensor.Control.MinSoftwareValue;
+            if (mLHMSensor != null)
+            {
+                return (int)mLHMSensor.Control.MinSoftwareValue;
+            }
+            else if (mOHMSensor != null)
+            {
+                return (int)mOHMSensor.Control.MinSoftwareValue;
+            }
+            return 0;
         }
 
         public override int getMaxSpeed()
         {
-            return (int)mSensor.Control.MaxSoftwareValue;
+            if (mLHMSensor != null)
+            {
+                return (int)mLHMSensor.Control.MaxSoftwareValue;
+            }
+            else if (mOHMSensor != null)
+            {
+                return (int)mOHMSensor.Control.MaxSoftwareValue;
+            }
+            return 100;
         }
 
         public override int setSpeed(int value)
         {
-            mSensor.Control.SetSoftware((float)value);
+            if (mLHMSensor != null)
+            {
+                mLHMSensor.Control.SetSoftware((float)value);
+            }
+            else if (mOHMSensor != null)
+            {
+                mOHMSensor.Control.SetSoftware((float)value);
+            }
             Value = value;
             LastValue = value;
             return value;

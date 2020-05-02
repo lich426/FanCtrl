@@ -9,6 +9,10 @@ namespace FanControl
 {
     public class GigabyteFanSpeed : BaseSensor
     {
+        public delegate float OnGetFanSpeedHandler(int index);
+
+        public event OnGetFanSpeedHandler onGetFanSpeed;
+
         private int mIndex = -1;
         
         public GigabyteFanSpeed(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
@@ -25,7 +29,7 @@ namespace FanControl
 
         public override void update()
         {
-            float speed = HardwareManager.getInstance().GigabyteFanSpeedList[mIndex];
+            float speed = onGetFanSpeed(mIndex);
             Value = (int)Math.Round(speed);
         }
         

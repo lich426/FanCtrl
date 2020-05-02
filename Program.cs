@@ -12,6 +12,9 @@ namespace FanControl
 {
     static class Program
     {
+        private static Mutex sMutex = null;
+        private static bool sIsLock = false;
+
         /// <summary>
         /// 해당 애플리케이션의 주 진입점입니다.
         /// </summary>
@@ -22,32 +25,29 @@ namespace FanControl
             {
                 try
                 {
-                    ProcessStartInfo procInfo = new ProcessStartInfo();
-                    procInfo.UseShellExecute = true;
-                    procInfo.FileName = Application.ExecutablePath;
-                    procInfo.WorkingDirectory = Environment.CurrentDirectory;
-                    procInfo.Verb = "runas";
-                    Process.Start(procInfo);
+                    Program.executeProgram();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message.ToString());
                 }
-
                 return;
             }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            bool isNew = true;
-            Mutex mutex = new Mutex(true, "FanControl", out isNew);
-
-            if (isNew == false)
+            sMutex = new Mutex(true, "FanControl", out sIsLock);
+            if (sIsLock == false)
                 return;
 
             Application.Run(new MainForm());
-            mutex.ReleaseMutex();
+
+            if(sIsLock == true)
+            {
+                sIsLock = false;
+                sMutex.ReleaseMutex();
+            }
         }
 
         public static bool IsAdministrator()
@@ -59,6 +59,26 @@ namespace FanControl
                 return principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             return false;
+        }
+
+        public static void executeProgram()
+        {
+            ProcessStartInfo procInfo = new ProcessStartInfo();
+            procInfo.UseShellExecute = true;
+            procInfo.FileName = Application.ExecutablePath;
+            procInfo.WorkingDirectory = Environment.CurrentDirectory;
+            procInfo.Verb = "runas";
+            Process.Start(procInfo);
+        }
+
+        public static void restartProgram()
+        {
+            if (sIsLock == true)
+            {
+                sIsLock = false;
+                sMutex.ReleaseMutex();
+            }
+            Program.executeProgram();
         }
     }
 }

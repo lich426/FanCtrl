@@ -162,6 +162,9 @@
   <data name="Kraken_Setting" xml:space="preserve">
     <value>Kraken Setting</value>
   </data>
+  <data name="Library" xml:space="preserve">
+    <value>Library</value>
+  </data>
   <data name="Made" xml:space="preserve">
     <value>Made by Lich (lich426@gmail.com)</value>
   </data>
@@ -179,6 +182,9 @@
   </data>
   <data name="Option" xml:space="preserve">
     <value>Option</value>
+  </data>
+  <data name="OptionRestart" xml:space="preserve">
+    <value>Changing the library will reset the fan settings and require the program to be restarted.</value>
   </data>
   <data name="Performance" xml:space="preserve">
     <value>Performance</value>

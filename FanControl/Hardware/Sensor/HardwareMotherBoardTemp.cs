@@ -8,19 +8,19 @@ using OpenHardwareMonitor.Hardware;
 
 namespace FanControl
 {
-    public class HardwareFanSpeed : BaseSensor
+    public class HardwareMotherBoardTemp : BaseSensor
     {
         // ISensor
         private LibreHardwareMonitor.Hardware.ISensor mLHMSensor = null;
         private OpenHardwareMonitor.Hardware.ISensor mOHMSensor = null;
 
-        public HardwareFanSpeed(LibreHardwareMonitor.Hardware.ISensor sensor, string name) : base(SENSOR_TYPE.FAN)
+        public HardwareMotherBoardTemp(LibreHardwareMonitor.Hardware.ISensor sensor, string name) : base(SENSOR_TYPE.TEMPERATURE)
         {
             mLHMSensor = sensor;
             Name = name;
         }
 
-        public HardwareFanSpeed(OpenHardwareMonitor.Hardware.ISensor sensor, string name) : base(SENSOR_TYPE.FAN)
+        public HardwareMotherBoardTemp(OpenHardwareMonitor.Hardware.ISensor sensor, string name) : base(SENSOR_TYPE.TEMPERATURE)
         {
             mOHMSensor = sensor;
             Name = name;
@@ -28,19 +28,25 @@ namespace FanControl
 
         public override string getString()
         {
-            string valueString = string.Format("{0:D4}", Value);
-            return valueString + " RPM";
+            return Value + " ℃";
         }
-
         public override void update()
         {
             if (mLHMSensor != null)
             {
-                Value = (mLHMSensor.Value.HasValue == true) ? (int)mLHMSensor.Value : Value;
+                double temp = ((mLHMSensor.Value.HasValue == true) ? Math.Round((double)mLHMSensor.Value) : 0);
+                if (temp > 0.0f)
+                {
+                    Value = (int)temp;
+                }
             }
             else if (mOHMSensor != null)
             {
-                Value = (mOHMSensor.Value.HasValue == true) ? (int)mOHMSensor.Value : Value;
+                double temp = ((mOHMSensor.Value.HasValue == true) ? Math.Round((double)mOHMSensor.Value) : 0);
+                if (temp > 0.0f)
+                {
+                    Value = (int)temp;
+                }
             }
         }
 

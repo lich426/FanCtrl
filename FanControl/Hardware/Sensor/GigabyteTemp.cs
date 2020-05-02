@@ -9,6 +9,10 @@ namespace FanControl
 {
     public class GigabyteTemp : BaseSensor
     {
+        public delegate float OnGetTemperatureHandler(int index);
+
+        public event OnGetTemperatureHandler onGetTemperatureHandler;
+
         private int mIndex = -1;
 
         public GigabyteTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
@@ -23,7 +27,7 @@ namespace FanControl
         }
         public override void update()
         {
-            float temp = HardwareManager.getInstance().GigabyteTemperatureList[mIndex];
+            float temp = onGetTemperatureHandler(mIndex);
             Value = (int)Math.Round(temp);
         }
 
