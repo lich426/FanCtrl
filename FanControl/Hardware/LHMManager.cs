@@ -151,24 +151,25 @@ namespace FanControl
                 var sensorArray = hardwareArray[i].Sensors;
                 for (int j = 0; j < sensorArray.Length; j++)
                 {
-                    if (sensorArray[j].SensorType != LibreHardwareMonitor.Hardware.SensorType.Fan)
-                        continue;
-
-                    if (hardwareArray[i].HardwareType == HardwareType.SuperIO)
+                    if (sensorArray[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Fan)
                     {
-                        var fan = new HardwareFanSpeed(sensorArray[j], "Fan #" + fanNum++);
-                        fanList.Add(fan);
-                    }
-                    else
-                    {
-                        string name = sensorArray[j].Name;
-                        if (this.isExistFan(ref fanList, name) == true)
+                        if (hardwareArray[i].HardwareType == HardwareType.SuperIO ||
+                        sensorArray[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Fan)
                         {
-                            name = name + " #" + otherFanNum++;
+                            var fan = new HardwareFanSpeed(sensorArray[j], "Fan #" + fanNum++);
+                            fanList.Add(fan);
                         }
-                        var fan = new HardwareFanSpeed(sensorArray[j], name);
-                        fanList.Add(fan);
-                    }
+                        else
+                        {
+                            string name = sensorArray[j].Name;
+                            if (this.isExistFan(ref fanList, name) == true)
+                            {
+                                name = name + " #" + otherFanNum++;
+                            }
+                            var fan = new HardwareFanSpeed(sensorArray[j], name);
+                            fanList.Add(fan);
+                        }
+                    }                    
                 }
 
                 var subHardwareArray = hardwareArray[i].SubHardware;
@@ -177,23 +178,23 @@ namespace FanControl
                     var subSensorArray = subHardwareArray[j].Sensors;
                     for (int k = 0; k < subSensorArray.Length; k++)
                     {
-                        if (subSensorArray[k].SensorType != LibreHardwareMonitor.Hardware.SensorType.Fan)
-                            continue;
-
-                        if (subHardwareArray[j].HardwareType == HardwareType.SuperIO)
+                        if (subSensorArray[k].SensorType == LibreHardwareMonitor.Hardware.SensorType.Fan)
                         {
-                            var fan = new HardwareFanSpeed(subSensorArray[k], "Fan #" + fanNum++);
-                            fanList.Add(fan);
-                        }
-                        else
-                        {
-                            string name = subSensorArray[k].Name;
-                            if (this.isExistFan(ref fanList, name) == true)
+                            if (subHardwareArray[j].HardwareType == HardwareType.SuperIO)
                             {
-                                name = name + " #" + otherFanNum++;
+                                var fan = new HardwareFanSpeed(subSensorArray[k], "Fan #" + fanNum++);
+                                fanList.Add(fan);
                             }
-                            var fan = new HardwareFanSpeed(subSensorArray[k], name);
-                            fanList.Add(fan);
+                            else
+                            {
+                                string name = subSensorArray[k].Name;
+                                if (this.isExistFan(ref fanList, name) == true)
+                                {
+                                    name = name + " #" + otherFanNum++;
+                                }
+                                var fan = new HardwareFanSpeed(subSensorArray[k], name);
+                                fanList.Add(fan);
+                            }
                         }
                     }
                 }
@@ -238,23 +239,23 @@ namespace FanControl
                 var sensorArray = hardwareArray[i].Sensors;
                 for (int j = 0; j < sensorArray.Length; j++)
                 {
-                    if (sensorArray[j].SensorType != LibreHardwareMonitor.Hardware.SensorType.Control || sensorArray[j].Control == null)
-                        continue;
-
-                    if (hardwareArray[i].HardwareType == HardwareType.SuperIO)
+                    if (sensorArray[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Control)
                     {
-                        var control = new HardwareControl(sensorArray[j], "Fan Control #" + fanNum++);
-                        controlList.Add(control);
-                    }
-                    else
-                    {
-                        string name = sensorArray[j].Name;
-                        if (this.isExistControl(ref controlList, name) == true)
+                        if (hardwareArray[i].HardwareType == HardwareType.SuperIO)
                         {
-                            name = name + " #" + otherFanNum++;
+                            var control = new HardwareControl(sensorArray[j], "Fan Control #" + fanNum++);
+                            controlList.Add(control);
                         }
-                        var control = new HardwareControl(sensorArray[j], name);
-                        controlList.Add(control);
+                        else
+                        {
+                            string name = sensorArray[j].Name;
+                            if (this.isExistControl(ref controlList, name) == true)
+                            {
+                                name = name + " #" + otherFanNum++;
+                            }
+                            var control = new HardwareControl(sensorArray[j], name);
+                            controlList.Add(control);
+                        }
                     }
                 }
 
@@ -264,23 +265,23 @@ namespace FanControl
                     var subSensorList = subHardwareArray[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
-                        if (subSensorList[k].SensorType != LibreHardwareMonitor.Hardware.SensorType.Control || subSensorList[k].Control == null)
-                            continue;
-
-                        if (subHardwareArray[j].HardwareType == HardwareType.SuperIO)
+                        if (subSensorList[k].SensorType == LibreHardwareMonitor.Hardware.SensorType.Control)
                         {
-                            var control = new HardwareControl(subSensorList[k], "Fan Control #" + fanNum++);
-                            controlList.Add(control);
-                        }
-                        else
-                        {
-                            string name = subSensorList[k].Name;
-                            if (this.isExistControl(ref controlList, name) == true)
+                            if (subHardwareArray[j].HardwareType == HardwareType.SuperIO)
                             {
-                                name = name + " #" + otherFanNum++;
+                                var control = new HardwareControl(subSensorList[k], "Fan Control #" + fanNum++);
+                                controlList.Add(control);
                             }
-                            var control = new HardwareControl(subSensorList[k], name);
-                            controlList.Add(control);
+                            else
+                            {
+                                string name = subSensorList[k].Name;
+                                if (this.isExistControl(ref controlList, name) == true)
+                                {
+                                    name = name + " #" + otherFanNum++;
+                                }
+                                var control = new HardwareControl(subSensorList[k], name);
+                                controlList.Add(control);
+                            }
                         }
                     }
                 }
