@@ -45,6 +45,7 @@ namespace FanControl
             }
             set
             {
+
                 mStartupControl.Startup = value;
             }
         }

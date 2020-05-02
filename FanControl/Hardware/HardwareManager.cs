@@ -422,6 +422,11 @@ namespace FanControl
 
             this.lockBus();
             var wordArray = SMBus.i2cWordData(address, 10);
+            if(wordArray == null)
+            {
+                this.unlockBus();
+                return;
+            }
             this.unlockBus();
 
             if (wordArray != null && wordArray.Length == 10)
