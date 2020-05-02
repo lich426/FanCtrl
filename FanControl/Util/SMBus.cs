@@ -30,7 +30,7 @@ namespace FanControl
 
         private static object sLock = new object();
 
-        public static bool open()
+        public static bool open(bool isCreateCOM)
         {
             Monitor.Enter(sLock);
             if (sIsOpen == true)
@@ -41,7 +41,7 @@ namespace FanControl
 
             try
             {
-                sIsOpen = (SMBus.openSMBus() > 0);
+                sIsOpen = (SMBus.openSMBus(isCreateCOM) > 0);
             }
             catch
             {
@@ -151,7 +151,7 @@ namespace FanControl
         }
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int openSMBus();
+        private static extern int openSMBus(bool isCreateCOM);
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void closeSMBus();

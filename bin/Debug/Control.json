@@ -1,0 +1,42 @@
+{
+  "enable": false,
+  "modeIndex": 0,
+  "name": {
+    "sensor": [
+      "Intel Core i9-9900K",
+      "NVIDIA GeForce RTX 2080 Ti",
+      "NZXT Kraken Liquid",
+      "DIMM #1",
+      "DIMM #2",
+      "Motherboard #1",
+      "Motherboard #2",
+      "Motherboard #3",
+      "Motherboard #4",
+      "Motherboard #5"
+    ],
+    "fan": [
+      "Fan #1",
+      "Fan #2",
+      "Fan #3",
+      "Fan #4",
+      "Fan #5",
+      "Fan #6",
+      "NZXT Kraken Fan",
+      "NZXT Kraken Pump"
+    ],
+    "control": [
+      "Fan Control #1",
+      "Fan Control #2",
+      "Fan Control #3",
+      "Fan Control #4",
+      "Fan Control #5",
+      "Fan Control #6",
+      "NZXT Kraken Fan",
+      "NZXT Kraken Pump"
+    ]
+  },
+  "control": [],
+  "silence": [],
+  "performance": [],
+  "game": []
+}

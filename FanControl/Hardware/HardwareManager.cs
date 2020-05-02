@@ -160,7 +160,7 @@ namespace FanControl
             }
 
             // DIMM thermal sensor
-            if (SMBus.open() == true)
+            if (SMBus.open(false) == true)
             {
                 int num = 1;
                 var detectBytes = SMBus.i2cDetect();
