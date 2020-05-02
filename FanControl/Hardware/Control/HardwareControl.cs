@@ -33,13 +33,13 @@ namespace FanControl
         public override void update()
         {
             double temp = 0.0f;            
-            if(mLHMSensor != null)
+            if(mLHMSensor != null && mLHMSensor.Value.HasValue == true)
             {
-                temp = (mLHMSensor.Value.HasValue == true) ? (double)mLHMSensor.Value : 0.0f;
+                temp = (double)mLHMSensor.Value;
             }
-            else if (mOHMSensor != null)
+            else if (mOHMSensor != null && mOHMSensor.Value.HasValue == true)
             {
-                temp = (mOHMSensor.Value.HasValue == true) ? (double)mOHMSensor.Value : 0.0f;
+                temp = (double)mOHMSensor.Value;
             }
             temp = Math.Round(temp);
             Value = (int)temp;
@@ -48,11 +48,11 @@ namespace FanControl
 
         public override int getMinSpeed()
         {
-            if (mLHMSensor != null)
+            if (mLHMSensor != null && mLHMSensor.Control != null)
             {
                 return (int)mLHMSensor.Control.MinSoftwareValue;
             }
-            else if (mOHMSensor != null)
+            else if (mOHMSensor != null && mOHMSensor.Control != null)
             {
                 return (int)mOHMSensor.Control.MinSoftwareValue;
             }
@@ -61,11 +61,11 @@ namespace FanControl
 
         public override int getMaxSpeed()
         {
-            if (mLHMSensor != null)
+            if (mLHMSensor != null && mLHMSensor.Control != null)
             {
                 return (int)mLHMSensor.Control.MaxSoftwareValue;
             }
-            else if (mOHMSensor != null)
+            else if (mOHMSensor != null && mOHMSensor.Control != null)
             {
                 return (int)mOHMSensor.Control.MaxSoftwareValue;
             }
@@ -74,13 +74,13 @@ namespace FanControl
 
         public override int setSpeed(int value)
         {
-            if (mLHMSensor != null)
+            if (mLHMSensor != null && mLHMSensor.Control != null)
             {
-                mLHMSensor.Control.SetSoftware((float)value);
+                mLHMSensor.Control.SetSoftware(value);
             }
-            else if (mOHMSensor != null)
+            else if (mOHMSensor != null && mOHMSensor.Control != null)
             {
-                mOHMSensor.Control.SetSoftware((float)value);
+                mOHMSensor.Control.SetSoftware(value);
             }
             Value = value;
             LastValue = value;

@@ -187,6 +187,10 @@ namespace FanControl
             // Motherboard temperature
             this.createMotherBoardTemp();
 
+            // GPU fan
+            this.createGPUFan();
+            this.createGPUFanControl();
+
             Monitor.Exit(mLock);
         }        
 
@@ -393,7 +397,26 @@ namespace FanControl
             {
                 mOHMManager.createFan(ref mFanList);
             }
-        }        
+        }
+
+        private void createGPUFan()
+        {
+            // Gigabyte
+            if (mIsGigabyte == true)
+                return;
+
+            // LibreHardwareMonitor
+            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
+            {
+                mLHMManager.createGPUFan(ref mFanList);
+            }
+
+            // OpenHardwareMonitor
+            else
+            {
+                mOHMManager.createGPUFan(ref mFanList);
+            }
+        }
 
         private void createControl()
         {
@@ -413,6 +436,25 @@ namespace FanControl
             else
             {
                 mOHMManager.createControl(ref mControlList);
+            }
+        }
+
+        private void createGPUFanControl()
+        {
+            // Gigabyte
+            if (mIsGigabyte == true)
+                return;
+
+            // LibreHardwareMonitor
+            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
+            {
+                mLHMManager.createGPUFanControl(ref mControlList);
+            }
+
+            // OpenHardwareMonitor
+            else
+            {
+                mOHMManager.createGPUFanControl(ref mControlList);
             }
         }
 

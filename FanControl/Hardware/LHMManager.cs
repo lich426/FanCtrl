@@ -142,6 +142,12 @@ namespace FanControl
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Length; i++)
             {
+                if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
+                    hardwareArray[i].HardwareType == HardwareType.GpuAmd)
+                {
+                    continue;
+                }
+
                 var sensorArray = hardwareArray[i].Sensors;
                 for (int j = 0; j < sensorArray.Length; j++)
                 {
@@ -192,7 +198,29 @@ namespace FanControl
                     }
                 }
             }
-        }        
+        }
+
+        public void createGPUFan(ref List<BaseSensor> fanList)
+        {
+            int gpuFanNum = 1;
+            var hardwareArray = mComputer.Hardware;
+            for (int i = 0; i < hardwareArray.Length; i++)
+            {
+                if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
+                    hardwareArray[i].HardwareType == HardwareType.GpuAmd)
+                {
+                    var sensorArray = hardwareArray[i].Sensors;
+                    for (int j = 0; j < sensorArray.Length; j++)
+                    {
+                        if (sensorArray[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Control)
+                        {
+                            var fan = new HardwareFanSpeed(sensorArray[j], "GPU Fan #" + gpuFanNum++);
+                            fanList.Add(fan);
+                        }
+                    }
+                }
+            }
+        }
 
         public void createControl(ref List<BaseControl> controlList)
         {
@@ -201,6 +229,12 @@ namespace FanControl
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Length; i++)
             {
+                if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
+                    hardwareArray[i].HardwareType == HardwareType.GpuAmd)
+                {
+                    continue;
+                }
+
                 var sensorArray = hardwareArray[i].Sensors;
                 for (int j = 0; j < sensorArray.Length; j++)
                 {
@@ -246,6 +280,28 @@ namespace FanControl
                                 name = name + " #" + otherFanNum++;
                             }
                             var control = new HardwareControl(subSensorList[k], name);
+                            controlList.Add(control);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void createGPUFanControl(ref List<BaseControl> controlList)
+        {
+            int gpuFanNum = 1;
+            var hardwareArray = mComputer.Hardware;
+            for (int i = 0; i < hardwareArray.Length; i++)
+            {
+                if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
+                    hardwareArray[i].HardwareType == HardwareType.GpuAmd)
+                {
+                    var sensorArray = hardwareArray[i].Sensors;
+                    for (int j = 0; j < sensorArray.Length; j++)
+                    {
+                        if (sensorArray[j].SensorType == LibreHardwareMonitor.Hardware.SensorType.Control)
+                        {
+                            var control = new HardwareControl(sensorArray[j], "GPU Fan Control #" + gpuFanNum++);
                             controlList.Add(control);
                         }
                     }
