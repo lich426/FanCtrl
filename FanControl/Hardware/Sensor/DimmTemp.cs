@@ -9,14 +9,16 @@ namespace FanControl
 {
     public class DimmTemp : BaseSensor
     {
-        public delegate void OnSetDimmTemperature(object sender, byte address);
+        public delegate void OnSetDimmTemperature(object sender, int busIndex, byte address);
         public event OnSetDimmTemperature onSetDimmTemperature;
 
+        private int mBusIndex = 0;
         private byte mAddress = 0;
 
-        public DimmTemp(string name, byte address) : base(SENSOR_TYPE.TEMPERATURE)
+        public DimmTemp(string name, int busIndex, byte address) : base(SENSOR_TYPE.TEMPERATURE)
         {
             Name = name;
+            mBusIndex = busIndex;
             mAddress = address;
         }
 
@@ -26,7 +28,7 @@ namespace FanControl
         }
         public override void update()
         {
-            onSetDimmTemperature(this, mAddress);
+            onSetDimmTemperature(this, mBusIndex, mAddress);
         }
 
     }

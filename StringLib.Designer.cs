@@ -241,6 +241,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   NVIDIA Library과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string NVIDIA_Library {
+            get {
+                return ResourceManager.GetString("NVIDIA_Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   OK과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OK {

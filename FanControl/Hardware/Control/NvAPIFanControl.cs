@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 
 namespace FanControl
 {
-    public class GigabyteNvidiaGpuFanControl : BaseControl
+    public class NvAPIFanControl : BaseControl
     {
-        public delegate void OnSetGigabyteNvidiaControlHandler(int index, int value);
-        public event OnSetGigabyteNvidiaControlHandler onSetGigabyteNvidiaControlHandler;
+        public delegate void OnSetNvAPIControlHandler(int index, int coolerID, int value);
+        public event OnSetNvAPIControlHandler onSetNvAPIControlHandler;
 
-        private int mIndex = -1;
+        private int mIndex = 0;
+        private int mCoolerID = 0;
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
-        public GigabyteNvidiaGpuFanControl(string name, int index, int minSpeed, int maxSpeed) : base()
+        public NvAPIFanControl(string name, int index, int coolerID, int value, int minSpeed, int maxSpeed) : base()
         {
             Name = name;
             mIndex = index;
+            mCoolerID = coolerID;
+            Value = value;
+            LastValue = value;
             mMinSpeed = minSpeed;
             mMaxSpeed = maxSpeed;
         }
@@ -40,23 +44,20 @@ namespace FanControl
 
         public override int setSpeed(int value)
         {
-            int min = this.getMinSpeed();
-            int max = this.getMaxSpeed();
-
-            if (value > max)
+            if (value > mMaxSpeed)
             {
-                Value = max;
+                Value = mMaxSpeed;
             }
-            else if (value < min)
+            else if (value < mMinSpeed)
             {
-                Value = min;
+                Value = mMinSpeed;
             }
             else
             {
                 Value = value;
             }
 
-            onSetGigabyteNvidiaControlHandler(mIndex, Value);
+            onSetNvAPIControlHandler(mIndex, mCoolerID, Value);
 
             LastValue = Value;
             return Value;

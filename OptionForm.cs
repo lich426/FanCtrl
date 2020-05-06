@@ -30,6 +30,8 @@ namespace FanControl
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
             mStartupCheckBox.Checked = OptionManager.getInstance().IsStartUp;
 
+            mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
+
             mLibraryRadioButton1.Checked = (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor);
             mLibraryRadioButton2.Checked = (OptionManager.getInstance().LibraryType == LibraryType.OpenHardwareMonitor);
         }
@@ -41,6 +43,7 @@ namespace FanControl
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
             mStartupCheckBox.Text = StringLib.Start_with_Windows;
             mLibraryGroupBox.Text = StringLib.Library;
+            mNVIDIAGroupBox.Text = StringLib.NVIDIA_Library;
             mOKButton.Text = StringLib.OK;
         }
 
@@ -70,11 +73,13 @@ namespace FanControl
                 interval = 5000;
             }
 
+            var optionManager = OptionManager.getInstance();
             bool isRestart = false;
 
             // 변경
-            if((OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor && mLibraryRadioButton2.Checked == true) ||
-                OptionManager.getInstance().LibraryType == LibraryType.OpenHardwareMonitor && mLibraryRadioButton1.Checked == true)
+            if( (optionManager.LibraryType == LibraryType.LibreHardwareMonitor && mLibraryRadioButton2.Checked == true) ||
+                (optionManager.LibraryType == LibraryType.OpenHardwareMonitor && mLibraryRadioButton1.Checked == true) ||
+                (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked))
             {
                 var result = MessageBox.Show(StringLib.OptionRestart, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result == DialogResult.Cancel)
@@ -82,18 +87,18 @@ namespace FanControl
                 isRestart = true;
             }
 
-            OptionManager.getInstance().Interval = interval;
-            OptionManager.getInstance().IsMinimized = mMinimizeCheckBox.Checked;
-            OptionManager.getInstance().IsStartUp = mStartupCheckBox.Checked;
-            OptionManager.getInstance().LibraryType = (mLibraryRadioButton1.Checked == true) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
-            OptionManager.getInstance().write();
+            optionManager.Interval = interval;
+            optionManager.IsMinimized = mMinimizeCheckBox.Checked;
+            optionManager.IsStartUp = mStartupCheckBox.Checked;
+            optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
+            optionManager.LibraryType = (mLibraryRadioButton1.Checked == true) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
+            optionManager.write();
 
             if(isRestart == true)
             {
                 ControlManager.getInstance().reset();
                 ControlManager.getInstance().write();
                 OnExitHandler(null, EventArgs.Empty);
-                Program.restartProgram();
                 return;
             }
 

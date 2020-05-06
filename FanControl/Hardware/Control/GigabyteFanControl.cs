@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Gigabyte.Engine.EnvironmentControl.CoolingDevice.Fan;
 
 namespace FanControl
 {
     public class GigabyteFanControl : BaseControl
     {
-        public delegate void OnSetSpeedHandler(int index, int value);
-        public event OnSetSpeedHandler onSetSpeedCallback;
+        public delegate void OnSetGigabyteControlHandler(int index, int value);
+        public event OnSetGigabyteControlHandler onSetGigabyteControlHandler;
 
         private int mIndex = -1;
         private int mMinSpeed = 0;
@@ -55,8 +54,8 @@ namespace FanControl
             {
                 Value = value;
             }
-            
-            onSetSpeedCallback(mIndex, Value);
+
+            onSetGigabyteControlHandler(mIndex, Value);
 
             LastValue = Value;
             return Value;

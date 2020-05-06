@@ -10,6 +10,7 @@ using Gigabyte.Engine.GraphicsCard;
 using Gigabyte.Engine.GraphicsCard.Nvidia;
 using Gigabyte.Engine.GraphicsCard.Amd;
 using Gigabyte.EnvironmentControl.Common.CoolingDevice.Fan;
+using Gigabyte.GraphicsCard.Common;
 
 namespace FanControl
 {
@@ -18,7 +19,6 @@ namespace FanControl
         public delegate void LockBusHandler();
         public delegate int AddChangeValueHandler(int value, BaseControl control);
 
-        // Gigabyte
         private SmartGuardianFanControlModule mGigabyteSmartGuardianFanControlModule = null;
         private HardwareMonitorControlModule mGigabyteHardwareMonitorControlModule = null;
         private GraphicsCardControlModule mGigabyteGraphicsCardControlModule = null;
@@ -35,7 +35,7 @@ namespace FanControl
 
         public GigabyteManager() { }
 
-        public bool createGigabyte()
+        public bool createGigabyte(bool isNvAPIWrapper)
         {
             try
             {
@@ -53,31 +53,32 @@ namespace FanControl
                 }
                 controller.Dispose();
 
-                var management = new GraphicsCardServiceManagement();
-                if(management.IsProcessExist() == false)
-                {
-                    this.destroyGigabyte();
-                    return false;
-                }
-
                 this.lockBus();
-
-                mGigabyteGraphicsCardControlModule = new GraphicsCardControlModule();
-                if(mGigabyteGraphicsCardControlModule.AmdGpuCount > 0)
-                {
-                    mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteAmdRadeonGraphicsModuleList);                    
-                }
-                if (mGigabyteGraphicsCardControlModule.NvidiaGpuCount > 0)
-                {
-                    mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteNvidiaGeforceGraphicsModuleList);
-                }
 
                 mGigabyteHardwareMonitorControlModule = new HardwareMonitorControlModule();
                 mGigabyteHardwareMonitorControlModule.Initialize(HardwareMonitorSourceTypes.HwRegister);
-                
+
                 mGigabyteSmartGuardianFanControlModule = new SmartGuardianFanControlModule();
                 var temperatureList = new List<float>();
                 mGigabyteSmartGuardianFanControlModule.GetHardwareMonitorDatas(ref temperatureList, ref mGigabyteFanSpeedList);
+
+                var management = new GraphicsCardServiceManagement();
+                if (management.IsProcessExist() == true)
+                {
+                    mGigabyteGraphicsCardControlModule = new GraphicsCardControlModule();
+                    if (mGigabyteGraphicsCardControlModule.AmdGpuCount > 0)
+                    {
+                        mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteAmdRadeonGraphicsModuleList);
+                    }
+
+                    if (isNvAPIWrapper == false)
+                    {
+                        if (mGigabyteGraphicsCardControlModule.NvidiaGpuCount > 0)
+                        {
+                            mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteNvidiaGeforceGraphicsModuleList);
+                        }
+                    }
+                }
 
                 this.unlockBus();
                 return true;
@@ -133,8 +134,8 @@ namespace FanControl
             UnlockBus();
         }
 
-        public void createTemp(ref List<BaseSensor> sensorList)
-        {
+        public void createTemp(ref List<BaseSensor> sensorList, bool isNvAPIWrapper)
+        {            
             this.lockBus();
             var pHwMonitoredDataList = new HardwareMonitoredDataCollection();
             mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Temperature, ref pHwMonitoredDataList);
@@ -144,12 +145,13 @@ namespace FanControl
             for (int i = 0; i < pHwMonitoredDataList.Count; i++)
             {
                 string name = pHwMonitoredDataList[i].Title;
-                if (this.isExistTemp(ref sensorList, name) == true)
+                while (this.isExistTemp(ref sensorList, name) == true)
                 {
-                    name = name + " #" + num++;
+                    name = pHwMonitoredDataList[i].Title + " #" + num++;
                 }
+
                 var sensor = new GigabyteTemp(name, i);
-                sensor.onGetTemperatureHandler += onGetGigabyteTemperature;
+                sensor.onGetGigabyteTemperatureHandler += onGetGigabyteTemperature;
                 sensorList.Add(sensor);
 
                 mGigabyteTemperatureList.Add(pHwMonitoredDataList[i].Value);
@@ -159,72 +161,100 @@ namespace FanControl
             for (int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
             {
                 string name = mGigabyteAmdRadeonGraphicsModuleList[i].ProductName;
-                if (this.isExistTemp(ref sensorList, name) == true)
+                while (this.isExistTemp(ref sensorList, name) == true)
                 {
-                    name = name + " #" + num++;
+                    name = mGigabyteAmdRadeonGraphicsModuleList[i].ProductName + " #" + num++;
                 }
-                var sensor = new GigabyteAmdGpuTemp(name, mGigabyteAmdRadeonGraphicsModuleList[i]);
+
+                var sensor = new GigabyteAmdGpuTemp(name, i);
+                sensor.onGetGigabyteAmdTemperatureHandler += onGetGigabyteAmdTemperature;
                 sensorList.Add(sensor);
             }
 
-            num = 2;
-            for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
+            if(isNvAPIWrapper == false)
             {
-                string name = mGigabyteNvidiaGeforceGraphicsModuleList[i].ProductName;
-                if (this.isExistTemp(ref sensorList, name) == true)
+                num = 2;
+                for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
                 {
-                    name = name + " #" + num++;
+                    string name = mGigabyteNvidiaGeforceGraphicsModuleList[i].ProductName;
+                    while (this.isExistTemp(ref sensorList, name) == true)
+                    {
+                        name = mGigabyteNvidiaGeforceGraphicsModuleList[i].ProductName + " #" + num++;
+                    }
+
+                    var sensor = new GigabyteNvidiaGpuTemp(name, i);
+                    sensor.onGetGigabyteNvidiaTemperatureHandler += onGetGigabyteNvidiaTemperature;
+                    sensorList.Add(sensor);
                 }
-                var sensor = new GigabyteNvidiaGpuTemp(name, mGigabyteNvidiaGeforceGraphicsModuleList[i]);
-                sensorList.Add(sensor);
             }
         }
 
-        public void createFan(ref List<BaseSensor> fanList)
+        public void createFan(ref List<BaseSensor> fanList, bool isNvAPIWrapper)
         {
             int num = 2;
             for (int i = 0; i < mGigabyteSmartGuardianFanControlModule.FanControlCount; i++)
             {
-                string name;
-                mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out name);
-                if (name.Equals("PCH") == true)
+                string originName;
+                mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out originName);
+                if (originName.Equals("PCH") == true)
                     continue;
 
-                if (this.isExistFan(ref fanList, name) == true)
+                var name = originName;
+                while (this.isExistFan(ref fanList, name) == true)
                 {
-                    name = name + " #" + num++;
+                    name = originName + " #" + num++;
                 }
+
                 var fan = new GigabyteFanSpeed(name, i);
-                fan.onGetFanSpeed += onGetGigabyteFanSpeed;
+                fan.onGetGigabyteFanSpeedHandler += onGetGigabyteFanSpeed;
                 fanList.Add(fan);
             }
 
             int gpuNum = 1;
             for (int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
             {
-                var fan = new GigabyteAmdGpuFanSpeed(mGigabyteAmdRadeonGraphicsModuleList[i], gpuNum++);
+                var name = "GPU Fan #" + gpuNum++;
+                while (this.isExistFan(ref fanList, name) == true)
+                {
+                    name = "GPU Fan #" + gpuNum++;
+                }
+
+                var fan = new GigabyteAmdGpuFanSpeed(name, i);
+                fan.onGetGigabyteAmdFanSpeedHandler += onGetGigabyteAmdFanSpeed;
                 fanList.Add(fan);
             }
-            for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
+
+            if (isNvAPIWrapper == false)
             {
-                var fan = new GigabyteNvidiaFanSpeed(mGigabyteNvidiaGeforceGraphicsModuleList[i], gpuNum++);
-                fanList.Add(fan);
+                for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
+                {
+                    var name = "GPU Fan #" + gpuNum++;
+                    while (this.isExistFan(ref fanList, name) == true)
+                    {
+                        name = "GPU Fan #" + gpuNum++;
+                    }
+
+                    var fan = new GigabyteNvidiaFanSpeed(name, i);
+                    fan.onGetGigabyteNvidiaFanSpeedHandler += onGetGigabyteNvidiaFanSpeed;
+                    fanList.Add(fan);
+                }
             }
         }        
 
-        public void createControl(ref List<BaseControl> controlList)
+        public void createControl(ref List<BaseControl> controlList, bool isNvAPIWrapper)
         {
             int num = 2;
             for (int i = 0; i < mGigabyteSmartGuardianFanControlModule.FanControlCount; i++)
             {
-                string name;
-                mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out name);
-                if (name.Equals("PCH") == true)
+                string originName;
+                mGigabyteSmartGuardianFanControlModule.GetFanControlTitle(i, out originName);
+                if (originName.Equals("PCH") == true)
                     continue;
 
-                if (this.isExistControl(ref controlList, name) == true)
+                var name = originName;
+                while (this.isExistControl(ref controlList, name) == true)
                 {
-                    name = name + " #" + num++;
+                    name = originName + " #" + num++;
                 }
 
                 var config = new SmartFanControlConfig();
@@ -232,26 +262,59 @@ namespace FanControl
 
                 double pwm = (double)config.FanConfig.StartPWM;
                 int value = (int)Math.Round(pwm / 255.0f * 100.0f);
-
+                
                 var control = new GigabyteFanControl(name, i, value);
-                control.onSetSpeedCallback += onSetGigabyteFanSpeed;
+                control.onSetGigabyteControlHandler += onSetGigabyteControl;
                 controlList.Add(control);
             }
 
             int gpuNum = 1;
             for (int i = 0; i < mGigabyteAmdRadeonGraphicsModuleList.Count; i++)
             {
-                var control = new GigabyteAmdGpuFanControl(mGigabyteAmdRadeonGraphicsModuleList[i], gpuNum++);
+                this.lockBus();
+                var info = new GraphicsFanSpeedInfo();
+                mGigabyteAmdRadeonGraphicsModuleList[i].GetFanSpeedInfo(ref info);
+                this.unlockBus();
+
+                var name = "GPU Fan #" + gpuNum++;
+                while (this.isExistControl(ref controlList, name) == true)
+                {
+                    name = "GPU Fan #" + gpuNum++;
+                }
+
+                var control = new GigabyteAmdGpuFanControl(name, i, info.MinPercent, info.MaxPercent);
+                control.onSetGigabyteAmdControlHandler += onSetGigabyteAmdControl;
                 controlList.Add(control);
 
                 this.addChangeValue(control.getMinSpeed(), control);
             }
-            for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
-            {
-                var control = new GigabyteNvidiaGpuFanControl(mGigabyteNvidiaGeforceGraphicsModuleList[i], gpuNum++);
-                controlList.Add(control);
 
-                this.addChangeValue(control.getMinSpeed(), control);
+            if (isNvAPIWrapper == false)
+            {
+                for (int i = 0; i < mGigabyteNvidiaGeforceGraphicsModuleList.Count; i++)
+                {
+                    this.lockBus();
+                    var info = new GraphicsCoolerSetting();
+                    mGigabyteNvidiaGeforceGraphicsModuleList[i].GetFanSpeedInfo(ref info);
+                    info.Support = true;
+                    info.Manual = true;
+                    this.unlockBus();
+
+                    int minPercent = (int)Math.Ceiling(info.Config.Minimum);
+                    int maxPercent = (int)Math.Ceiling(info.Config.Maximum);
+
+                    var name = "GPU Fan #" + gpuNum++;
+                    while (this.isExistControl(ref controlList, name) == true)
+                    {
+                        name = "GPU Fan #" + gpuNum++;
+                    }
+
+                    var control = new GigabyteNvidiaGpuFanControl(name, i, minPercent, maxPercent);
+                    control.onSetGigabyteNvidiaControlHandler += onSetGigabyteNvidiaControl;
+                    controlList.Add(control);
+
+                    this.addChangeValue(control.getMinSpeed(), control);
+                }
             }
         }
 
@@ -291,16 +354,36 @@ namespace FanControl
             return false;
         }
 
-        private void onSetGigabyteFanSpeed(int index, int value)
-        {
-            this.lockBus();
-            mGigabyteSmartGuardianFanControlModule.SetCalibrationPwm(index, value);
-            this.unlockBus();
-        }
-
         private float onGetGigabyteFanSpeed(int index)
         {
             return mGigabyteFanSpeedList[index];
+        }
+
+        private float onGetGigabyteAmdFanSpeed(int index)
+        {
+            float speed = 0.0f;
+            FanSpeedType type = FanSpeedType.RPM;
+            this.lockBus();
+            try
+            {
+                mGigabyteAmdRadeonGraphicsModuleList[index].GetFanSpeed(ref speed, ref type);
+            }
+            catch { }            
+            this.unlockBus();
+            return speed;
+        }
+
+        private float onGetGigabyteNvidiaFanSpeed(int index)
+        {
+            float speed = 0.0f;
+            this.lockBus();
+            try
+            {
+                mGigabyteNvidiaGeforceGraphicsModuleList[index].GetFanSpeed(ref speed);
+            }
+            catch { }
+            this.unlockBus();
+            return speed;
         }
 
         private float onGetGigabyteTemperature(int index)
@@ -308,14 +391,77 @@ namespace FanControl
             return mGigabyteTemperatureList[index];
         }
 
-        public void update()
+        private float onGetGigabyteAmdTemperature(int index)
+        {
+            float temp = 0.0f;
+            this.lockBus();
+            try
+            {
+                mGigabyteAmdRadeonGraphicsModuleList[index].GetTemperature(ref temp);
+            }
+            catch { }
+            this.unlockBus();
+            return temp;
+        }
+
+        private float onGetGigabyteNvidiaTemperature(int index)
+        {
+            float temp = 0.0f;
+            this.lockBus();
+            try
+            {
+                mGigabyteNvidiaGeforceGraphicsModuleList[index].GetTemperature(ref temp);
+            }
+            catch { }
+            this.unlockBus();
+            return temp;
+        }
+
+        private void onSetGigabyteControl(int index, int value)
         {
             this.lockBus();
-            var tempDataList = new HardwareMonitoredDataCollection();
-            mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Temperature, ref tempDataList);
+            try
+            {
+                mGigabyteSmartGuardianFanControlModule.SetCalibrationPwm(index, value);
+            }
+            catch { }
+            this.unlockBus();
+        }
 
+        private void onSetGigabyteAmdControl(int index, int value)
+        {
+            this.lockBus();
+            try
+            {
+                mGigabyteAmdRadeonGraphicsModuleList[index].SetFanSpeed(value);
+            }
+            catch { }
+            this.unlockBus();
+        }
+
+        private void onSetGigabyteNvidiaControl(int index, int value)
+        {
+            this.lockBus();
+            try
+            {
+                mGigabyteNvidiaGeforceGraphicsModuleList[index].SetFanSpeed(value);
+            }
+            catch { }
+            this.unlockBus();
+        }
+
+        public void update()
+        {
+            var tempDataList = new HardwareMonitoredDataCollection();
             var fanDataList = new HardwareMonitoredDataCollection();
-            mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Fan, ref fanDataList);
+
+            this.lockBus();
+            try
+            {
+                mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Temperature, ref tempDataList);
+                mGigabyteHardwareMonitorControlModule.GetCurrentMonitoredData(SensorTypes.Fan, ref fanDataList);
+            }
+            catch { }
             this.unlockBus();
 
             for (int i = 0; i < tempDataList.Count; i++)

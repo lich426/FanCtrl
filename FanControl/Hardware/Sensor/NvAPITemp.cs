@@ -4,18 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibreHardwareMonitor.Hardware;
+using OpenHardwareMonitor.Hardware;
 
 namespace FanControl
 {
-    public class GigabyteTemp : BaseSensor
+    public class NvAPITemp : BaseSensor
     {
-        public delegate float OnGetGigabyteTemperatureHandler(int index);
+        public delegate int OnGetNvAPITemperatureHandler(int index);
 
-        public event OnGetGigabyteTemperatureHandler onGetGigabyteTemperatureHandler;
+        public event OnGetNvAPITemperatureHandler onGetNvAPITemperatureHandler;
 
         private int mIndex = -1;
 
-        public GigabyteTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
+        public NvAPITemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
         {
             Name = name;
             mIndex = index;
@@ -27,9 +28,7 @@ namespace FanControl
         }
         public override void update()
         {
-            float temp = onGetGigabyteTemperatureHandler(mIndex);
-            Value = (int)Math.Round(temp);
+            Value = onGetNvAPITemperatureHandler(mIndex);
         }
-
     }
 }

@@ -28,12 +28,15 @@ namespace FanControl
         {
             Interval = 1000;
             LibraryType = LibraryType.LibreHardwareMonitor;
+            IsNvAPIWrapper = false;
             IsMinimized = false;
         }
         
         public int Interval { get; set; }
 
         public LibraryType LibraryType { get; set; }
+
+        public bool IsNvAPIWrapper { get; set; }
 
         public bool IsMinimized { get; set; }
 
@@ -64,6 +67,7 @@ namespace FanControl
                 else
                     LibraryType = (rootObject.Value<int>("library") == 0) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
 
+                IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : false;
                 IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
                 IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
             }
@@ -81,6 +85,7 @@ namespace FanControl
                 var rootObject = new JObject();
                 rootObject["interval"] = Interval;
                 rootObject["library"] = (LibraryType == LibraryType.LibreHardwareMonitor) ? 0 : 1;
+                rootObject["nvapi"] = IsNvAPIWrapper;
                 rootObject["minimized"] = IsMinimized;
                 rootObject["startup"] = IsStartUp;
                 File.WriteAllText(cOptionFileName, rootObject.ToString());

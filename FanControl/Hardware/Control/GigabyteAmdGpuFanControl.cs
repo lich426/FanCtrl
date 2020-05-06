@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Gigabyte.Engine.EnvironmentControl.CoolingDevice.Fan;
-using Gigabyte.Engine.GraphicsCard.Amd;
-using Gigabyte.GraphicsCard.Common;
 
 namespace FanControl
 {
     public class GigabyteAmdGpuFanControl : BaseControl
     {
-        private AmdRadeonGraphicsModule mModule = null;
+        public delegate void OnSetGigabyteAmdControlHandler(int index, int value);
+        public event OnSetGigabyteAmdControlHandler onSetGigabyteAmdControlHandler;
 
-        public GigabyteAmdGpuFanControl(AmdRadeonGraphicsModule module, int num) : base()
+        private int mIndex = -1;
+        private int mMinSpeed = 0;
+        private int mMaxSpeed = 100;
+
+        public GigabyteAmdGpuFanControl(string name, int index, int minSpeed, int maxSpeed) : base()
         {
-            Name = "GPU Fan #" + num;
-            mModule = module;
+            Name = name;
+            mIndex = index;
+            mMinSpeed = minSpeed;
+            mMaxSpeed = maxSpeed;
         }
 
         public override void update()
@@ -26,16 +30,12 @@ namespace FanControl
 
         public override int getMinSpeed()
         {
-            var info = new GraphicsFanSpeedInfo();
-            mModule.GetFanSpeedInfo(ref info);
-            return info.MinPercent;
+            return mMinSpeed;
         }
 
         public override int getMaxSpeed()
         {
-            var info = new GraphicsFanSpeedInfo();
-            mModule.GetFanSpeedInfo(ref info);
-            return info.MaxPercent;
+            return mMaxSpeed;
         }
 
         public override int setSpeed(int value)
@@ -56,7 +56,8 @@ namespace FanControl
                 Value = value;
             }
 
-            mModule.SetFanSpeed(Value);
+            onSetGigabyteAmdControlHandler(mIndex, Value);
+
             LastValue = Value;
             return Value;
         }

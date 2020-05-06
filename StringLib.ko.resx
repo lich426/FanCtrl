@@ -177,6 +177,9 @@
   <data name="Not_Match" xml:space="preserve">
     <value>하드웨어와 저장된 설정 파일(Config.json) 내용이 일치하지 않습니다!</value>
   </data>
+  <data name="NVIDIA_Library" xml:space="preserve">
+    <value>NVIDIA 라이브러리</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>확인</value>
   </data>

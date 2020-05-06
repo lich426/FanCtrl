@@ -1,6 +1,4 @@
-﻿using Gigabyte.Engine.GraphicsCard.Amd;
-using Gigabyte.GraphicsCard.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +8,16 @@ namespace FanControl
 {
     public class GigabyteAmdGpuFanSpeed : BaseSensor
     {
-        private AmdRadeonGraphicsModule mModule = null;
+        public delegate float OnGetGigabyteAmdFanSpeedHandler(int index);
 
-        public GigabyteAmdGpuFanSpeed(AmdRadeonGraphicsModule module, int num) : base(SENSOR_TYPE.TEMPERATURE)
+        public event OnGetGigabyteAmdFanSpeedHandler onGetGigabyteAmdFanSpeedHandler;
+
+        private int mIndex = -1;
+
+        public GigabyteAmdGpuFanSpeed(string name, int index) : base(SENSOR_TYPE.FAN)
         {
-            Name = "GPU Fan #" + num;
-            mModule = module;
+            Name = name;
+            mIndex = index;
         }
 
         public override string getString()
@@ -26,9 +28,7 @@ namespace FanControl
 
         public override void update()
         {
-            float speed = 0.0f;
-            FanSpeedType type = FanSpeedType.RPM;
-            mModule.GetFanSpeed(ref speed, ref type);
+            float speed = onGetGigabyteAmdFanSpeedHandler(mIndex);
             Value = (int)Math.Round(speed);
         }
         

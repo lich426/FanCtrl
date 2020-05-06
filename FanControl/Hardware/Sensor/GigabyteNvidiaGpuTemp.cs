@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Gigabyte.Engine.GraphicsCard.Nvidia;
 
 namespace FanControl
 {
     public class GigabyteNvidiaGpuTemp : BaseSensor
     {
-        private NvidiaGeforceGraphicsModule mModule = null;
+        public delegate float OnGetGigabyteNvidiaTemperatureHandler(int index);
 
-        public GigabyteNvidiaGpuTemp(string name, NvidiaGeforceGraphicsModule module) : base(SENSOR_TYPE.TEMPERATURE)
+        public event OnGetGigabyteNvidiaTemperatureHandler onGetGigabyteNvidiaTemperatureHandler;
+
+        private int mIndex = -1;
+
+        public GigabyteNvidiaGpuTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
         {
             Name = name;// module.ProductName;
-            mModule = module;
+            mIndex = index;
         }
 
         public override string getString()
@@ -23,8 +26,7 @@ namespace FanControl
         }
         public override void update()
         {
-            float temp = 0.0f;
-            mModule.GetTemperature(ref temp);
+            float temp = onGetGigabyteNvidiaTemperatureHandler(mIndex);
             Value = (int)Math.Round(temp);
         }
 

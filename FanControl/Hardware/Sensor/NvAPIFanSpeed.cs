@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace FanControl
 {
-    public class GigabyteFanSpeed : BaseSensor
+    public class NvAPIFanSpeed : BaseSensor
     {
-        public delegate float OnGetGigabyteFanSpeedHandler(int index);
+        public delegate int OnGetNvAPIFanSpeedHandler(int index, int coolerID);
 
-        public event OnGetGigabyteFanSpeedHandler onGetGigabyteFanSpeedHandler;
+        public event OnGetNvAPIFanSpeedHandler onGetNvAPIFanSpeedHandler;
 
-        private int mIndex = -1;
+        private int mIndex = 0;
+        private int mCooerID = 0;
         
-        public GigabyteFanSpeed(string name, int index) : base(SENSOR_TYPE.FAN)
+        public NvAPIFanSpeed(string name, int index, int coolerID) : base(SENSOR_TYPE.FAN)
         {
             Name = name;
             mIndex = index;
+            mCooerID = coolerID;
         }
 
         public override string getString()
@@ -29,8 +31,7 @@ namespace FanControl
 
         public override void update()
         {
-            float speed = onGetGigabyteFanSpeedHandler(mIndex);
-            Value = (int)Math.Round(speed);
+            Value = onGetNvAPIFanSpeedHandler(mIndex, mCooerID);
         }
         
     }

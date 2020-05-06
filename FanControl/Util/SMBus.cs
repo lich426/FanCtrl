@@ -69,7 +69,27 @@ namespace FanControl
             Monitor.Exit(sLock);
         }
 
-        public static byte[] i2cDetect()
+        public static int getCount()
+        {
+            Monitor.Enter(sLock);
+            if (sIsOpen == false)
+            {
+                Monitor.Exit(sLock);
+                return 0;
+            }
+
+            try
+            {
+                int count = SMBus.getSMBusCount();
+                Monitor.Exit(sLock);
+                return count;
+            }
+            catch { }
+            Monitor.Exit(sLock);
+            return 0;
+        }
+
+        public static byte[] i2cDetect(int index)
         {
             Monitor.Enter(sLock);
             if (sIsOpen == false)
@@ -80,7 +100,7 @@ namespace FanControl
 
             try
             {
-                var pByteArrayData = SMBus.getI2CDetect();
+                var pByteArrayData = SMBus.getI2CDetect(index);
                 var retData = SMBus.getBytes(pByteArrayData);
                 SMBus.deleteByteArrayData(pByteArrayData);
                 Monitor.Exit(sLock);
@@ -91,7 +111,7 @@ namespace FanControl
             return null;
         }
 
-        public static byte[] i2cByteData(byte address, int length)
+        public static byte[] i2cByteData(int index, byte address, int length)
         {
             Monitor.Enter(sLock);
             if (sIsOpen == false)
@@ -102,7 +122,7 @@ namespace FanControl
 
             try
             {
-                var pByteArrayData = SMBus.getI2CByteData(address, length);
+                var pByteArrayData = SMBus.getI2CByteData(index, address, length);
                 var retData = SMBus.getBytes(pByteArrayData);
                 SMBus.deleteByteArrayData(pByteArrayData);
                 Monitor.Exit(sLock);
@@ -113,7 +133,7 @@ namespace FanControl
             return null;
         }
 
-        public static ushort[] i2cWordData(byte address, int length)
+        public static ushort[] i2cWordData(int index, byte address, int length)
         {
             Monitor.Enter(sLock);
             if (sIsOpen == false)
@@ -124,7 +144,7 @@ namespace FanControl
 
             try
             {
-                var pByteArrayData = SMBus.getI2CWordData(address, length);
+                var pByteArrayData = SMBus.getI2CWordData(index, address, length);
                 var datas = SMBus.getBytes(pByteArrayData);
                 SMBus.deleteByteArrayData(pByteArrayData);
 
@@ -157,13 +177,16 @@ namespace FanControl
         private static extern void closeSMBus();
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr getI2CDetect();
+        private static extern int getSMBusCount();
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr getI2CByteData(byte address, int length);
+        private static extern IntPtr getI2CDetect(int smbusIndex);
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr getI2CWordData(byte address, int length);
+        private static extern IntPtr getI2CByteData(int smbusIndex, byte address, int length);
+
+        [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr getI2CWordData(int smbusIndex, byte address, int length);
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr getData(IntPtr pByteArrayData);

@@ -177,6 +177,9 @@
   <data name="Not_Match" xml:space="preserve">
     <value>The hardware and Control.json file do not match!</value>
   </data>
+  <data name="NVIDIA_Library" xml:space="preserve">
+    <value>NVIDIA Library</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>

@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Gigabyte.Engine.GraphicsCard.Amd;
 
 namespace FanControl
 {
     public class GigabyteAmdGpuTemp : BaseSensor
     {
-        private AmdRadeonGraphicsModule mModule = null;
+        public delegate float OnGetGigabyteAmdTemperatureHandler(int index);
 
-        public GigabyteAmdGpuTemp(string name, AmdRadeonGraphicsModule module) : base(SENSOR_TYPE.TEMPERATURE)
+        public event OnGetGigabyteAmdTemperatureHandler onGetGigabyteAmdTemperatureHandler;
+
+        private int mIndex = -1;
+
+        public GigabyteAmdGpuTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
         {
             Name = name;// module.ProductName;
-            mModule = module;
+            mIndex = index;
         }
 
         public override string getString()
@@ -23,8 +26,7 @@ namespace FanControl
         }
         public override void update()
         {
-            float temp = 0.0f;
-            mModule.GetTemperature(ref temp);
+            float temp = onGetGigabyteAmdTemperatureHandler(mIndex);
             Value = (int)Math.Round(temp);
         }
 

@@ -90,11 +90,17 @@ namespace FanControl
                 controlManager.setName(2, i, false, temp.Name);
             }
 
-            controlManager.read();
-            if (controlManager.checkData() == false)
+            if (controlManager.read() == false)
             {
                 MessageBox.Show(StringLib.Not_Match);
             }
+            else
+            {
+                if (controlManager.checkData() == false)
+                {
+                    MessageBox.Show(StringLib.Not_Match);
+                }
+            }            
 
             this.createComponent();
             this.ActiveControl = mFanControlButton;

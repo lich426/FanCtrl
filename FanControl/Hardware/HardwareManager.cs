@@ -4,6 +4,8 @@ using System.Threading;
 using NZXTSharp.KrakenX;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using NvAPIWrapper;
+using NvAPIWrapper.GPU;
 
 namespace FanControl
 {
@@ -85,7 +87,7 @@ namespace FanControl
             mGigabyteManager.LockBus += lockBus;
             mGigabyteManager.UnlockBus += unlockBus;
 
-            mIsGigabyte = mGigabyteManager.createGigabyte();
+            mIsGigabyte = mGigabyteManager.createGigabyte(OptionManager.getInstance().IsNvAPIWrapper);
             if (mIsGigabyte == false)
             {
                 mGigabyteManager = null;
@@ -103,6 +105,12 @@ namespace FanControl
                     mOHMManager = new OHMManager();
                     mOHMManager.start();
                 }
+            }
+
+            // NvAPIWrapper
+            if(OptionManager.getInstance().IsNvAPIWrapper == true)
+            {
+                NVIDIA.Initialize();
             }
 
             this.createTemp();
@@ -160,36 +168,44 @@ namespace FanControl
             }
 
             // DIMM thermal sensor
+            this.lockBus();
             if (SMBus.open(false) == true)
             {
                 int num = 1;
-                var detectBytes = SMBus.i2cDetect();
-                if(detectBytes != null)
-                {
-                    // 0x18 ~ 0x20
-                    for (int i = 0; i < detectBytes.Length; i++)
-                    {
-                        if (i < 24)
-                            continue;
-                        else if (i > 32)
-                            break;
+                int busCount = SMBus.getCount();
 
-                        if (detectBytes[i] == (byte)i)
+                for(int i = 0; i < busCount; i++)
+                {
+                    var detectBytes = SMBus.i2cDetect(i);
+                    if (detectBytes != null)
+                    {
+                        // 0x18 ~ 0x20
+                        for (int j = 0; j < detectBytes.Length; j++)
                         {
-                            var sensor = new DimmTemp("DIMM #" + num++, detectBytes[i]);
-                            sensor.onSetDimmTemperature += onSetDimmTemperature;
-                            mSensorList.Add(sensor);
+                            if (j < 24)
+                                continue;
+                            else if (j > 32)
+                                break;
+
+                            if (detectBytes[j] == (byte)j)
+                            {
+                                var sensor = new DimmTemp("DIMM #" + num++, i, detectBytes[j]);
+                                sensor.onSetDimmTemperature += onSetDimmTemperature;
+                                mSensorList.Add(sensor);
+                            }
                         }
                     }
                 }
             }
+            this.unlockBus();
 
             // Motherboard temperature
             this.createMotherBoardTemp();
 
-            // GPU fan
+            // GPU
+            this.createGPUTemp();
             this.createGPUFan();
-            this.createGPUFanControl();
+            this.createGPUControl();
 
             Monitor.Exit(mLock);
         }        
@@ -344,20 +360,20 @@ namespace FanControl
             // Gigabyte
             if (mIsGigabyte == true)
             {
-                mGigabyteManager.createTemp(ref mSensorList);
+                mGigabyteManager.createTemp(ref mSensorList, OptionManager.getInstance().IsNvAPIWrapper);
             }
 
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createTemp(ref mSensorList);
+                mLHMManager.createTemp(ref mSensorList, OptionManager.getInstance().IsNvAPIWrapper);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createTemp(ref mSensorList);
-            }
+                mOHMManager.createTemp(ref mSensorList, OptionManager.getInstance().IsNvAPIWrapper);
+            }            
         }
 
         private void createMotherBoardTemp()
@@ -383,7 +399,7 @@ namespace FanControl
             // Gigabyte
             if (mIsGigabyte == true)
             {
-                mGigabyteManager.createFan(ref mFanList);
+                mGigabyteManager.createFan(ref mFanList, OptionManager.getInstance().IsNvAPIWrapper);
             }
 
             // LibreHardwareMonitor
@@ -399,31 +415,12 @@ namespace FanControl
             }
         }
 
-        private void createGPUFan()
-        {
-            // Gigabyte
-            if (mIsGigabyte == true)
-                return;
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHMManager.createGPUFan(ref mFanList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHMManager.createGPUFan(ref mFanList);
-            }
-        }
-
         private void createControl()
         {
             // Gigabyte
             if (mIsGigabyte == true)
             {
-                mGigabyteManager.createControl(ref mControlList);
+                mGigabyteManager.createControl(ref mControlList, OptionManager.getInstance().IsNvAPIWrapper);
             }
 
             // LibreHardwareMonitor
@@ -439,31 +436,175 @@ namespace FanControl
             }
         }
 
-        private void createGPUFanControl()
+        private void createGPUTemp()
+        {
+            if (OptionManager.getInstance().IsNvAPIWrapper == true)
+            {
+                this.lockBus();
+                try
+                {
+                    int gpuNum = 2;
+                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                    for (int i = 0; i < gpuArray.Length; i++)
+                    {
+                        var gpu = gpuArray[i];
+                        var name = gpu.FullName;
+                        while (this.isExistTemp(name) == true)
+                        {
+                            name = gpu.FullName + " #" + gpuNum++;
+                        }
+
+                        var temp = new NvAPITemp(name, i);
+                        temp.onGetNvAPITemperatureHandler += onGetNvAPITemperature;
+                        mSensorList.Add(temp);
+                    }
+                }
+                catch { }                
+                this.unlockBus();
+            }
+        }
+
+        private void createGPUFan()
         {
             // Gigabyte
-            if (mIsGigabyte == true)
-                return;
+            if (mIsGigabyte == true) { }
 
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createGPUFanControl(ref mControlList);
+                mLHMManager.createGPUFan(ref mFanList, OptionManager.getInstance().IsNvAPIWrapper);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createGPUFanControl(ref mControlList);
+                mOHMManager.createGPUFan(ref mFanList, OptionManager.getInstance().IsNvAPIWrapper);
+            }
+
+            if (OptionManager.getInstance().IsNvAPIWrapper == true)
+            {
+                this.lockBus();
+                try
+                {
+                    int gpuFanNum = 1;
+                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                    for (int i = 0; i < gpuArray.Length; i++)
+                    {
+                        var e = gpuArray[i].CoolerInformation.Coolers.GetEnumerator();
+                        while (e.MoveNext())
+                        {
+                            var value = e.Current;
+                            var name = "GPU Fan #" + gpuFanNum++;
+                            while (this.isExistFan(name) == true)
+                            {
+                                name = "GPU Fan #" + gpuFanNum++;
+                            }
+
+                            var fan = new NvAPIFanSpeed(name, i, value.CoolerId);
+                            fan.onGetNvAPIFanSpeedHandler += onGetNvAPIFanSpeed;
+                            mFanList.Add(fan);
+                        }
+                    }
+                }
+                catch { }                
+                this.unlockBus();
             }
         }
 
-        private void onSetDimmTemperature(object sender, byte address)
+        private void createGPUControl()
+        {
+            // Gigabyte
+            if (mIsGigabyte == true) { }
+
+            // LibreHardwareMonitor
+            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
+            {
+                mLHMManager.createGPUFanControl(ref mControlList, OptionManager.getInstance().IsNvAPIWrapper);
+            }
+
+            // OpenHardwareMonitor
+            else
+            {
+                mOHMManager.createGPUFanControl(ref mControlList, OptionManager.getInstance().IsNvAPIWrapper);
+            }
+
+            if (OptionManager.getInstance().IsNvAPIWrapper == true)
+            {
+                this.lockBus();
+                try
+                {
+                    int gpuFanNum = 1;
+                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                    for (int i = 0; i < gpuArray.Length; i++)
+                    {
+                        var e = gpuArray[i].CoolerInformation.Coolers.GetEnumerator();
+                        while (e.MoveNext())
+                        {
+                            var value = e.Current;
+                            int coolerID = value.CoolerId;
+                            int speed = value.CurrentLevel;
+                            int minSpeed = value.DefaultMinimumLevel;
+                            int maxSpeed = value.DefaultMaximumLevel;
+
+                            var name = "GPU Fan Control #" + gpuFanNum++;
+                            while (this.isExistControl(name) == true)
+                            {
+                                name = "GPU Fan Control #" + gpuFanNum++;
+                            }
+
+                            var control = new NvAPIFanControl(name, i, coolerID, speed, minSpeed, maxSpeed);
+                            control.onSetNvAPIControlHandler += onSetNvApiControl;
+                            mControlList.Add(control);
+                        }
+                    }
+                }
+                catch { }                
+                this.unlockBus();
+            }
+        }
+
+        private bool isExistTemp(string name)
+        {
+            for (int i = 0; i < mSensorList.Count; i++)
+            {
+                if (mSensorList[i].Name.Equals(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool isExistFan(string name)
+        {
+            for (int i = 0; i < mFanList.Count; i++)
+            {
+                if (mFanList[i].Name.Equals(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool isExistControl(string name)
+        {
+            for (int i = 0; i < mControlList.Count; i++)
+            {
+                if (mControlList[i].Name.Equals(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void onSetDimmTemperature(object sender, int busIndex, byte address)
         {
             var sensor = (DimmTemp)sender;
 
             this.lockBus();
-            var wordArray = SMBus.i2cWordData(address, 10);
+            var wordArray = SMBus.i2cWordData(busIndex, address, 10);
             if(wordArray == null)
             {
                 this.unlockBus();
@@ -483,6 +624,67 @@ namespace FanControl
                     sensor.Value = (int)value;
                 }
             }            
+        }
+
+        private int onGetNvAPITemperature(int index)
+        {
+            this.lockBus();
+            int temp = 0;
+            var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+            if (index >= gpuArray.Length)
+            {
+                this.unlockBus();
+                return temp;
+            }
+            
+            var e = gpuArray[index].ThermalInformation.ThermalSensors.GetEnumerator();
+            while(e.MoveNext())
+            {
+                var value = e.Current;
+                temp = value.CurrentTemperature;
+                break;
+            }
+            this.unlockBus();
+            return temp;
+        }
+
+        private int onGetNvAPIFanSpeed(int index, int coolerID)
+        {
+            this.lockBus();
+            int speed = 0;
+            var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+            if (index >= gpuArray.Length)
+            {
+                this.unlockBus();
+                return speed;
+            }
+
+            var e = gpuArray[index].CoolerInformation.Coolers.GetEnumerator();
+            while (e.MoveNext())
+            {
+                var value = e.Current;
+                if(value.CoolerId == coolerID)
+                {
+                    speed = value.CurrentFanSpeedInRPM;
+                    break;
+                }
+            }
+            this.unlockBus();
+            return speed;
+        }
+
+        private void onSetNvApiControl(int index, int coolerID, int value)
+        {
+            this.lockBus();
+            var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+            if (index >= gpuArray.Length)
+            {
+                this.unlockBus();
+                return;
+            }
+            var info = gpuArray[index].CoolerInformation;
+            info.SetCoolerSettings(coolerID, value);
+            this.unlockBus();
         }
 
         private void onUpdate(object sender, EventArgs e)
