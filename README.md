@@ -10,13 +10,14 @@ NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
-NZXT Kraken Control : [NZXTSharp][2]<br>
-USB Communication : [HidLibrary][3]<br>
-Json : [Newtonsoft Json][4]<br>
-Graph : [ZedGraph][5]<br>
+Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][2]<br>
+NZXT Kraken Control : [NZXTSharp][3]<br>
+USB Communication : [HidLibrary][4]<br>
+Json : [Newtonsoft Json][5]<br>
+Graph : [ZedGraph][6]<br>
 
 ## License
-[GNU General Public License v3.0][6]
+[GNU General Public License v3.0][7]
 
 ## Precautions
  - FanControl is free software with a GNU GPLv3 license.<br>
@@ -25,13 +26,14 @@ Graph : [ZedGraph][5]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanControl_v1.0.8.zip][7]
+Download : [FanControl_v1.0.9.zip][8]
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
-[2]: https://github.com/akmadian/NZXTSharp
-[3]: https://github.com/mikeobrien/HidLibrary
-[4]: https://www.newtonsoft.com/json
-[5]: http://zedgraph.sourceforge.net/samples.html
-[6]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[7]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.8.zip
+[2]: https://github.com/falahati/NvAPIWrapper
+[3]: https://github.com/akmadian/NZXTSharp
+[4]: https://github.com/mikeobrien/HidLibrary
+[5]: https://www.newtonsoft.com/json
+[6]: http://zedgraph.sourceforge.net/samples.html
+[7]: https://github.com/lich426/FanControl/blob/master/LICENSE
+[8]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.9.zip
