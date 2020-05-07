@@ -11,7 +11,7 @@ NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][2]<br>
-Gigabyte board Sensor and Fan Control : [App center][3]<br>
+Gigabyte board Sensor and Fan Control : [App Center][3]<br>
 NZXT Kraken Control : [NZXTSharp][4]<br>
 USB Communication : [HidLibrary][5]<br>
 Json : [Newtonsoft Json][6]<br>
