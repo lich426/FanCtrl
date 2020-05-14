@@ -2,8 +2,9 @@
 
 FanControl is a software that allows you to automatically control the fan speed on your PC.<br>
 Requires .NET framework 4.6 or higher.<br>
-Gigabyte board : App Center installation is required (https://www.gigabyte.com/Support/Utility/Motherboard)<br>
+Gigabyte board : AppCenter installation is required (https://www.gigabyte.com/Support/Utility/Motherboard)<br>
 NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
+EVGA CLC : support
 
 ![FanControl](https://github.com/lich426/FanControl/blob/master/img/1.png)<br>
 ![Auto Fan Control](https://github.com/lich426/FanControl/blob/master/img/2.png)
@@ -11,8 +12,7 @@ NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][2]<br>
-NZXT Kraken Control : [NZXTSharp][3]<br>
-USB Communication : [HidLibrary][4]<br>
+USB Communication : [HidLibrary][3], [SiUSBXp][4]<br>
 Json : [Newtonsoft Json][5]<br>
 Graph : [ZedGraph][6]<br>
 
@@ -26,14 +26,14 @@ Graph : [ZedGraph][6]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanControl_v1.0.9.zip][8]
+Download : [FanControl_v1.1.0.zip][8]
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
 [2]: https://github.com/falahati/NvAPIWrapper
-[3]: https://github.com/akmadian/NZXTSharp
-[4]: https://github.com/mikeobrien/HidLibrary
+[3]: https://github.com/mikeobrien/HidLibrary
+[4]: https://www.silabs.com/products/development-tools/software/direct-access-drivers
 [5]: https://www.newtonsoft.com/json
 [6]: http://zedgraph.sourceforge.net/samples.html
 [7]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[8]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.0.9.zip
+[8]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.1.0.zip
