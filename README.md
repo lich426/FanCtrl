@@ -28,6 +28,9 @@ Graph : [ZedGraph][6]<br>
 ## Portable
 Download : [FanControl_v1.1.0.zip][8]
 
+## Donate with PayPal
+[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
+
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
 [2]: https://github.com/falahati/NvAPIWrapper
