@@ -73,34 +73,10 @@ namespace FanControl
 
             mEnableCheckBox.Checked = ControlManager.getInstance().IsEnable;
 
-            if (mModeIndex == 0)
-            {
-                mNormalRadioButton.Checked = true;
-                mSilenceRadioButton.Checked = false;
-                mPerformanceRadioButton.Checked = false;
-                mGameRadioButton.Checked = false;
-            }
-            else if (mModeIndex == 1)
-            {
-                mNormalRadioButton.Checked = false;
-                mSilenceRadioButton.Checked = true;
-                mPerformanceRadioButton.Checked = false;
-                mGameRadioButton.Checked = false;
-            }
-            else if (mModeIndex == 2)
-            {
-                mNormalRadioButton.Checked = false;
-                mSilenceRadioButton.Checked = false;
-                mPerformanceRadioButton.Checked = true;
-                mGameRadioButton.Checked = false;
-            }
-            else
-            {
-                mNormalRadioButton.Checked = false;
-                mSilenceRadioButton.Checked = false;
-                mPerformanceRadioButton.Checked = false;
-                mGameRadioButton.Checked = true;
-            }
+            mNormalRadioButton.Checked = (mModeIndex == 0);
+            mSilenceRadioButton.Checked = (mModeIndex == 1);
+            mPerformanceRadioButton.Checked = (mModeIndex == 2);
+            mGameRadioButton.Checked = (mModeIndex == 3);
 
             mNormalRadioButton.Click += onRadioButtonClick;
             mSilenceRadioButton.Click += onRadioButtonClick;
@@ -181,7 +157,7 @@ namespace FanControl
             {
                 mPointList.Add(5 * i, 50);
             }
-            mLineItem = mGraph.GraphPane.AddCurve("Fan speed", mPointList, Color.Blue, SymbolType.Circle);
+            mLineItem = mGraph.GraphPane.AddCurve("Graph", mPointList, Color.Blue, SymbolType.Circle);
             mLineItem.Line.Width = 2.0f;
             mLineItem.Symbol.Size = 10.0f;
             mLineItem.Symbol.Fill = new Fill(Color.White);
@@ -204,34 +180,10 @@ namespace FanControl
 
             mModeIndex = index;
 
-            if (mModeIndex == 0)
-            {
-                mNormalRadioButton.Checked = true;
-                mSilenceRadioButton.Checked = false;
-                mPerformanceRadioButton.Checked = false;
-                mGameRadioButton.Checked = false;
-            }
-            else if (mModeIndex == 1)
-            {
-                mNormalRadioButton.Checked = false;
-                mSilenceRadioButton.Checked = true;
-                mPerformanceRadioButton.Checked = false;
-                mGameRadioButton.Checked = false;
-            }
-            else if (mModeIndex == 2)
-            {
-                mNormalRadioButton.Checked = false;
-                mSilenceRadioButton.Checked = false;
-                mPerformanceRadioButton.Checked = true;
-                mGameRadioButton.Checked = false;
-            }
-            else
-            {
-                mNormalRadioButton.Checked = false;
-                mSilenceRadioButton.Checked = false;
-                mPerformanceRadioButton.Checked = false;
-                mGameRadioButton.Checked = true;
-            }
+            mNormalRadioButton.Checked = (mModeIndex == 0);
+            mSilenceRadioButton.Checked = (mModeIndex == 1);
+            mPerformanceRadioButton.Checked = (mModeIndex == 2);
+            mGameRadioButton.Checked = (mModeIndex == 3);
 
             this.onSensorComboBoxIndexChanged(null, EventArgs.Empty);
         }

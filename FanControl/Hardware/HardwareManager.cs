@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using NZXTSharp.KrakenX;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using NvAPIWrapper;
@@ -30,17 +29,21 @@ namespace FanControl
 
         // Gigabyte
         private bool mIsGigabyte = false;
-        private GigabyteManager mGigabyteManager = null;
+        private Gigabyte mGigabyte = null;
 
         // LibreHardwareMonitor
-        private LHMManager mLHMManager = null;
+        private LHM mLHM = null;
 
         // OpenHardwareMonitor
-        private OHMManager mOHMManager = null;
+        private OHM mOHM = null;
 
         // NZXT Kraken
-        private KrakenX mKrakenX = null;
-        public KrakenX getKrakenX() { return mKrakenX; }        
+        private Kraken mKraken = null;
+        public Kraken getKraken() { return mKraken; }
+
+        // EVGA CLC
+        private CLC mCLC = null;
+        public CLC getCLC() { return mCLC; }
 
         // Temperature sensor List
         private List<BaseSensor> mSensorList = new List<BaseSensor>();        
@@ -82,28 +85,37 @@ namespace FanControl
             this.createBusMutex(mutexName, ref mPCIMutex);
 
             // Gigabyte
-            mGigabyteManager = new GigabyteManager();
-            mGigabyteManager.AddChangeValue += addChangeValue;
-            mGigabyteManager.LockBus += lockBus;
-            mGigabyteManager.UnlockBus += unlockBus;
+            if(OptionManager.getInstance().IsGigabyte == true)
+            {
+                mGigabyte = new Gigabyte();
+                mGigabyte.AddChangeValue += addChangeValue;
+                mGigabyte.LockBus += lockBus;
+                mGigabyte.UnlockBus += unlockBus;
 
-            mIsGigabyte = mGigabyteManager.createGigabyte(OptionManager.getInstance().IsNvAPIWrapper);
+                mIsGigabyte = mGigabyte.start();
+            }
+            else
+            {
+                mIsGigabyte = false;
+                Gigabyte.stopService();
+            }
+            
             if (mIsGigabyte == false)
             {
-                mGigabyteManager = null;
+                mGigabyte = null;
 
                 // LibreHardwareMonitor
                 if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
                 {
-                    mLHMManager = new LHMManager();
-                    mLHMManager.start();
+                    mLHM = new LHM();
+                    mLHM.start();
                 }
 
                 // OpenHardwareMonitor
                 else
                 {
-                    mOHMManager = new OHMManager();
-                    mOHMManager.start();
+                    mOHM = new OHM();
+                    mOHM.start();
                 }
             }
 
@@ -117,66 +129,101 @@ namespace FanControl
             this.createFan();
             this.createControl();
 
-            // NZXT Kraken
-            try
+            if (OptionManager.getInstance().IsKraken == true)
             {
+                // NZXT Kraken
                 try
                 {
-                    mKrakenX = new KrakenX(NZXTSharp.NZXTDeviceType.KrakenX);
+                    mKraken = new Kraken();
+
+                    // X2
+                    if (mKraken.start(USBProductID.KrakenX2) == false)
+                    {
+                        // X3
+                        if (mKraken.start(USBProductID.KrakenX3) == false)
+                        {
+                            mKraken = null;
+                        }
+                    }
+
+                    if (mKraken != null)
+                    {
+                        var sensor = new KrakenLiquidTemp(mKraken);
+                        mSensorList.Add(sensor);
+
+                        if (mKraken.ProductID == USBProductID.KrakenX2)
+                        {
+                            var fan = new KrakenFanSpeed(mKraken);
+                            mFanList.Add(fan);
+                        }
+
+                        var pump = new KrakenPumpSpeed(mKraken);
+                        mFanList.Add(pump);
+
+                        if (mKraken.ProductID == USBProductID.KrakenX2)
+                        {
+                            var fanControl = new KrakenFanControl(mKraken);
+                            mControlList.Add(fanControl);
+                            this.addChangeValue(30, fanControl);
+                        }
+
+                        var pumpControl = new KrakenPumpControl(mKraken);
+                        mControlList.Add(pumpControl);
+                        this.addChangeValue(50, pumpControl);
+                    }
                 }
                 catch
                 {
-                    try
+                    mKraken = null;
+                }
+            }
+
+            if (OptionManager.getInstance().IsCLC == true)
+            {
+                try
+                {
+                    mCLC = new CLC();
+                    if(mCLC.start(USBProductID.CLC) == false)
                     {
-                        mKrakenX = new KrakenX(NZXTSharp.NZXTDeviceType.KrakenX3);
+                        mCLC = null;
                     }
-                    catch
+
+                    if (mCLC != null)
                     {
-                        mKrakenX = null;
+                        var sensor = new CLCLiquidTemp(mCLC);
+                        mSensorList.Add(sensor);
+
+                        var fan = new CLCFanSpeed(mCLC);
+                        mFanList.Add(fan);
+
+                        var pump = new CLCPumpSpeed(mCLC);
+                        mFanList.Add(pump);
+
+                        var fanControl = new CLCFanControl(mCLC);
+                        mControlList.Add(fanControl);
+                        this.addChangeValue(25, fanControl);
+
+                        var pumpControl = new CLCPumpControl(mCLC);
+                        mControlList.Add(pumpControl);
+                        this.addChangeValue(50, pumpControl);
                     }
                 }
-
-                if(mKrakenX != null)
+                catch
                 {
-                    var sensor = new NZXTKrakenLiquidTemp(mKrakenX);
-                    mSensorList.Add(sensor);
-
-                    if(mKrakenX.Type == NZXTSharp.NZXTDeviceType.KrakenX)
-                    {
-                        var fan = new NZXTKrakenFanSpeed(mKrakenX);
-                        mFanList.Add(fan);
-                    }                    
-
-                    var pump = new NZXTKrakenPumpSpeed(mKrakenX);
-                    mFanList.Add(pump);
-
-                    if (mKrakenX.Type == NZXTSharp.NZXTDeviceType.KrakenX)
-                    {
-                        var fanControl = new NZXTKrakenFanControl(mKrakenX);
-                        mControlList.Add(fanControl);
-                        this.addChangeValue(30, fanControl);
-                    }
-
-                    var pumpControl = new NZXTKrakenPumpControl(mKrakenX);
-                    mControlList.Add(pumpControl);
-                    this.addChangeValue(50, pumpControl);                    
-                }                
-            }
-            catch
-            {
-                mKrakenX = null;
+                    mCLC = null;
+                }
             }
 
             // DIMM thermal sensor
             this.lockBus();
-            if (SMBus.open(false) == true)
+            if (SMBusController.open(false) == true)
             {
                 int num = 1;
-                int busCount = SMBus.getCount();
+                int busCount = SMBusController.getCount();
 
-                for(int i = 0; i < busCount; i++)
+                for (int i = 0; i < busCount; i++)
                 {
-                    var detectBytes = SMBus.i2cDetect(i);
+                    var detectBytes = SMBusController.i2cDetect(i);
                     if (detectBytes != null)
                     {
                         // 0x18 ~ 0x20
@@ -230,40 +277,50 @@ namespace FanControl
                 mUpdateTimer = null;
             }
 
-            if (mLHMManager != null)
+            if (mLHM != null)
             {
-                mLHMManager.stop();
-                mLHMManager = null;
+                mLHM.stop();
+                mLHM = null;
             }
 
-            if (mOHMManager != null)
+            if (mOHM != null)
             {
-                mOHMManager.stop();
-                mOHMManager = null;
+                mOHM.stop();
+                mOHM = null;
             }
 
             try
             {
-                if (mKrakenX != null)
+                if (mKraken != null)
                 {
-                    mKrakenX.Dispose();
-                    mKrakenX = null;
+                    mKraken.stop();
+                    mKraken = null;
                 }
             }
-            catch { }            
+            catch { }
 
-            if(mIsGigabyte == true && mGigabyteManager != null)
+            try
+            {
+                if (mCLC != null)
+                {
+                    mCLC.stop();
+                    mCLC = null;
+                }
+            }
+            catch { }
+
+            if (mIsGigabyte == true && mGigabyte != null)
             {
                 mIsGigabyte = false;
-                mGigabyteManager.destroyGigabyte();
-                mGigabyteManager = null;
+                mGigabyte.stop();
+                mGigabyte = null;
             }
 
             mSensorList.Clear();
             mFanList.Clear();
             mControlList.Clear();
 
-            SMBus.close();
+            SMBusController.close();
 
             if (mISABusMutex != null)
             {
@@ -360,19 +417,19 @@ namespace FanControl
             // Gigabyte
             if (mIsGigabyte == true)
             {
-                mGigabyteManager.createTemp(ref mSensorList, OptionManager.getInstance().IsNvAPIWrapper);
+                mGigabyte.createTemp(ref mSensorList);
             }
 
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createTemp(ref mSensorList, OptionManager.getInstance().IsNvAPIWrapper);
+                mLHM.createTemp(ref mSensorList);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createTemp(ref mSensorList, OptionManager.getInstance().IsNvAPIWrapper);
+                mOHM.createTemp(ref mSensorList);
             }            
         }
 
@@ -384,13 +441,13 @@ namespace FanControl
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createMotherBoardTemp(ref mSensorList);
+                mLHM.createMotherBoardTemp(ref mSensorList);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createMotherBoardTemp(ref mSensorList);
+                mOHM.createMotherBoardTemp(ref mSensorList);
             }
         }
 
@@ -399,19 +456,19 @@ namespace FanControl
             // Gigabyte
             if (mIsGigabyte == true)
             {
-                mGigabyteManager.createFan(ref mFanList, OptionManager.getInstance().IsNvAPIWrapper);
+                mGigabyte.createFan(ref mFanList);
             }
 
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createFan(ref mFanList);
+                mLHM.createFan(ref mFanList);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createFan(ref mFanList);
+                mOHM.createFan(ref mFanList);
             }
         }
 
@@ -420,19 +477,19 @@ namespace FanControl
             // Gigabyte
             if (mIsGigabyte == true)
             {
-                mGigabyteManager.createControl(ref mControlList, OptionManager.getInstance().IsNvAPIWrapper);
+                mGigabyte.createControl(ref mControlList);
             }
 
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createControl(ref mControlList);
+                mLHM.createControl(ref mControlList);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createControl(ref mControlList);
+                mOHM.createControl(ref mControlList);
             }
         }
 
@@ -472,13 +529,13 @@ namespace FanControl
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createGPUFan(ref mFanList, OptionManager.getInstance().IsNvAPIWrapper);
+                mLHM.createGPUFan(ref mFanList);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createGPUFan(ref mFanList, OptionManager.getInstance().IsNvAPIWrapper);
+                mOHM.createGPUFan(ref mFanList);
             }
 
             if (OptionManager.getInstance().IsNvAPIWrapper == true)
@@ -519,13 +576,13 @@ namespace FanControl
             // LibreHardwareMonitor
             else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
             {
-                mLHMManager.createGPUFanControl(ref mControlList, OptionManager.getInstance().IsNvAPIWrapper);
+                mLHM.createGPUFanControl(ref mControlList);
             }
 
             // OpenHardwareMonitor
             else
             {
-                mOHMManager.createGPUFanControl(ref mControlList, OptionManager.getInstance().IsNvAPIWrapper);
+                mOHM.createGPUFanControl(ref mControlList);
             }
 
             if (OptionManager.getInstance().IsNvAPIWrapper == true)
@@ -604,7 +661,7 @@ namespace FanControl
             var sensor = (DimmTemp)sender;
 
             this.lockBus();
-            var wordArray = SMBus.i2cWordData(busIndex, address, 10);
+            var wordArray = SMBusController.i2cWordData(busIndex, address, 10);
             if(wordArray == null)
             {
                 this.unlockBus();
@@ -692,19 +749,19 @@ namespace FanControl
             if (Monitor.TryEnter(mLock) == false)
                 return;
 
-            if (mIsGigabyte == true && mGigabyteManager != null)
+            if (mIsGigabyte == true && mGigabyte != null)
             {
-                mGigabyteManager.update();
+                mGigabyte.update();
             }
 
-            if (mLHMManager != null)
+            if (mLHM != null)
             {
-                mLHMManager.update();
+                mLHM.update();
             }
 
-            if (mOHMManager != null)
+            if (mOHM != null)
             {
-                mOHMManager.update();
+                mOHM.update();
             }
 
             for (int i = 0; i < mSensorList.Count; i++)

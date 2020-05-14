@@ -47,9 +47,13 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mMadeLabel = new System.Windows.Forms.Label();
-            this.mKrakenButton = new System.Windows.Forms.Button();
+            this.mMadeLabel1 = new System.Windows.Forms.Label();
+            this.mMadeLabel2 = new System.Windows.Forms.Label();
+            this.mDonateQRPictureBox = new System.Windows.Forms.PictureBox();
+            this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
             this.mTrayMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mDonateQRPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // mTempGroupBox
@@ -81,7 +85,7 @@
             // 
             // mFanControlButton
             // 
-            this.mFanControlButton.Location = new System.Drawing.Point(574, 71);
+            this.mFanControlButton.Location = new System.Drawing.Point(574, 75);
             this.mFanControlButton.Name = "mFanControlButton";
             this.mFanControlButton.Size = new System.Drawing.Size(136, 38);
             this.mFanControlButton.TabIndex = 5;
@@ -95,7 +99,7 @@
             // 
             // mOptionButton
             // 
-            this.mOptionButton.Location = new System.Drawing.Point(432, 71);
+            this.mOptionButton.Location = new System.Drawing.Point(432, 75);
             this.mOptionButton.Name = "mOptionButton";
             this.mOptionButton.Size = new System.Drawing.Size(136, 38);
             this.mOptionButton.TabIndex = 6;
@@ -183,33 +187,56 @@
             this.mExitToolStripMenuItem.Text = "Exit";
             this.mExitToolStripMenuItem.Click += new System.EventHandler(this.onTrayMenuExit);
             // 
-            // mMadeLabel
+            // mMadeLabel1
             // 
-            this.mMadeLabel.AutoSize = true;
-            this.mMadeLabel.Location = new System.Drawing.Point(18, 86);
-            this.mMadeLabel.Name = "mMadeLabel";
-            this.mMadeLabel.Size = new System.Drawing.Size(207, 12);
-            this.mMadeLabel.TabIndex = 7;
-            this.mMadeLabel.Text = "Made by Lich (lich426@gmail.com)";
+            this.mMadeLabel1.AutoSize = true;
+            this.mMadeLabel1.Location = new System.Drawing.Point(17, 78);
+            this.mMadeLabel1.Name = "mMadeLabel1";
+            this.mMadeLabel1.Size = new System.Drawing.Size(83, 12);
+            this.mMadeLabel1.TabIndex = 7;
+            this.mMadeLabel1.Text = "Made by Lich";
             // 
-            // mKrakenButton
+            // mMadeLabel2
             // 
-            this.mKrakenButton.Location = new System.Drawing.Point(290, 71);
-            this.mKrakenButton.Name = "mKrakenButton";
-            this.mKrakenButton.Size = new System.Drawing.Size(136, 38);
-            this.mKrakenButton.TabIndex = 8;
-            this.mKrakenButton.Text = "Kraken Setting";
-            this.mKrakenButton.UseVisualStyleBackColor = true;
-            this.mKrakenButton.Click += new System.EventHandler(this.onKrakenButtonClick);
+            this.mMadeLabel2.AutoSize = true;
+            this.mMadeLabel2.Location = new System.Drawing.Point(15, 95);
+            this.mMadeLabel2.Name = "mMadeLabel2";
+            this.mMadeLabel2.Size = new System.Drawing.Size(125, 12);
+            this.mMadeLabel2.TabIndex = 8;
+            this.mMadeLabel2.Text = "(lich426@gmail.com)";
+            // 
+            // mDonateQRPictureBox
+            // 
+            this.mDonateQRPictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonateQRPictureBox.BackgroundImage")));
+            this.mDonateQRPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.mDonateQRPictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonateQRPictureBox.InitialImage")));
+            this.mDonateQRPictureBox.Location = new System.Drawing.Point(151, 68);
+            this.mDonateQRPictureBox.Name = "mDonateQRPictureBox";
+            this.mDonateQRPictureBox.Size = new System.Drawing.Size(50, 50);
+            this.mDonateQRPictureBox.TabIndex = 11;
+            this.mDonateQRPictureBox.TabStop = false;
+            // 
+            // mDonatePictureBox
+            // 
+            this.mDonatePictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.BackgroundImage")));
+            this.mDonatePictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.mDonatePictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.InitialImage")));
+            this.mDonatePictureBox.Location = new System.Drawing.Point(208, 82);
+            this.mDonatePictureBox.Name = "mDonatePictureBox";
+            this.mDonatePictureBox.Size = new System.Drawing.Size(92, 26);
+            this.mDonatePictureBox.TabIndex = 12;
+            this.mDonatePictureBox.TabStop = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(719, 117);
-            this.Controls.Add(this.mKrakenButton);
-            this.Controls.Add(this.mMadeLabel);
+            this.ClientSize = new System.Drawing.Size(719, 122);
+            this.Controls.Add(this.mDonatePictureBox);
+            this.Controls.Add(this.mDonateQRPictureBox);
+            this.Controls.Add(this.mMadeLabel2);
+            this.Controls.Add(this.mMadeLabel1);
             this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mFanControlButton);
             this.Controls.Add(this.mControlGroupBox);
@@ -222,6 +249,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FanControl";
             this.mTrayMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mDonateQRPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -239,8 +268,7 @@
         private System.Windows.Forms.ContextMenuStrip mTrayMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem mShowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mExitToolStripMenuItem;
-        private System.Windows.Forms.Label mMadeLabel;
-        private System.Windows.Forms.Button mKrakenButton;
+        private System.Windows.Forms.Label mMadeLabel1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mEnableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mNormalToolStripMenuItem;
@@ -248,6 +276,9 @@
         private System.Windows.Forms.ToolStripMenuItem mPerformanceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mGameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.Label mMadeLabel2;
+        private System.Windows.Forms.PictureBox mDonateQRPictureBox;
+        private System.Windows.Forms.PictureBox mDonatePictureBox;
     }
 }
 

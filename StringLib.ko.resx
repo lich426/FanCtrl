@@ -129,6 +129,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>취소</value>
   </data>
+  <data name="CLC_Lighting" xml:space="preserve">
+    <value>CLC 조명설정</value>
+  </data>
   <data name="Control" xml:space="preserve">
     <value>제어</value>
   </data>
@@ -159,14 +162,20 @@
   <data name="Interval" xml:space="preserve">
     <value>주기 설정</value>
   </data>
-  <data name="Kraken_Setting" xml:space="preserve">
-    <value>크라켄 설정</value>
+  <data name="Kraken_Lighting" xml:space="preserve">
+    <value>Kraken 조명 설정</value>
   </data>
   <data name="Library" xml:space="preserve">
     <value>라이브러리</value>
   </data>
-  <data name="Made" xml:space="preserve">
-    <value>Made by 똥고집 (lich426@gmail.com)</value>
+  <data name="Lighting" xml:space="preserve">
+    <value>조명</value>
+  </data>
+  <data name="Made1" xml:space="preserve">
+    <value>Made by 똥고집</value>
+  </data>
+  <data name="Made2" xml:space="preserve">
+    <value>(lich426@gmail.com)</value>
   </data>
   <data name="Mode" xml:space="preserve">
     <value>모드</value>
@@ -176,9 +185,6 @@
   </data>
   <data name="Not_Match" xml:space="preserve">
     <value>하드웨어와 저장된 설정 파일(Config.json) 내용이 일치하지 않습니다!</value>
-  </data>
-  <data name="NVIDIA_Library" xml:space="preserve">
-    <value>NVIDIA 라이브러리</value>
   </data>
   <data name="OK" xml:space="preserve">
     <value>확인</value>

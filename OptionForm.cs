@@ -22,39 +22,49 @@ namespace FanControl
 
             mToolTip.SetToolTip(mIntervalTextBox, "100 ≤ value ≤ 5000");
 
+            mIntervalTextBox.Text = OptionManager.getInstance().Interval.ToString();
+            mIntervalTextBox.KeyPress += onTextBoxKeyPress;
+            mIntervalTextBox.Leave += onTextBoxLeaves;
+
+            mGigabyteCheckBox.Checked = OptionManager.getInstance().IsGigabyte;
+
             mLibraryRadioButton1.Click += onRadioClick;
             mLibraryRadioButton2.Click += onRadioClick;
-
-            mIntervalTextBox.KeyPress += onTextBoxKeyPress;
-            mIntervalTextBox.Text = OptionManager.getInstance().Interval.ToString();
-            mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
-            mStartupCheckBox.Checked = OptionManager.getInstance().IsStartUp;
-
-            mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
-
             mLibraryRadioButton1.Checked = (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor);
             mLibraryRadioButton2.Checked = (OptionManager.getInstance().LibraryType == LibraryType.OpenHardwareMonitor);
+            
+            mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
+
+            mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
+            mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;
+
+            mKrakenButton.Enabled = (HardwareManager.getInstance().getKraken() != null);
+            mCLCButton.Enabled = (HardwareManager.getInstance().getCLC() != null);            
+
+            mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
+            mStartupCheckBox.Checked = OptionManager.getInstance().IsStartUp;
         }
 
         private void localizeComponent()
         {
             this.Text = StringLib.Option;
             mIntervalGroupBox.Text = StringLib.Interval;
+            mKrakenButton.Text = StringLib.Lighting;
+            mCLCButton.Text = StringLib.Lighting;
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
             mStartupCheckBox.Text = StringLib.Start_with_Windows;
             mLibraryGroupBox.Text = StringLib.Library;
-            mNVIDIAGroupBox.Text = StringLib.NVIDIA_Library;
             mOKButton.Text = StringLib.OK;
         }
 
         private void onRadioClick(object sender, EventArgs e)
         {
-            if(sender == mLibraryRadioButton1)
+            if (sender == mLibraryRadioButton1)
             {
                 mLibraryRadioButton1.Checked = true;
                 mLibraryRadioButton2.Checked = false;
             }
-            else
+            else if (sender == mLibraryRadioButton2)
             {
                 mLibraryRadioButton1.Checked = false;
                 mLibraryRadioButton2.Checked = true;
@@ -77,9 +87,12 @@ namespace FanControl
             bool isRestart = false;
 
             // 변경
-            if( (optionManager.LibraryType == LibraryType.LibreHardwareMonitor && mLibraryRadioButton2.Checked == true) ||
+            if ((optionManager.IsGigabyte != mGigabyteCheckBox.Checked) ||
+                (optionManager.LibraryType == LibraryType.LibreHardwareMonitor && mLibraryRadioButton2.Checked == true) ||
                 (optionManager.LibraryType == LibraryType.OpenHardwareMonitor && mLibraryRadioButton1.Checked == true) ||
-                (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked))
+                (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
+                (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
+                (optionManager.IsCLC != mCLCCheckBox.Checked))
             {
                 var result = MessageBox.Show(StringLib.OptionRestart, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result == DialogResult.Cancel)
@@ -88,13 +101,16 @@ namespace FanControl
             }
 
             optionManager.Interval = interval;
+            optionManager.IsGigabyte = mGigabyteCheckBox.Checked;
+            optionManager.LibraryType = (mLibraryRadioButton1.Checked == true) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
+            optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
+            optionManager.IsKraken = mKrakenCheckBox.Checked;
+            optionManager.IsCLC = mCLCCheckBox.Checked;            
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
             optionManager.IsStartUp = mStartupCheckBox.Checked;
-            optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
-            optionManager.LibraryType = (mLibraryRadioButton1.Checked == true) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
             optionManager.write();
 
-            if(isRestart == true)
+            if (isRestart == true)
             {
                 ControlManager.getInstance().reset();
                 ControlManager.getInstance().write();
@@ -105,13 +121,40 @@ namespace FanControl
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-        
+
         private void onTextBoxKeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsDigit(e.KeyChar) == false)
             {
                 e.Handled = true;
             }
+        }
+
+        private void onTextBoxLeaves(object sender, EventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            int interval = int.Parse(mIntervalTextBox.Text);
+            if (interval < 100)
+            {
+                interval = 100;
+            }
+            else if (interval > 5000)
+            {
+                interval = 5000;
+            }
+            mIntervalTextBox.Text = interval.ToString();
+        }
+
+        private void onKrakenButtonClick(object sender, EventArgs e)
+        {
+            var form = new LightingForm(HardwareManager.getInstance().getKraken());
+            form.ShowDialog();
+        }
+
+        private void onCLCButtonClick(object sender, EventArgs e)
+        {
+            var form = new LightingForm(HardwareManager.getInstance().getCLC());
+            form.ShowDialog();
         }
     }
 }

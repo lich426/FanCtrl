@@ -97,6 +97,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   CLC Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string CLC_Lighting {
+            get {
+                return ResourceManager.GetString("CLC_Lighting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Control과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Control {
@@ -187,11 +196,11 @@ namespace FanControl {
         }
         
         /// <summary>
-        ///   Kraken Setting과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Kraken Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
-        internal static string Kraken_Setting {
+        internal static string Kraken_Lighting {
             get {
-                return ResourceManager.GetString("Kraken_Setting", resourceCulture);
+                return ResourceManager.GetString("Kraken_Lighting", resourceCulture);
             }
         }
         
@@ -205,11 +214,29 @@ namespace FanControl {
         }
         
         /// <summary>
-        ///   Made by Lich (lich426@gmail.com)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
-        internal static string Made {
+        internal static string Lighting {
             get {
-                return ResourceManager.GetString("Made", resourceCulture);
+                return ResourceManager.GetString("Lighting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Made by Lich과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Made1 {
+            get {
+                return ResourceManager.GetString("Made1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   (lich426@gmail.com)과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Made2 {
+            get {
+                return ResourceManager.GetString("Made2", resourceCulture);
             }
         }
         
@@ -237,15 +264,6 @@ namespace FanControl {
         internal static string Not_Match {
             get {
                 return ResourceManager.GetString("Not_Match", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   NVIDIA Library과(와) 유사한 지역화된 문자열을 찾습니다.
-        /// </summary>
-        internal static string NVIDIA_Library {
-            get {
-                return ResourceManager.GetString("NVIDIA_Library", resourceCulture);
             }
         }
         

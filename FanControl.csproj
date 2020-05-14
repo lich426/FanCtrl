@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanControl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.9.0</ApplicationVersion>
+    <ApplicationVersion>1.1.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -48,7 +48,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -140,6 +140,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
@@ -162,75 +163,34 @@
     <Compile Include="FanControlForm.Designer.cs">
       <DependentUpon>FanControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="External\NZXTSharp\COM\ICOMController.cs" />
-    <Compile Include="External\NZXTSharp\COM\Serial\SerialCOMData.cs" />
-    <Compile Include="External\NZXTSharp\COM\Serial\SerialController.cs" />
-    <Compile Include="External\NZXTSharp\COM\USB\DeviceEnumerator.cs" />
-    <Compile Include="External\NZXTSharp\COM\USB\USBController.cs" />
-    <Compile Include="External\NZXTSharp\Core\Color.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Alternating.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Breathing.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\CoveringMarquee.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Fading.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Fixed.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\IEffect.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Marquee.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Pulse.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\SpectrumWave.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Effects\Wings.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Params\CISS.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Params\IParam.cs" />
-    <Compile Include="External\NZXTSharp\Core\Common\Params\LSS.cs" />
-    <Compile Include="External\NZXTSharp\Core\DebugController.cs" />
-    <Compile Include="External\NZXTSharp\Core\DeviceLoader.cs" />
-    <Compile Include="External\NZXTSharp\Core\Enum\DeviceLoadFilter.cs" />
-    <Compile Include="External\NZXTSharp\Core\Enum\HIDDeviceID.cs" />
-    <Compile Include="External\NZXTSharp\Core\Enum\NZXTDeviceType.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\IncompatibleDeviceTypeException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\IncompatibleEffectException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\IncompatibleParamException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\InvalidEffectSpeedException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\InvalidParamException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\MaxHandshakeRetryExceededException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\SubDeviceDoesNotExistException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\SubDeviceLEDDoesNotExistException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Exceptions\TooManyColorsProvidedException.cs" />
-    <Compile Include="External\NZXTSharp\Core\Extensions.cs" />
-    <Compile Include="External\NZXTSharp\Core\IChannel.cs" />
-    <Compile Include="External\NZXTSharp\Core\INZXTDevice.cs" />
-    <Compile Include="External\NZXTSharp\Core\SubDevices\Fan.cs" />
-    <Compile Include="External\NZXTSharp\Core\SubDevices\ISubDevice.cs" />
-    <Compile Include="External\NZXTSharp\Core\SubDevices\Strip.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\Effects\CandleLight.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\HuePlus.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\HuePlusChannel.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\HuePlusChannelInfo.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\Params\02Param.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\Params\03Param.cs" />
-    <Compile Include="External\NZXTSharp\HuePlus\Params\Direction.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\Effects\Loading.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\Effects\TaiChi.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\Effects\WaterCooler.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\KrakenX.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\KrakenXChannel.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\Params\DCB.cs" />
-    <Compile Include="External\NZXTSharp\KrakenX\Params\DCBWM.cs" />
-    <Compile Include="FanControl\Control\ControlManager.cs" />
-    <Compile Include="FanControl\Control\FanData.cs" />
-    <Compile Include="FanControl\Control\ControlData.cs" />
+    <Compile Include="FanControl\Controller\HidUSBController.cs" />
+    <Compile Include="FanControl\Controller\SiUSBController.cs" />
+    <Compile Include="FanControl\Controller\SiUSBXp.cs" />
+    <Compile Include="FanControl\Controller\WinUSBController.cs" />
+    <Compile Include="FanControl\Data\Control\ControlManager.cs" />
+    <Compile Include="FanControl\Data\Control\FanData.cs" />
+    <Compile Include="FanControl\Data\Control\ControlData.cs" />
+    <Compile Include="FanControl\Hardware\CLC.cs" />
     <Compile Include="FanControl\Hardware\Control\BaseControl.cs" />
+    <Compile Include="FanControl\Hardware\Control\CLCFanControl.cs" />
+    <Compile Include="FanControl\Hardware\Control\CLCPumpControl.cs" />
     <Compile Include="FanControl\Hardware\Control\GigabyteAmdGpuFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\GigabyteFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\GigabyteNvidiaGpuFanControl.cs" />
     <Compile Include="FanControl\Hardware\Control\HardwareControl.cs" />
     <Compile Include="FanControl\Hardware\Control\HardwareGpuControl.cs" />
     <Compile Include="FanControl\Hardware\Control\NvAPIFanControl.cs" />
-    <Compile Include="FanControl\Hardware\Control\NZXTKrakenFanControl.cs" />
-    <Compile Include="FanControl\Hardware\Control\NZXTKrakenPumpControl.cs" />
-    <Compile Include="FanControl\Hardware\GigabyteManager.cs" />
+    <Compile Include="FanControl\Hardware\Control\KrakenFanControl.cs" />
+    <Compile Include="FanControl\Hardware\Control\KrakenPumpControl.cs" />
+    <Compile Include="FanControl\Hardware\Gigabyte.cs" />
     <Compile Include="FanControl\Hardware\HardwareManager.cs" />
-    <Compile Include="FanControl\Hardware\LHMManager.cs" />
-    <Compile Include="FanControl\Hardware\OHMManager.cs" />
+    <Compile Include="FanControl\Hardware\Kraken.cs" />
+    <Compile Include="FanControl\Hardware\LHM.cs" />
+    <Compile Include="FanControl\Hardware\Liquid.cs" />
+    <Compile Include="FanControl\Hardware\OHM.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\CLCFanSpeed.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\CLCLiquidTemp.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\CLCPumpSpeed.cs" />
     <Compile Include="FanControl\Hardware\Sensor\DimmTemp.cs" />
     <Compile Include="FanControl\Hardware\Sensor\GigabyteAmdGpuFanSpeed.cs" />
     <Compile Include="FanControl\Hardware\Sensor\GigabyteAmdGpuTemp.cs" />
@@ -241,20 +201,22 @@
     <Compile Include="FanControl\Hardware\Sensor\HardwareMotherBoardTemp.cs" />
     <Compile Include="FanControl\Hardware\Sensor\NvAPIFanSpeed.cs" />
     <Compile Include="FanControl\Hardware\Sensor\NvAPITemp.cs" />
-    <Compile Include="FanControl\Option\OptionManager.cs" />
+    <Compile Include="FanControl\Data\Option\OptionManager.cs" />
     <Compile Include="FanControl\Hardware\Sensor\BaseSensor.cs" />
     <Compile Include="FanControl\Hardware\Sensor\HardwareFanSpeed.cs" />
     <Compile Include="FanControl\Hardware\Sensor\HardwareTemp.cs" />
-    <Compile Include="FanControl\Hardware\Sensor\NZXTKrakenFanSpeed.cs" />
-    <Compile Include="FanControl\Hardware\Sensor\NZXTKrakenLiquidTemp.cs" />
-    <Compile Include="FanControl\Hardware\Sensor\NZXTKrakenPumpSpeed.cs" />
-    <Compile Include="FanControl\Option\StartupControl.cs" />
-    <Compile Include="FanControl\Util\SMBus.cs" />
-    <Compile Include="KrakenForm.cs">
+    <Compile Include="FanControl\Hardware\Sensor\KrakenFanSpeed.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\KrakenLiquidTemp.cs" />
+    <Compile Include="FanControl\Hardware\Sensor\KrakenPumpSpeed.cs" />
+    <Compile Include="FanControl\Data\Option\StartupControl.cs" />
+    <Compile Include="FanControl\Controller\SMBusController.cs" />
+    <Compile Include="FanControl\Controller\USBController.cs" />
+    <Compile Include="FanControl\Util\Util.cs" />
+    <Compile Include="LightingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KrakenForm.Designer.cs">
-      <DependentUpon>KrakenForm.cs</DependentUpon>
+    <Compile Include="LightingForm.Designer.cs">
+      <DependentUpon>LightingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -275,11 +237,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringLib.resx</DependentUpon>
     </Compile>
+    <Compile Include="StringLib.ko.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringLib.ko.resx</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="FanControlForm.resx">
       <DependentUpon>FanControlForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KrakenForm.resx">
-      <DependentUpon>KrakenForm.cs</DependentUpon>
+    <EmbeddedResource Include="LightingForm.resx">
+      <DependentUpon>LightingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -297,7 +264,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="StringLib.ko.resx" />
+    <EmbeddedResource Include="StringLib.ko.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringLib.ko.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="StringLib.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.Designer.cs</LastGenOutput>
@@ -330,6 +300,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\donate2.png" />
+    <None Include="Resources\donate.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(SolutionDir)dll\*.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del "$(TargetDir)*.dll"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

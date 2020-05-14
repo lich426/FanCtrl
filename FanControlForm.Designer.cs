@@ -46,10 +46,10 @@
             this.mApplyButton = new System.Windows.Forms.Button();
             this.mHysNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.mModeGroupBox = new System.Windows.Forms.GroupBox();
-            this.mNormalRadioButton = new System.Windows.Forms.RadioButton();
-            this.mSilenceRadioButton = new System.Windows.Forms.RadioButton();
-            this.mPerformanceRadioButton = new System.Windows.Forms.RadioButton();
             this.mGameRadioButton = new System.Windows.Forms.RadioButton();
+            this.mPerformanceRadioButton = new System.Windows.Forms.RadioButton();
+            this.mSilenceRadioButton = new System.Windows.Forms.RadioButton();
+            this.mNormalRadioButton = new System.Windows.Forms.RadioButton();
             this.mSensorGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
@@ -227,27 +227,16 @@
             this.mModeGroupBox.TabStop = false;
             this.mModeGroupBox.Text = "Mode";
             // 
-            // mNormalRadioButton
+            // mGameRadioButton
             // 
-            this.mNormalRadioButton.AutoSize = true;
-            this.mNormalRadioButton.Location = new System.Drawing.Point(41, 20);
-            this.mNormalRadioButton.Name = "mNormalRadioButton";
-            this.mNormalRadioButton.Size = new System.Drawing.Size(64, 16);
-            this.mNormalRadioButton.TabIndex = 0;
-            this.mNormalRadioButton.TabStop = true;
-            this.mNormalRadioButton.Text = "Normal";
-            this.mNormalRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // mSilenceRadioButton
-            // 
-            this.mSilenceRadioButton.AutoSize = true;
-            this.mSilenceRadioButton.Location = new System.Drawing.Point(146, 20);
-            this.mSilenceRadioButton.Name = "mSilenceRadioButton";
-            this.mSilenceRadioButton.Size = new System.Drawing.Size(65, 16);
-            this.mSilenceRadioButton.TabIndex = 1;
-            this.mSilenceRadioButton.TabStop = true;
-            this.mSilenceRadioButton.Text = "Silence";
-            this.mSilenceRadioButton.UseVisualStyleBackColor = true;
+            this.mGameRadioButton.AutoSize = true;
+            this.mGameRadioButton.Location = new System.Drawing.Point(384, 20);
+            this.mGameRadioButton.Name = "mGameRadioButton";
+            this.mGameRadioButton.Size = new System.Drawing.Size(57, 16);
+            this.mGameRadioButton.TabIndex = 3;
+            this.mGameRadioButton.TabStop = true;
+            this.mGameRadioButton.Text = "Game";
+            this.mGameRadioButton.UseVisualStyleBackColor = true;
             // 
             // mPerformanceRadioButton
             // 
@@ -260,16 +249,27 @@
             this.mPerformanceRadioButton.Text = "Performance";
             this.mPerformanceRadioButton.UseVisualStyleBackColor = true;
             // 
-            // mGameRadioButton
+            // mSilenceRadioButton
             // 
-            this.mGameRadioButton.AutoSize = true;
-            this.mGameRadioButton.Location = new System.Drawing.Point(384, 20);
-            this.mGameRadioButton.Name = "mGameRadioButton";
-            this.mGameRadioButton.Size = new System.Drawing.Size(57, 16);
-            this.mGameRadioButton.TabIndex = 3;
-            this.mGameRadioButton.TabStop = true;
-            this.mGameRadioButton.Text = "Game";
-            this.mGameRadioButton.UseVisualStyleBackColor = true;
+            this.mSilenceRadioButton.AutoSize = true;
+            this.mSilenceRadioButton.Location = new System.Drawing.Point(146, 20);
+            this.mSilenceRadioButton.Name = "mSilenceRadioButton";
+            this.mSilenceRadioButton.Size = new System.Drawing.Size(65, 16);
+            this.mSilenceRadioButton.TabIndex = 1;
+            this.mSilenceRadioButton.TabStop = true;
+            this.mSilenceRadioButton.Text = "Silence";
+            this.mSilenceRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // mNormalRadioButton
+            // 
+            this.mNormalRadioButton.AutoSize = true;
+            this.mNormalRadioButton.Location = new System.Drawing.Point(41, 20);
+            this.mNormalRadioButton.Name = "mNormalRadioButton";
+            this.mNormalRadioButton.Size = new System.Drawing.Size(64, 16);
+            this.mNormalRadioButton.TabIndex = 0;
+            this.mNormalRadioButton.TabStop = true;
+            this.mNormalRadioButton.Text = "Normal";
+            this.mNormalRadioButton.UseVisualStyleBackColor = true;
             // 
             // FanControlForm
             // 

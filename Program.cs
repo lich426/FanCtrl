@@ -19,7 +19,7 @@ namespace FanControl
         /// 해당 애플리케이션의 주 진입점입니다.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             if (IsAdministrator() == false)
             {

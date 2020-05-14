@@ -21,7 +21,6 @@ namespace FanControl
         private List<TextBox> mControlNameTextBoxList = new List<TextBox>();        
 
         private FanControlForm mFanControlForm = null;
-        private KrakenForm mKrakenForm = null;
 
         public MainForm()
         {
@@ -33,6 +32,9 @@ namespace FanControl
             mTrayIcon.Visible = true;
             mTrayIcon.MouseDoubleClick += onTrayIconDBClicked;
             mTrayIcon.ContextMenuStrip = mTrayMenuStrip;
+
+            mDonatePictureBox.MouseClick += onDonatePictureBoxClick;
+            mDonateQRPictureBox.MouseClick += onDonatePictureBoxClick;
 
             if (OptionManager.getInstance().read() == false)
             {
@@ -104,7 +106,6 @@ namespace FanControl
 
             this.createComponent();
             this.ActiveControl = mFanControlButton;
-            mKrakenButton.Visible = (hardwareManager.getKrakenX() != null);
 
             mEnableToolStripMenuItem.Checked = controlManager.IsEnable;
             mNormalToolStripMenuItem.Checked = (controlManager.ModeIndex == 0);
@@ -126,8 +127,8 @@ namespace FanControl
             mControlGroupBox.Text = StringLib.Fan_control;
             mOptionButton.Text = StringLib.Option;
             mFanControlButton.Text = StringLib.Auto_Fan_Control;
-            mKrakenButton.Text = StringLib.Kraken_Setting;
-            mMadeLabel.Text = StringLib.Made;
+            mMadeLabel1.Text = StringLib.Made1;
+            mMadeLabel2.Text = StringLib.Made2;
 
             mEnableToolStripMenuItem.Text = StringLib.Enable_automatic_fan_control;
             mNormalToolStripMenuItem.Text = StringLib.Normal;
@@ -144,12 +145,6 @@ namespace FanControl
             {
                 mFanControlForm.Close();
                 mFanControlForm = null;
-            }
-
-            if(mKrakenForm != null)
-            {
-                mKrakenForm.Close();
-                mKrakenForm = null;
             }
 
             this.Visible = false;
@@ -229,12 +224,6 @@ namespace FanControl
             {
                 mFanControlForm.Close();
                 mFanControlForm = null;
-            }
-
-            if(mKrakenForm != null)
-            {
-                mKrakenForm.Close();
-                mKrakenForm = null;
             }
 
             HardwareManager.getInstance().stop();
@@ -369,11 +358,13 @@ namespace FanControl
             }            
 
             // position
-            mOptionButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 6;            
-            mFanControlButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 6;
-            mKrakenButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 6;
-            mMadeLabel.Top = mFanGroupBox.Top + mFanGroupBox.Height + 20;
-            this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;
+            mOptionButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;            
+            mFanControlButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
+            mMadeLabel1.Top = mFanGroupBox.Top + mFanGroupBox.Height + 15;
+            mMadeLabel2.Top = mFanGroupBox.Top + mFanGroupBox.Height + 32;
+            mDonatePictureBox.Top = mFanGroupBox.Top + mFanGroupBox.Height + 17;
+            mDonateQRPictureBox.Top = mFanGroupBox.Top + mFanGroupBox.Height + 3;
+            this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;            
         }
 
         private void onControlTextBoxKeyPress(object sender, KeyPressEventArgs e)
@@ -569,23 +560,11 @@ namespace FanControl
             mFanControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
             mFanControlForm.Show(this);
         }
-
-        private void onKrakenButtonClick(object sender, EventArgs e)
+        
+        private void onDonatePictureBoxClick(object sender, MouseEventArgs e)
         {
-            if(mKrakenForm != null)
-            {
-                mKrakenForm.Focus();
-                return;
-            }
-
-            mKrakenForm = new KrakenForm(HardwareManager.getInstance().getKrakenX());
-            mKrakenForm.onCloseCallback += (sender2, e2) =>
-            {
-                mKrakenForm = null;
-            };
-            mKrakenForm.StartPosition = FormStartPosition.Manual;
-            mKrakenForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
-            mKrakenForm.Show(this);
-        }        
+            Console.WriteLine("MainForm.onDonatePictureBoxClick()");
+            System.Diagnostics.Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url");
+        }
     }
 }
