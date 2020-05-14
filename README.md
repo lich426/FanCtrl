@@ -12,7 +12,7 @@ EVGA CLC : support
 
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1]<br>
-Gigabyte board Sensor and Fan Control : [AppCenter[2]<br>
+Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
 NZXT Kraken USB Communication : [HidLibrary][4]<br>
 EVGA CLC USB Communication : [SiUSBXp][5] or [libusb-1.0][6]<br>
