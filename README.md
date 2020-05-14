@@ -12,12 +12,13 @@ EVGA CLC : support
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][2]<br>
-USB Communication : [HidLibrary][3], [SiUSBXp][4]<br>
-Json : [Newtonsoft Json][5]<br>
-Graph : [ZedGraph][6]<br>
+NZXT Kraken USB Communication: [HidLibrary][3]
+EVGA CLC USB Communication : [SiUSBXp][4] or [libusb-1.0][5]<br>
+Json : [Newtonsoft Json][6]<br>
+Graph : [ZedGraph][7]<br>
 
 ## License
-[GNU General Public License v3.0][7]
+[GNU General Public License v3.0][8]
 
 ## Precautions
  - FanControl is free software with a GNU GPLv3 license.<br>
@@ -26,7 +27,7 @@ Graph : [ZedGraph][6]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanControl_v1.1.0.zip][8]
+Download : [FanControl_v1.1.0.zip][9]
 
 ## Donate with PayPal
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
@@ -36,7 +37,8 @@ Download : [FanControl_v1.1.0.zip][8]
 [2]: https://github.com/falahati/NvAPIWrapper
 [3]: https://github.com/mikeobrien/HidLibrary
 [4]: https://www.silabs.com/products/development-tools/software/direct-access-drivers
-[5]: https://www.newtonsoft.com/json
-[6]: http://zedgraph.sourceforge.net/samples.html
-[7]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[8]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.1.0.zip
+[5]: https://libusb.info
+[6]: https://www.newtonsoft.com/json
+[7]: http://zedgraph.sourceforge.net/samples.html
+[8]: https://github.com/lich426/FanControl/blob/master/LICENSE
+[9]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.1.0.zip
