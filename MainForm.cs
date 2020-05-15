@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,6 +13,8 @@ namespace FanControl
 {
     public partial class MainForm : Form
     {
+        private bool mIsExit = false;
+
         private List<Label> mSensorLabelList = new List<Label>();
         private List<TextBox> mSensorNameTextBoxList = new List<TextBox>();
         private List<Label> mFanLabelList = new List<Label>();
@@ -22,6 +25,10 @@ namespace FanControl
 
         private FanControlForm mFanControlForm = null;
 
+        private List<Icon> mFanIconList = new List<Icon>();
+        private int mFanIconIndex = 0;
+        private System.Windows.Forms.Timer mFanIconTimer = new System.Windows.Forms.Timer();
+
         public MainForm()
         {
             InitializeComponent();
@@ -29,6 +36,16 @@ namespace FanControl
 
             this.FormClosing += onClosing;
 
+            mFanIconList.Add(Properties.Resources.fan_1);
+            mFanIconList.Add(Properties.Resources.fan_2);
+            mFanIconList.Add(Properties.Resources.fan_3);
+            mFanIconList.Add(Properties.Resources.fan_4);
+            mFanIconList.Add(Properties.Resources.fan_5);
+            mFanIconList.Add(Properties.Resources.fan_6);
+            mFanIconList.Add(Properties.Resources.fan_7);
+            mFanIconList.Add(Properties.Resources.fan_8);
+
+            mTrayIcon.Icon = mFanIconList[0];
             mTrayIcon.Visible = true;
             mTrayIcon.MouseDoubleClick += onTrayIconDBClicked;
             mTrayIcon.ContextMenuStrip = mTrayMenuStrip;
@@ -115,6 +132,14 @@ namespace FanControl
 
             // startUpdate
             hardwareManager.startUpdate();
+
+            // start icon update
+            mFanIconTimer.Interval = 100;
+            mFanIconTimer.Tick += onFanIconTimer;
+            if (OptionManager.getInstance().IsAnimation == true)
+            {                
+                mFanIconTimer.Start();
+            }
         }
 
         private void localizeComponent()
@@ -147,8 +172,21 @@ namespace FanControl
                 mFanControlForm = null;
             }
 
-            this.Visible = false;
-            e.Cancel = true;
+            if (mIsExit == false)
+            {
+                this.Visible = false;
+                e.Cancel = true;
+            }
+        }
+
+        private void onFanIconTimer(object sender, EventArgs e)
+        {
+            if (ControlManager.getInstance().IsEnable == false || OptionManager.getInstance().IsAnimation == false)
+                return;
+
+            if (mFanIconIndex >= mFanIconList.Count)
+                mFanIconIndex = 0;
+            mTrayIcon.Icon = mFanIconList[mFanIconIndex++];
         }
 
         private void onTrayIconDBClicked(object sender, MouseEventArgs e)
@@ -227,12 +265,34 @@ namespace FanControl
             }
 
             HardwareManager.getInstance().stop();
-            
+
+            mFanIconTimer.Stop();
             mTrayIcon.Visible = false;
 
+            mIsExit = true;
             Application.ExitThread();
             Application.Exit();
-        }        
+        }
+
+        private void onRestartProgram(object sender, EventArgs e)
+        {
+            if (mFanControlForm != null)
+            {
+                mFanControlForm.Close();
+                mFanControlForm = null;
+            }
+
+            HardwareManager.getInstance().stop();
+
+            mFanIconTimer.Stop();
+            mTrayIcon.Visible = false;
+
+            Program.releaseMutex();
+            Program.executeProgram();
+
+            mIsExit = true;
+            Environment.Exit(0);
+        }
 
         private void createComponent()
         {
@@ -510,10 +570,20 @@ namespace FanControl
         private void onOptionButtonClick(object sender, EventArgs e)
         {
             var form = new OptionForm();
-            form.OnExitHandler += onTrayMenuExit;
+            form.OnExitHandler += onRestartProgram;
             if (form.ShowDialog() == DialogResult.OK)
             {
                 HardwareManager.getInstance().restartTimer(OptionManager.getInstance().Interval);
+
+                // start icon update
+                if (OptionManager.getInstance().IsAnimation == true)
+                {
+                    mFanIconTimer.Start();
+                }
+                else
+                {
+                    mFanIconTimer.Stop();
+                }
             }
         }
 

@@ -70,5 +70,14 @@ namespace FanControl
             procInfo.Verb = "runas";
             Process.Start(procInfo);
         }
+
+        public static void releaseMutex()
+        {
+            if (sIsLock == true)
+            {
+                sIsLock = false;
+                sMutex.ReleaseMutex();
+            }
+        }
     }
 }

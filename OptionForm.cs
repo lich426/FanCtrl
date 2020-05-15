@@ -41,6 +41,7 @@ namespace FanControl
             mKrakenButton.Enabled = (HardwareManager.getInstance().getKraken() != null);
             mCLCButton.Enabled = (HardwareManager.getInstance().getCLC() != null);            
 
+            mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
             mStartupCheckBox.Checked = OptionManager.getInstance().IsStartUp;
         }
@@ -51,6 +52,7 @@ namespace FanControl
             mIntervalGroupBox.Text = StringLib.Interval;
             mKrakenButton.Text = StringLib.Lighting;
             mCLCButton.Text = StringLib.Lighting;
+            mAnimationCheckBox.Text = StringLib.Tray_Icon_animation;
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
             mStartupCheckBox.Text = StringLib.Start_with_Windows;
             mLibraryGroupBox.Text = StringLib.Library;
@@ -105,7 +107,8 @@ namespace FanControl
             optionManager.LibraryType = (mLibraryRadioButton1.Checked == true) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
             optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
             optionManager.IsKraken = mKrakenCheckBox.Checked;
-            optionManager.IsCLC = mCLCCheckBox.Checked;            
+            optionManager.IsCLC = mCLCCheckBox.Checked;
+            optionManager.IsAnimation = mAnimationCheckBox.Checked;
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
             optionManager.IsStartUp = mStartupCheckBox.Checked;
             optionManager.write();

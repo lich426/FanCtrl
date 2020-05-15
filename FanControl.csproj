@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanControl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.1.0.0</ApplicationVersion>
+    <ApplicationVersion>1.1.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -300,6 +300,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\8.ico" />
+    <None Include="Resources\7.ico" />
+    <None Include="Resources\6.ico" />
+    <None Include="Resources\5.ico" />
+    <None Include="Resources\4.ico" />
+    <None Include="Resources\3.ico" />
+    <None Include="Resources\2.ico" />
+    <None Include="Resources\1.ico" />
     <None Include="Resources\donate2.png" />
     <None Include="Resources\donate.png" />
   </ItemGroup>

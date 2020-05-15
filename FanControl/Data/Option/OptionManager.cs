@@ -32,6 +32,7 @@ namespace FanControl
             IsNvAPIWrapper = false;
             IsKraken = true;
             IsCLC = false;
+            IsAnimation = true;
             IsMinimized = false;
             IsStartUp = false;
         }
@@ -47,6 +48,8 @@ namespace FanControl
         public bool IsKraken { get; set; }
 
         public bool IsCLC { get; set; }
+
+        public bool IsAnimation { get; set; }
 
         public bool IsMinimized { get; set; }
 
@@ -82,6 +85,7 @@ namespace FanControl
                 IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : false;
                 IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
                 IsCLC= (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : false;
+                IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
                 IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
                 IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
             }
@@ -103,6 +107,7 @@ namespace FanControl
                 rootObject["nvapi"] = IsNvAPIWrapper;
                 rootObject["kraken"] = IsKraken;
                 rootObject["clc"] = IsCLC;
+                rootObject["animation"] = IsAnimation;
                 rootObject["minimized"] = IsMinimized;
                 rootObject["startup"] = IsStartUp;
                 File.WriteAllText(cOptionFileName, rootObject.ToString());

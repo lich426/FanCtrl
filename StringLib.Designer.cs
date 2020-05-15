@@ -383,5 +383,14 @@ namespace FanControl {
                 return ResourceManager.GetString("Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Tray Icon animation과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Tray_Icon_animation {
+            get {
+                return ResourceManager.GetString("Tray_Icon_animation", resourceCulture);
+            }
+        }
     }
 }
