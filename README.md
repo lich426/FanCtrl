@@ -8,7 +8,21 @@ NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
 EVGA CLC : support
 
 ![FanControl](https://github.com/lich426/FanControl/blob/master/img/1.png)<br>
-![Auto Fan Control](https://github.com/lich426/FanControl/blob/master/img/2.png)
+![Auto Fan Control](https://github.com/lich426/FanControl/blob/master/img/2.png)<br>
+<br>
+## Lighting
+You can see the lighting packet on the link.<Br>
+NZXT Kraeken X2 : [X2.txt][11]<br>
+NZXT Kraeken X3 : [X3.txt][12]<br>
+EVGA CLC : [clc.txt][13]<br>
+<br>
+ Example X2<br>
+![Lighting](https://github.com/lich426/FanControl/blob/master/img/3.png)<br>
+Logo : Spectrum wave, Ring : Spectrum wave<br>
+<br>
+![Lighting2](https://github.com/lich426/FanControl/blob/master/img/4.png)<br>
+Logo : Fading, Ring : Pulse<br>
+<br>
 
 ## Used Library
 Sensor and Fan Control : [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1]<br>
@@ -29,7 +43,7 @@ Graph : [ZedGraph][8]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanControl_v1.1.0.zip][10]
+Download : [FanControl_v1.1.1.zip][10]
 
 ## Donate with PayPal
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
@@ -44,4 +58,7 @@ Download : [FanControl_v1.1.0.zip][10]
 [7]: https://www.newtonsoft.com/json
 [8]: http://zedgraph.sourceforge.net/samples.html
 [9]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[10]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.1.0.zip
+[10]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.1.1.zip
+[11]: https://github.com/lich426/FanControl/blob/master/Packet/X2.txt
+[12]: https://github.com/lich426/FanControl/blob/master/Packet/X3.txt
+[13]: https://github.com/lich426/FanControl/blob/master/Packet/clc.txt
