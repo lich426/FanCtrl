@@ -50,6 +50,7 @@
             this.mNvApiCheckBox = new System.Windows.Forms.CheckBox();
             this.mKrakenCheckBox = new System.Windows.Forms.CheckBox();
             this.mAnimationCheckBox = new System.Windows.Forms.CheckBox();
+            this.mDimmCheckBox = new System.Windows.Forms.CheckBox();
             this.mIntervalGroupBox.SuspendLayout();
             this.mLibraryGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -86,29 +87,29 @@
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 305);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 336);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
-            this.mMinimizeCheckBox.TabIndex = 10;
+            this.mMinimizeCheckBox.TabIndex = 11;
             this.mMinimizeCheckBox.Text = "Start minimized";
             this.mMinimizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 331);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 362);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
-            this.mStartupCheckBox.TabIndex = 11;
+            this.mStartupCheckBox.TabIndex = 12;
             this.mStartupCheckBox.Text = "Start with Windows";
             this.mStartupCheckBox.UseVisualStyleBackColor = true;
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(11, 356);
+            this.mOKButton.Location = new System.Drawing.Point(11, 388);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(188, 38);
-            this.mOKButton.TabIndex = 12;
+            this.mOKButton.TabIndex = 13;
             this.mOKButton.Text = "OK";
             this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
@@ -119,6 +120,7 @@
             // 
             // mLibraryGroupBox
             // 
+            this.mLibraryGroupBox.Controls.Add(this.mDimmCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mCLCButton);
             this.mLibraryGroupBox.Controls.Add(this.mKrakenButton);
             this.mLibraryGroupBox.Controls.Add(this.panel1);
@@ -129,27 +131,27 @@
             this.mLibraryGroupBox.Controls.Add(this.mKrakenCheckBox);
             this.mLibraryGroupBox.Location = new System.Drawing.Point(12, 77);
             this.mLibraryGroupBox.Name = "mLibraryGroupBox";
-            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 191);
+            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 221);
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
             // 
             // mCLCButton
             // 
-            this.mCLCButton.Location = new System.Drawing.Point(116, 160);
+            this.mCLCButton.Location = new System.Drawing.Point(116, 188);
             this.mCLCButton.Name = "mCLCButton";
             this.mCLCButton.Size = new System.Drawing.Size(64, 23);
-            this.mCLCButton.TabIndex = 8;
+            this.mCLCButton.TabIndex = 9;
             this.mCLCButton.Text = "Lighting";
             this.mCLCButton.UseVisualStyleBackColor = true;
             this.mCLCButton.Click += new System.EventHandler(this.onCLCButtonClick);
             // 
             // mKrakenButton
             // 
-            this.mKrakenButton.Location = new System.Drawing.Point(116, 134);
+            this.mKrakenButton.Location = new System.Drawing.Point(116, 162);
             this.mKrakenButton.Name = "mKrakenButton";
             this.mKrakenButton.Size = new System.Drawing.Size(64, 23);
-            this.mKrakenButton.TabIndex = 6;
+            this.mKrakenButton.TabIndex = 7;
             this.mKrakenButton.Text = "Lighting";
             this.mKrakenButton.UseVisualStyleBackColor = true;
             this.mKrakenButton.Click += new System.EventHandler(this.onKrakenButtonClick);
@@ -199,7 +201,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 124);
+            this.label3.Location = new System.Drawing.Point(5, 148);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(179, 12);
             this.label3.TabIndex = 5;
@@ -208,10 +210,10 @@
             // mCLCCheckBox
             // 
             this.mCLCCheckBox.AutoSize = true;
-            this.mCLCCheckBox.Location = new System.Drawing.Point(8, 165);
+            this.mCLCCheckBox.Location = new System.Drawing.Point(8, 193);
             this.mCLCCheckBox.Name = "mCLCCheckBox";
             this.mCLCCheckBox.Size = new System.Drawing.Size(86, 16);
-            this.mCLCCheckBox.TabIndex = 7;
+            this.mCLCCheckBox.TabIndex = 8;
             this.mCLCCheckBox.Text = "EVGA CLC";
             this.mCLCCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -237,29 +239,39 @@
             // mKrakenCheckBox
             // 
             this.mKrakenCheckBox.AutoSize = true;
-            this.mKrakenCheckBox.Location = new System.Drawing.Point(8, 139);
+            this.mKrakenCheckBox.Location = new System.Drawing.Point(8, 167);
             this.mKrakenCheckBox.Name = "mKrakenCheckBox";
             this.mKrakenCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.mKrakenCheckBox.TabIndex = 5;
+            this.mKrakenCheckBox.TabIndex = 6;
             this.mKrakenCheckBox.Text = "NZXT Kraken";
             this.mKrakenCheckBox.UseVisualStyleBackColor = true;
             // 
             // mAnimationCheckBox
             // 
             this.mAnimationCheckBox.AutoSize = true;
-            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 279);
+            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 310);
             this.mAnimationCheckBox.Name = "mAnimationCheckBox";
             this.mAnimationCheckBox.Size = new System.Drawing.Size(137, 16);
-            this.mAnimationCheckBox.TabIndex = 9;
+            this.mAnimationCheckBox.TabIndex = 10;
             this.mAnimationCheckBox.Text = "Tray Icon animation";
             this.mAnimationCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mDimmCheckBox
+            // 
+            this.mDimmCheckBox.AutoSize = true;
+            this.mDimmCheckBox.Location = new System.Drawing.Point(8, 129);
+            this.mDimmCheckBox.Name = "mDimmCheckBox";
+            this.mDimmCheckBox.Size = new System.Drawing.Size(100, 16);
+            this.mDimmCheckBox.TabIndex = 5;
+            this.mDimmCheckBox.Text = "DIMM sensor";
+            this.mDimmCheckBox.UseVisualStyleBackColor = true;
             // 
             // OptionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(212, 411);
+            this.ClientSize = new System.Drawing.Size(212, 436);
             this.Controls.Add(this.mAnimationCheckBox);
             this.Controls.Add(this.mLibraryGroupBox);
             this.Controls.Add(this.mOKButton);
@@ -306,5 +318,6 @@
         private System.Windows.Forms.CheckBox mCLCCheckBox;
         private System.Windows.Forms.CheckBox mGigabyteCheckBox;
         private System.Windows.Forms.CheckBox mAnimationCheckBox;
+        private System.Windows.Forms.CheckBox mDimmCheckBox;
     }
 }

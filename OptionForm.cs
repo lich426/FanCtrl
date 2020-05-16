@@ -32,7 +32,9 @@ namespace FanControl
             mLibraryRadioButton2.Click += onRadioClick;
             mLibraryRadioButton1.Checked = (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor);
             mLibraryRadioButton2.Checked = (OptionManager.getInstance().LibraryType == LibraryType.OpenHardwareMonitor);
-            
+
+            mDimmCheckBox.Checked = OptionManager.getInstance().IsDimm;
+
             mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
 
             mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
@@ -92,6 +94,7 @@ namespace FanControl
             if ((optionManager.IsGigabyte != mGigabyteCheckBox.Checked) ||
                 (optionManager.LibraryType == LibraryType.LibreHardwareMonitor && mLibraryRadioButton2.Checked == true) ||
                 (optionManager.LibraryType == LibraryType.OpenHardwareMonitor && mLibraryRadioButton1.Checked == true) ||
+                (optionManager.IsDimm != mDimmCheckBox.Checked) ||
                 (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
                 (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
                 (optionManager.IsCLC != mCLCCheckBox.Checked))
@@ -105,6 +108,7 @@ namespace FanControl
             optionManager.Interval = interval;
             optionManager.IsGigabyte = mGigabyteCheckBox.Checked;
             optionManager.LibraryType = (mLibraryRadioButton1.Checked == true) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
+            optionManager.IsDimm = mDimmCheckBox.Checked;
             optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
             optionManager.IsKraken = mKrakenCheckBox.Checked;
             optionManager.IsCLC = mCLCCheckBox.Checked;

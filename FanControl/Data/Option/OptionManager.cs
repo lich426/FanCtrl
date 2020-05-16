@@ -30,6 +30,7 @@ namespace FanControl
             IsGigabyte = true;
             LibraryType = LibraryType.LibreHardwareMonitor;
             IsNvAPIWrapper = false;
+            IsDimm = true;
             IsKraken = true;
             IsCLC = false;
             IsAnimation = true;
@@ -44,6 +45,8 @@ namespace FanControl
         public LibraryType LibraryType { get; set; }
 
         public bool IsNvAPIWrapper { get; set; }
+
+        public bool IsDimm { get; set; }
 
         public bool IsKraken { get; set; }
 
@@ -83,6 +86,7 @@ namespace FanControl
                     LibraryType = (rootObject.Value<int>("library") == 0) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
 
                 IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : false;
+                IsDimm = (rootObject.ContainsKey("dimm") == true) ? rootObject.Value<bool>("dimm") : true;
                 IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
                 IsCLC= (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : false;
                 IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
@@ -104,6 +108,7 @@ namespace FanControl
                 rootObject["interval"] = Interval;
                 rootObject["gigabyte"] = IsGigabyte;
                 rootObject["library"] = (LibraryType == LibraryType.LibreHardwareMonitor) ? 0 : 1;
+                rootObject["dimm"] = IsDimm;
                 rootObject["nvapi"] = IsNvAPIWrapper;
                 rootObject["kraken"] = IsKraken;
                 rootObject["clc"] = IsCLC;

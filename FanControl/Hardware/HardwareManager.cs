@@ -215,36 +215,39 @@ namespace FanControl
             }
 
             // DIMM thermal sensor
-            this.lockSMBus(0);
-            if (SMBusController.open(false) == true)
+            if(OptionManager.getInstance().IsDimm == true)
             {
-                int num = 1;
-                int busCount = SMBusController.getCount();
-
-                for (int i = 0; i < busCount; i++)
+                this.lockSMBus(0);
+                if (SMBusController.open(false) == true)
                 {
-                    var detectBytes = SMBusController.i2cDetect(i);
-                    if (detectBytes != null)
-                    {
-                        // 0x18 ~ 0x20
-                        for (int j = 0; j < detectBytes.Length; j++)
-                        {
-                            if (j < 24)
-                                continue;
-                            else if (j > 32)
-                                break;
+                    int num = 1;
+                    int busCount = SMBusController.getCount();
 
-                            if (detectBytes[j] == (byte)j)
+                    for (int i = 0; i < busCount; i++)
+                    {
+                        var detectBytes = SMBusController.i2cDetect(i);
+                        if (detectBytes != null)
+                        {
+                            // 0x18 ~ 0x20
+                            for (int j = 0; j < detectBytes.Length; j++)
                             {
-                                var sensor = new DimmTemp("DIMM #" + num++, i, detectBytes[j]);
-                                sensor.onSetDimmTemperature += onSetDimmTemperature;
-                                mSensorList.Add(sensor);
+                                if (j < 24)
+                                    continue;
+                                else if (j > 32)
+                                    break;
+
+                                if (detectBytes[j] == (byte)j)
+                                {
+                                    var sensor = new DimmTemp("DIMM #" + num++, i, detectBytes[j]);
+                                    sensor.onSetDimmTemperature += onSetDimmTemperature;
+                                    mSensorList.Add(sensor);
+                                }
                             }
                         }
                     }
                 }
-            }
-            this.unlockSMBus();
+                this.unlockSMBus();
+            }            
 
             // Motherboard temperature
             this.createMotherBoardTemp();
@@ -667,7 +670,7 @@ namespace FanControl
         {
             var sensor = (DimmTemp)sender;
 
-            if (this.lockSMBus(50) == false)
+            if (this.lockSMBus(10) == false)
                 return;
 
             var wordArray = SMBusController.i2cWordData(busIndex, address, 10);
