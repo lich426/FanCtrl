@@ -22,7 +22,6 @@ namespace FanControl
         private object mLock = new object();
 
         // Mutex
-        private bool mIsBusLock = false;
         private Mutex mISABusMutex = null;
         private Mutex mSMBusMutex = null;
         private Mutex mPCIMutex = null;
@@ -58,11 +57,12 @@ namespace FanControl
         private List<int> mChangeValueList = new List<int>();
         private List<BaseControl> mChangeControlList = new List<BaseControl>();
 
-        // update timer
-        private System.Timers.Timer mUpdateTimer = null;
+        // update thread
+        private long mUpdateInterval = 1000;
+        private bool mUpdateThreadState = false;
+        private Thread mUpdateThread = null;
 
         public event UpdateTimerEventHandler onUpdateCallback;
-
         public delegate void UpdateTimerEventHandler();
 
         public void start()
@@ -215,7 +215,7 @@ namespace FanControl
             }
 
             // DIMM thermal sensor
-            this.lockBus();
+            this.lockSMBus(0);
             if (SMBusController.open(false) == true)
             {
                 int num = 1;
@@ -244,7 +244,7 @@ namespace FanControl
                     }
                 }
             }
-            this.unlockBus();
+            this.unlockSMBus();
 
             // Motherboard temperature
             this.createMotherBoardTemp();
@@ -270,11 +270,11 @@ namespace FanControl
             mChangeControlList.Clear();
             mChangeValueList.Clear();
 
-            if (mUpdateTimer != null)
+            mUpdateThreadState = false;
+            if (mUpdateThread != null)
             {
-                mUpdateTimer.Enabled = false;
-                mUpdateTimer.Stop();
-                mUpdateTimer = null;
+                mUpdateThread.Join();
+                mUpdateThread = null;
             }
 
             if (mLHM != null)
@@ -351,10 +351,10 @@ namespace FanControl
                 return;
             }
 
-            mUpdateTimer = new System.Timers.Timer();
-            mUpdateTimer.Interval = OptionManager.getInstance().Interval;
-            mUpdateTimer.Elapsed += onUpdate;
-            mUpdateTimer.Start();
+            mUpdateInterval = OptionManager.getInstance().Interval;
+            mUpdateThreadState = true;
+            mUpdateThread = new Thread(onUpdateThread);
+            mUpdateThread.Start();
 
             Monitor.Exit(mLock);
         }
@@ -367,7 +367,7 @@ namespace FanControl
                 Monitor.Exit(mLock);
                 return;
             }
-            mUpdateTimer.Interval = OptionManager.getInstance().Interval;
+            mUpdateInterval = interval;
             Monitor.Exit(mLock);
         }
 
@@ -394,23 +394,30 @@ namespace FanControl
 
         private void lockBus()
         {
-            if (mIsBusLock == true)
-                return;
             mISABusMutex.WaitOne();
-            mSMBusMutex.WaitOne();
             mPCIMutex.WaitOne();
-            mIsBusLock = true;
         }
 
         private void unlockBus()
         {
-            if (mIsBusLock == false)
-                return;
             mISABusMutex.ReleaseMutex();
-            mSMBusMutex.ReleaseMutex();
             mPCIMutex.ReleaseMutex();
-            mIsBusLock = false;
         }
+
+        private bool lockSMBus(int ms)
+        {
+            if (ms > 0)
+            {
+                return mSMBusMutex.WaitOne(ms);
+            }
+            mSMBusMutex.WaitOne();
+            return true;
+        }
+
+        private void unlockSMBus()
+        {
+            mSMBusMutex.ReleaseMutex();
+        }        
 
         private void createTemp()
         {
@@ -660,14 +667,16 @@ namespace FanControl
         {
             var sensor = (DimmTemp)sender;
 
-            this.lockBus();
+            if (this.lockSMBus(50) == false)
+                return;
+
             var wordArray = SMBusController.i2cWordData(busIndex, address, 10);
             if(wordArray == null)
             {
-                this.unlockBus();
+                this.unlockSMBus();
                 return;
             }
-            this.unlockBus();
+            this.unlockSMBus();
 
             if (wordArray != null && wordArray.Length == 10)
             {
@@ -680,7 +689,8 @@ namespace FanControl
                 {
                     sensor.Value = (int)value;
                 }
-            }            
+            }
+            return;
         }
 
         private int onGetNvAPITemperature(int index)
@@ -744,103 +754,119 @@ namespace FanControl
             this.unlockBus();
         }
 
-        private void onUpdate(object sender, EventArgs e)
+        private void onUpdateThread()
         {
-            if (Monitor.TryEnter(mLock) == false)
-                return;
-
-            if (mIsGigabyte == true && mGigabyte != null)
+            long startTime = Util.getNowMS();
+            while (mUpdateThreadState == true)
             {
-                mGigabyte.update();
-            }
-
-            if (mLHM != null)
-            {
-                mLHM.update();
-            }
-
-            if (mOHM != null)
-            {
-                mOHM.update();
-            }
-
-            for (int i = 0; i < mSensorList.Count; i++)
-            {
-                mSensorList[i].update();
-            }
-
-            for (int i = 0; i < mFanList.Count; i++)
-            {
-                mFanList[i].update();
-            }
-
-            for (int i = 0; i < mControlList.Count; i++)
-            {
-                mControlList[i].update();
-            }
-
-            // change value
-            bool isExistChange = false;
-            if (mChangeValueList.Count > 0)
-            {
-                for (int i = 0; i < mChangeControlList.Count; i++)
+                if (Monitor.TryEnter(mLock) == false)
                 {
-                    isExistChange = true;
-                    mChangeControlList[i].setSpeed(mChangeValueList[i]);
+                    Thread.Sleep(10);
+                    continue;
                 }
-                mChangeControlList.Clear();
-                mChangeValueList.Clear();
-            }
 
-            // Control
-            var controlManager = ControlManager.getInstance();
-            if (controlManager.IsEnable == true && isExistChange == false)
-            {
-                var controlDictionary = new Dictionary<int, BaseControl>();
-                int modeIndex = controlManager.ModeIndex;
-
-                for (int i = 0; i < controlManager.getControlDataCount(modeIndex); i++)
+                long nowTime = Util.getNowMS();
+                if(nowTime - startTime < mUpdateInterval)
                 {
-                    var controlData = controlManager.getControlData(modeIndex, i);
-                    if (controlData == null)
-                        break;
+                    Monitor.Exit(mLock);
+                    Thread.Sleep(10);
+                    continue;
+                }
+                startTime = nowTime;
 
-                    int sensorIndex = controlData.Index;
-                    int temperature = mSensorList[sensorIndex].Value;
+                if (mIsGigabyte == true && mGigabyte != null)
+                {
+                    mGigabyte.update();
+                }
 
-                    for (int j = 0; j < controlData.FanDataList.Count; j++)
+                if (mLHM != null)
+                {
+                    mLHM.update();
+                }
+
+                if (mOHM != null)
+                {
+                    mOHM.update();
+                }
+
+                for (int i = 0; i < mSensorList.Count; i++)
+                {
+                    mSensorList[i].update();
+                }
+
+                for (int i = 0; i < mFanList.Count; i++)
+                {
+                    mFanList[i].update();
+                }
+
+                for (int i = 0; i < mControlList.Count; i++)
+                {
+                    mControlList[i].update();
+                }
+
+                // change value
+                bool isExistChange = false;
+                if (mChangeValueList.Count > 0)
+                {
+                    for (int i = 0; i < mChangeControlList.Count; i++)
                     {
-                        var fanData = controlData.FanDataList[j];
-                        int controlIndex = fanData.Index;
-                        int percent = fanData.getValue(temperature);
+                        isExistChange = true;
+                        mChangeControlList[i].setSpeed(mChangeValueList[i]);
+                    }
+                    mChangeControlList.Clear();
+                    mChangeValueList.Clear();
+                }
 
-                        var control = mControlList[controlIndex];
+                // Control
+                var controlManager = ControlManager.getInstance();
+                if (controlManager.IsEnable == true && isExistChange == false)
+                {
+                    var controlDictionary = new Dictionary<int, BaseControl>();
+                    int modeIndex = controlManager.ModeIndex;
 
-                        if (controlDictionary.ContainsKey(controlIndex) == false)
+                    for (int i = 0; i < controlManager.getControlDataCount(modeIndex); i++)
+                    {
+                        var controlData = controlManager.getControlData(modeIndex, i);
+                        if (controlData == null)
+                            break;
+
+                        int sensorIndex = controlData.Index;
+                        int temperature = mSensorList[sensorIndex].Value;
+
+                        for (int j = 0; j < controlData.FanDataList.Count; j++)
                         {
-                            controlDictionary[controlIndex] = control;
-                            control.NextValue = percent;
+                            var fanData = controlData.FanDataList[j];
+                            int controlIndex = fanData.Index;
+                            int percent = fanData.getValue(temperature);
+
+                            var control = mControlList[controlIndex];
+
+                            if (controlDictionary.ContainsKey(controlIndex) == false)
+                            {
+                                controlDictionary[controlIndex] = control;
+                                control.NextValue = percent;
+                            }
+                            else
+                            {
+                                control.NextValue = (control.NextValue >= percent) ? control.NextValue : percent;
+                            }
                         }
-                        else
-                        {
-                            control.NextValue = (control.NextValue >= percent) ? control.NextValue : percent;
-                        }
+                    }
+
+                    foreach (var keyPair in controlDictionary)
+                    {
+                        var control = keyPair.Value;
+                        if (control.Value == control.NextValue)
+                            continue;
+                        control.setSpeed(control.NextValue);
                     }
                 }
 
-                foreach (var keyPair in controlDictionary)
-                {
-                    var control = keyPair.Value;
-                    if (control.Value == control.NextValue)
-                        continue;
-                    control.setSpeed(control.NextValue);
-                }
+                // onUpdateCallback
+                onUpdateCallback();
+
+                Monitor.Exit(mLock);
             }
-
-            // onUpdateCallback
-            onUpdateCallback();
-
-            Monitor.Exit(mLock);
         }
 
         public int addChangeValue(int value, BaseControl control)
