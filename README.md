@@ -24,7 +24,7 @@ Logo : Spectrum wave, Ring : Spectrum wave<br>
 Logo : Fading, Ring : Pulse<br>
 <br>
 
-## Used Library
+## Using external Libraries
 Sensor and Fan Control : [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1]<br>
 Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
