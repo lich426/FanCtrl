@@ -401,5 +401,14 @@ namespace FanControl {
                 return ResourceManager.GetString("Tray_Icon_animation", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Unit :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Unit {
+            get {
+                return ResourceManager.GetString("Unit", resourceCulture);
+            }
+        }
     }
 }

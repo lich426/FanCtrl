@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +14,12 @@ namespace FanControl
 {
     public partial class FanControlForm : Form
     {
+        private Size mLastSize = new Size(748, 414);
+        private Size mNormalLastSize = new Size(748, 414);
+
+        private bool mIsUpdateGraph = true;
+        private bool mIsResize = false;
+
         private int mSelectedIndex = -1;
         private PointPairList mPointList = null;
         private LineItem mLineItem = null;
@@ -39,6 +46,90 @@ namespace FanControl
 
             this.initControl();
             this.initGraph();
+
+            this.SetStyle(ControlStyles.UserPaint |
+                            ControlStyles.OptimizedDoubleBuffer |
+                            ControlStyles.AllPaintingInWmPaint |
+                            ControlStyles.SupportsTransparentBackColor, true);
+            this.Resize += (sender, e) =>
+            {
+                if (mIsResize == true)
+                    return;
+                mIsResize = true;
+
+                //Console.WriteLine("Size : {0}, {1}", this.Width, this.Height);
+
+                int widthGap = this.Width - mLastSize.Width;
+                int heightGap = this.Height - mLastSize.Height;
+
+                //Console.WriteLine("Gap : {0}, {1}", widthGap, heightGap);
+                
+                mFanGroupBox.Height = mFanGroupBox.Height + heightGap;
+                mFanListView.Height = mFanListView.Height + heightGap;
+                mRemoveButton.Top = mRemoveButton.Top + heightGap;
+                              
+                mModeGroupBox.Width = mModeGroupBox.Width + widthGap;
+
+                mGraphGroupBox.Width = mGraphGroupBox.Width + widthGap;
+                mGraphGroupBox.Height = mGraphGroupBox.Height + heightGap;
+
+                mGraph.Width = mGraph.Width + widthGap;
+                mGraph.Height = mGraph.Height + heightGap;
+
+                mUnitLabel.Left = mUnitLabel.Left + widthGap;
+                mUnitComboBox.Left = mUnitComboBox.Left + widthGap;
+                mHysLabel.Left = mHysLabel.Left + widthGap;
+                mHysNumericUpDown.Left = mHysNumericUpDown.Left + widthGap;
+                mStepCheckBox.Left = mStepCheckBox.Left + widthGap;
+
+                mApplyButton.Left = mApplyButton.Left + widthGap;
+                mApplyButton.Top = mApplyButton.Top + heightGap;
+
+                mOKButton.Left = mOKButton.Left + widthGap;
+                mOKButton.Top = mOKButton.Top + heightGap;
+
+                mLastSize.Width = this.Width;
+                mLastSize.Height = this.Height;
+
+                if(this.WindowState != FormWindowState.Maximized)
+                {
+                    mNormalLastSize.Width = this.Width;
+                    mNormalLastSize.Height = this.Height;                    
+                }
+
+                mIsResize = false;
+            };
+
+            this.ResizeBegin += (s, e) =>
+            {
+                mIsUpdateGraph = false;
+                this.SuspendLayout();
+            };
+            this.ResizeEnd += (s, e) =>
+            {
+                this.ResumeLayout();
+                mIsUpdateGraph = true;
+            };
+
+            this.FormClosing += (s, e) =>
+            {
+                ControlManager.getInstance().Width = mNormalLastSize.Width;
+                ControlManager.getInstance().Height = mNormalLastSize.Height;
+                ControlManager.getInstance().IsMaximize = (this.WindowState == FormWindowState.Maximized);
+                ControlManager.getInstance().write();
+            };
+
+            if (ControlManager.getInstance().IsMaximize == true)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+
+            this.Width = ControlManager.getInstance().Width;
+            this.Height = ControlManager.getInstance().Height;
+            mLastSize.Width = this.Width;
+            mLastSize.Height = this.Height;
+            mNormalLastSize.Width = this.Width;
+            mNormalLastSize.Height = this.Height;
         }
 
         private void localizeComponent()
@@ -55,6 +146,7 @@ namespace FanControl
             mAddButton.Text = StringLib.Add;
             mRemoveButton.Text = StringLib.Remove;
             mGraphGroupBox.Text = StringLib.Graph;
+            mUnitLabel.Text = StringLib.Unit;
             mHysLabel.Text = StringLib.Hysteresis;
             mStepCheckBox.Text = StringLib.Step;
             mOKButton.Text = StringLib.OK;
@@ -83,6 +175,12 @@ namespace FanControl
             mFanListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             mFanListView.GridLines = true;
             mFanListView.SelectedIndexChanged += onFanListViewIndexChanged;
+
+            mUnitComboBox.Items.Add("1");
+            mUnitComboBox.Items.Add("5");
+            mUnitComboBox.Items.Add("10");
+            mUnitComboBox.SelectedIndex = 1;
+            mUnitComboBox.SelectedIndexChanged += onUnitComboBoxIndexChanged;
 
             mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
 
@@ -154,7 +252,7 @@ namespace FanControl
 
             // line
             mPointList = new PointPairList();
-            for (int i = 0; i < FanData.MAX_FAN_VALUE_SIZE; i++)
+            for (int i = 0; i < FanData.MAX_FAN_VALUE_SIZE_5; i++)
             {
                 mPointList.Add(5 * i, 50);
             }
@@ -163,10 +261,46 @@ namespace FanControl
             mLineItem.Symbol.Size = 10.0f;
             mLineItem.Symbol.Fill = new Fill(Color.White);
 
+            mUnitLabel.Visible = false;
+            mUnitComboBox.Visible = false;
             mGraph.Visible = false;
             mStepCheckBox.Visible = false;
             mHysLabel.Visible = false;
             mHysNumericUpDown.Visible = false;
+        }
+
+        private void setGraphFromSelectedFanData()
+        {
+            if (mSelectedFanData == null)
+                return;
+
+            var unit = mSelectedFanData.Unit;
+            if (unit == FanValueUnit.Size_1)
+            {
+                mGraph.GraphPane.XAxis.Scale.MinorStep = 1;
+                mGraph.GraphPane.YAxis.Scale.MinorStep = 1;
+                mLineItem.Symbol.Size = 2.0f;
+            }
+            else if (unit == FanValueUnit.Size_5)
+            {
+                mGraph.GraphPane.XAxis.Scale.MinorStep = 5;
+                mGraph.GraphPane.YAxis.Scale.MinorStep = 5;
+                mLineItem.Symbol.Size = 10.0f;
+            }
+            else
+            {
+                mGraph.GraphPane.XAxis.Scale.MinorStep = 10;
+                mGraph.GraphPane.YAxis.Scale.MinorStep = 10;
+                mLineItem.Symbol.Size = 10.0f;
+            }
+
+            //mGraph.GraphPane.CurveList.Clear();
+            mPointList.Clear();
+            for (int i = 0; i < mSelectedFanData.getMaxFanValue(); i++)
+            {
+                mPointList.Add(mSelectedFanData.getDivideValue() * i, mSelectedFanData.ValueList[i]);
+            }
+            mGraph.Refresh();
         }
 
         private void onRadioButtonClick(object sender, EventArgs e)
@@ -191,6 +325,8 @@ namespace FanControl
 
         private void onSensorComboBoxIndexChanged(object sender, EventArgs e)
         {
+            mUnitLabel.Visible = false;
+            mUnitComboBox.Visible = false;
             mGraph.Visible = false;
             mStepCheckBox.Visible = false;
             mHysLabel.Visible = false;
@@ -262,7 +398,7 @@ namespace FanControl
 
         private int getPointIndex(double x)
         {
-            double divide = x / 5.0;
+            double divide = x / mSelectedFanData.getDivideValue();
             int index = (int)Math.Round(divide);
             return index;
         }
@@ -275,9 +411,9 @@ namespace FanControl
             if (y < 0)          y = 0;
             else if (y > 100)   y = 100;
 
-            double divide = y / 5.0;
+            double divide = y / mSelectedFanData.getDivideValue();
             int temp = (int)Math.Round(divide);
-            y = (double)(temp * 5);
+            y = (double)(temp * mSelectedFanData.getDivideValue());
 
             mPointList[mSelectedIndex].Y = y;
             if (mSelectedFanData != null)
@@ -315,7 +451,8 @@ namespace FanControl
             if (mSensorComboBox.Items.Count == 0 ||
                 mFanComboBox.Items.Count == 0 ||
                 mSelectedFanData == null ||
-                mNowPoint == null)
+                mNowPoint == null ||
+                mIsUpdateGraph == false)
             {
                 return;
             }
@@ -389,6 +526,8 @@ namespace FanControl
             var items = mFanListView.SelectedItems;
             if (items == null || items.Count == 0)
             {
+                mUnitLabel.Visible = false;
+                mUnitComboBox.Visible = false;
                 mGraph.Visible = false;
                 mStepCheckBox.Visible = false;
                 mHysLabel.Visible = false;
@@ -397,6 +536,8 @@ namespace FanControl
                 return;
             }
 
+            mUnitLabel.Visible = true;
+            mUnitComboBox.Visible = true;
             mGraph.Visible = true;
             mStepCheckBox.Visible = true;
             mHysLabel.Visible = true;
@@ -404,19 +545,28 @@ namespace FanControl
 
             var item = items[0];
             mSelectedFanData = this.getFanData(mSensorComboBox.SelectedIndex, item.Text);
-            for(int i = 0; i < FanData.MAX_FAN_VALUE_SIZE; i++)
-            {
-                mPointList[i].Y = (double)mSelectedFanData.ValueList[i];
-            }
 
+            // setGraphFromSelectedFanData
+            this.setGraphFromSelectedFanData();
+
+            mUnitComboBox.SelectedIndex = (int)mSelectedFanData.Unit;
             mStepCheckBox.Checked = mSelectedFanData.IsStep;
             mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
             mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
             mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
 
-            mGraph.Refresh();
-
             this.onUpdateTimer();
+        }
+
+        private void onUnitComboBoxIndexChanged(object sender, EventArgs e)
+        {
+            if (mSelectedFanData == null)
+                return;
+
+            mSelectedFanData.setChangeUnitAndFanValue((FanValueUnit)mUnitComboBox.SelectedIndex);
+
+            // setGraphFromSelectedFanData
+            this.setGraphFromSelectedFanData();
         }
 
         private void onHysNumericValueChanged(object sender, EventArgs e)
@@ -452,7 +602,7 @@ namespace FanControl
             var fanData = this.getFanData(sensorIndex, fanIndex);
             if(fanData == null)
             {
-                fanData = new FanData(fanIndex, fanControlName, true, 0);
+                fanData = new FanData(fanIndex, fanControlName, FanValueUnit.Size_5, true, 0);
                 controlData.FanDataList.Add(fanData);
 
                 mFanListView.Items.Add(fanData.Name);
@@ -499,6 +649,11 @@ namespace FanControl
                 }
                 ControlManager.getInstance().setControlDataList(i, mControlDataList[i]);
             }
+
+            ControlManager.getInstance().Width = mNormalLastSize.Width;
+            ControlManager.getInstance().Height = mNormalLastSize.Height;
+            ControlManager.getInstance().IsMaximize = (this.WindowState == FormWindowState.Maximized);
+
             ControlManager.getInstance().ModeIndex = mModeIndex;
             ControlManager.getInstance().IsEnable = mEnableCheckBox.Checked;
             ControlManager.getInstance().write();

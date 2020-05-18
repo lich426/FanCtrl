@@ -39,6 +39,7 @@
             this.mFanListView = new System.Windows.Forms.ListView();
             this.mFanComboBox = new System.Windows.Forms.ComboBox();
             this.mGraphGroupBox = new System.Windows.Forms.GroupBox();
+            this.mUnitLabel = new System.Windows.Forms.Label();
             this.mHysLabel = new System.Windows.Forms.Label();
             this.mStepCheckBox = new System.Windows.Forms.CheckBox();
             this.mGraph = new ZedGraph.ZedGraphControl();
@@ -50,6 +51,7 @@
             this.mPerformanceRadioButton = new System.Windows.Forms.RadioButton();
             this.mSilenceRadioButton = new System.Windows.Forms.RadioButton();
             this.mNormalRadioButton = new System.Windows.Forms.RadioButton();
+            this.mUnitComboBox = new System.Windows.Forms.ComboBox();
             this.mSensorGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
@@ -84,7 +86,7 @@
             this.mSensorComboBox.Location = new System.Drawing.Point(7, 21);
             this.mSensorComboBox.Name = "mSensorComboBox";
             this.mSensorComboBox.Size = new System.Drawing.Size(195, 20);
-            this.mSensorComboBox.TabIndex = 0;
+            this.mSensorComboBox.TabIndex = 1;
             // 
             // mFanGroupBox
             // 
@@ -104,7 +106,7 @@
             this.mRemoveButton.Location = new System.Drawing.Point(7, 171);
             this.mRemoveButton.Name = "mRemoveButton";
             this.mRemoveButton.Size = new System.Drawing.Size(195, 33);
-            this.mRemoveButton.TabIndex = 3;
+            this.mRemoveButton.TabIndex = 2;
             this.mRemoveButton.Text = "Remove";
             this.mRemoveButton.UseVisualStyleBackColor = true;
             this.mRemoveButton.Click += new System.EventHandler(this.onRemoveButtonClick);
@@ -127,7 +129,7 @@
             this.mFanListView.MultiSelect = false;
             this.mFanListView.Name = "mFanListView";
             this.mFanListView.Size = new System.Drawing.Size(195, 116);
-            this.mFanListView.TabIndex = 1;
+            this.mFanListView.TabIndex = 2;
             this.mFanListView.UseCompatibleStateImageBehavior = false;
             this.mFanListView.View = System.Windows.Forms.View.List;
             // 
@@ -138,19 +140,30 @@
             this.mFanComboBox.Location = new System.Drawing.Point(7, 20);
             this.mFanComboBox.Name = "mFanComboBox";
             this.mFanComboBox.Size = new System.Drawing.Size(125, 20);
-            this.mFanComboBox.TabIndex = 0;
+            this.mFanComboBox.TabIndex = 2;
             // 
             // mGraphGroupBox
             // 
+            this.mGraphGroupBox.Controls.Add(this.mUnitLabel);
             this.mGraphGroupBox.Controls.Add(this.mHysLabel);
             this.mGraphGroupBox.Controls.Add(this.mStepCheckBox);
             this.mGraphGroupBox.Controls.Add(this.mGraph);
             this.mGraphGroupBox.Location = new System.Drawing.Point(227, 61);
             this.mGraphGroupBox.Name = "mGraphGroupBox";
             this.mGraphGroupBox.Size = new System.Drawing.Size(493, 267);
-            this.mGraphGroupBox.TabIndex = 0;
+            this.mGraphGroupBox.TabIndex = 4;
             this.mGraphGroupBox.TabStop = false;
             this.mGraphGroupBox.Text = "Graph";
+            // 
+            // mUnitLabel
+            // 
+            this.mUnitLabel.AutoSize = true;
+            this.mUnitLabel.Location = new System.Drawing.Point(214, 1);
+            this.mUnitLabel.Name = "mUnitLabel";
+            this.mUnitLabel.Size = new System.Drawing.Size(34, 12);
+            this.mUnitLabel.TabIndex = 4;
+            this.mUnitLabel.Text = "Unit :";
+            this.mUnitLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // mHysLabel
             // 
@@ -158,8 +171,9 @@
             this.mHysLabel.Location = new System.Drawing.Point(306, 1);
             this.mHysLabel.Name = "mHysLabel";
             this.mHysLabel.Size = new System.Drawing.Size(73, 12);
-            this.mHysLabel.TabIndex = 5;
+            this.mHysLabel.TabIndex = 4;
             this.mHysLabel.Text = "Hysteresis :";
+            this.mHysLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // mStepCheckBox
             // 
@@ -174,7 +188,7 @@
             // 
             // mGraph
             // 
-            this.mGraph.Location = new System.Drawing.Point(6, 21);
+            this.mGraph.Location = new System.Drawing.Point(6, 23);
             this.mGraph.Name = "mGraph";
             this.mGraph.ScrollGrace = 0D;
             this.mGraph.ScrollMaxX = 0D;
@@ -183,8 +197,8 @@
             this.mGraph.ScrollMinX = 0D;
             this.mGraph.ScrollMinY = 0D;
             this.mGraph.ScrollMinY2 = 0D;
-            this.mGraph.Size = new System.Drawing.Size(481, 240);
-            this.mGraph.TabIndex = 0;
+            this.mGraph.Size = new System.Drawing.Size(481, 238);
+            this.mGraph.TabIndex = 4;
             this.mGraph.ZoomButtons = System.Windows.Forms.MouseButtons.None;
             // 
             // mOKButton
@@ -209,10 +223,10 @@
             // 
             // mHysNumericUpDown
             // 
-            this.mHysNumericUpDown.Location = new System.Drawing.Point(608, 58);
+            this.mHysNumericUpDown.Location = new System.Drawing.Point(608, 59);
             this.mHysNumericUpDown.Name = "mHysNumericUpDown";
             this.mHysNumericUpDown.Size = new System.Drawing.Size(38, 21);
-            this.mHysNumericUpDown.TabIndex = 5;
+            this.mHysNumericUpDown.TabIndex = 4;
             // 
             // mModeGroupBox
             // 
@@ -222,8 +236,8 @@
             this.mModeGroupBox.Controls.Add(this.mNormalRadioButton);
             this.mModeGroupBox.Location = new System.Drawing.Point(227, 9);
             this.mModeGroupBox.Name = "mModeGroupBox";
-            this.mModeGroupBox.Size = new System.Drawing.Size(493, 46);
-            this.mModeGroupBox.TabIndex = 6;
+            this.mModeGroupBox.Size = new System.Drawing.Size(493, 43);
+            this.mModeGroupBox.TabIndex = 3;
             this.mModeGroupBox.TabStop = false;
             this.mModeGroupBox.Text = "Mode";
             // 
@@ -244,7 +258,7 @@
             this.mPerformanceRadioButton.Location = new System.Drawing.Point(255, 20);
             this.mPerformanceRadioButton.Name = "mPerformanceRadioButton";
             this.mPerformanceRadioButton.Size = new System.Drawing.Size(95, 16);
-            this.mPerformanceRadioButton.TabIndex = 2;
+            this.mPerformanceRadioButton.TabIndex = 3;
             this.mPerformanceRadioButton.TabStop = true;
             this.mPerformanceRadioButton.Text = "Performance";
             this.mPerformanceRadioButton.UseVisualStyleBackColor = true;
@@ -255,7 +269,7 @@
             this.mSilenceRadioButton.Location = new System.Drawing.Point(146, 20);
             this.mSilenceRadioButton.Name = "mSilenceRadioButton";
             this.mSilenceRadioButton.Size = new System.Drawing.Size(65, 16);
-            this.mSilenceRadioButton.TabIndex = 1;
+            this.mSilenceRadioButton.TabIndex = 3;
             this.mSilenceRadioButton.TabStop = true;
             this.mSilenceRadioButton.Text = "Silence";
             this.mSilenceRadioButton.UseVisualStyleBackColor = true;
@@ -266,17 +280,26 @@
             this.mNormalRadioButton.Location = new System.Drawing.Point(41, 20);
             this.mNormalRadioButton.Name = "mNormalRadioButton";
             this.mNormalRadioButton.Size = new System.Drawing.Size(64, 16);
-            this.mNormalRadioButton.TabIndex = 0;
+            this.mNormalRadioButton.TabIndex = 3;
             this.mNormalRadioButton.TabStop = true;
             this.mNormalRadioButton.Text = "Normal";
             this.mNormalRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // mUnitComboBox
+            // 
+            this.mUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mUnitComboBox.FormattingEnabled = true;
+            this.mUnitComboBox.Location = new System.Drawing.Point(478, 58);
+            this.mUnitComboBox.Name = "mUnitComboBox";
+            this.mUnitComboBox.Size = new System.Drawing.Size(44, 20);
+            this.mUnitComboBox.TabIndex = 4;
             // 
             // FanControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(732, 375);
+            this.Controls.Add(this.mUnitComboBox);
             this.Controls.Add(this.mModeGroupBox);
             this.Controls.Add(this.mHysNumericUpDown);
             this.Controls.Add(this.mApplyButton);
@@ -285,10 +308,9 @@
             this.Controls.Add(this.mFanGroupBox);
             this.Controls.Add(this.mSensorGroupBox);
             this.Controls.Add(this.mEnableCheckBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(748, 414);
             this.Name = "FanControlForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FanControl";
@@ -326,5 +348,7 @@
         private System.Windows.Forms.RadioButton mPerformanceRadioButton;
         private System.Windows.Forms.RadioButton mSilenceRadioButton;
         private System.Windows.Forms.RadioButton mNormalRadioButton;
+        private System.Windows.Forms.Label mUnitLabel;
+        private System.Windows.Forms.ComboBox mUnitComboBox;
     }
 }

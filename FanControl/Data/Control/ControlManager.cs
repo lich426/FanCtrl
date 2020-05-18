@@ -20,6 +20,60 @@ namespace FanControl
 
         private Object mLock = new Object();
 
+        private int mWidth = 748;
+        public int Width
+        {
+            get
+            {
+                Monitor.Enter(mLock);
+                int width = mWidth;
+                Monitor.Exit(mLock);
+                return width;
+            }
+            set
+            {
+                Monitor.Enter(mLock);
+                mWidth = value;
+                Monitor.Exit(mLock);
+            }
+        }
+
+        private int mHeight = 414;
+        public int Height
+        {
+            get
+            {
+                Monitor.Enter(mLock);
+                int height = mHeight;
+                Monitor.Exit(mLock);
+                return height;
+            }
+            set
+            {
+                Monitor.Enter(mLock);
+                mHeight = value;
+                Monitor.Exit(mLock);
+            }
+        }
+
+        private bool mIsMaximize = false;
+        public bool IsMaximize
+        {
+            get
+            {
+                Monitor.Enter(mLock);
+                bool isMaximize = mIsMaximize;
+                Monitor.Exit(mLock);
+                return isMaximize;
+            }
+            set
+            {
+                Monitor.Enter(mLock);
+                mIsMaximize = value;
+                Monitor.Exit(mLock);
+            }
+        }
+
         private bool mIsEnable = false;
         public bool IsEnable
         {
@@ -315,14 +369,10 @@ namespace FanControl
             {
                 var rootObject = JObject.Parse(jsonString);
 
-                if (rootObject.ContainsKey("enable") == false)
-                {
-                    mIsEnable = false;
-                }
-                else
-                {
-                    mIsEnable = rootObject.Value<bool>("enable");
-                }
+                mWidth = (rootObject.ContainsKey("width") == true) ? rootObject.Value<int>("width") : mWidth;
+                mHeight = (rootObject.ContainsKey("height") == true) ? rootObject.Value<int>("height") : mHeight;
+                mIsMaximize = (rootObject.ContainsKey("maximize") == true) ? rootObject.Value<bool>("maximize") : mIsMaximize;
+                mIsEnable = (rootObject.ContainsKey("enable") == true) ? rootObject.Value<bool>("enable") : mIsEnable;
 
                 if (rootObject.ContainsKey("modeIndex") == false)
                 {
@@ -426,14 +476,15 @@ namespace FanControl
                     string fanName = fanObject.Value<string>("name");
                     bool isStep = (fanObject.ContainsKey("step") == true) ? fanObject.Value<bool>("step") : true;
                     int hysteresis = (fanObject.ContainsKey("hysteresis") == true) ? fanObject.Value<int>("hysteresis") : 0;
+                    int unit = (fanObject.ContainsKey("unit") == true) ? fanObject.Value<int>("unit") : 1;
 
-                    var fanData = new FanData(fanIndex, fanName, isStep, hysteresis);
+                    var fanData = new FanData(fanIndex, fanName, (FanValueUnit)unit, isStep, hysteresis);
 
                     // Percent value
                     var valueList = fanObject.Value<JArray>("value");
 
-                    // fan value list is 21
-                    if (valueList.Count == FanData.MAX_FAN_VALUE_SIZE)
+                    // fan value list
+                    if (valueList.Count == fanData.getMaxFanValue())
                     {
                         for (int k = 0; k < valueList.Count; k++)
                         {
@@ -457,6 +508,10 @@ namespace FanControl
             try
             {
                 var rootObject = new JObject();
+
+                rootObject["width"] = mWidth;
+                rootObject["height"] = mHeight;
+                rootObject["maximize"] = mIsMaximize;
                 rootObject["enable"] = mIsEnable;
                 rootObject["modeIndex"] = mModeIndex;
 
@@ -526,9 +581,10 @@ namespace FanControl
                     fanObject["index"] = fanData.Index;
                     fanObject["step"] = fanData.IsStep;
                     fanObject["hysteresis"] = fanData.Hysteresis;
+                    fanObject["unit"] = (int)fanData.Unit;
 
                     var valueList = new JArray();
-                    for (int k = 0; k < FanData.MAX_FAN_VALUE_SIZE; k++)
+                    for (int k = 0; k < fanData.getMaxFanValue(); k++)
                     {
                         int value = fanData.ValueList[k];
                         valueList.Add(value);

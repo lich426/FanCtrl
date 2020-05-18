@@ -231,4 +231,7 @@
   <data name="Tray_Icon_animation" xml:space="preserve">
     <value>트레이아이콘 애니메이션</value>
   </data>
+  <data name="Unit" xml:space="preserve">
+    <value>유닛 :</value>
+  </data>
 </root>

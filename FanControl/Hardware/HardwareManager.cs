@@ -397,29 +397,60 @@ namespace FanControl
 
         private void lockBus()
         {
-            mISABusMutex.WaitOne();
-            mPCIMutex.WaitOne();
+            try
+            {
+                mISABusMutex.WaitOne();
+            }
+            catch { }
+
+            try
+            {
+                mPCIMutex.WaitOne();
+            }
+            catch { }            
         }
 
         private void unlockBus()
         {
-            mISABusMutex.ReleaseMutex();
-            mPCIMutex.ReleaseMutex();
+            try
+            {
+                mISABusMutex.ReleaseMutex();
+            }
+            catch { }
+            try
+            {
+                mPCIMutex.ReleaseMutex();
+            }
+            catch { }
         }
 
         private bool lockSMBus(int ms)
         {
             if (ms > 0)
             {
-                return mSMBusMutex.WaitOne(ms);
+                try
+                {
+                    return mSMBusMutex.WaitOne(ms);
+                }
+                catch { }
+                return false;
             }
-            mSMBusMutex.WaitOne();
-            return true;
+            try
+            {
+                mSMBusMutex.WaitOne();
+                return true;
+            }
+            catch { }            
+            return false;
         }
 
         private void unlockSMBus()
         {
-            mSMBusMutex.ReleaseMutex();
+            try
+            {
+                mSMBusMutex.ReleaseMutex();
+            }
+            catch { }
         }        
 
         private void createTemp()
@@ -764,7 +795,7 @@ namespace FanControl
             {
                 if (Monitor.TryEnter(mLock) == false)
                 {
-                    Thread.Sleep(10);
+                    Thread.Sleep(100);
                     continue;
                 }
 
@@ -772,7 +803,7 @@ namespace FanControl
                 if(nowTime - startTime < mUpdateInterval)
                 {
                     Monitor.Exit(mLock);
-                    Thread.Sleep(10);
+                    Thread.Sleep(100);
                     continue;
                 }
                 startTime = nowTime;
