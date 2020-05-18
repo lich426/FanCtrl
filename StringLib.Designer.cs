@@ -133,6 +133,15 @@ namespace FanControl {
         }
         
         /// <summary>
+        ///   Fahrenheit (°F)과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Fahrenheit {
+            get {
+                return ResourceManager.GetString("Fahrenheit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Fan과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Fan {

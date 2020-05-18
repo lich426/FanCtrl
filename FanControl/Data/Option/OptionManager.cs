@@ -34,6 +34,7 @@ namespace FanControl
             IsKraken = true;
             IsCLC = false;
             IsAnimation = true;
+            IsFahrenheit = false;
             IsMinimized = false;
             IsStartUp = false;
         }
@@ -53,6 +54,8 @@ namespace FanControl
         public bool IsCLC { get; set; }
 
         public bool IsAnimation { get; set; }
+
+        public bool IsFahrenheit { get; set; }
 
         public bool IsMinimized { get; set; }
 
@@ -90,6 +93,7 @@ namespace FanControl
                 IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
                 IsCLC= (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : false;
                 IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
+                IsFahrenheit = (rootObject.ContainsKey("fahrenheit") == true) ? rootObject.Value<bool>("fahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
                 IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
             }
@@ -113,6 +117,7 @@ namespace FanControl
                 rootObject["kraken"] = IsKraken;
                 rootObject["clc"] = IsCLC;
                 rootObject["animation"] = IsAnimation;
+                rootObject["fahrenheit"] = IsFahrenheit;
                 rootObject["minimized"] = IsMinimized;
                 rootObject["startup"] = IsStartUp;
                 File.WriteAllText(cOptionFileName, rootObject.ToString());

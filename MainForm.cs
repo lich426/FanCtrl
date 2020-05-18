@@ -303,10 +303,12 @@ namespace FanControl
             for (int i = 0; i < hardwareManager.getSensorCount(); i++)
             {
                 var label = new Label();
-                label.Location = new System.Drawing.Point(10, 25 + i * 25);
+                label.Location = new System.Drawing.Point(3, 25 + i * 25);
                 label.Name = "sensorLabel" + i.ToString();
-                label.Size = new System.Drawing.Size(33, 23);
+                label.Size = new System.Drawing.Size(40, 23);
                 label.Text = "";
+                label.AutoSize = false;
+                label.TextAlign = ContentAlignment.TopRight;
                 mTempGroupBox.Controls.Add(label);
                 mSensorLabelList.Add(label);
 
@@ -335,6 +337,8 @@ namespace FanControl
                 label.Name = "fanLabel" + i.ToString();
                 label.Size = new System.Drawing.Size(60, 23);
                 label.Text = "";
+                label.AutoSize = false;
+                label.TextAlign = ContentAlignment.TopRight;
                 mFanGroupBox.Controls.Add(label);
                 mFanLabelList.Add(label);
 
@@ -589,35 +593,7 @@ namespace FanControl
 
         private void onFanControlButtonClick(object sender, EventArgs e)
         {
-            if(mFanControlForm != null)
-            {
-                mFanControlForm.Focus();
-                return;
-            }
-
-            for(int i = 0; i < mSensorNameTextBoxList.Count; i++)
-                mSensorNameTextBoxList[i].Enabled = false;
-
-            for (int i = 0; i < mFanNameTextBoxList.Count; i++)
-                mFanNameTextBoxList[i].Enabled = false;
-
-            for (int i = 0; i < mControlNameTextBoxList.Count; i++)
-                mControlNameTextBoxList[i].Enabled = false;
-
             mFanControlForm = new FanControlForm();
-            mFanControlForm.onCloseCallback += (sender2, e2) =>
-            {
-                mFanControlForm = null;
-
-                for (int i = 0; i < mSensorNameTextBoxList.Count; i++)
-                    mSensorNameTextBoxList[i].Enabled = true;
-
-                for (int i = 0; i < mFanNameTextBoxList.Count; i++)
-                    mFanNameTextBoxList[i].Enabled = true;
-
-                for (int i = 0; i < mControlNameTextBoxList.Count; i++)
-                    mControlNameTextBoxList[i].Enabled = true;
-            };
             mFanControlForm.onApplyCallback += (sender2, e2) =>
             {
                 mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
@@ -628,7 +604,8 @@ namespace FanControl
             };
             mFanControlForm.StartPosition = FormStartPosition.Manual;
             mFanControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
-            mFanControlForm.Show(this);
+            mFanControlForm.ShowDialog();
+            mFanControlForm = null;
         }
         
         private void onDonatePictureBoxClick(object sender, MouseEventArgs e)

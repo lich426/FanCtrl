@@ -38,6 +38,7 @@
             this.mOKButton = new System.Windows.Forms.Button();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mLibraryGroupBox = new System.Windows.Forms.GroupBox();
+            this.mDimmCheckBox = new System.Windows.Forms.CheckBox();
             this.mCLCButton = new System.Windows.Forms.Button();
             this.mKrakenButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -50,7 +51,7 @@
             this.mNvApiCheckBox = new System.Windows.Forms.CheckBox();
             this.mKrakenCheckBox = new System.Windows.Forms.CheckBox();
             this.mAnimationCheckBox = new System.Windows.Forms.CheckBox();
-            this.mDimmCheckBox = new System.Windows.Forms.CheckBox();
+            this.mFahrenheitCheckBox = new System.Windows.Forms.CheckBox();
             this.mIntervalGroupBox.SuspendLayout();
             this.mLibraryGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -87,29 +88,29 @@
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 336);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 360);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
-            this.mMinimizeCheckBox.TabIndex = 11;
+            this.mMinimizeCheckBox.TabIndex = 12;
             this.mMinimizeCheckBox.Text = "Start minimized";
             this.mMinimizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 362);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 385);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
-            this.mStartupCheckBox.TabIndex = 12;
+            this.mStartupCheckBox.TabIndex = 13;
             this.mStartupCheckBox.Text = "Start with Windows";
             this.mStartupCheckBox.UseVisualStyleBackColor = true;
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(11, 388);
+            this.mOKButton.Location = new System.Drawing.Point(11, 411);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(188, 38);
-            this.mOKButton.TabIndex = 13;
+            this.mOKButton.TabIndex = 14;
             this.mOKButton.Text = "OK";
             this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
@@ -135,6 +136,16 @@
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
+            // 
+            // mDimmCheckBox
+            // 
+            this.mDimmCheckBox.AutoSize = true;
+            this.mDimmCheckBox.Location = new System.Drawing.Point(8, 129);
+            this.mDimmCheckBox.Name = "mDimmCheckBox";
+            this.mDimmCheckBox.Size = new System.Drawing.Size(100, 16);
+            this.mDimmCheckBox.TabIndex = 5;
+            this.mDimmCheckBox.Text = "DIMM sensor";
+            this.mDimmCheckBox.UseVisualStyleBackColor = true;
             // 
             // mCLCButton
             // 
@@ -256,22 +267,23 @@
             this.mAnimationCheckBox.Text = "Tray Icon animation";
             this.mAnimationCheckBox.UseVisualStyleBackColor = true;
             // 
-            // mDimmCheckBox
+            // mFahrenheitCheckBox
             // 
-            this.mDimmCheckBox.AutoSize = true;
-            this.mDimmCheckBox.Location = new System.Drawing.Point(8, 129);
-            this.mDimmCheckBox.Name = "mDimmCheckBox";
-            this.mDimmCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.mDimmCheckBox.TabIndex = 5;
-            this.mDimmCheckBox.Text = "DIMM sensor";
-            this.mDimmCheckBox.UseVisualStyleBackColor = true;
+            this.mFahrenheitCheckBox.AutoSize = true;
+            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 335);
+            this.mFahrenheitCheckBox.Name = "mFahrenheitCheckBox";
+            this.mFahrenheitCheckBox.Size = new System.Drawing.Size(108, 16);
+            this.mFahrenheitCheckBox.TabIndex = 11;
+            this.mFahrenheitCheckBox.Text = "Fahrenheit (°F)";
+            this.mFahrenheitCheckBox.UseVisualStyleBackColor = true;
             // 
             // OptionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(212, 436);
+            this.ClientSize = new System.Drawing.Size(212, 459);
+            this.Controls.Add(this.mFahrenheitCheckBox);
             this.Controls.Add(this.mAnimationCheckBox);
             this.Controls.Add(this.mLibraryGroupBox);
             this.Controls.Add(this.mOKButton);
@@ -319,5 +331,6 @@
         private System.Windows.Forms.CheckBox mGigabyteCheckBox;
         private System.Windows.Forms.CheckBox mAnimationCheckBox;
         private System.Windows.Forms.CheckBox mDimmCheckBox;
+        private System.Windows.Forms.CheckBox mFahrenheitCheckBox;
     }
 }

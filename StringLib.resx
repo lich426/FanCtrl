@@ -141,6 +141,9 @@
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>Fahrenheit (°F)</value>
+  </data>
   <data name="Fan" xml:space="preserve">
     <value>Fan</value>
   </data>

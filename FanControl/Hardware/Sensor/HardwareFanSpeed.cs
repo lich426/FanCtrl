@@ -28,8 +28,7 @@ namespace FanControl
 
         public override string getString()
         {
-            string valueString = string.Format("{0:D4}", Value);
-            return valueString + " RPM";
+            return Value.ToString() + " RPM";
         }
 
         public override void update()

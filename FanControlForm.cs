@@ -25,17 +25,11 @@ namespace FanControl
         private FanData mSelectedFanData = null;
 
         public event EventHandler onApplyCallback;
-        public event EventHandler onCloseCallback;
 
         public FanControlForm()
         {
             InitializeComponent();
             this.localizeComponent();
-
-            this.FormClosed += (sender, e) =>
-            {
-                onCloseCallback(sender, EventArgs.Empty);
-            };
 
             mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(0));
             mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(1));
@@ -128,10 +122,17 @@ namespace FanControl
             mGraph.GraphPane.XAxis.Scale.MajorStep = 10;
             mGraph.GraphPane.XAxis.Scale.Min = 0;
             mGraph.GraphPane.XAxis.Scale.Max = 100;
-            mGraph.GraphPane.XAxis.Scale.Format = "0℃";
             mGraph.GraphPane.XAxis.MinorGrid.IsVisible = false;
             mGraph.GraphPane.XAxis.MajorGrid.IsVisible = true;
             mGraph.GraphPane.XAxis.Type = AxisType.Linear;
+
+            mGraph.GraphPane.XAxis.ScaleFormatEvent += (pane, axis, val, index) =>
+            {
+                var min = OptionManager.getInstance().IsFahrenheit == false ? 0 : 32;
+                var majorStep = OptionManager.getInstance().IsFahrenheit == false ? 10 : 18;
+                var temp = min + majorStep * index;
+                return temp + (OptionManager.getInstance().IsFahrenheit == false ? "°C" : "°F");
+            };
 
             // Y axis
             mGraph.GraphPane.YAxis.Scale.MinorStep = 5;
@@ -510,6 +511,5 @@ namespace FanControl
             this.onApplyButtonClick(sender, e);
             this.Close();
         }
-        
     }
 }

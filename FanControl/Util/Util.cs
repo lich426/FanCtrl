@@ -99,5 +99,15 @@ namespace FanControl
         {
             return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
+
+        public static int getFahrenheit(int celsius)
+        {
+            return (int)Math.Round(((double)celsius * 9 / 5) + 32);
+        }
+
+        public static int getCelsius(int fahrenheit)
+        {
+            return (int)Math.Round(((double)fahrenheit - 32) * 5 / 9);
+        }
     }
 }

@@ -141,6 +141,9 @@
   <data name="Exit" xml:space="preserve">
     <value>종료</value>
   </data>
+  <data name="Fahrenheit" xml:space="preserve">
+    <value>화씨온도표시 (°F)</value>
+  </data>
   <data name="Fan" xml:space="preserve">
     <value>팬</value>
   </data>

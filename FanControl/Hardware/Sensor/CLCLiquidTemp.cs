@@ -18,7 +18,10 @@ namespace FanControl
 
         public override string getString()
         {
-            return Value + " ℃";
+            if(OptionManager.getInstance().IsFahrenheit == true)
+                return Util.getFahrenheit(Value) + " °F";
+            else
+                return Value + " °C";
         }
         public override void update()
         {
