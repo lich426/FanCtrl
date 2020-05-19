@@ -76,7 +76,8 @@ namespace FanControl
                     var valueList = new int[MAX_FAN_VALUE_SIZE_5];
                     for (int i = 0; i < valueList.Length; i++)
                     {
-                        valueList[i] = mValueList[i * 5];
+                        int value = mValueList[i * 5] / 5 * 5;
+                        valueList[i] = value;
                     }
                     mValueList = valueList;
                 }
@@ -87,7 +88,8 @@ namespace FanControl
                     var valueList = new int[MAX_FAN_VALUE_SIZE_10];
                     for (int i = 0; i < valueList.Length; i++)
                     {
-                        valueList[i] = mValueList[i * 10];
+                        int value = mValueList[i * 10] / 10 * 10;
+                        valueList[i] = value;
                     }
                     mValueList = valueList;
                 }
@@ -101,7 +103,8 @@ namespace FanControl
                     var valueList = new int[MAX_FAN_VALUE_SIZE_10];
                     for (int i = 0; i < valueList.Length; i++)
                     {
-                        valueList[i] = mValueList[i * 2];
+                        int value = mValueList[i * 2] / 10 * 10;
+                        valueList[i] = value;
                     }
                     mValueList = valueList;
                 }
