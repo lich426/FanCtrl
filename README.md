@@ -3,9 +3,11 @@
 FanControl is a software that allows you to automatically control the fan speed on your PC.<br>
 Requires .NET framework 4.6 or higher.<br>
 <br>
-Gigabyte board : AppCenter installation is required (https://www.gigabyte.com/Support/Utility/Motherboard)<br>
-NZXT Kraken : x2, x3 support (z3 series is not supported)<br>
-EVGA CLC : support
+Gigabyte motherboard : If ![AppCenter][2] is installed, it is controlled by communicating with EasytuneEngineService.<br>
+Other motherboard : Use [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1] to obtain sensor temperature, fan rpm, and to control the fan.
+NZXT Kraken x2 and x3 is support (z3 series is not supported)<br>
+EVGA CLC is support
+DIMM thermal sensor is support
 
 ![FanControl](https://github.com/lich426/FanControl/blob/master/img/1.png)<br>
 ![Auto Fan Control](https://github.com/lich426/FanControl/blob/master/img/2.png)<br>
@@ -18,10 +20,12 @@ EVGA CLC : [clc.txt][13]<br>
 <br>
  Example X2<br>
 ![Lighting](https://github.com/lich426/FanControl/blob/master/img/3.png)<br>
-Logo : Spectrum wave, Ring : Spectrum wave<br>
+Logo : Spectrum wave<br>
+Ring : Spectrum wave<br>
 <br>
 ![Lighting2](https://github.com/lich426/FanControl/blob/master/img/4.png)<br>
-Logo : Fading, Ring : Pulse<br>
+Logo : Fading<br>
+Ring : Pulse<br>
 <br>
 
 ## Using external Libraries
