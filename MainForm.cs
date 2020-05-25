@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,8 +146,7 @@ namespace FanControl
 
         private void localizeComponent()
         {
-            System.Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = StringLib.Title + " v" + version.Major + "." + version.Minor + "." + version.Build;
+            this.Text = StringLib.Title + " v" + Application.ProductVersion;
             mTrayIcon.Text = StringLib.Title;
             mTempGroupBox.Text = StringLib.Temperature;
             mFanGroupBox.Text = StringLib.Fan_speed;
