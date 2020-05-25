@@ -20,6 +20,8 @@ namespace FanControl
         private bool mIsUpdateGraph = true;
         private bool mIsResize = false;
 
+        private int mSelectedSensorIndex = -1;
+
         private int mSelectedIndex = -1;
         private PointPairList mPointList = null;
         private LineItem mLineItem = null;
@@ -197,6 +199,7 @@ namespace FanControl
             if (mSensorComboBox.Items.Count > 0)
             {
                 mSensorComboBox.SelectedIndex = 0;
+                mSelectedSensorIndex = 0;
             }
 
             if (mFanComboBox.Items.Count > 0)
@@ -336,7 +339,8 @@ namespace FanControl
             mFanListView.BeginUpdate();
             mFanListView.Clear();
 
-            var controlData = this.getControlData(mSensorComboBox.SelectedIndex);
+            mSelectedSensorIndex = mSensorComboBox.SelectedIndex;
+            var controlData = this.getControlData(mSelectedSensorIndex);
             if(controlData == null)
             {
                 mFanListView.EndUpdate();
@@ -449,6 +453,7 @@ namespace FanControl
         public void onUpdateTimer()
         {
             if (mSensorComboBox.Items.Count == 0 ||
+                mSelectedSensorIndex == -1 ||
                 mFanComboBox.Items.Count == 0 ||
                 mSelectedFanData == null ||
                 mNowPoint == null ||
@@ -458,13 +463,13 @@ namespace FanControl
             }
 
             var hardwareManager = HardwareManager.getInstance();
-            var sensor = hardwareManager.getSensor(mSensorComboBox.SelectedIndex);
+            var sensor = hardwareManager.getSensor(mSelectedSensorIndex);
             var control = hardwareManager.getControl(mSelectedFanData.Index);
             if (sensor == null || control == null)
                 return;
-
+            
             mNowPoint[0].X = (double)sensor.Value;
-            mNowPoint[0].Y = (double)control.LastValue;
+            mNowPoint[0].Y = (double)control.LastValue;            
             mGraph.Refresh();
         }
 
@@ -544,7 +549,7 @@ namespace FanControl
             mHysNumericUpDown.Visible = true;
 
             var item = items[0];
-            mSelectedFanData = this.getFanData(mSensorComboBox.SelectedIndex, item.Text);
+            mSelectedFanData = this.getFanData(mSelectedSensorIndex, item.Text);
 
             // setGraphFromSelectedFanData
             this.setGraphFromSelectedFanData();
@@ -583,7 +588,7 @@ namespace FanControl
             if (mSensorComboBox.Items.Count == 0 || mFanComboBox.Items.Count == 0)
                 return;
 
-            int sensorIndex = mSensorComboBox.SelectedIndex;
+            int sensorIndex = mSelectedSensorIndex;
             int fanIndex = mFanComboBox.SelectedIndex;
 
             var controlManager = ControlManager.getInstance();
@@ -618,7 +623,7 @@ namespace FanControl
                 return;
 
             var item = items[0];
-            var controlData = this.getControlData(mSensorComboBox.SelectedIndex);
+            var controlData = this.getControlData(mSelectedSensorIndex);
             for(int i = 0; i < controlData.FanDataList.Count; i++)
             {
                 var fanData = controlData.FanDataList[i];

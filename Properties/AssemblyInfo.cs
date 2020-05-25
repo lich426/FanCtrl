@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 // 기본값으로 할 수 있습니다.
 [assembly: AssemblyVersion("1.1.3")]
 [assembly: AssemblyFileVersion("1.1.3")]
-[assembly: AssemblyInformationalVersion("1.1.3 alpha")]
+[assembly: AssemblyInformationalVersion("1.1.3")]
 //[assembly: AssemblyVersion("1.0.0.0")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]

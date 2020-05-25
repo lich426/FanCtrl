@@ -55,8 +55,8 @@ namespace FanControl
             try
             {
                 var dataArray = report.Data;
-                Console.WriteLine("onReport.onReport() -----------------------------------------");
-                Util.printHex(dataArray, dataArray.Length);
+                //Console.WriteLine("onReport.onReport() -----------------------------------------");
+                //Util.printHex(dataArray, dataArray.Length);
 
                 this.onRecv(dataArray, dataArray.Length);
                 mHidDevice.ReadReport(onReport);
