@@ -159,12 +159,14 @@ namespace FanControl
         {
             var form = new LightingForm(HardwareManager.getInstance().getKraken());
             form.ShowDialog();
+            form.Dispose();
         }
 
         private void onCLCButtonClick(object sender, EventArgs e)
         {
             var form = new LightingForm(HardwareManager.getInstance().getCLC());
             form.ShowDialog();
+            form.Dispose();
         }
     }
 }

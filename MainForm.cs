@@ -590,6 +590,7 @@ namespace FanControl
                     mFanIconTimer.Stop();
                 }
             }
+            form.Dispose();
         }
 
         private void onFanControlButtonClick(object sender, EventArgs e)
@@ -606,6 +607,7 @@ namespace FanControl
             mFanControlForm.StartPosition = FormStartPosition.Manual;
             mFanControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
             mFanControlForm.ShowDialog();
+            mFanControlForm.Dispose();
             mFanControlForm = null;
         }
         
