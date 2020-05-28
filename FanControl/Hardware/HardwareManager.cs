@@ -731,20 +731,24 @@ namespace FanControl
         {
             this.lockBus();
             int temp = 0;
-            var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-            if (index >= gpuArray.Length)
-            {
-                this.unlockBus();
-                return temp;
+            try
+            {                
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                if (index >= gpuArray.Length)
+                {
+                    this.unlockBus();
+                    return temp;
+                }
+
+                var e = gpuArray[index].ThermalInformation.ThermalSensors.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    var value = e.Current;
+                    temp = value.CurrentTemperature;
+                    break;
+                }
             }
-            
-            var e = gpuArray[index].ThermalInformation.ThermalSensors.GetEnumerator();
-            while(e.MoveNext())
-            {
-                var value = e.Current;
-                temp = value.CurrentTemperature;
-                break;
-            }
+            catch { }            
             this.unlockBus();
             return temp;
         }
@@ -753,23 +757,27 @@ namespace FanControl
         {
             this.lockBus();
             int speed = 0;
-            var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-            if (index >= gpuArray.Length)
+            try
             {
-                this.unlockBus();
-                return speed;
-            }
-
-            var e = gpuArray[index].CoolerInformation.Coolers.GetEnumerator();
-            while (e.MoveNext())
-            {
-                var value = e.Current;
-                if(value.CoolerId == coolerID)
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                if (index >= gpuArray.Length)
                 {
-                    speed = value.CurrentFanSpeedInRPM;
-                    break;
+                    this.unlockBus();
+                    return speed;
+                }
+
+                var e = gpuArray[index].CoolerInformation.Coolers.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    var value = e.Current;
+                    if (value.CoolerId == coolerID)
+                    {
+                        speed = value.CurrentFanSpeedInRPM;
+                        break;
+                    }
                 }
             }
+            catch { }
             this.unlockBus();
             return speed;
         }
@@ -777,14 +785,18 @@ namespace FanControl
         private void onSetNvApiControl(int index, int coolerID, int value)
         {
             this.lockBus();
-            var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-            if (index >= gpuArray.Length)
+            try
             {
-                this.unlockBus();
-                return;
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                if (index >= gpuArray.Length)
+                {
+                    this.unlockBus();
+                    return;
+                }
+                var info = gpuArray[index].CoolerInformation;
+                info.SetCoolerSettings(coolerID, value);
             }
-            var info = gpuArray[index].CoolerInformation;
-            info.SetCoolerSettings(coolerID, value);
+            catch { }            
             this.unlockBus();
         }
 
