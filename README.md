@@ -1,6 +1,6 @@
-# FanControl
+# FanCtrl
 
-FanControl is a software that allows you to automatically control the fan speed on your PC.<br>
+FanCtrl is a software that allows you to automatically control the fan speed on your PC.<br>
 Requires .NET framework 4.6 or higher.<br>
 <br>
 Gigabyte motherboard : If [AppCenter][2] is installed, it is controlled by communicating with EasytuneEngineService.<br>
@@ -9,8 +9,8 @@ NZXT Kraken x2 and x3 is support (z3 series is not supported)<br>
 EVGA CLC is support<br>
 DIMM thermal sensor is support<br>
 
-![FanControl](https://github.com/lich426/FanControl/blob/master/img/1.png)<br>
-![Auto Fan Control](https://github.com/lich426/FanControl/blob/master/img/2.png)<br>
+![FanCtrl](https://github.com/lich426/FanCtrl/blob/master/img/1.png)<br>
+![Auto Fan Control](https://github.com/lich426/FanCtrl/blob/master/img/2.png)<br>
 <br>
 ## Lighting
 You can see the lighting packet on the link.<Br>
@@ -19,11 +19,11 @@ NZXT Kraeken X3 : [X3.txt][12]<br>
 EVGA CLC : [clc.txt][13]<br>
 <br>
  Example X2<br>
-![Lighting](https://github.com/lich426/FanControl/blob/master/img/3.png)<br>
+![Lighting](https://github.com/lich426/FanCtrl/blob/master/img/3.png)<br>
 Logo : Spectrum wave<br>
 Ring : Spectrum wave<br>
 <br>
-![Lighting2](https://github.com/lich426/FanControl/blob/master/img/4.png)<br>
+![Lighting2](https://github.com/lich426/FanCtrl/blob/master/img/4.png)<br>
 Logo : Fading<br>
 Ring : Pulse<br>
 <br>
@@ -41,13 +41,13 @@ Graph : [ZedGraph][8]<br>
 [GNU General Public License v3.0][9]
 
 ## Precautions
- - FanControl is free software with a GNU GPLv3 license.<br>
+ - FanCtrl is free software with a GNU GPLv3 license.<br>
  - You can malfunction while other fan control programs are on at the same time.<br>
  - I am not responsible for hardware that has failed or is not working using this software.<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanControl_v1.1.4.zip][10]
+Download : [FanCtrl_v1.1.5.zip][10]
 
 ## Donate
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
@@ -61,8 +61,8 @@ Download : [FanControl_v1.1.4.zip][10]
 [6]: https://libusb.info
 [7]: https://www.newtonsoft.com/json
 [8]: http://zedgraph.sourceforge.net/samples.html
-[9]: https://github.com/lich426/FanControl/blob/master/LICENSE
-[10]: https://github.com/lich426/FanControl/raw/master/Portable/FanControl_v1.1.4.zip
-[11]: https://github.com/lich426/FanControl/blob/master/Packet/X2.txt
-[12]: https://github.com/lich426/FanControl/blob/master/Packet/X3.txt
-[13]: https://github.com/lich426/FanControl/blob/master/Packet/clc.txt
+[9]: https://github.com/lich426/FanCtrl/blob/master/LICENSE
+[10]: https://github.com/lich426/FanCtrl/raw/master/Portable/FanCtrl_v1.1.5.zip
+[11]: https://github.com/lich426/FanCtrl/blob/master/Packet/X2.txt
+[12]: https://github.com/lich426/FanCtrl/blob/master/Packet/X3.txt
+[13]: https://github.com/lich426/FanCtrl/blob/master/Packet/clc.txt
