@@ -1,4 +1,4 @@
-﻿namespace FanControl
+﻿namespace FanCtrl
 {
     partial class OptionForm
     {

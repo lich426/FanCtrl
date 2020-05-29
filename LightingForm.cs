@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FanControl
+namespace FanCtrl
 {
     public partial class LightingForm : Form
     {

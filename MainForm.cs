@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FanControl
+namespace FanCtrl
 {
     public partial class MainForm : Form
     {
@@ -25,7 +25,7 @@ namespace FanControl
         private List<Label> mControlLabelList = new List<Label>();
         private List<TextBox> mControlNameTextBoxList = new List<TextBox>();        
 
-        private FanControlForm mFanControlForm = null;
+        private ControlForm mControlForm = null;
 
         private List<Icon> mFanIconList = new List<Icon>();
         private int mFanIconIndex = 0;
@@ -167,10 +167,10 @@ namespace FanControl
 
         private void onClosing(object sender, FormClosingEventArgs e)
         {
-            if (mFanControlForm != null)
+            if (mControlForm != null)
             {
-                mFanControlForm.Close();
-                mFanControlForm = null;
+                mControlForm.Close();
+                mControlForm = null;
             }
 
             if (mIsExit == false)
@@ -259,10 +259,10 @@ namespace FanControl
 
         private void onTrayMenuExit(object sender, EventArgs e)
         {
-            if (mFanControlForm != null)
+            if (mControlForm != null)
             {
-                mFanControlForm.Close();
-                mFanControlForm = null;
+                mControlForm.Close();
+                mControlForm = null;
             }
 
             HardwareManager.getInstance().stop();
@@ -277,10 +277,10 @@ namespace FanControl
 
         private void onRestartProgram(object sender, EventArgs e)
         {
-            if (mFanControlForm != null)
+            if (mControlForm != null)
             {
-                mFanControlForm.Close();
-                mFanControlForm = null;
+                mControlForm.Close();
+                mControlForm = null;
             }
 
             HardwareManager.getInstance().stop();
@@ -566,8 +566,8 @@ namespace FanControl
                     }
                 }
 
-                if (mFanControlForm != null)
-                    mFanControlForm.onUpdateTimer();
+                if (mControlForm != null)
+                    mControlForm.onUpdateTimer();
             }));
         }
         
@@ -595,8 +595,8 @@ namespace FanControl
 
         private void onFanControlButtonClick(object sender, EventArgs e)
         {
-            mFanControlForm = new FanControlForm();
-            mFanControlForm.onApplyCallback += (sender2, e2) =>
+            mControlForm = new ControlForm();
+            mControlForm.onApplyCallback += (sender2, e2) =>
             {
                 mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
                 mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
@@ -604,11 +604,11 @@ namespace FanControl
                 mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
                 mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
             };
-            mFanControlForm.StartPosition = FormStartPosition.Manual;
-            mFanControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
-            mFanControlForm.ShowDialog();
-            mFanControlForm.Dispose();
-            mFanControlForm = null;
+            mControlForm.StartPosition = FormStartPosition.Manual;
+            mControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
+            mControlForm.ShowDialog();
+            mControlForm.Dispose();
+            mControlForm = null;
         }
         
         private void onDonatePictureBoxClick(object sender, MouseEventArgs e)

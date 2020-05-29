@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FanControl {
+namespace FanCtrl {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace FanControl {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FanControl.StringLib", typeof(StringLib).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FanCtrl.StringLib", typeof(StringLib).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -385,7 +385,7 @@ namespace FanControl {
         }
         
         /// <summary>
-        ///   FanControl과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   FanCtrl과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Title {
             get {

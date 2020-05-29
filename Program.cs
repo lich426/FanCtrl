@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FanControl
+namespace FanCtrl
 {
     static class Program
     {
@@ -37,7 +37,7 @@ namespace FanControl
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            sMutex = new Mutex(true, "FanControl", out sIsLock);
+            sMutex = new Mutex(true, "FanCtrl", out sIsLock);
             if (sIsLock == false)
                 return;
 
