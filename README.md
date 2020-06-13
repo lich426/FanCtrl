@@ -32,7 +32,7 @@ Ring : Pulse<br>
 Sensor and Fan Control : [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1]<br>
 Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
-NZXT Kraken USB Communication : [HidLibrary][4]<br>
+NZXT Kraken USB Communication : [HIDSharp][4]<br>
 EVGA CLC USB Communication : [SiUSBXp][5] or [libusb-1.0][6]<br>
 Json : [Newtonsoft Json][7]<br>
 Graph : [ZedGraph][8]<br>
@@ -56,7 +56,7 @@ Download : [FanCtrl_v1.1.6.zip][10]
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
 [2]: https://www.gigabyte.com/Support/Utility/Motherboard
 [3]: https://github.com/falahati/NvAPIWrapper
-[4]: https://github.com/mikeobrien/HidLibrary
+[4]: https://www.zer7.com/software/hidsharp
 [5]: https://www.silabs.com/products/development-tools/software/direct-access-drivers
 [6]: https://libusb.info
 [7]: https://www.newtonsoft.com/json
