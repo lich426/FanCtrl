@@ -124,8 +124,8 @@ namespace FanCtrl
                 {
                     if(recvDataSize >= 18)
                     {
-                        int temp = (int)Math.Round(recvArray[14] + (recvArray[15] * 0.1));
-                        int pump = (int)(recvArray[17] << 8 | recvArray[16]);
+                        int temp = (int)Math.Round(recvArray[15] + (recvArray[16] * 0.1));
+                        int pump = (int)(recvArray[18] << 8 | recvArray[17]);
 
                         if (temp > 0 && temp < 100 && pump > 0 && pump < 10000)
                         {
@@ -137,11 +137,11 @@ namespace FanCtrl
                 // X2
                 else
                 {
-                    if (recvDataSize >= 6)
+                    if (recvDataSize >= 7)
                     {
-                        int temp = (int)Math.Round(recvArray[0] + (recvArray[1] * 0.1));
-                        int pump = (int)(recvArray[4] << 8 | recvArray[5]);
-                        int fan = (int)(recvArray[2] << 8 | recvArray[3]);
+                        int temp = (int)Math.Round(recvArray[1] + (recvArray[2] * 0.1));
+                        int pump = (int)(recvArray[5] << 8 | recvArray[6]);
+                        int fan = (int)(recvArray[3] << 8 | recvArray[4]);
 
                         if (temp > 0 && temp < 100 && pump > 0 && pump < 10000 && fan > 0 && fan < 10000)
                         {

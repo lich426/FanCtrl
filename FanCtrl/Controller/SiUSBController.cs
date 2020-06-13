@@ -124,7 +124,7 @@ namespace FanCtrl
             {
                 if (Monitor.TryEnter(mLock) == false)
                 {
-                    Thread.Sleep(10);
+                    Thread.Sleep(100);
                     continue;
                 }
                 try
@@ -153,7 +153,7 @@ namespace FanCtrl
                         {
                             Console.WriteLine(String.Format("SiUSBController.threadFunc() : Failed recv({0})", ret2));
                             Monitor.Exit(mLock);
-                            Thread.Sleep(10);
+                            Thread.Sleep(100);
                             continue;
                         }
 
@@ -162,7 +162,7 @@ namespace FanCtrl
                 }
                 catch { }
                 Monitor.Exit(mLock);
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
 

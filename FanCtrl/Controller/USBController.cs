@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace FanCtrl
 {
-    public enum USBVendorID
+    public enum USBVendorID : int
     {
         Unknown = -1,
 
@@ -21,7 +21,7 @@ namespace FanCtrl
         ASETEK = 0x2433,
     };
 
-    public enum USBProductID
+    public enum USBProductID : int
     {
         Unknown = -1,
 

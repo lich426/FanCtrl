@@ -7,14 +7,18 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using HidLibrary;
+using System.Threading.Tasks;
+using HidSharp;
 
 namespace FanCtrl
 {
     public class HidUSBController : USBController
     {
         // HidDevice
-        private HidDevice mHidDevice = null;
+        private HidStream mHidStream = null;
+
+        private delegate void RecvDelegate();
+        private delegate void SendDelegate(byte[] data);
 
         public HidUSBController(USBVendorID vendorID, USBProductID productID) : base(vendorID, productID)
         {
@@ -25,13 +29,37 @@ namespace FanCtrl
         {
             try
             {
-                mHidDevice = HidDevices.Enumerate((int)VendorID, (int)ProductID).FirstOrDefault();
-                mHidDevice.OpenDevice();
-                mHidDevice.ReadReport(onReport);
+                int venderID = (int)this.VendorID;
+                int productID = (int)this.ProductID;
+                HidDevice hidDevice = null;
+                foreach (HidDevice dev in DeviceList.Local.GetHidDevices(venderID))
+                {
+                    if(dev.ProductID == productID)
+                    {
+                        hidDevice = dev;
+                        break;
+                    }
+                }
+
+                if (hidDevice == null)
+                {
+                    Console.WriteLine("HidUSBController.start() : could not find the device");
+                    this.stop();
+                    return false;
+                }
+
+                if (hidDevice.TryOpen(out mHidStream) == false)
+                {
+                    Console.WriteLine("HidUSBController.start() : could not open the device");
+                    this.stop();
+                    return false;
+                }
+
+                this.readAsync();
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("HidUSBController.start() : Failed catch");
+                Console.WriteLine("HidUSBController.start() : Failed catch\nerror : {0}", e.Message);
                 this.stop();
                 return false;
             }
@@ -39,50 +67,66 @@ namespace FanCtrl
         }
 
         public override void stop()
-        { 
-            if (mHidDevice != null)
-            {
-                try
-                {
-                    mHidDevice.CloseDevice();
-                }
-                catch { }
-            }
-        }
-        
-        private void onReport(HidReport report)
         {
             try
             {
-                var dataArray = report.Data;
-                //Console.WriteLine("onReport.onReport() -----------------------------------------");
-                //Util.printHex(dataArray, dataArray.Length);
-
-                this.onRecv(dataArray, dataArray.Length);
-                mHidDevice.ReadReport(onReport);
+                if (mHidStream != null)
+                {
+                    mHidStream.Close();
+                }
             }
             catch { }
         }
 
         public override void send(byte[] buffer)
         {
-            try
-            {
-                mHidDevice.WriteAsync(buffer);
-            }
-            catch { }
+            this.writeAsync(buffer);
         }
 
         public override void send(List<byte[]> bufferList)
         {
-            for(int i = 0; i < bufferList.Count; i++)
+            for (int i = 0; i < bufferList.Count; i++)
             {
-                try
+                this.writeAsync(bufferList[i]);
+            }
+        }
+
+        private async void readAsync()
+        {
+            var recvDelegate = new RecvDelegate(read);
+            await Task.Factory.FromAsync(recvDelegate.BeginInvoke, recvDelegate.EndInvoke, null);
+        }
+
+        private void read()
+        {
+            try
+            {
+                if (mHidStream != null && mHidStream.CanRead == true)
                 {
-                    mHidDevice.WriteAsync(bufferList[i]);
+                    var buffer = mHidStream.Read();
+                    this.onRecv(buffer, buffer.Length);
+                    this.readAsync();
                 }
-                catch { }
-            }            
+            }
+            catch { }
+        }
+
+        private async void writeAsync(byte[] buffer)
+        {
+            var sendDelegate = new SendDelegate(write);
+            await Task.Factory.FromAsync(sendDelegate.BeginInvoke, sendDelegate.EndInvoke, buffer, null);
+        }
+
+        private void write(byte[] buffer)
+        {
+            try
+            {
+                if (mHidStream != null && mHidStream.CanWrite == true)
+                {
+                    mHidStream.Write(buffer);
+                }
+            }
+            catch { }
         }
     }
 }
