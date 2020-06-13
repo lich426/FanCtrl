@@ -635,6 +635,10 @@ namespace FanCtrl
         private void onOSDButtonClick(object sender, EventArgs e)
         {
             var form = new OSDForm();
+            form.onApplyCallback += (sender2, e2) =>
+            {
+                mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
+            };
             form.ShowDialog();
             form.Dispose();
         }

@@ -138,7 +138,7 @@ namespace FanCtrl
             switch (UnitType)
             {
                 case OSDUnitType.Temperature:
-                    return (OptionManager.getInstance().IsFahrenheit == false) ? " *C" : " *F";
+                    return (OptionManager.getInstance().IsFahrenheit == false) ? " 캜" : " 캟";
 
                 case OSDUnitType.RPM:
                     return " RPM";

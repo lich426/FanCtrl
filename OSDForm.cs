@@ -19,6 +19,8 @@ namespace FanCtrl
         private ListViewItem mGroupEditItem = null;
         private ListViewItem.ListViewSubItem mGroupEditSubItem = null;
 
+        public event EventHandler onApplyCallback;
+
         public OSDForm()
         {
             InitializeComponent();
@@ -488,6 +490,7 @@ namespace FanCtrl
             OSDManager.getInstance().IsEnable = mEnableCheckBox.Checked;
             OSDManager.getInstance().setGroupList(mGroupList);
             OSDManager.getInstance().write();
+            onApplyCallback(sender, e);
         }
 
         private void onOKButtonClick(object sender, EventArgs e)
