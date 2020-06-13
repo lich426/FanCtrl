@@ -79,6 +79,8 @@ namespace FanCtrl
 
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             var hardwareManager = HardwareManager.getInstance();
             var controlManager = ControlManager.getInstance();
 
@@ -121,12 +123,16 @@ namespace FanCtrl
                 {
                     MessageBox.Show(StringLib.Not_Match);
                 }
-            }            
+            }
+
+            // OSDManager
+            OSDManager.getInstance().read();
 
             this.createComponent();
             this.ActiveControl = mFanControlButton;
 
             mEnableToolStripMenuItem.Checked = controlManager.IsEnable;
+            mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
             mNormalToolStripMenuItem.Checked = (controlManager.ModeIndex == 0);
             mSilenceToolStripMenuItem.Checked = (controlManager.ModeIndex == 1);
             mPerformanceToolStripMenuItem.Checked = (controlManager.ModeIndex == 2);
@@ -157,6 +163,7 @@ namespace FanCtrl
             mMadeLabel2.Text = StringLib.Made2;
 
             mEnableToolStripMenuItem.Text = StringLib.Enable_automatic_fan_control;
+            mEnableOSDToolStripMenuItem.Text = StringLib.Enable_OSD;
             mNormalToolStripMenuItem.Text = StringLib.Normal;
             mSilenceToolStripMenuItem.Text = StringLib.Silence;
             mPerformanceToolStripMenuItem.Text = StringLib.Performance;
@@ -205,6 +212,13 @@ namespace FanCtrl
             ControlManager.getInstance().IsEnable = !ControlManager.getInstance().IsEnable;
             mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
             ControlManager.getInstance().write();
+        }
+
+        private void onTrayManuEnableOSDClick(object sender, EventArgs e)
+        {
+            OSDManager.getInstance().IsEnable = !OSDManager.getInstance().IsEnable;
+            mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
+            OSDManager.getInstance().write();
         }
 
         private void onTrayMenuNormalClick(object sender, EventArgs e)
@@ -423,7 +437,8 @@ namespace FanCtrl
             }            
 
             // position
-            mOptionButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;            
+            mOSDButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
+            mOptionButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
             mFanControlButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
             mMadeLabel1.Top = mFanGroupBox.Top + mFanGroupBox.Height + 15;
             mMadeLabel2.Top = mFanGroupBox.Top + mFanGroupBox.Height + 32;
@@ -614,7 +629,16 @@ namespace FanCtrl
         private void onDonatePictureBoxClick(object sender, MouseEventArgs e)
         {
             Console.WriteLine("MainForm.onDonatePictureBoxClick()");
-            System.Diagnostics.Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url");
+            System.Diagnostics.Process.Start("https://bit.ly/3fLvB4L");
         }
+
+        private void onOSDButtonClick(object sender, EventArgs e)
+        {
+            var form = new OSDForm();
+            form.ShowDialog();
+            form.Dispose();
+        }
+
+        
     }
 }

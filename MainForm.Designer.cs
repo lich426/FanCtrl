@@ -51,6 +51,9 @@
             this.mMadeLabel2 = new System.Windows.Forms.Label();
             this.mDonateQRPictureBox = new System.Windows.Forms.PictureBox();
             this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
+            this.mOSDButton = new System.Windows.Forms.Button();
+            this.mEnableOSDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mTrayMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mDonateQRPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
@@ -85,9 +88,9 @@
             // 
             // mFanControlButton
             // 
-            this.mFanControlButton.Location = new System.Drawing.Point(574, 75);
+            this.mFanControlButton.Location = new System.Drawing.Point(588, 75);
             this.mFanControlButton.Name = "mFanControlButton";
-            this.mFanControlButton.Size = new System.Drawing.Size(136, 38);
+            this.mFanControlButton.Size = new System.Drawing.Size(122, 38);
             this.mFanControlButton.TabIndex = 5;
             this.mFanControlButton.Text = "Auto Fan Control";
             this.mFanControlButton.UseVisualStyleBackColor = true;
@@ -99,9 +102,9 @@
             // 
             // mOptionButton
             // 
-            this.mOptionButton.Location = new System.Drawing.Point(432, 75);
+            this.mOptionButton.Location = new System.Drawing.Point(460, 75);
             this.mOptionButton.Name = "mOptionButton";
-            this.mOptionButton.Size = new System.Drawing.Size(136, 38);
+            this.mOptionButton.Size = new System.Drawing.Size(122, 38);
             this.mOptionButton.TabIndex = 6;
             this.mOptionButton.Text = "Option";
             this.mOptionButton.UseVisualStyleBackColor = true;
@@ -118,6 +121,8 @@
             this.mTrayMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mEnableToolStripMenuItem,
             this.toolStripSeparator1,
+            this.mEnableOSDToolStripMenuItem,
+            this.toolStripSeparator3,
             this.mNormalToolStripMenuItem,
             this.mSilenceToolStripMenuItem,
             this.mPerformanceToolStripMenuItem,
@@ -126,7 +131,7 @@
             this.mShowToolStripMenuItem,
             this.mExitToolStripMenuItem});
             this.mTrayMenuStrip.Name = "mTrayMenuStrip";
-            this.mTrayMenuStrip.Size = new System.Drawing.Size(231, 170);
+            this.mTrayMenuStrip.Size = new System.Drawing.Size(231, 220);
             // 
             // mEnableToolStripMenuItem
             // 
@@ -227,17 +232,40 @@
             this.mDonatePictureBox.TabIndex = 12;
             this.mDonatePictureBox.TabStop = false;
             // 
+            // mOSDButton
+            // 
+            this.mOSDButton.Location = new System.Drawing.Point(332, 75);
+            this.mOSDButton.Name = "mOSDButton";
+            this.mOSDButton.Size = new System.Drawing.Size(122, 38);
+            this.mOSDButton.TabIndex = 13;
+            this.mOSDButton.Text = "OSD (RTSS)";
+            this.mOSDButton.UseVisualStyleBackColor = true;
+            this.mOSDButton.Click += new System.EventHandler(this.onOSDButtonClick);
+            // 
+            // mEnableOSDToolStripMenuItem
+            // 
+            this.mEnableOSDToolStripMenuItem.Name = "mEnableOSDToolStripMenuItem";
+            this.mEnableOSDToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mEnableOSDToolStripMenuItem.Text = "Enable OSD (RTSS)";
+            this.mEnableOSDToolStripMenuItem.Click += new System.EventHandler(this.onTrayManuEnableOSDClick);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(227, 6);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(719, 122);
+            this.Controls.Add(this.mOSDButton);
+            this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mDonatePictureBox);
             this.Controls.Add(this.mDonateQRPictureBox);
             this.Controls.Add(this.mMadeLabel2);
             this.Controls.Add(this.mMadeLabel1);
-            this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mFanControlButton);
             this.Controls.Add(this.mControlGroupBox);
             this.Controls.Add(this.mFanGroupBox);
@@ -279,6 +307,9 @@
         private System.Windows.Forms.Label mMadeLabel2;
         private System.Windows.Forms.PictureBox mDonateQRPictureBox;
         private System.Windows.Forms.PictureBox mDonatePictureBox;
+        private System.Windows.Forms.Button mOSDButton;
+        private System.Windows.Forms.ToolStripMenuItem mEnableOSDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

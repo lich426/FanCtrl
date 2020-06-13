@@ -5,6 +5,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using NvAPIWrapper;
 using NvAPIWrapper.GPU;
+using System.Text;
 
 namespace FanCtrl
 {
@@ -342,6 +343,9 @@ namespace FanCtrl
                 mPCIMutex.Close();
                 mPCIMutex = null;
             }
+
+            OSDController.releaseOSD();
+
             Monitor.Exit(mLock);
         }
 
@@ -800,6 +804,8 @@ namespace FanCtrl
             this.unlockBus();
         }
 
+        private byte mTest = 0x00;
+
         private void onUpdateThread()
         {
             long startTime = Util.getNowMS();
@@ -910,6 +916,56 @@ namespace FanCtrl
 
                 // onUpdateCallback
                 onUpdateCallback();
+
+                var osdManager = OSDManager.getInstance();
+                if (osdManager.IsEnable == true)
+                {
+                    var osdString = new StringBuilder();
+                    osdString.Append("<A0=-5>");
+                    osdString.Append("<A1=5>");
+                    osdString.Append("<S0=50>");
+                    osdString.Append("\r");
+
+                    bool isOK = (osdManager.getGroupCount() > 0) ? true : false;
+                    int maxNameLength = 0;
+                    for (int i = 0; i < osdManager.getGroupCount(); i++)
+                    {
+                        var group = osdManager.getGroup(i);
+                        if (group == null)
+                        {
+                            isOK = false;
+                            break;
+                        }
+
+                        if (group.Name.Length > maxNameLength)
+                            maxNameLength = group.Name.Length;
+                    }
+
+                    for (int i = 0; i < osdManager.getGroupCount(); i++)
+                    {
+                        var group = osdManager.getGroup(i);
+                        if (group == null)
+                        {
+                            isOK = false;
+                            break;
+                        }
+                        osdString.Append(group.getOSDString(maxNameLength));                        
+                    }
+
+                    if (isOK == true)
+                    {
+                        OSDController.updateOSD(osdString.ToString());
+                        osdManager.IsUpdate = true;
+                    }
+                }
+                else
+                {
+                    if (osdManager.IsUpdate == true)
+                    {
+                        OSDController.releaseOSD();
+                        osdManager.IsUpdate = false;
+                    }
+                }
 
                 Monitor.Exit(mLock);
             }

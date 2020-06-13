@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.1.5.0</ApplicationVersion>
+    <ApplicationVersion>1.1.6.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -114,9 +114,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Gigabyte.GraphicsCard.Common.dll</HintPath>
     </Reference>
-    <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\HidLibrary.dll</HintPath>
+      <HintPath>dll\HidSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibreHardwareMonitorLib, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -164,12 +164,16 @@
       <DependentUpon>ControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FanCtrl\Controller\HidUSBController.cs" />
+    <Compile Include="FanCtrl\Controller\OSDController.cs" />
     <Compile Include="FanCtrl\Controller\SiUSBController.cs" />
     <Compile Include="FanCtrl\Controller\SiUSBXp.cs" />
     <Compile Include="FanCtrl\Controller\WinUSBController.cs" />
     <Compile Include="FanCtrl\Data\Control\ControlManager.cs" />
     <Compile Include="FanCtrl\Data\Control\FanData.cs" />
     <Compile Include="FanCtrl\Data\Control\ControlData.cs" />
+    <Compile Include="FanCtrl\Data\OSD\OSDGroup.cs" />
+    <Compile Include="FanCtrl\Data\OSD\OSDItem.cs" />
+    <Compile Include="FanCtrl\Data\OSD\OSDManager.cs" />
     <Compile Include="FanCtrl\Hardware\CLC.cs" />
     <Compile Include="FanCtrl\Hardware\Control\BaseControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\CLCFanControl.cs" />
@@ -211,6 +215,7 @@
     <Compile Include="FanCtrl\Data\Option\StartupControl.cs" />
     <Compile Include="FanCtrl\Controller\SMBusController.cs" />
     <Compile Include="FanCtrl\Controller\USBController.cs" />
+    <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />
     <Compile Include="LightingForm.cs">
       <SubType>Form</SubType>
@@ -229,6 +234,12 @@
     </Compile>
     <Compile Include="OptionForm.Designer.cs">
       <DependentUpon>OptionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OSDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OSDForm.Designer.cs">
+      <DependentUpon>OSDForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -253,6 +264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OptionForm.resx">
       <DependentUpon>OptionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OSDForm.resx">
+      <DependentUpon>OSDForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -129,14 +129,26 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Change_the_color" xml:space="preserve">
+    <value>Do you want to change the color?</value>
+  </data>
   <data name="CLC_Lighting" xml:space="preserve">
     <value>CLC Lighting</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
   </data>
   <data name="Control" xml:space="preserve">
     <value>Control</value>
   </data>
+  <data name="Default_color" xml:space="preserve">
+    <value>Default color</value>
+  </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
     <value>Enable automatic fan control</value>
+  </data>
+  <data name="Enable_OSD" xml:space="preserve">
+    <value>Enable OSD (RTSS)</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
@@ -159,11 +171,17 @@
   <data name="Graph" xml:space="preserve">
     <value>Graph</value>
   </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
   <data name="Hysteresis" xml:space="preserve">
     <value>Hysteresis : </value>
   </data>
   <data name="Interval" xml:space="preserve">
     <value>Interval</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Items</value>
   </data>
   <data name="Kraken_Lighting" xml:space="preserve">
     <value>Kraken Lighting</value>
@@ -206,6 +224,9 @@
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>Sensor</value>
+  </data>
+  <data name="Set_color" xml:space="preserve">
+    <value>Set color</value>
   </data>
   <data name="Show" xml:space="preserve">
     <value>Show</value>

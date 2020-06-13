@@ -97,11 +97,29 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Do you want to change the color?과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Change_the_color {
+            get {
+                return ResourceManager.GetString("Change_the_color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   CLC Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CLC_Lighting {
             get {
                 return ResourceManager.GetString("CLC_Lighting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Color과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Color {
+            get {
+                return ResourceManager.GetString("Color", resourceCulture);
             }
         }
         
@@ -115,11 +133,29 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Default color과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Default_color {
+            get {
+                return ResourceManager.GetString("Default_color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Enable automatic fan control과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Enable_automatic_fan_control {
             get {
                 return ResourceManager.GetString("Enable_automatic_fan_control", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Enable OSD (RTSS)과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Enable_OSD {
+            get {
+                return ResourceManager.GetString("Enable_OSD", resourceCulture);
             }
         }
         
@@ -187,6 +223,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Groups과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Groups {
+            get {
+                return ResourceManager.GetString("Groups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Hysteresis : 과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Hysteresis {
@@ -201,6 +246,15 @@ namespace FanCtrl {
         internal static string Interval {
             get {
                 return ResourceManager.GetString("Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Items과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Items {
+            get {
+                return ResourceManager.GetString("Items", resourceCulture);
             }
         }
         
@@ -327,6 +381,15 @@ namespace FanCtrl {
         internal static string Sensor {
             get {
                 return ResourceManager.GetString("Sensor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Set color과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Set_color {
+            get {
+                return ResourceManager.GetString("Set_color", resourceCulture);
             }
         }
         

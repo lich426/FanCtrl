@@ -129,14 +129,26 @@
   <data name="Cancel" xml:space="preserve">
     <value>취소</value>
   </data>
+  <data name="Change_the_color" xml:space="preserve">
+    <value>색 변경을 하시겠습니까?</value>
+  </data>
   <data name="CLC_Lighting" xml:space="preserve">
     <value>CLC 조명설정</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>색 변경</value>
   </data>
   <data name="Control" xml:space="preserve">
     <value>제어</value>
   </data>
+  <data name="Default_color" xml:space="preserve">
+    <value>기본 색</value>
+  </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
     <value>자동 팬 제어 활성화</value>
+  </data>
+  <data name="Enable_OSD" xml:space="preserve">
+    <value>OSD 활성화</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>종료</value>
@@ -159,11 +171,17 @@
   <data name="Graph" xml:space="preserve">
     <value>그래프</value>
   </data>
+  <data name="Groups" xml:space="preserve">
+    <value>그룹</value>
+  </data>
   <data name="Hysteresis" xml:space="preserve">
     <value>  이력 온도 : </value>
   </data>
   <data name="Interval" xml:space="preserve">
     <value>주기 설정</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>아이템</value>
   </data>
   <data name="Kraken_Lighting" xml:space="preserve">
     <value>Kraken 조명 설정</value>
@@ -187,7 +205,7 @@
     <value>일반</value>
   </data>
   <data name="Not_Match" xml:space="preserve">
-    <value>하드웨어와 저장된 설정 파일(Config.json) 내용이 일치하지 않습니다!</value>
+    <value>하드웨어와 저장된 설정 파일(Control.json) 내용이 일치하지 않습니다!</value>
   </data>
   <data name="OK" xml:space="preserve">
     <value>확인</value>
@@ -206,6 +224,9 @@
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>센서</value>
+  </data>
+  <data name="Set_color" xml:space="preserve">
+    <value>색 변경</value>
   </data>
   <data name="Show" xml:space="preserve">
     <value>열기</value>
