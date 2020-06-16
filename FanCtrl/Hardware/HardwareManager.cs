@@ -54,14 +54,15 @@ namespace FanCtrl
         // Control List
         private List<BaseControl> mControlList = new List<BaseControl>();
 
+        // OSD sensor List
+        private List<OSDSensor> mOSDSensorList = new List<OSDSensor>();
+
         // next tick change value
         private List<int> mChangeValueList = new List<int>();
         private List<BaseControl> mChangeControlList = new List<BaseControl>();
 
-        // update thread
-        private long mUpdateInterval = 1000;
-        private bool mUpdateThreadState = false;
-        private Thread mUpdateThread = null;
+        // update timer
+        private System.Timers.Timer mUpdateTimer = new System.Timers.Timer();
 
         public event UpdateTimerEventHandler onUpdateCallback;
         public delegate void UpdateTimerEventHandler();
@@ -258,6 +259,9 @@ namespace FanCtrl
             this.createGPUFan();
             this.createGPUControl();
 
+            // osd sensor
+            this.createOSDSensor();
+
             Monitor.Exit(mLock);
         }        
 
@@ -274,12 +278,7 @@ namespace FanCtrl
             mChangeControlList.Clear();
             mChangeValueList.Clear();
 
-            mUpdateThreadState = false;
-            if (mUpdateThread != null)
-            {
-                mUpdateThread.Join();
-                mUpdateThread = null;
-            }
+            mUpdateTimer.Stop();
 
             if (mLHM != null)
             {
@@ -358,10 +357,9 @@ namespace FanCtrl
                 return;
             }
 
-            mUpdateInterval = OptionManager.getInstance().Interval;
-            mUpdateThreadState = true;
-            mUpdateThread = new Thread(onUpdateThread);
-            mUpdateThread.Start();
+            mUpdateTimer.Interval = OptionManager.getInstance().Interval;
+            mUpdateTimer.Elapsed += onUpdateTimer;
+            mUpdateTimer.Start();
 
             Monitor.Exit(mLock);
         }
@@ -374,7 +372,7 @@ namespace FanCtrl
                 Monitor.Exit(mLock);
                 return;
             }
-            mUpdateInterval = interval;
+            mUpdateTimer.Interval = interval;
             Monitor.Exit(mLock);
         }
 
@@ -665,6 +663,86 @@ namespace FanCtrl
             }
         }
 
+        private void createOSDSensor()
+        {
+            if (mIsGigabyte == true) {}
+
+            // LibreHardwareMonitor
+            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
+            {
+                mLHM.createOSDSensor(ref mOSDSensorList);
+            }
+
+            // OpenHardwareMonitor
+            else if (OptionManager.getInstance().LibraryType == LibraryType.OpenHardwareMonitor)
+            {
+                mOHM.createOSDSensor(ref mOSDSensorList);
+            }
+
+            if (OptionManager.getInstance().IsNvAPIWrapper == true)
+            {
+                this.lockBus();
+                try
+                {
+                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                    for (int i = 0; i < gpuArray.Length; i++)
+                    {
+                        int subIndex = 0;
+
+                        var osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Graphics", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Memory", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Processor", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Video Decoding", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+                        
+                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Core", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Frame Buffer", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Video Engine", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Bus Interface", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Memory", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.KB, "[Data] GPU Memory Free", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.KB, "[Data] GPU Memory Used", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+
+                        osdSensor = new OSDSensor(OSDUnitType.KB, "[Data] GPU Memory Total", i, subIndex++);
+                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
+                        mOSDSensorList.Add(osdSensor);
+                    }
+                }
+                catch { }
+                this.unlockBus();
+            }
+        }
+
         private bool isExistTemp(string name)
         {
             for (int i = 0; i < mSensorList.Count; i++)
@@ -804,171 +882,208 @@ namespace FanCtrl
             this.unlockBus();
         }
 
-        private byte mTest = 0x00;
-
-        private void onUpdateThread()
+        private double onOSDSensorUpdate(OSDLibraryType libraryType, int index, int subIndex)
         {
-            long startTime = Util.getNowMS();
-            while (mUpdateThreadState == true)
-            {
-                if (Monitor.TryEnter(mLock) == false)
+            double value = 0;
+            if (libraryType == OSDLibraryType.NvApiWrapper)
+            {                
+                this.lockBus();
+                try
                 {
-                    Thread.Sleep(100);
-                    continue;
-                }
-
-                long nowTime = Util.getNowMS();
-                if(nowTime - startTime < mUpdateInterval)
-                {
-                    Monitor.Exit(mLock);
-                    Thread.Sleep(100);
-                    continue;
-                }
-                startTime = nowTime;
-
-                if (mIsGigabyte == true && mGigabyte != null)
-                {
-                    mGigabyte.update();
-                }
-
-                if (mLHM != null)
-                {
-                    mLHM.update();
-                }
-
-                if (mOHM != null)
-                {
-                    mOHM.update();
-                }
-
-                for (int i = 0; i < mSensorList.Count; i++)
-                {
-                    mSensorList[i].update();
-                }
-
-                for (int i = 0; i < mFanList.Count; i++)
-                {
-                    mFanList[i].update();
-                }
-
-                for (int i = 0; i < mControlList.Count; i++)
-                {
-                    mControlList[i].update();
-                }
-
-                // change value
-                bool isExistChange = false;
-                if (mChangeValueList.Count > 0)
-                {
-                    for (int i = 0; i < mChangeControlList.Count; i++)
+                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                    var gpu = gpuArray[index];
+                    
+                    switch (subIndex)
                     {
-                        isExistChange = true;
-                        mChangeControlList[i].setSpeed(mChangeValueList[i]);
-                    }
-                    mChangeControlList.Clear();
-                    mChangeValueList.Clear();
-                }
-
-                // Control
-                var controlManager = ControlManager.getInstance();
-                if (controlManager.IsEnable == true && isExistChange == false)
-                {
-                    var controlDictionary = new Dictionary<int, BaseControl>();
-                    int modeIndex = controlManager.ModeIndex;
-
-                    for (int i = 0; i < controlManager.getControlDataCount(modeIndex); i++)
-                    {
-                        var controlData = controlManager.getControlData(modeIndex, i);
-                        if (controlData == null)
+                        case 0:
+                            value = (double)gpu.CurrentClockFrequencies.GraphicsClock.Frequency;
                             break;
-
-                        int sensorIndex = controlData.Index;
-                        int temperature = mSensorList[sensorIndex].Value;
-
-                        for (int j = 0; j < controlData.FanDataList.Count; j++)
-                        {
-                            var fanData = controlData.FanDataList[j];
-                            int controlIndex = fanData.Index;
-                            int percent = fanData.getValue(temperature);
-
-                            var control = mControlList[controlIndex];
-
-                            if (controlDictionary.ContainsKey(controlIndex) == false)
-                            {
-                                controlDictionary[controlIndex] = control;
-                                control.NextValue = percent;
-                            }
-                            else
-                            {
-                                control.NextValue = (control.NextValue >= percent) ? control.NextValue : percent;
-                            }
-                        }
-                    }
-
-                    foreach (var keyPair in controlDictionary)
-                    {
-                        var control = keyPair.Value;
-                        if (control.Value == control.NextValue)
-                            continue;
-                        control.setSpeed(control.NextValue);
-                    }
-                }
-
-                // onUpdateCallback
-                onUpdateCallback();
-
-                var osdManager = OSDManager.getInstance();
-                if (osdManager.IsEnable == true)
-                {
-                    var osdString = new StringBuilder();
-                    osdString.Append("<A0=-5>");
-                    osdString.Append("<A1=5>");
-                    osdString.Append("<S0=50>");
-                    osdString.Append("\r");
-
-                    bool isOK = (osdManager.getGroupCount() > 0) ? true : false;
-                    int maxNameLength = 0;
-                    for (int i = 0; i < osdManager.getGroupCount(); i++)
-                    {
-                        var group = osdManager.getGroup(i);
-                        if (group == null)
-                        {
-                            isOK = false;
+                        case 1:
+                            value = (double)gpu.CurrentClockFrequencies.MemoryClock.Frequency;
                             break;
-                        }
-
-                        if (group.Name.Length > maxNameLength)
-                            maxNameLength = group.Name.Length;
-                    }
-
-                    for (int i = 0; i < osdManager.getGroupCount(); i++)
-                    {
-                        var group = osdManager.getGroup(i);
-                        if (group == null)
-                        {
-                            isOK = false;
+                        case 2:
+                            value = (double)gpu.CurrentClockFrequencies.ProcessorClock.Frequency;
                             break;
-                        }
-                        osdString.Append(group.getOSDString(maxNameLength));                        
-                    }
-
-                    if (isOK == true)
-                    {
-                        OSDController.updateOSD(osdString.ToString());
-                        osdManager.IsUpdate = true;
+                        case 3:
+                            value = (double)gpu.CurrentClockFrequencies.VideoDecodingClock.Frequency;
+                            break;
+                        case 4:
+                            value = (double)gpu.UsageInformation.GPU.Percentage;
+                            break;
+                        case 5:
+                            value = (double)gpu.UsageInformation.FrameBuffer.Percentage;
+                            break;
+                        case 6:
+                            value = (double)gpu.UsageInformation.VideoEngine.Percentage;
+                            break;
+                        case 7:
+                            value = (double)gpu.UsageInformation.BusInterface.Percentage;
+                            break;
+                        case 8:
+                            value = (double)(((double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB) / (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB * 100.0);
+                            break;
+                        case 9:
+                            value = (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB;
+                            break;
+                        case 10:
+                            value = (double)(gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB);
+                            break;
+                        case 11:
+                            value = (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB;
+                            break;
+                        default:
+                            value = 0;
+                            break;
                     }
                 }
-                else
-                {
-                    if (osdManager.IsUpdate == true)
-                    {
-                        OSDController.releaseOSD();
-                        osdManager.IsUpdate = false;
-                    }
-                }
-
-                Monitor.Exit(mLock);
+                catch { }
+                this.unlockBus();
             }
+            return value;
+        }
+
+        private void onUpdateTimer(object sender, EventArgs e)
+        {
+            if (Monitor.TryEnter(mLock) == false)
+                return;
+
+            if (mIsGigabyte == true && mGigabyte != null)
+            {
+                mGigabyte.update();
+            }
+
+            if (mLHM != null)
+            {
+                mLHM.update();
+            }
+
+            if (mOHM != null)
+            {
+                mOHM.update();
+            }
+
+            for (int i = 0; i < mSensorList.Count; i++)
+            {
+                mSensorList[i].update();
+            }
+
+            for (int i = 0; i < mFanList.Count; i++)
+            {
+                mFanList[i].update();
+            }
+
+            for (int i = 0; i < mControlList.Count; i++)
+            {
+                mControlList[i].update();
+            }
+
+            // change value
+            bool isExistChange = false;
+            if (mChangeValueList.Count > 0)
+            {
+                for (int i = 0; i < mChangeControlList.Count; i++)
+                {
+                    isExistChange = true;
+                    mChangeControlList[i].setSpeed(mChangeValueList[i]);
+                }
+                mChangeControlList.Clear();
+                mChangeValueList.Clear();
+            }
+
+            // Control
+            var controlManager = ControlManager.getInstance();
+            if (controlManager.IsEnable == true && isExistChange == false)
+            {
+                var controlDictionary = new Dictionary<int, BaseControl>();
+                int modeIndex = controlManager.ModeIndex;
+
+                for (int i = 0; i < controlManager.getControlDataCount(modeIndex); i++)
+                {
+                    var controlData = controlManager.getControlData(modeIndex, i);
+                    if (controlData == null)
+                        break;
+
+                    int sensorIndex = controlData.Index;
+                    int temperature = mSensorList[sensorIndex].Value;
+
+                    for (int j = 0; j < controlData.FanDataList.Count; j++)
+                    {
+                        var fanData = controlData.FanDataList[j];
+                        int controlIndex = fanData.Index;
+                        int percent = fanData.getValue(temperature);
+
+                        var control = mControlList[controlIndex];
+
+                        if (controlDictionary.ContainsKey(controlIndex) == false)
+                        {
+                            controlDictionary[controlIndex] = control;
+                            control.NextValue = percent;
+                        }
+                        else
+                        {
+                            control.NextValue = (control.NextValue >= percent) ? control.NextValue : percent;
+                        }
+                    }
+                }
+
+                foreach (var keyPair in controlDictionary)
+                {
+                    var control = keyPair.Value;
+                    if (control.Value == control.NextValue)
+                        continue;
+                    control.setSpeed(control.NextValue);
+                }
+            }
+
+            // onUpdateCallback
+            onUpdateCallback();
+
+            var osdManager = OSDManager.getInstance();
+            if (osdManager.IsEnable == true)
+            {
+                var osdHeaderString = "<A0=-5><A1=5><S0=50>\r";
+
+                var osdString = new StringBuilder();
+                if (osdManager.IsTime == true)
+                {
+                    osdString.Append(DateTime.Now.ToString("HH:mm:ss") + "\n");
+                }
+
+                int maxNameLength = 0;
+                for (int i = 0; i < osdManager.getGroupCount(); i++)
+                {
+                    var group = osdManager.getGroup(i);
+                    if (group == null)
+                        break;
+                    if (group.Name.Length > maxNameLength)
+                        maxNameLength = group.Name.Length;
+                }
+
+                for (int i = 0; i < osdManager.getGroupCount(); i++)
+                {
+                    var group = osdManager.getGroup(i);
+                    if (group == null)
+                        break;
+                    osdString.Append(group.getOSDString(maxNameLength));
+                }
+
+                if (osdString.ToString().Length > 0)
+                {
+                    var sendString = osdHeaderString + osdString.ToString();
+                    OSDController.updateOSD(sendString);
+                    osdManager.IsUpdate = true;
+                }
+            }
+            else
+            {
+                if (osdManager.IsUpdate == true)
+                {
+                    OSDController.releaseOSD();
+                    osdManager.IsUpdate = false;
+                }
+            }
+
+            Monitor.Exit(mLock);
         }
 
         public int addChangeValue(int value, BaseControl control)
@@ -1049,6 +1164,27 @@ namespace FanCtrl
             var control = mControlList[index];
             Monitor.Exit(mLock);
             return control;
+        }
+
+        public int getOSDSensorCount()
+        {
+            Monitor.Enter(mLock);
+            int count = mOSDSensorList.Count;
+            Monitor.Exit(mLock);
+            return count;
+        }
+
+        public OSDSensor getOSDSensor(int index)
+        {
+            Monitor.Enter(mLock);
+            if (index >= mOSDSensorList.Count)
+            {
+                Monitor.Exit(mLock);
+                return null;
+            }
+            var other = mOSDSensorList[index];
+            Monitor.Exit(mLock);
+            return other;
         }
     }
 }

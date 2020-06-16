@@ -124,6 +124,10 @@ namespace FanCtrl
             {
                 ControlManager.getInstance().reset();
                 ControlManager.getInstance().write();
+
+                OSDManager.getInstance().reset();
+                OSDManager.getInstance().write();
+
                 OnExitHandler(null, EventArgs.Empty);
                 return;
             }

@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>추가</value>
   </data>
+  <data name="Align_digits" xml:space="preserve">
+    <value>      자릿수 :</value>
+  </data>
   <data name="Apply" xml:space="preserve">
     <value>적용</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="Enable_OSD" xml:space="preserve">
     <value>OSD 활성화</value>
+  </data>
+  <data name="ETC" xml:space="preserve">
+    <value>기타</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>종료</value>
@@ -230,6 +236,9 @@
   </data>
   <data name="Show" xml:space="preserve">
     <value>열기</value>
+  </data>
+  <data name="Show_system_time" xml:space="preserve">
+    <value>현재 시간 보기</value>
   </data>
   <data name="Silence" xml:space="preserve">
     <value>사일런스</value>

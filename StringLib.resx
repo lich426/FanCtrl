@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="Align_digits" xml:space="preserve">
+    <value>Align digits :</value>
+  </data>
   <data name="Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="Enable_OSD" xml:space="preserve">
     <value>Enable OSD (RTSS)</value>
+  </data>
+  <data name="ETC" xml:space="preserve">
+    <value>ETC</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
@@ -230,6 +236,9 @@
   </data>
   <data name="Show" xml:space="preserve">
     <value>Show</value>
+  </data>
+  <data name="Show_system_time" xml:space="preserve">
+    <value>Show system time</value>
   </data>
   <data name="Silence" xml:space="preserve">
     <value>Silence</value>

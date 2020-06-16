@@ -14,6 +14,9 @@ namespace FanCtrl
         // fan speed
         FAN,
 
+        // OSD sensor
+        OSD,
+
         UNKNOWN,
     };
 

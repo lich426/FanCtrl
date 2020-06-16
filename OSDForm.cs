@@ -35,13 +35,16 @@ namespace FanCtrl
             mGroupEditTextBox.Hide();
 
             mItemListView.Columns.Add("Color", 50);
-            mItemListView.Columns.Add("Item", 200);
-            
+            mItemListView.Columns.Add("Item", 280);
+
+            mDigitNumericUpDown.ValueChanged += onDigitNumericUpDownValueChanged;
+
             this.enableItemConrol(false);
 
             var hardwareManager = HardwareManager.getInstance();
             var controlManager = ControlManager.getInstance();
 
+            // Sensor
             for (int i = 0; i < hardwareManager.getSensorCount(); i++)
             {
                 var sensor = hardwareManager.getSensor(i);
@@ -53,6 +56,7 @@ namespace FanCtrl
                 mItemComboBox.Items.Add("[" + StringLib.Temperature + "] " + controlManager.getName(0, i, false));
             }
 
+            // Fan
             for (int i = 0; i < hardwareManager.getFanCount(); i++)
             {
                 var fan = hardwareManager.getFan(i);
@@ -64,6 +68,7 @@ namespace FanCtrl
                 mItemComboBox.Items.Add("[" + StringLib.Fan_speed + "] " + controlManager.getName(1, i, false));
             }
 
+            // Control
             for (int i = 0; i < hardwareManager.getControlCount(); i++)
             {
                 var control = hardwareManager.getControl(i);
@@ -75,9 +80,38 @@ namespace FanCtrl
                 mItemComboBox.Items.Add("[" + StringLib.Fan_control + "] " + controlManager.getName(2, i, false));
             }
 
+            // Predefined
+            // Framerate
+            var osdItem = new OSDItem();
+            osdItem.ItemType = OSDItemType.Predefined;
+            osdItem.UnitType = OSDUnitType.FPS;
+            mComboBoxItemList.Add(osdItem);
+            mItemComboBox.Items.Add("[" + StringLib.ETC + "] Framerate");
+
+            // Blank
+            osdItem = new OSDItem();
+            osdItem.ItemType = OSDItemType.Predefined;
+            osdItem.UnitType = OSDUnitType.Blank;
+            mComboBoxItemList.Add(osdItem);
+            mItemComboBox.Items.Add("[" + StringLib.ETC + "] Blank");
+
+            // osd sensor
+            for (int i = 0; i < hardwareManager.getOSDSensorCount(); i++)
+            {
+                var osdSensor = hardwareManager.getOSDSensor(i);
+                var item = new OSDItem();
+                item.ItemType = OSDItemType.Predefined;
+                item.UnitType = osdSensor.UnitType;
+                item.Index = i;
+                mComboBoxItemList.Add(item);
+                mItemComboBox.Items.Add(osdSensor.Name);
+            }
+
             mItemComboBox.SelectedIndex = 0;
 
             mEnableCheckBox.Checked = OSDManager.getInstance().IsEnable;
+            mSystemTimeCheckBox.Checked = OSDManager.getInstance().IsTime;
+
             mGroupList = OSDManager.getInstance().getCloneGroupList();
             for (int i = 0; i < mGroupList.Count; i++)
             {
@@ -105,9 +139,11 @@ namespace FanCtrl
             this.mEnableCheckBox.Text = StringLib.Enable_OSD;
             mGroupGroupBox.Text = StringLib.Groups;
             mItemGroupBox.Text = StringLib.Items;
+            mDigitLabel.Text = StringLib.Align_digits;
             mGroupAddButton.Text = StringLib.Add;
             mGroupColorButton.Text = StringLib.Color;
             mGroupRemoveButton.Text = StringLib.Remove;
+            mSystemTimeCheckBox.Text = StringLib.Show_system_time;
             mItemAddButton.Text = StringLib.Add;
             mItemColorButton.Text = StringLib.Color;
             mItemRemoveButton.Text = StringLib.Remove;
@@ -136,6 +172,7 @@ namespace FanCtrl
                 var controlManager = ControlManager.getInstance();
 
                 var group = mGroupList[index];
+                mDigitNumericUpDown.Value = group.Digit;
                 for (int i = 0; i < group.ItemList.Count; i++)
                 {
                     var item = group.ItemList[i];
@@ -162,6 +199,21 @@ namespace FanCtrl
                     else if (item.ItemType == OSDItemType.Control)
                     {
                         listItem.SubItems.Add("[" + StringLib.Fan_control + "] " + controlManager.getName(2, item.Index, false));
+                    }
+                    else if (item.ItemType == OSDItemType.Predefined)
+                    {
+                        if(item.UnitType == OSDUnitType.FPS)
+                        {
+                            listItem.SubItems.Add("[" + StringLib.ETC + "] Framerate");
+                        }
+                        else if(item.UnitType == OSDUnitType.Blank)
+                        {
+                            listItem.SubItems.Add("[" + StringLib.ETC + "] Blank");
+                        }
+                        else
+                        {
+                            listItem.SubItems.Add(hardwareManager.getOSDSensor(item.Index).Name);
+                        }
                     }
 
                     listItem.UseItemStyleForSubItems = false;
@@ -213,6 +265,7 @@ namespace FanCtrl
         private void enableItemConrol(bool isEnable)
         {
             //mItemComboBox.Enabled = isEnable;
+            mDigitNumericUpDown.Enabled = isEnable;
             mItemListView.Enabled = isEnable;
             mItemAddButton.Enabled = isEnable;
             mItemUpButton.Enabled = isEnable;
@@ -344,6 +397,19 @@ namespace FanCtrl
                 int index = mGroupListView.SelectedItems[0].Index;
                 mGroupListView.Items.RemoveAt(index);
                 mGroupList.RemoveAt(index);
+            }
+            catch { }
+        }
+
+        private void onDigitNumericUpDownValueChanged(object sender, EventArgs e)
+        {
+            if (this.isSelectedGroupListView() == false)
+                return;
+
+            try
+            {
+                int index = mGroupListView.SelectedItems[0].Index;
+                mGroupList[index].Digit = Decimal.ToInt32(mDigitNumericUpDown.Value);
             }
             catch { }
         }
@@ -488,6 +554,7 @@ namespace FanCtrl
         private void onApplyButtonClick(object sender, EventArgs e)
         {
             OSDManager.getInstance().IsEnable = mEnableCheckBox.Checked;
+            OSDManager.getInstance().IsTime = mSystemTimeCheckBox.Checked;            
             OSDManager.getInstance().setGroupList(mGroupList);
             OSDManager.getInstance().write();
             onApplyCallback(sender, e);

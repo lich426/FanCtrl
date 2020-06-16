@@ -47,7 +47,7 @@ Graph : [ZedGraph][8]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanCtrl_v1.1.6.zip][10]
+Download : [FanCtrl_v1.1.7.zip][10]
 
 ## Donate
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
@@ -62,7 +62,7 @@ Download : [FanCtrl_v1.1.6.zip][10]
 [7]: https://www.newtonsoft.com/json
 [8]: http://zedgraph.sourceforge.net/samples.html
 [9]: https://github.com/lich426/FanCtrl/blob/master/LICENSE
-[10]: https://github.com/lich426/FanCtrl/raw/master/Portable/FanCtrl_v1.1.6.zip
+[10]: https://github.com/lich426/FanCtrl/raw/master/Portable/FanCtrl_v1.1.7.zip
 [11]: https://github.com/lich426/FanCtrl/blob/master/Packet/X2.txt
 [12]: https://github.com/lich426/FanCtrl/blob/master/Packet/X3.txt
 [13]: https://github.com/lich426/FanCtrl/blob/master/Packet/clc.txt

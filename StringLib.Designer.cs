@@ -70,6 +70,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Align digits :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Align_digits {
+            get {
+                return ResourceManager.GetString("Align_digits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Apply과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Apply {
@@ -156,6 +165,15 @@ namespace FanCtrl {
         internal static string Enable_OSD {
             get {
                 return ResourceManager.GetString("Enable_OSD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ETC과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string ETC {
+            get {
+                return ResourceManager.GetString("ETC", resourceCulture);
             }
         }
         
@@ -399,6 +417,15 @@ namespace FanCtrl {
         internal static string Show {
             get {
                 return ResourceManager.GetString("Show", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show system time과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Show_system_time {
+            get {
+                return ResourceManager.GetString("Show_system_time", resourceCulture);
             }
         }
         

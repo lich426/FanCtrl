@@ -10,19 +10,28 @@ namespace FanCtrl
     public enum OSDItemType : int
     {
         Sensor = 0,
-        Fan = 1,
-        Control = 2,
-        Predefined = 3,
+        Fan,
+        Control,
+        Predefined,
+        Unknown,
     }
 
     public enum OSDUnitType : int
     {
         Temperature = 0,
-        RPM = 1,
-        Percent = 2,
-        //MHz = 3,
-        //MB = 4,
-        //FPS = 5,
+        RPM,
+        Percent,
+        MHz,
+        kHz,
+        KB,
+        MB,
+        GB,
+        MBPerSec,
+        Voltage,
+        Power,
+        FPS,
+        Blank,
+        Unknown,
     }
 
     public class OSDItem
@@ -37,7 +46,7 @@ namespace FanCtrl
 
         public Color Color { get; set; } = Color.White;
 
-        public string getOSDString()
+        public string getOSDString(int digit)
         {
             try
             {
@@ -58,7 +67,7 @@ namespace FanCtrl
                 }
 
                 // Value prefix
-                osdString.Append("<A0>");
+                osdString.Append(string.Format("<A=-{0}>", digit));
 
                 // Value
                 var hardwareManager = HardwareManager.getInstance();
@@ -87,12 +96,24 @@ namespace FanCtrl
                     int value = control.Value;
                     osdString.Append(value.ToString());
                 }
-                /*
                 else if (ItemType == OSDItemType.Predefined)
                 {
-
+                    if(UnitType == OSDUnitType.FPS)
+                    {
+                        osdString.Append("<FR>");
+                    }
+                    else if(UnitType == OSDUnitType.Blank)
+                    {
+                        osdString.Append(" ");
+                    }
+                    else
+                    {
+                        var sensor = hardwareManager.getOSDSensor(Index);
+                        if (sensor == null)
+                            return "";
+                        osdString.Append(sensor.getString());
+                    }
                 }
-                */
                 else
                 {
                     return "";
@@ -146,16 +167,27 @@ namespace FanCtrl
                 case OSDUnitType.Percent:
                     return " %";
 
-                    /*
                 case OSDUnitType.MHz:
+                case OSDUnitType.kHz:
                     return " MHz";
 
+                case OSDUnitType.KB:
+                case OSDUnitType.GB:
                 case OSDUnitType.MB:
                     return " MB";
 
+                case OSDUnitType.MBPerSec:
+                    return " MB/s";
+
+                case OSDUnitType.Voltage:
+                    return " V";
+
+                case OSDUnitType.Power:
+                    return " W";
+
                 case OSDUnitType.FPS:
                     return " FPS";
-                    */
+
                 default:
                     return " ";
             }

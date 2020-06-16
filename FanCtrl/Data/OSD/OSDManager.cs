@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Windows.Forms.DataVisualization.Charting;
+using System.Timers;
 
 namespace FanCtrl
 {
@@ -57,11 +57,29 @@ namespace FanCtrl
             }
         }
 
+        private bool mIsTime = false;
+        public bool IsTime
+        {
+            get
+            {
+                Monitor.Enter(mLock);
+                bool isTime = mIsTime;
+                Monitor.Exit(mLock);
+                return isTime;
+            }
+            set
+            {
+                Monitor.Enter(mLock);
+                mIsTime = value;
+                Monitor.Exit(mLock);
+            }
+        }
+
         private List<OSDGroup> mGroupList = new List<OSDGroup>();
 
         private OSDManager()
         {
-            
+
         }
 
         private void clear()
@@ -98,6 +116,7 @@ namespace FanCtrl
                 var rootObject = JObject.Parse(jsonString);
 
                 mIsEnable = (rootObject.ContainsKey("enable") == true) ? rootObject.Value<bool>("enable") : false;
+                mIsTime = (rootObject.ContainsKey("time") == true) ? rootObject.Value<bool>("time") : false;
 
                 if (rootObject.ContainsKey("group") == true)
                 {
@@ -106,16 +125,18 @@ namespace FanCtrl
                     {
                         var groupObject = (JObject)groupList[i];
 
-                        string name = groupObject.Value<string>("name");
-                        bool isColor = groupObject.Value<bool>("isColor");
-                        byte r = groupObject.Value<byte>("r");
-                        byte g = groupObject.Value<byte>("g");
-                        byte b = groupObject.Value<byte>("b");
+                        string name = (groupObject.ContainsKey("name") == false) ? "" : groupObject.Value<string>("name");
+                        bool isColor = (groupObject.ContainsKey("isColor") == false) ? false : groupObject.Value<bool>("isColor");
+                        byte r = (groupObject.ContainsKey("r") == false) ? (byte)0xFF : groupObject.Value<byte>("r");
+                        byte g = (groupObject.ContainsKey("g") == false) ? (byte)0xFF : groupObject.Value<byte>("g");
+                        byte b = (groupObject.ContainsKey("b") == false) ? (byte)0xFF : groupObject.Value<byte>("b");
+                        int digit = (groupObject.ContainsKey("digit") == false) ? 5 : groupObject.Value<int>("digit");
 
                         var group = new OSDGroup();
                         group.Name = name;
                         group.IsColor = isColor;
                         group.Color = Color.FromArgb(r, g, b);
+                        group.Digit = digit;
 
                         if (groupObject.ContainsKey("item") == true)
                         {
@@ -124,13 +145,16 @@ namespace FanCtrl
                             {
                                 var itemObject = (JObject)itemList[j];
 
-                                var itemType = itemObject.Value<int>("itemType");
-                                var unitType = itemObject.Value<int>("unitType");
-                                int index = itemObject.Value<int>("index");
-                                isColor = itemObject.Value<bool>("isColor");
-                                r = itemObject.Value<byte>("r");
-                                g = itemObject.Value<byte>("g");
-                                b = itemObject.Value<byte>("b");
+                                var itemType = (itemObject.ContainsKey("itemType") == false) ? (int)OSDItemType.Unknown : itemObject.Value<int>("itemType");
+                                var unitType = (itemObject.ContainsKey("unitType") == false) ? (int)OSDUnitType.Unknown : itemObject.Value<int>("unitType");
+                                int index = (itemObject.ContainsKey("index") == false) ? 0 : itemObject.Value<int>("index");
+                                isColor = (itemObject.ContainsKey("isColor") == false) ? false : itemObject.Value<bool>("isColor");
+                                r = (itemObject.ContainsKey("r") == false) ? (byte)0xFF : itemObject.Value<byte>("r");
+                                g = (itemObject.ContainsKey("g") == false) ? (byte)0xFF : itemObject.Value<byte>("g");
+                                b = (itemObject.ContainsKey("b") == false) ? (byte)0xFF : itemObject.Value<byte>("b");
+
+                                if (itemType >= (int)OSDItemType.Unknown || unitType >= (int)OSDUnitType.Unknown)
+                                    continue;
 
                                 var item = new OSDItem();
                                 item.ItemType = (OSDItemType)itemType;
@@ -163,6 +187,7 @@ namespace FanCtrl
             {
                 var rootObject = new JObject();
                 rootObject["enable"] = mIsEnable;
+                rootObject["time"] = mIsTime;
 
                 var groupList = new JArray();
                 for(int i = 0; i < mGroupList.Count; i++)
@@ -175,6 +200,7 @@ namespace FanCtrl
                     groupObject["r"] = group.Color.R;
                     groupObject["g"] = group.Color.G;
                     groupObject["b"] = group.Color.B;
+                    groupObject["digit"] = group.Digit;
 
                     var itemList = new JArray();
                     for (int j = 0; j < group.ItemList.Count; j++)

@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.1.6.0</ApplicationVersion>
+    <ApplicationVersion>1.1.7.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -215,6 +215,7 @@
     <Compile Include="FanCtrl\Data\Option\StartupControl.cs" />
     <Compile Include="FanCtrl\Controller\SMBusController.cs" />
     <Compile Include="FanCtrl\Controller\USBController.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\OSDSensor.cs" />
     <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />
     <Compile Include="LightingForm.cs">

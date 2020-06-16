@@ -9,7 +9,6 @@ namespace FanCtrl
     {
         private bool mIsStart = false;
 
-        // OpenHardwareMonitorLib
         private Computer mComputer = null;
 
         public OHM() { }
@@ -22,6 +21,7 @@ namespace FanCtrl
 
             mComputer = new Computer();
             mComputer.CPUEnabled = true;
+            mComputer.RAMEnabled = true;
             mComputer.MainboardEnabled = true;
             mComputer.FanControllerEnabled = true;
             mComputer.GPUEnabled = true;
@@ -49,7 +49,7 @@ namespace FanCtrl
 
             // CPU, GPU
             int cpuNum = 2;
-            int gpuAmdNum = 2;
+            int GpuAtiNum = 2;
             int gpuNvidiaNum = 2;
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Length; i++)
@@ -70,7 +70,7 @@ namespace FanCtrl
                     string name = hardwareArray[i].Name;
                     while (this.isExistTemp(ref sensorList, name) == true)
                     {
-                        name = hardwareArray[i].Name + " #" + gpuAmdNum++;
+                        name = hardwareArray[i].Name + " #" + GpuAtiNum++;
                     }
                     var sensor = new HardwareTemp(hardwareArray[i], name);
                     sensorList.Add(sensor);
@@ -310,6 +310,112 @@ namespace FanCtrl
                         }
                     }
                 }
+            }
+        }
+
+        public void createOSDSensor(ref List<OSDSensor> osdList)
+        {
+            try
+            {
+                bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
+                var hardwareArray = mComputer.Hardware;
+                for (int i = 0; i < hardwareArray.Length; i++)
+                {
+                    if (isNvAPIWrapper == true && hardwareArray[i].HardwareType == HardwareType.GpuNvidia)
+                        continue;
+
+                    var sensorArray = hardwareArray[i].Sensors;
+                    this.setOSDSensor(sensorArray, SensorType.Load, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.Clock, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.Voltage, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.Data, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.SmallData, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.Power, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.Throughput, ref osdList);
+
+                    var subHardwareArray = hardwareArray[i].SubHardware;
+                    for (int j = 0; j < subHardwareArray.Length; j++)
+                    {
+                        var subSensorArray = subHardwareArray[j].Sensors;
+                        this.setOSDSensor(subSensorArray, SensorType.Load, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.Clock, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.Voltage, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.Data, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.SmallData, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.Power, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.Throughput, ref osdList);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void setOSDSensor(ISensor[] sensorArray, SensorType sensorType, ref List<OSDSensor> osdList)
+        {
+            var sensorList = new List<ISensor>();
+            for (int i = 0; i < sensorArray.Length; i++)
+            {
+                if (sensorArray[i].SensorType != sensorType)
+                {
+                    continue;
+                }
+                sensorList.Add(sensorArray[i]);
+            }
+
+            for (int i = 0; i < sensorList.Count; i++)
+            {
+                var sensor = sensorList[i];
+
+                int index = osdList.Count;
+                OSDUnitType unitType = OSDUnitType.Unknown;
+                string sensorName = "";
+                switch (sensorList[i].SensorType)
+                {
+                    case SensorType.Voltage:
+                        unitType = OSDUnitType.Voltage;
+                        sensorName = "[Voltage]  ";
+                        break;
+
+                    case SensorType.Power:
+                        unitType = OSDUnitType.Power;
+                        sensorName = "[Power] ";
+                        break;
+
+                    case SensorType.Load:
+                        unitType = OSDUnitType.Percent;
+                        sensorName = "[Load] ";
+                        break;
+
+                    case SensorType.Clock:
+                        unitType = OSDUnitType.MHz;
+                        sensorName = "[Clock] ";
+                        break;
+
+                    case SensorType.Data:
+                        unitType = OSDUnitType.GB;
+                        sensorName = "[Data] ";
+                        break;
+
+                    case SensorType.SmallData:
+                        unitType = OSDUnitType.MB;
+                        sensorName = "[Data] ";
+                        break;
+
+                    case SensorType.Throughput:
+                        unitType = OSDUnitType.MBPerSec;
+                        sensorName = "[Throughput] ";
+                        break;
+
+                    default:
+                        unitType = OSDUnitType.Unknown;
+                        break;
+                }
+
+                if (unitType == OSDUnitType.Unknown)
+                    continue;
+
+                var osdSensor = new OSDSensor(sensorList[i], unitType, sensorName + sensorList[i].Name, index);
+                osdList.Add(osdSensor);
             }
         }
 

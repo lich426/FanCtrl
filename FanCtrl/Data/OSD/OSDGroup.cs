@@ -15,6 +15,8 @@ namespace FanCtrl
 
         public Color Color { get; set; } = Color.White;
 
+        public int Digit { get; set; } = 5;
+
         private List<OSDItem> mItemList = new List<OSDItem>();
         public List<OSDItem> ItemList
         {
@@ -63,7 +65,7 @@ namespace FanCtrl
             for (int i = 0; i < mItemList.Count; i++)
             {
                 var item = mItemList[i];
-                osdString.Append(item.getOSDString());                
+                osdString.Append(item.getOSDString(Digit));                
             }
 
             osdString.Append("\n");
@@ -76,6 +78,7 @@ namespace FanCtrl
             group.Name = this.Name;
             group.IsColor = this.IsColor;
             group.Color = Color.FromArgb(this.Color.R, this.Color.G, this.Color.B);
+            group.Digit = this.Digit;
 
             for (int i = 0; i < mItemList.Count; i++)
                 group.ItemList.Add(mItemList[i].clone());
