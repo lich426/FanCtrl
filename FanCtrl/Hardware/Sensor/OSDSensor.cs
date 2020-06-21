@@ -69,7 +69,7 @@ namespace FanCtrl
             }
             else if (UnitType == OSDUnitType.kHz)
             {
-                Value = (int)Math.Round(DoubleValue / 1024);
+                Value = (int)Math.Round(DoubleValue / 1000);
                 return Value.ToString();
             }
             else if (UnitType == OSDUnitType.KB)
