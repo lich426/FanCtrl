@@ -228,6 +228,9 @@
   <data name="Remove" xml:space="preserve">
     <value>제거</value>
   </data>
+  <data name="RGBnFC_Lighting" xml:space="preserve">
+    <value>NZXT RGB＆Fan Controller 조명설정</value>
+  </data>
   <data name="Sensor" xml:space="preserve">
     <value>센서</value>
   </data>

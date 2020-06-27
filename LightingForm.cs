@@ -13,6 +13,7 @@ namespace FanCtrl
     public partial class LightingForm : Form
     {
         private Liquid mLiquid = null;
+        private RGBnFC mRGBnFC = null;
 
         private bool mIsCancel = false;
 
@@ -40,15 +41,40 @@ namespace FanCtrl
             }
         }
 
-        private void localizeComponent()
+        public LightingForm(RGBnFC fc)
         {
-            if (mLiquid.CoolerType == LiquidCoolerType.Kraken)
+            mRGBnFC = fc;
+            InitializeComponent();
+            this.localizeComponent();
+
+            var customList = mRGBnFC.getCustomDataList();
+            if (customList.Count == 0)
             {
-                this.Text = StringLib.Kraken_Lighting;
+                this.onAddButtonClick(null, EventArgs.Empty);
             }
             else
             {
+                for (int i = 0; i < customList.Count; i++)
+                {
+                    this.onAddButtonClick(null, EventArgs.Empty);
+                    mHexTextBoxList[i].Text = customList[i];
+                }
+            }
+        }
+
+        private void localizeComponent()
+        {
+            if (mLiquid != null && mLiquid.CoolerType == LiquidCoolerType.Kraken)
+            {
+                this.Text = StringLib.Kraken_Lighting;
+            }
+            else if (mLiquid != null && mLiquid.CoolerType == LiquidCoolerType.CLC)
+            {
                 this.Text = StringLib.CLC_Lighting;
+            }
+            else if (mRGBnFC != null)
+            {
+                this.Text = StringLib.RGBnFC_Lighting;
             }
 
             mAddButton.Text = StringLib.Add;
@@ -169,8 +195,16 @@ namespace FanCtrl
                 hexStringList.Add(text);
             }
 
-            mLiquid.setCustomDataList(hexStringList);
-            mLiquid.writeFile();
+            if (mLiquid != null)
+            {
+                mLiquid.setCustomDataList(hexStringList);
+                mLiquid.writeFile();
+            }
+            else if (mRGBnFC != null)
+            {
+                mRGBnFC.setCustomDataList(hexStringList);
+                mRGBnFC.writeFile();
+            }            
         }
 
         private void onOKButtonClick(object sender, EventArgs e)

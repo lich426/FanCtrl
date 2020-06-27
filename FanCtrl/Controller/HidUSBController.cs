@@ -18,7 +18,11 @@ namespace FanCtrl
         private HidStream mHidStream = null;
 
         private delegate void RecvDelegate();
-        private delegate void SendDelegate(byte[] data);
+        private delegate void SendDelegate();
+
+        private bool mIsSend = false;
+        private List<byte[]> mSendArrayList = new List<byte[]>();
+        private object mSendArrayListLock = new object();
 
         public HidUSBController(USBVendorID vendorID, USBProductID productID) : base(vendorID, productID)
         {
@@ -76,19 +80,39 @@ namespace FanCtrl
                 }
             }
             catch { }
+
+            try
+            {
+                Monitor.Enter(mSendArrayListLock);
+                mSendArrayList.Clear();
+                Monitor.Exit(mSendArrayListLock);
+            }
+            catch { }
         }
 
         public override void send(byte[] buffer)
         {
-            this.writeAsync(buffer);
+            Monitor.Enter(mSendArrayListLock);
+            mSendArrayList.Add(buffer);
+            if (mIsSend == false)
+            {
+                this.writeAsync();
+            }
+            Monitor.Exit(mSendArrayListLock);            
         }
 
         public override void send(List<byte[]> bufferList)
         {
+            Monitor.Enter(mSendArrayListLock);
             for (int i = 0; i < bufferList.Count; i++)
             {
-                this.writeAsync(bufferList[i]);
+                mSendArrayList.Add(bufferList[i]);
             }
+            if (mIsSend == false)
+            {
+                this.writeAsync();
+            }
+            Monitor.Exit(mSendArrayListLock);
         }
 
         private async void readAsync()
@@ -111,22 +135,30 @@ namespace FanCtrl
             catch { }
         }
 
-        private async void writeAsync(byte[] buffer)
+        private async void writeAsync()
         {
+            mIsSend = true;
             var sendDelegate = new SendDelegate(write);
-            await Task.Factory.FromAsync(sendDelegate.BeginInvoke, sendDelegate.EndInvoke, buffer, null);
+            await Task.Factory.FromAsync(sendDelegate.BeginInvoke, sendDelegate.EndInvoke, null);
         }
 
-        private void write(byte[] buffer)
+        private void write()
         {
+            Monitor.Enter(mSendArrayListLock);
             try
             {
                 if (mHidStream != null && mHidStream.CanWrite == true)
                 {
-                    mHidStream.Write(buffer);
+                    for (int i = 0; i < mSendArrayList.Count; i++)
+                    {
+                        mHidStream.Write(mSendArrayList[i]);
+                    }
                 }
             }
             catch { }
+            mSendArrayList.Clear();
+            mIsSend = false;
+            Monitor.Exit(mSendArrayListLock);
         }
     }
 }

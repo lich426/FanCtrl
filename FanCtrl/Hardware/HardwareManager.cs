@@ -45,6 +45,10 @@ namespace FanCtrl
         private CLC mCLC = null;
         public CLC getCLC() { return mCLC; }
 
+        // NZXT RGB & Fan Controller
+        private RGBnFC mRGBnFC = null;
+        public RGBnFC getRGBnFC() { return mRGBnFC; }
+
         // Temperature sensor List
         private List<BaseSensor> mSensorList = new List<BaseSensor>();        
 
@@ -216,8 +220,37 @@ namespace FanCtrl
                 }
             }
 
+            if (OptionManager.getInstance().IsRGBnFC == true)
+            {
+                try
+                {
+                    mRGBnFC = new RGBnFC();
+                    if (mRGBnFC.start() == false)
+                    {
+                        mRGBnFC = null;
+                    }
+
+                    if (mRGBnFC != null)
+                    {
+                        for (int i = 0; i < RGBnFC.cMaxFanCount; i++)
+                        {
+                            var fan = new RGBnFCFanSpeed(mRGBnFC, i);
+                            mFanList.Add(fan);
+
+                            var control = new RGBnFCControl(mRGBnFC, i);
+                            mControlList.Add(control);
+                            this.addChangeValue(control.getMinSpeed(), control);
+                        }
+                    }
+                }
+                catch
+                {
+                    mRGBnFC = null;
+                }
+            }
+
             // DIMM thermal sensor
-            if(OptionManager.getInstance().IsDimm == true)
+            if (OptionManager.getInstance().IsDimm == true)
             {
                 this.lockSMBus(0);
                 if (SMBusController.open(false) == true)
@@ -308,6 +341,16 @@ namespace FanCtrl
                 {
                     mCLC.stop();
                     mCLC = null;
+                }
+            }
+            catch { }
+
+            try
+            {
+                if (mRGBnFC != null)
+                {
+                    mRGBnFC.stop();
+                    mRGBnFC = null;
                 }
             }
             catch { }

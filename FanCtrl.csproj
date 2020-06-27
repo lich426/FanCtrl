@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.1.8.0</ApplicationVersion>
+    <ApplicationVersion>1.1.9.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -186,12 +186,14 @@
     <Compile Include="FanCtrl\Hardware\Control\NvAPIFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenPumpControl.cs" />
+    <Compile Include="FanCtrl\Hardware\Control\RGBnFCControl.cs" />
     <Compile Include="FanCtrl\Hardware\Gigabyte.cs" />
     <Compile Include="FanCtrl\Hardware\HardwareManager.cs" />
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
     <Compile Include="FanCtrl\Hardware\Liquid.cs" />
     <Compile Include="FanCtrl\Hardware\OHM.cs" />
+    <Compile Include="FanCtrl\Hardware\RGBnFC.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCLiquidTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCPumpSpeed.cs" />
@@ -216,6 +218,7 @@
     <Compile Include="FanCtrl\Controller\SMBusController.cs" />
     <Compile Include="FanCtrl\Controller\USBController.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\OSDSensor.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\RGBnFCFanSpeed.cs" />
     <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />
     <Compile Include="LightingForm.cs">

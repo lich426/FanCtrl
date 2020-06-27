@@ -38,6 +38,8 @@
             this.mOKButton = new System.Windows.Forms.Button();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mLibraryGroupBox = new System.Windows.Forms.GroupBox();
+            this.mRGBnFCButton = new System.Windows.Forms.Button();
+            this.mRGBnFCCheckBox = new System.Windows.Forms.CheckBox();
             this.mDimmCheckBox = new System.Windows.Forms.CheckBox();
             this.mCLCButton = new System.Windows.Forms.Button();
             this.mKrakenButton = new System.Windows.Forms.Button();
@@ -88,7 +90,7 @@
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 360);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 397);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
             this.mMinimizeCheckBox.TabIndex = 12;
@@ -98,7 +100,7 @@
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 385);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 422);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
             this.mStartupCheckBox.TabIndex = 13;
@@ -107,7 +109,7 @@
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(11, 411);
+            this.mOKButton.Location = new System.Drawing.Point(11, 448);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(188, 38);
             this.mOKButton.TabIndex = 14;
@@ -121,6 +123,8 @@
             // 
             // mLibraryGroupBox
             // 
+            this.mLibraryGroupBox.Controls.Add(this.mRGBnFCButton);
+            this.mLibraryGroupBox.Controls.Add(this.mRGBnFCCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mDimmCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mCLCButton);
             this.mLibraryGroupBox.Controls.Add(this.mKrakenButton);
@@ -132,10 +136,29 @@
             this.mLibraryGroupBox.Controls.Add(this.mKrakenCheckBox);
             this.mLibraryGroupBox.Location = new System.Drawing.Point(12, 77);
             this.mLibraryGroupBox.Name = "mLibraryGroupBox";
-            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 221);
+            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 258);
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
+            // 
+            // mRGBnFCButton
+            // 
+            this.mRGBnFCButton.Location = new System.Drawing.Point(116, 222);
+            this.mRGBnFCButton.Name = "mRGBnFCButton";
+            this.mRGBnFCButton.Size = new System.Drawing.Size(64, 23);
+            this.mRGBnFCButton.TabIndex = 11;
+            this.mRGBnFCButton.Text = "Lighting";
+            this.mRGBnFCButton.UseVisualStyleBackColor = true;
+            this.mRGBnFCButton.Click += new System.EventHandler(this.onRGBnFCButtonClick);
+            // 
+            // mRGBnFCCheckBox
+            // 
+            this.mRGBnFCCheckBox.Location = new System.Drawing.Point(8, 219);
+            this.mRGBnFCCheckBox.Name = "mRGBnFCCheckBox";
+            this.mRGBnFCCheckBox.Size = new System.Drawing.Size(104, 30);
+            this.mRGBnFCCheckBox.TabIndex = 10;
+            this.mRGBnFCCheckBox.Text = "NZXT RGB＆Fan Controller";
+            this.mRGBnFCCheckBox.UseVisualStyleBackColor = true;
             // 
             // mDimmCheckBox
             // 
@@ -149,7 +172,7 @@
             // 
             // mCLCButton
             // 
-            this.mCLCButton.Location = new System.Drawing.Point(116, 188);
+            this.mCLCButton.Location = new System.Drawing.Point(116, 192);
             this.mCLCButton.Name = "mCLCButton";
             this.mCLCButton.Size = new System.Drawing.Size(64, 23);
             this.mCLCButton.TabIndex = 9;
@@ -221,7 +244,7 @@
             // mCLCCheckBox
             // 
             this.mCLCCheckBox.AutoSize = true;
-            this.mCLCCheckBox.Location = new System.Drawing.Point(8, 193);
+            this.mCLCCheckBox.Location = new System.Drawing.Point(8, 196);
             this.mCLCCheckBox.Name = "mCLCCheckBox";
             this.mCLCCheckBox.Size = new System.Drawing.Size(86, 16);
             this.mCLCCheckBox.TabIndex = 8;
@@ -260,7 +283,7 @@
             // mAnimationCheckBox
             // 
             this.mAnimationCheckBox.AutoSize = true;
-            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 310);
+            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 347);
             this.mAnimationCheckBox.Name = "mAnimationCheckBox";
             this.mAnimationCheckBox.Size = new System.Drawing.Size(137, 16);
             this.mAnimationCheckBox.TabIndex = 10;
@@ -270,7 +293,7 @@
             // mFahrenheitCheckBox
             // 
             this.mFahrenheitCheckBox.AutoSize = true;
-            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 335);
+            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 372);
             this.mFahrenheitCheckBox.Name = "mFahrenheitCheckBox";
             this.mFahrenheitCheckBox.Size = new System.Drawing.Size(108, 16);
             this.mFahrenheitCheckBox.TabIndex = 11;
@@ -282,7 +305,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(212, 459);
+            this.ClientSize = new System.Drawing.Size(212, 495);
             this.Controls.Add(this.mFahrenheitCheckBox);
             this.Controls.Add(this.mAnimationCheckBox);
             this.Controls.Add(this.mLibraryGroupBox);
@@ -332,5 +355,7 @@
         private System.Windows.Forms.CheckBox mAnimationCheckBox;
         private System.Windows.Forms.CheckBox mDimmCheckBox;
         private System.Windows.Forms.CheckBox mFahrenheitCheckBox;
+        private System.Windows.Forms.CheckBox mRGBnFCCheckBox;
+        private System.Windows.Forms.Button mRGBnFCButton;
     }
 }

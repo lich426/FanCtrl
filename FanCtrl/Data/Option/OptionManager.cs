@@ -53,6 +53,8 @@ namespace FanCtrl
 
         public bool IsCLC { get; set; }
 
+        public bool IsRGBnFC { get; set; }
+
         public bool IsAnimation { get; set; }
 
         public bool IsFahrenheit { get; set; }
@@ -92,6 +94,7 @@ namespace FanCtrl
                 IsDimm = (rootObject.ContainsKey("dimm") == true) ? rootObject.Value<bool>("dimm") : true;
                 IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
                 IsCLC= (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : false;
+                IsRGBnFC = (rootObject.ContainsKey("rgbnfc") == true) ? rootObject.Value<bool>("rgbnfc") : false;
                 IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("fahrenheit") == true) ? rootObject.Value<bool>("fahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
@@ -116,6 +119,7 @@ namespace FanCtrl
                 rootObject["nvapi"] = IsNvAPIWrapper;
                 rootObject["kraken"] = IsKraken;
                 rootObject["clc"] = IsCLC;
+                rootObject["rgbnfc"] = IsRGBnFC;
                 rootObject["animation"] = IsAnimation;
                 rootObject["fahrenheit"] = IsFahrenheit;
                 rootObject["minimized"] = IsMinimized;

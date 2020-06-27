@@ -38,10 +38,13 @@ namespace FanCtrl
             mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
 
             mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
-            mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;
-
             mKrakenButton.Enabled = (HardwareManager.getInstance().getKraken() != null);
+
+            mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;            
             mCLCButton.Enabled = (HardwareManager.getInstance().getCLC() != null);
+
+            mRGBnFCCheckBox.Checked = OptionManager.getInstance().IsRGBnFC;
+            mRGBnFCButton.Enabled = (HardwareManager.getInstance().getRGBnFC() != null);
 
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
@@ -55,6 +58,7 @@ namespace FanCtrl
             mIntervalGroupBox.Text = StringLib.Interval;
             mKrakenButton.Text = StringLib.Lighting;
             mCLCButton.Text = StringLib.Lighting;
+            mRGBnFCButton.Text = StringLib.Lighting;
             mAnimationCheckBox.Text = StringLib.Tray_Icon_animation;
             mFahrenheitCheckBox.Text = StringLib.Fahrenheit;
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
@@ -99,7 +103,8 @@ namespace FanCtrl
                 (optionManager.IsDimm != mDimmCheckBox.Checked) ||
                 (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
                 (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
-                (optionManager.IsCLC != mCLCCheckBox.Checked))
+                (optionManager.IsCLC != mCLCCheckBox.Checked) ||
+                (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked))
             {
                 var result = MessageBox.Show(StringLib.OptionRestart, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result == DialogResult.Cancel)
@@ -114,6 +119,7 @@ namespace FanCtrl
             optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
             optionManager.IsKraken = mKrakenCheckBox.Checked;
             optionManager.IsCLC = mCLCCheckBox.Checked;
+            optionManager.IsRGBnFC = mRGBnFCCheckBox.Checked;
             optionManager.IsFahrenheit = mFahrenheitCheckBox.Checked;
             optionManager.IsAnimation = mAnimationCheckBox.Checked;
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
@@ -169,6 +175,13 @@ namespace FanCtrl
         private void onCLCButtonClick(object sender, EventArgs e)
         {
             var form = new LightingForm(HardwareManager.getInstance().getCLC());
+            form.ShowDialog();
+            form.Dispose();
+        }
+
+        private void onRGBnFCButtonClick(object sender, EventArgs e)
+        {
+            var form = new LightingForm(HardwareManager.getInstance().getRGBnFC());
             form.ShowDialog();
             form.Dispose();
         }

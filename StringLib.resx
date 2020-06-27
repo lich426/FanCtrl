@@ -228,6 +228,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="RGBnFC_Lighting" xml:space="preserve">
+    <value>NZXT RGB＆Fan Controller Lighting</value>
+  </data>
   <data name="Sensor" xml:space="preserve">
     <value>Sensor</value>
   </data>

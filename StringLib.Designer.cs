@@ -394,6 +394,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   NZXT RGB＆Fan Controller Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string RGBnFC_Lighting {
+            get {
+                return ResourceManager.GetString("RGBnFC_Lighting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sensor과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Sensor {
