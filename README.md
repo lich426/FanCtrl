@@ -7,16 +7,23 @@ Gigabyte motherboard : If [AppCenter][2] is installed, it is controlled by commu
 Other motherboard : Use [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1] to obtain sensor temperature, fan rpm, and to control the fan.<br>
 NZXT Kraken x2 and x3 is support (z3 series is not supported)<br>
 EVGA CLC is support<br>
+NZXT RGB & Fan Controller is support<br>
 DIMM thermal sensor is support<br>
 
 ![FanCtrl](https://github.com/lich426/FanCtrl/blob/master/img/1.png)<br>
 ![Auto Fan Control](https://github.com/lich426/FanCtrl/blob/master/img/2.png)<br>
 <br>
+## On Screen Display (RTSS)
+GROUP stands for one line, and ITEM is the data to display.<br>
+![OSD](https://github.com/lich426/FanCtrl/blob/master/img/5.png)<br>
+![OSD2](https://github.com/lich426/FanCtrl/blob/master/img/6.png)<br>
+
 ## Lighting
 You can see the lighting packet on the link.<Br>
 NZXT Kraeken X2 : [X2.txt][11]<br>
 NZXT Kraeken X3 : [X3.txt][12]<br>
 EVGA CLC : [clc.txt][13]<br>
+NZXT RGB & Fan Controller : [RGBnFC.txt][14]<br>
 <br>
  Example X2<br>
 ![Lighting](https://github.com/lich426/FanCtrl/blob/master/img/3.png)<br>
@@ -27,7 +34,6 @@ Ring : Spectrum wave<br>
 Logo : Fading<br>
 Ring : Pulse<br>
 <br>
-
 ## Using external Libraries
 Sensor and Fan Control : [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1]<br>
 Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
@@ -47,7 +53,7 @@ Graph : [ZedGraph][8]<br>
  - Not all types of hardware are supported.<br>
  
 ## Portable
-Download : [FanCtrl_v1.1.8a.zip][10]
+Download : [FanCtrl_v1.1.9.zip][10]
 
 ## Donate
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
@@ -62,7 +68,8 @@ Download : [FanCtrl_v1.1.8a.zip][10]
 [7]: https://www.newtonsoft.com/json
 [8]: http://zedgraph.sourceforge.net/samples.html
 [9]: https://github.com/lich426/FanCtrl/blob/master/LICENSE
-[10]: https://github.com/lich426/FanCtrl/raw/master/Portable/FanCtrl_v1.1.8a.zip
+[10]: https://github.com/lich426/FanCtrl/raw/master/Portable/FanCtrl_v1.1.9.zip
 [11]: https://github.com/lich426/FanCtrl/blob/master/Packet/X2.txt
 [12]: https://github.com/lich426/FanCtrl/blob/master/Packet/X3.txt
 [13]: https://github.com/lich426/FanCtrl/blob/master/Packet/clc.txt
+[14]: https://github.com/lich426/FanCtrl/blob/master/Packet/RGBnFC.txt
