@@ -20,8 +20,8 @@ GROUP stands for one line, and ITEM is the data to display.<br>
 
 ## Lighting
 You can see the lighting packet on the link.<Br>
-NZXT Kraeken X2 : [X2.txt][11]<br>
-NZXT Kraeken X3 : [X3.txt][12]<br>
+NZXT Kraken X2 : [X2.txt][11]<br>
+NZXT Kraken X3 : [X3.txt][12]<br>
 EVGA CLC : [clc.txt][13]<br>
 NZXT RGB & Fan Controller : [RGBnFC.txt][14]<br>
 <br>
