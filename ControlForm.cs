@@ -14,8 +14,8 @@ namespace FanCtrl
 {
     public partial class ControlForm : Form
     {
-        private Size mLastSize = new Size(748, 414);
-        private Size mNormalLastSize = new Size(748, 414);
+        private Size mLastSize = new Size(940, 543);
+        private Size mNormalLastSize = new Size(940, 543);
 
         private bool mIsUpdateGraph = true;
         private bool mIsResize = false;
@@ -49,89 +49,98 @@ namespace FanCtrl
             this.initControl();
             this.initGraph();
 
-            this.SetStyle(ControlStyles.UserPaint |
+            // Can only resize windows with Windows 10
+            if (System.Environment.OSVersion.Version.Major >= 10)
+            {
+                this.SetStyle(ControlStyles.UserPaint |
                             ControlStyles.OptimizedDoubleBuffer |
                             ControlStyles.AllPaintingInWmPaint |
                             ControlStyles.SupportsTransparentBackColor, true);
-            this.Resize += (sender, e) =>
-            {
-                if (mIsResize == true)
-                    return;
-                mIsResize = true;
-
-                //Console.WriteLine("Size : {0}, {1}", this.Width, this.Height);
-
-                int widthGap = this.Width - mLastSize.Width;
-                int heightGap = this.Height - mLastSize.Height;
-
-                //Console.WriteLine("Gap : {0}, {1}", widthGap, heightGap);
-                
-                mFanGroupBox.Height = mFanGroupBox.Height + heightGap;
-                mFanListView.Height = mFanListView.Height + heightGap;
-                mRemoveButton.Top = mRemoveButton.Top + heightGap;
-                              
-                mModeGroupBox.Width = mModeGroupBox.Width + widthGap;
-
-                mGraphGroupBox.Width = mGraphGroupBox.Width + widthGap;
-                mGraphGroupBox.Height = mGraphGroupBox.Height + heightGap;
-
-                mGraph.Width = mGraph.Width + widthGap;
-                mGraph.Height = mGraph.Height + heightGap;
-
-                mUnitLabel.Left = mUnitLabel.Left + widthGap;
-                mUnitComboBox.Left = mUnitComboBox.Left + widthGap;
-                mHysLabel.Left = mHysLabel.Left + widthGap;
-                mHysNumericUpDown.Left = mHysNumericUpDown.Left + widthGap;
-                mStepCheckBox.Left = mStepCheckBox.Left + widthGap;
-
-                mApplyButton.Left = mApplyButton.Left + widthGap;
-                mApplyButton.Top = mApplyButton.Top + heightGap;
-
-                mOKButton.Left = mOKButton.Left + widthGap;
-                mOKButton.Top = mOKButton.Top + heightGap;
-
-                mLastSize.Width = this.Width;
-                mLastSize.Height = this.Height;
-
-                if(this.WindowState != FormWindowState.Maximized)
+                this.Resize += (sender, e) =>
                 {
-                    mNormalLastSize.Width = this.Width;
-                    mNormalLastSize.Height = this.Height;                    
+                    if (mIsResize == true)
+                        return;
+                    mIsResize = true;
+
+                    //Console.WriteLine("Size : {0}, {1}", this.Width, this.Height);
+
+                    int widthGap = this.Width - mLastSize.Width;
+                    int heightGap = this.Height - mLastSize.Height;
+
+                    //Console.WriteLine("Gap : {0}, {1}", widthGap, heightGap);
+
+                    mFanGroupBox.Height = mFanGroupBox.Height + heightGap;
+                    mFanListView.Height = mFanListView.Height + heightGap;
+                    mRemoveButton.Top = mRemoveButton.Top + heightGap;
+
+                    mModeGroupBox.Width = mModeGroupBox.Width + widthGap;
+
+                    mGraphGroupBox.Width = mGraphGroupBox.Width + widthGap;
+                    mGraphGroupBox.Height = mGraphGroupBox.Height + heightGap;
+
+                    mGraph.Width = mGraph.Width + widthGap;
+                    mGraph.Height = mGraph.Height + heightGap;
+
+                    mUnitLabel.Left = mUnitLabel.Left + widthGap;
+                    mUnitComboBox.Left = mUnitComboBox.Left + widthGap;
+                    mHysLabel.Left = mHysLabel.Left + widthGap;
+                    mHysNumericUpDown.Left = mHysNumericUpDown.Left + widthGap;
+                    mStepCheckBox.Left = mStepCheckBox.Left + widthGap;
+
+                    mApplyButton.Left = mApplyButton.Left + widthGap;
+                    mApplyButton.Top = mApplyButton.Top + heightGap;
+
+                    mOKButton.Left = mOKButton.Left + widthGap;
+                    mOKButton.Top = mOKButton.Top + heightGap;
+
+                    mLastSize.Width = this.Width;
+                    mLastSize.Height = this.Height;
+
+                    if (this.WindowState != FormWindowState.Maximized)
+                    {
+                        mNormalLastSize.Width = this.Width;
+                        mNormalLastSize.Height = this.Height;
+                    }
+
+                    mIsResize = false;
+                };
+
+                this.ResizeBegin += (s, e) =>
+                {
+                    mIsUpdateGraph = false;
+                    this.SuspendLayout();
+                };
+                this.ResizeEnd += (s, e) =>
+                {
+                    this.ResumeLayout();
+                    mIsUpdateGraph = true;
+                };
+
+                this.FormClosing += (s, e) =>
+                {
+                    ControlManager.getInstance().Width = mNormalLastSize.Width;
+                    ControlManager.getInstance().Height = mNormalLastSize.Height;
+                    ControlManager.getInstance().IsMaximize = (this.WindowState == FormWindowState.Maximized);
+                    ControlManager.getInstance().write();
+                };
+
+                if (ControlManager.getInstance().IsMaximize == true)
+                {
+                    this.WindowState = FormWindowState.Maximized;
                 }
 
-                mIsResize = false;
-            };
-
-            this.ResizeBegin += (s, e) =>
-            {
-                mIsUpdateGraph = false;
-                this.SuspendLayout();
-            };
-            this.ResizeEnd += (s, e) =>
-            {
-                this.ResumeLayout();
-                mIsUpdateGraph = true;
-            };
-
-            this.FormClosing += (s, e) =>
-            {
-                ControlManager.getInstance().Width = mNormalLastSize.Width;
-                ControlManager.getInstance().Height = mNormalLastSize.Height;
-                ControlManager.getInstance().IsMaximize = (this.WindowState == FormWindowState.Maximized);
-                ControlManager.getInstance().write();
-            };
-
-            if (ControlManager.getInstance().IsMaximize == true)
-            {
-                this.WindowState = FormWindowState.Maximized;
+                this.Width = ControlManager.getInstance().Width;
+                this.Height = ControlManager.getInstance().Height;
+                mLastSize.Width = this.Width;
+                mLastSize.Height = this.Height;
+                mNormalLastSize.Width = this.Width;
+                mNormalLastSize.Height = this.Height;
             }
-
-            this.Width = ControlManager.getInstance().Width;
-            this.Height = ControlManager.getInstance().Height;
-            mLastSize.Width = this.Width;
-            mLastSize.Height = this.Height;
-            mNormalLastSize.Width = this.Width;
-            mNormalLastSize.Height = this.Height;
+            else
+            {
+                this.MaximizeBox = false;
+                this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            }
         }
 
         private void localizeComponent()

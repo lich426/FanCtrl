@@ -605,7 +605,6 @@ namespace FanCtrl
                     mFanIconTimer.Stop();
                 }
             }
-            form.Dispose();
         }
 
         private void onFanControlButtonClick(object sender, EventArgs e)
@@ -622,7 +621,6 @@ namespace FanCtrl
             mControlForm.StartPosition = FormStartPosition.Manual;
             mControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
             mControlForm.ShowDialog();
-            mControlForm.Dispose();
             mControlForm = null;
         }
         
@@ -640,7 +638,6 @@ namespace FanCtrl
                 mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
             };
             form.ShowDialog();
-            form.Dispose();
         }
 
         
