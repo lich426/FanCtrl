@@ -38,16 +38,16 @@ namespace FanCtrl
         private OHM mOHM = null;
 
         // NZXT Kraken
-        private Kraken mKraken = null;
-        public Kraken getKraken() { return mKraken; }
+        private List<Kraken> mKrakenList = new List<Kraken>();
+        public List<Kraken> getKrakenList() { return mKrakenList; }
 
         // EVGA CLC
-        private CLC mCLC = null;
-        public CLC getCLC() { return mCLC; }
+        private List<CLC> mCLCList = new List<CLC>();
+        public List<CLC> getCLCList() { return mCLCList; }
 
         // NZXT RGB & Fan Controller
-        private RGBnFC mRGBnFC = null;
-        public RGBnFC getRGBnFC() { return mRGBnFC; }
+        private List<RGBnFC> mRGBnFCList = new List<RGBnFC>();
+        public List<RGBnFC> getRGBnFCList() { return mRGBnFCList; }
 
         // Temperature sensor List
         private List<BaseSensor> mSensorList = new List<BaseSensor>();        
@@ -135,118 +135,173 @@ namespace FanCtrl
             this.createFan();
             this.createControl();
 
+            // NZXT Kraken
             if (OptionManager.getInstance().IsKraken == true)
-            {
-                // NZXT Kraken
+            {                
                 try
                 {
-                    mKraken = new Kraken();
+                    uint num = 1;
 
                     // X2
-                    if (mKraken.start(USBProductID.KrakenX2) == false)
+                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX2);
+                    for (uint i = 0; i < devCount; i++)
                     {
-                        // X3
-                        if (mKraken.start(USBProductID.KrakenX3) == false)
+                        var kraken = new Kraken();
+                        if (kraken.start(i, USBProductID.KrakenX2) == true)
                         {
-                            mKraken = null;
-                        }
-                    }
+                            mKrakenList.Add(kraken);
 
-                    if (mKraken != null)
-                    {
-                        var sensor = new KrakenLiquidTemp(mKraken);
-                        mSensorList.Add(sensor);
+                            var sensor = new KrakenLiquidTemp(kraken, num);
+                            mSensorList.Add(sensor);
 
-                        if (mKraken.ProductID == USBProductID.KrakenX2)
-                        {
-                            var fan = new KrakenFanSpeed(mKraken);
+                            var fan = new KrakenFanSpeed(kraken, num);
                             mFanList.Add(fan);
-                        }
 
-                        var pump = new KrakenPumpSpeed(mKraken);
-                        mFanList.Add(pump);
+                            var pump = new KrakenPumpSpeed(kraken, num);
+                            mFanList.Add(pump);
 
-                        if (mKraken.ProductID == USBProductID.KrakenX2)
-                        {
-                            var fanControl = new KrakenFanControl(mKraken);
+                            var fanControl = new KrakenFanControl(kraken, num);
                             mControlList.Add(fanControl);
                             this.addChangeValue(30, fanControl);
-                        }
 
-                        var pumpControl = new KrakenPumpControl(mKraken);
-                        mControlList.Add(pumpControl);
-                        this.addChangeValue(50, pumpControl);
+                            var pumpControl = new KrakenPumpControl(kraken, num);
+                            mControlList.Add(pumpControl);
+                            this.addChangeValue(50, pumpControl);
+
+                            num++;
+                        }
+                    }
+
+                    // X3
+                    devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX3);
+                    for (uint i = 0; i < devCount; i++)
+                    {
+                        var kraken = new Kraken();
+                        if (kraken.start(i, USBProductID.KrakenX3) == true)
+                        {
+                            mKrakenList.Add(kraken);
+
+                            var sensor = new KrakenLiquidTemp(kraken, num);
+                            mSensorList.Add(sensor);
+
+                            var pump = new KrakenPumpSpeed(kraken, num);
+                            mFanList.Add(pump);
+
+                            var pumpControl = new KrakenPumpControl(kraken, num);
+                            mControlList.Add(pumpControl);
+                            this.addChangeValue(50, pumpControl);
+
+                            num++;
+                        }
                     }
                 }
-                catch
-                {
-                    mKraken = null;
-                }
+                catch { }
             }
 
+            // EVGA CLC
             if (OptionManager.getInstance().IsCLC == true)
             {
                 try
                 {
-                    mCLC = new CLC();
-                    if(mCLC.start(USBProductID.CLC) == false)
+                    uint num = 1;
+                    uint clcIndex = 0;
+
+                    // SiUSBController
+                    uint devCount = SiUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
+                    for (uint i = 0; i < devCount; i++)
                     {
-                        mCLC = null;
+                        var clc = new CLC();
+                        if (clc.start(true, clcIndex, i) == true)
+                        {
+                            mCLCList.Add(clc);
+
+                            var sensor = new CLCLiquidTemp(clc, num);
+                            mSensorList.Add(sensor);
+
+                            var fan = new CLCFanSpeed(clc, num);
+                            mFanList.Add(fan);
+
+                            var pump = new CLCPumpSpeed(clc, num);
+                            mFanList.Add(pump);
+
+                            var fanControl = new CLCFanControl(clc, num);
+                            mControlList.Add(fanControl);
+                            this.addChangeValue(25, fanControl);
+
+                            var pumpControl = new CLCPumpControl(clc, num);
+                            mControlList.Add(pumpControl);
+                            this.addChangeValue(50, pumpControl);
+
+                            clcIndex++;
+                            num++;
+                        }
                     }
 
-                    if (mCLC != null)
+                    if (WinUSBController.initUSB() == true)
                     {
-                        var sensor = new CLCLiquidTemp(mCLC);
-                        mSensorList.Add(sensor);
+                        // WinUSBController
+                        devCount = WinUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
+                        for (uint i = 0; i < devCount; i++)
+                        {
+                            var clc = new CLC();
+                            if (clc.start(false, clcIndex, i) == true)
+                            {
+                                mCLCList.Add(clc);
 
-                        var fan = new CLCFanSpeed(mCLC);
-                        mFanList.Add(fan);
+                                var sensor = new CLCLiquidTemp(clc, num);
+                                mSensorList.Add(sensor);
 
-                        var pump = new CLCPumpSpeed(mCLC);
-                        mFanList.Add(pump);
+                                var fan = new CLCFanSpeed(clc, num);
+                                mFanList.Add(fan);
 
-                        var fanControl = new CLCFanControl(mCLC);
-                        mControlList.Add(fanControl);
-                        this.addChangeValue(25, fanControl);
+                                var pump = new CLCPumpSpeed(clc, num);
+                                mFanList.Add(pump);
 
-                        var pumpControl = new CLCPumpControl(mCLC);
-                        mControlList.Add(pumpControl);
-                        this.addChangeValue(50, pumpControl);
+                                var fanControl = new CLCFanControl(clc, num);
+                                mControlList.Add(fanControl);
+                                this.addChangeValue(25, fanControl);
+
+                                var pumpControl = new CLCPumpControl(clc, num);
+                                mControlList.Add(pumpControl);
+                                this.addChangeValue(50, pumpControl);
+
+                                clcIndex++;
+                                num++;
+                            }
+                        }
                     }
                 }
-                catch
-                {
-                    mCLC = null;
-                }
+                catch { }
             }
 
             if (OptionManager.getInstance().IsRGBnFC == true)
             {
                 try
                 {
-                    mRGBnFC = new RGBnFC();
-                    if (mRGBnFC.start() == false)
+                    uint num = 1;
+                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.RGBAndFanController);
+                    for (uint i = 0; i < devCount; i++)
                     {
-                        mRGBnFC = null;
-                    }
-
-                    if (mRGBnFC != null)
-                    {
-                        for (int i = 0; i < RGBnFC.cMaxFanCount; i++)
+                        var rgb = new RGBnFC();
+                        if (rgb.start(i) == true)
                         {
-                            var fan = new RGBnFCFanSpeed(mRGBnFC, i);
-                            mFanList.Add(fan);
+                            mRGBnFCList.Add(rgb);
 
-                            var control = new RGBnFCControl(mRGBnFC, i);
-                            mControlList.Add(control);
-                            this.addChangeValue(control.getMinSpeed(), control);
+                            for (int j = 0; j < RGBnFC.MAX_FAN_COUNT; j++)
+                            {
+                                var fan = new RGBnFCFanSpeed(rgb, j, num);
+                                mFanList.Add(fan);
+
+                                var control = new RGBnFCControl(rgb, j, num);
+                                mControlList.Add(control);
+                                this.addChangeValue(control.getMinSpeed(), control);
+
+                                num++;
+                            }
                         }
                     }
                 }
-                catch
-                {
-                    mRGBnFC = null;
-                }
+                catch { }
             }
 
             // DIMM thermal sensor
@@ -325,35 +380,35 @@ namespace FanCtrl
                 mOHM = null;
             }
 
-            try
+            for (int i = 0; i < mKrakenList.Count; i++)
             {
-                if (mKraken != null)
+                try
                 {
-                    mKraken.stop();
-                    mKraken = null;
+                    mKrakenList[i].stop();
                 }
+                catch { }
             }
-            catch { }
+            mKrakenList.Clear();
 
-            try
+            for (int i = 0; i < mCLCList.Count; i++)
             {
-                if (mCLC != null)
+                try
                 {
-                    mCLC.stop();
-                    mCLC = null;
+                    mCLCList[i].stop();
                 }
+                catch { }
             }
-            catch { }
+            mCLCList.Clear();
 
-            try
+            for (int i = 0; i < mRGBnFCList.Count; i++)
             {
-                if (mRGBnFC != null)
+                try
                 {
-                    mRGBnFC.stop();
-                    mRGBnFC = null;
+                    mRGBnFCList[i].stop();
                 }
+                catch { }
             }
-            catch { }
+            mRGBnFCList.Clear();
 
             if (mIsGigabyte == true && mGigabyte != null)
             {
@@ -387,6 +442,7 @@ namespace FanCtrl
             }
 
             OSDController.releaseOSD();
+            WinUSBController.exitUSB();
 
             Monitor.Exit(mLock);
         }

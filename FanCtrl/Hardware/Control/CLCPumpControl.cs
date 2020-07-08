@@ -10,10 +10,14 @@ namespace FanCtrl
     {
         private CLC mCLC = null;
 
-        public CLCPumpControl(CLC clc) : base()
+        public CLCPumpControl(CLC clc, uint num) : base()
         {
             mCLC = clc;
             Name = "EVGA CLC Pump";
+            if (num > 1)
+            {
+                Name = Name + " #" + num;
+            }
         }
 
         public override void update()

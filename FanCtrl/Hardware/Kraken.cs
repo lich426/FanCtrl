@@ -7,16 +7,13 @@ using System.Threading;
 
 using System.IO;
 using Newtonsoft.Json.Linq;
+using HidSharp;
 
 namespace FanCtrl
 {
-    public class Kraken : Liquid
+    public class Kraken : USBDevice
     {
-        private const string cFileName = "Kraken.json";
-
-        private System.Timers.Timer mTimer = new System.Timers.Timer();
-
-        private long mSendDelayTime = 5000;
+        private const long SEND_DELAY_TIME = 5000;
 
         private int mLastLiquidTemp = 0;
         private int mLastFanRPM = 0;
@@ -29,26 +26,24 @@ namespace FanCtrl
         private int mLastFanPercent = 0;
 
         private long mPumpLastSendTime = 0;
-        private long mFanLastSendTime = 0;
+        private long mFanLastSendTime = 0;        
 
-        private bool mIsSendCustomData = false;
-        private List<byte[]> mCustomDataList = new List<byte[]>();
+        public Kraken() : base(USBDeviceType.Kraken)
+        {
+            
+        }
 
-        private USBController mUSBController = null;
-
-        public Kraken() : base(LiquidCoolerType.Kraken) { }
-
-        public override int getMinFanSpeed()
+        public int getMinFanSpeed()
         {
             return 25;
         }
 
-        public override int getMaxFanSpeed()
+        public int getMaxFanSpeed()
         {
             return 100;
         }
 
-        public override int getMinPumpSpeed()
+        public int getMinPumpSpeed()
         {
             // X3
             if (mUSBController.ProductID == USBProductID.KrakenX3)
@@ -60,16 +55,24 @@ namespace FanCtrl
             return 50;
         }
 
-        public override int getMaxPumpSpeed()
+        public int getMaxPumpSpeed()
         {
             return 100;
         }
 
-        public override bool start(USBProductID productID)
+        public bool start(uint index, USBProductID productID)
         {
             Monitor.Enter(mLock);
 
-            ProductID = productID;
+            if (index == 0)
+            {
+                mFileName = "Kraken.json";
+            }
+            else
+            {
+                mFileName = string.Format("Kraken{0}.json", index + 1);
+            }
+
             mPumpSpeed = 50;
             mFanPercent = 25;
             mLastPumpSpeed = 0;
@@ -78,10 +81,9 @@ namespace FanCtrl
             mPumpLastSendTime = 0;
             mFanLastSendTime = 0;
 
-            mUSBController = new HidUSBController(USBVendorID.NZXT, ProductID);
-
+            mUSBController = new HidUSBController(USBVendorID.NZXT, productID);
             mUSBController.onRecvHandler += onRecv;
-            if(mUSBController.start() == false)
+            if(mUSBController.start(index) == false)
             {
                 Monitor.Exit(mLock);
                 this.stop();
@@ -100,7 +102,7 @@ namespace FanCtrl
             return true;
         }
 
-        public override void stop()
+        public void stop()
         {
             Monitor.Enter(mLock);
             mTimer.Stop();
@@ -166,7 +168,7 @@ namespace FanCtrl
                 long startTime = Util.getNowMS();
 
                 // pump
-                if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= mSendDelayTime)
+                if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= SEND_DELAY_TIME)
                 {
                     mLastPumpSpeed = mPumpSpeed;
                     mPumpLastSendTime = startTime;
@@ -196,7 +198,7 @@ namespace FanCtrl
 
                 // fan
                 if ((mUSBController.ProductID == USBProductID.KrakenX2) &&
-                    (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= mSendDelayTime))
+                    (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= SEND_DELAY_TIME))
                 {
                     mLastFanPercent = mFanPercent;
                     mFanLastSendTime = startTime;
@@ -223,7 +225,7 @@ namespace FanCtrl
         {
             try
             {
-                var jsonString = File.ReadAllText(cFileName);
+                var jsonString = File.ReadAllText(mFileName);
                 var rootObject = JObject.Parse(jsonString);
 
                 var listObject = rootObject.Value<JArray>("list");
@@ -253,42 +255,13 @@ namespace FanCtrl
                     listObject.Add(hexString);
                 }
                 rootObject["list"] = listObject;
-                File.WriteAllText(cFileName, rootObject.ToString());
+                File.WriteAllText(mFileName, rootObject.ToString());
             }
             catch { }
             Monitor.Exit(mLock);
         }
 
-        public override void setCustomDataList(List<string> hexStringList)
-        {
-            Monitor.Enter(mLock);
-            mCustomDataList.Clear();
-            if (hexStringList.Count == 0)
-            {
-                Monitor.Exit(mLock);
-                return;
-            }            
-            for (int i = 0; i < hexStringList.Count; i++)
-            {
-                mCustomDataList.Add(Util.getHexBytes(hexStringList[i]));
-            }
-            mIsSendCustomData = (mCustomDataList.Count > 0);
-            Monitor.Exit(mLock);
-        }
-
-        public override List<string> getCustomDataList()
-        {
-            Monitor.Enter(mLock);
-            var hexStringList = new List<string>();
-            for(int i = 0; i < mCustomDataList.Count; i++)
-            {
-                hexStringList.Add(Util.getHexString(mCustomDataList[i]));
-            }
-            Monitor.Exit(mLock);
-            return hexStringList;
-        }
-
-        public override int getPumpSpeed()
+        public int getPumpSpeed()
         {
             Monitor.Enter(mLock);
             int speed = mLastPumpRPM;
@@ -296,7 +269,7 @@ namespace FanCtrl
             return speed;
         }
 
-        public override void setPumpSpeed(int speed)
+        public void setPumpSpeed(int speed)
         {
             Monitor.Enter(mLock);
             if (speed > this.getMaxPumpSpeed())
@@ -311,7 +284,7 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        public override int getFanSpeed()
+        public int getFanSpeed()
         {
             Monitor.Enter(mLock);
             int speed = mLastFanRPM;
@@ -319,7 +292,7 @@ namespace FanCtrl
             return speed;
         }
 
-        public override void setFanSpeed(int percent)
+        public void setFanSpeed(int percent)
         {
             Monitor.Enter(mLock);
             if (percent > this.getMaxFanSpeed())
@@ -334,7 +307,7 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        public override int getLiquidTemp()
+        public int getLiquidTemp()
         {
             Monitor.Enter(mLock);
             int temp = mLastLiquidTemp;

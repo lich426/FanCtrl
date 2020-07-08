@@ -29,34 +29,48 @@ namespace FanCtrl
 
         }
 
-        public override bool start()
+        public static uint getDeviceCount(USBVendorID vendorID, USBProductID productID)
+        {
+            uint count = 0;
+            try
+            {                
+                int venderID2 = (int)vendorID;
+                int productID2 = (int)productID;
+                foreach (HidDevice dev in DeviceList.Local.GetHidDevices(venderID2))
+                {
+                    if (dev.ProductID == productID2)
+                    {
+                        count++;
+                    }
+                }                
+            }
+            catch { }
+            return count;
+        }
+
+        public override bool start(uint index)
         {
             try
             {
+                uint i = 0;
                 int venderID = (int)this.VendorID;
                 int productID = (int)this.ProductID;
-                HidDevice hidDevice = null;
                 foreach (HidDevice dev in DeviceList.Local.GetHidDevices(venderID))
                 {
-                    if(dev.ProductID == productID)
+                    if (dev.ProductID == productID)
                     {
-                        hidDevice = dev;
-                        break;
+                        if (i == index)
+                        {
+                            if (dev.TryOpen(out mHidStream) == false)
+                            {
+                                Console.WriteLine("HidUSBController.start() : could not open the device");
+                                this.stop();
+                                return false;
+                            }
+                            break;
+                        }
+                        i++;
                     }
-                }
-
-                if (hidDevice == null)
-                {
-                    Console.WriteLine("HidUSBController.start() : could not find the device");
-                    this.stop();
-                    return false;
-                }
-
-                if (hidDevice.TryOpen(out mHidStream) == false)
-                {
-                    Console.WriteLine("HidUSBController.start() : could not open the device");
-                    this.stop();
-                    return false;
                 }
 
                 this.readAsync();

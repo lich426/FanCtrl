@@ -10,10 +10,14 @@ namespace FanCtrl
     {
         private CLC mCLC = null;
 
-        public CLCPumpSpeed(CLC clc) : base(SENSOR_TYPE.FAN)
+        public CLCPumpSpeed(CLC clc, uint num) : base(SENSOR_TYPE.FAN)
         {
             mCLC = clc;
             Name = "EVGA CLC Pump";
+            if (num > 1)
+            {
+                Name = Name + " #" + num;
+            }
         }
 
         public override string getString()

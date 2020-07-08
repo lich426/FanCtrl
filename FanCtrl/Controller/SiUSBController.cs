@@ -24,24 +24,13 @@ namespace FanCtrl
 
         }
 
-        public override bool start()
+        public static uint getDeviceCount(USBVendorID vendorID, USBProductID productID)
         {
-            Monitor.Enter(mLock);
+            uint count = 0;
             try
             {
-                uint count = SiUSBController.count();
-                if (count == 0)
-                {
-                    Console.WriteLine("SiUSBController.start() : USB device is zero");
-                    Monitor.Exit(mLock);
-                    this.stop();
-                    return false;
-                }
-
-                Console.WriteLine("SiUSBController.start() : USB device count({0})", count);
-
-                bool isDeviceOpen = false;
-                for (uint i = 0; i < count; i++)
+                uint devCount = SiUSBController.count();
+                for (uint i = 0; i < devCount; i++)
                 {
                     var vidSB = new StringBuilder();
                     var pidSB = new StringBuilder();
@@ -50,8 +39,43 @@ namespace FanCtrl
                         string vidString = vidSB.ToString();
                         string pidString = pidSB.ToString();
 
-                        Console.WriteLine("SiUSBController.start() : Device index({0}), VendorID(0x{1:X4}), ProductID(0x{2:X4})", i, vidString, pidString);
-                        
+                        Console.WriteLine("SiUSBController.getDeviceCount() : SiUSB index({0}), VendorID(0x{1:X4}), ProductID(0x{2:X4})", i, vidString, pidString);
+
+                        var vidHex = Util.getHexBytes(vidString);
+                        var pidHex = Util.getHexBytes(pidString);
+                        Array.Reverse(vidHex);
+                        Array.Reverse(pidHex);
+
+                        ushort vID = BitConverter.ToUInt16(vidHex, 0);
+                        ushort pID = BitConverter.ToUInt16(pidHex, 0);
+
+                        if (vID == (ushort)vendorID && pID == (ushort)productID)
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+            catch { }
+            return count;
+        }
+
+        public override bool start(uint index)
+        {
+            Monitor.Enter(mLock);
+            try
+            {
+                uint i = 0;
+                uint devCount = SiUSBController.count();
+                for (uint j = 0; j < devCount; j++)
+                {
+                    var vidSB = new StringBuilder();
+                    var pidSB = new StringBuilder();
+                    if (SiUSBController.getVID(j, vidSB) > 0 && SiUSBController.getPID(j, pidSB) > 0)
+                    {
+                        string vidString = vidSB.ToString();
+                        string pidString = pidSB.ToString();
+
                         var vidHex = Util.getHexBytes(vidString);
                         var pidHex = Util.getHexBytes(pidString);
                         Array.Reverse(vidHex);
@@ -62,41 +86,37 @@ namespace FanCtrl
 
                         if (vID == (ushort)VendorID && pID == (ushort)ProductID)
                         {
-                            if (SiUSBController.open(i, ref mDeviceHandle) == true)
+                            if (i == index)
                             {
-                                Console.WriteLine("SiUSBController.start() : Success open({0})", i);
-                                isDeviceOpen = true;
-                                break;
+                                if (SiUSBController.open(j, ref mDeviceHandle) == false)
+                                {
+                                    Console.WriteLine("SiUSBController.start() : Failed open (SiUSB index : {0})", j);
+                                    Monitor.Exit(mLock);
+                                    this.stop();
+                                    return false;
+                                }
+
+                                Console.WriteLine("SiUSBController.start() : Success open (SiUSB index : {0})", j);
+
+                                mThreadState = true;
+                                mThread = new Thread(threadFunc);
+                                mThread.Start();
+                                Monitor.Exit(mLock);
+                                return true;
                             }
-                            else
-                            {
-                                Console.WriteLine("SiUSBController.start() : Failed open({0})", i);
-                            }
+                            i++;
                         }
                     }
                 }
-
-                if(isDeviceOpen == false)
-                {
-                    Console.WriteLine("SiUSBController.start() : Failed device open");
-                    Monitor.Exit(mLock);
-                    this.stop();
-                    return false;
-                }
-
-                mThreadState = true;
-                mThread = new Thread(threadFunc);
-                mThread.Start();
-                Monitor.Exit(mLock);
-                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("SiUSBController.start() : Failed catch({0})", e.Message);
-                Monitor.Exit(mLock);
-                this.stop();
-                return false;
+                
             }
+            Monitor.Exit(mLock);
+            this.stop();
+            return false;
         }
 
         public override void stop()

@@ -11,11 +11,11 @@ namespace FanCtrl
         private RGBnFC mRGBnFC = null;
         private int mIndex = 0;
 
-        public RGBnFCControl(RGBnFC fc, int index) : base()
+        public RGBnFCControl(RGBnFC fc, int index, uint num) : base()
         {
             mRGBnFC = fc;
             mIndex = index;
-            Name = "NZXT RGB＆Fan #" + (index + 1);
+            Name = "NZXT RGB＆Fan #" + num;
         }
 
         public override void update()

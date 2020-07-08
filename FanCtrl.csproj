@@ -191,7 +191,7 @@
     <Compile Include="FanCtrl\Hardware\HardwareManager.cs" />
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
-    <Compile Include="FanCtrl\Hardware\Liquid.cs" />
+    <Compile Include="FanCtrl\Hardware\USBDevice.cs" />
     <Compile Include="FanCtrl\Hardware\OHM.cs" />
     <Compile Include="FanCtrl\Hardware\RGBnFC.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCFanSpeed.cs" />

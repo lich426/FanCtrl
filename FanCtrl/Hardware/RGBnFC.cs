@@ -10,30 +10,21 @@ using Newtonsoft.Json.Linq;
 
 namespace FanCtrl
 {
-    public class RGBnFC
+    public class RGBnFC : USBDevice
     {
-        private const string cFileName = "RGBnFC.json";
-        public const int cMaxFanCount = 3;
-        private const long cSendDelayTime = 5000;
+        public const int MAX_FAN_COUNT = 3;
+        private const long SEND_DELAY_TIME = 5000;
 
-        private object mLock = new object();
-        private System.Timers.Timer mTimer = new System.Timers.Timer();
+        private int[] mLastFanRPM = new int[MAX_FAN_COUNT];
 
-        private USBController mUSBController = null;
-
-        private int[] mLastFanRPM = new int[cMaxFanCount];
-
-        private int[] mFanPercent = new int[cMaxFanCount];
-        private int[] mLastFanPercent = new int[cMaxFanCount];
+        private int[] mFanPercent = new int[MAX_FAN_COUNT];
+        private int[] mLastFanPercent = new int[MAX_FAN_COUNT];
 
         private long mFanLastSendTime = Util.getNowMS();
-
-        private bool mIsSendCustomData = false;
-        private List<byte[]> mCustomDataList = new List<byte[]>();
-
-        public RGBnFC()
+        
+        public RGBnFC() : base(USBDeviceType.RGBnFC)
         {
-            for (int i = 0; i < cMaxFanCount; i++)
+            for (int i = 0; i < MAX_FAN_COUNT; i++)
             {
                 mLastFanRPM[i] = 0;
                 mFanPercent[i] = 20;
@@ -41,14 +32,22 @@ namespace FanCtrl
             }
         }
 
-        public bool start()
+        public bool start(uint index)
         {
             Monitor.Enter(mLock);
 
-            mUSBController = new HidUSBController(USBVendorID.NZXT, USBProductID.RGBAndFanController);
+            if (index == 0)
+            {
+                mFileName = "RGBnFC.json";
+            }
+            else
+            {
+                mFileName = string.Format("RGBnFC{0}.json", index + 1);
+            }
 
+            mUSBController = new HidUSBController(USBVendorID.NZXT, USBProductID.RGBAndFanController);
             mUSBController.onRecvHandler += onRecv;
-            if(mUSBController.start() == false)
+            if (mUSBController.start(index) == false)
             {
                 Monitor.Exit(mLock);
                 this.stop();
@@ -120,7 +119,7 @@ namespace FanCtrl
                 if (mLastFanPercent[0] != mFanPercent[0] ||
                     mLastFanPercent[1] != mFanPercent[1] ||
                     mLastFanPercent[2] != mFanPercent[2] ||
-                    mFanLastSendTime == 0 || startTime - mFanLastSendTime >= cSendDelayTime)
+                    mFanLastSendTime == 0 || startTime - mFanLastSendTime >= SEND_DELAY_TIME)
                 {
                     mFanLastSendTime = startTime;
                     mLastFanPercent[0] = mFanPercent[0];
@@ -131,7 +130,7 @@ namespace FanCtrl
                     commandList.Add(0x62);
                     commandList.Add(0x01);
                     commandList.Add(0x07);
-                    for (int i = 0; i < cMaxFanCount; i++)
+                    for (int i = 0; i < MAX_FAN_COUNT; i++)
                     {
                         commandList.Add(Convert.ToByte(mFanPercent[i]));
                     }
@@ -184,11 +183,11 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        private bool readFile()
+        protected override bool readFile()
         {
             try
             {
-                var jsonString = File.ReadAllText(cFileName);
+                var jsonString = File.ReadAllText(mFileName);
                 var rootObject = JObject.Parse(jsonString);
 
                 var listObject = rootObject.Value<JArray>("list");
@@ -205,7 +204,7 @@ namespace FanCtrl
             return true;
         }
 
-        public void writeFile()
+        public override void writeFile()
         {
             Monitor.Enter(mLock);
             try
@@ -218,41 +217,12 @@ namespace FanCtrl
                     listObject.Add(hexString);
                 }
                 rootObject["list"] = listObject;
-                File.WriteAllText(cFileName, rootObject.ToString());
+                File.WriteAllText(mFileName, rootObject.ToString());
             }
             catch { }
             Monitor.Exit(mLock);
         }
         
-        public void setCustomDataList(List<string> hexStringList)
-        {
-            Monitor.Enter(mLock);
-            mCustomDataList.Clear();
-            if (hexStringList.Count == 0)
-            {
-                Monitor.Exit(mLock);
-                return;
-            }            
-            for (int i = 0; i < hexStringList.Count; i++)
-            {
-                mCustomDataList.Add(Util.getHexBytes(hexStringList[i]));
-            }
-            mIsSendCustomData = (mCustomDataList.Count > 0);
-            Monitor.Exit(mLock);
-        }
-
-        public List<string> getCustomDataList()
-        {
-            Monitor.Enter(mLock);
-            var hexStringList = new List<string>();
-            for(int i = 0; i < mCustomDataList.Count; i++)
-            {
-                hexStringList.Add(Util.getHexString(mCustomDataList[i]));
-            }
-            Monitor.Exit(mLock);
-            return hexStringList;
-        }
-
         public int getMinFanSpeed(int index)
         {
             return 20;

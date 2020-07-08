@@ -38,13 +38,13 @@ namespace FanCtrl
             mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
 
             mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
-            mKrakenButton.Enabled = (HardwareManager.getInstance().getKraken() != null);
+            mKrakenButton.Enabled = (HardwareManager.getInstance().getKrakenList().Count > 0);
 
             mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;            
-            mCLCButton.Enabled = (HardwareManager.getInstance().getCLC() != null);
+            mCLCButton.Enabled = (HardwareManager.getInstance().getCLCList().Count > 0);
 
             mRGBnFCCheckBox.Checked = OptionManager.getInstance().IsRGBnFC;
-            mRGBnFCButton.Enabled = (HardwareManager.getInstance().getRGBnFC() != null);
+            mRGBnFCButton.Enabled = (HardwareManager.getInstance().getRGBnFCList().Count > 0);
 
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
@@ -167,20 +167,83 @@ namespace FanCtrl
 
         private void onKrakenButtonClick(object sender, EventArgs e)
         {
-            var form = new LightingForm(HardwareManager.getInstance().getKraken());
-            form.ShowDialog();
+            var deviceList = HardwareManager.getInstance().getKrakenList();
+            if (deviceList.Count == 1)
+            {
+                var form = new LightingForm(deviceList[0], 1);
+                form.ShowDialog();
+            }
+            else
+            {
+                var menu = new ContextMenu();
+                for (int i = 0; i < deviceList.Count; i++)
+                {
+                    int index = i;
+                    var item = new MenuItem(string.Format("{0}", i + 1), (sender2, e2) =>
+                    {
+                        var form = new LightingForm(deviceList[index], index + 1);
+                        form.ShowDialog();
+                    });
+                    menu.MenuItems.Add(item);
+                }
+
+                var point = mKrakenButton.PointToClient(Control.MousePosition);
+                menu.Show(mKrakenButton, point);
+            }
         }
 
         private void onCLCButtonClick(object sender, EventArgs e)
         {
-            var form = new LightingForm(HardwareManager.getInstance().getCLC());
-            form.ShowDialog();
+            var deviceList = HardwareManager.getInstance().getCLCList();
+            if (deviceList.Count == 1)
+            {
+                var form = new LightingForm(deviceList[0], 1);
+                form.ShowDialog();
+            }
+            else
+            {
+                var menu = new ContextMenu();
+                for (int i = 0; i < deviceList.Count; i++)
+                {
+                    int index = i;
+                    var item = new MenuItem(string.Format("{0}", i + 1), (sender2, e2) =>
+                    {
+                        var form = new LightingForm(deviceList[index], index + 1);
+                        form.ShowDialog();
+                    });
+                    menu.MenuItems.Add(item);
+                }
+
+                var point = mCLCButton.PointToClient(Control.MousePosition);
+                menu.Show(mCLCButton, point);
+            }
         }
 
         private void onRGBnFCButtonClick(object sender, EventArgs e)
         {
-            var form = new LightingForm(HardwareManager.getInstance().getRGBnFC());
-            form.ShowDialog();
+            var deviceList = HardwareManager.getInstance().getRGBnFCList();
+            if (deviceList.Count == 1)
+            {
+                var form = new LightingForm(deviceList[0], 1);
+                form.ShowDialog();
+            }
+            else
+            {
+                var menu = new ContextMenu();
+                for (int i = 0; i < deviceList.Count; i++)
+                {
+                    int index = i;
+                    var item = new MenuItem(string.Format("{0}", i + 1), (sender2, e2) =>
+                    {
+                        var form = new LightingForm(deviceList[index], index + 1);
+                        form.ShowDialog();
+                    });
+                    menu.MenuItems.Add(item);
+                }
+
+                var point = mRGBnFCButton.PointToClient(Control.MousePosition);
+                menu.Show(mRGBnFCButton, point);
+            }
         }
     }
 }

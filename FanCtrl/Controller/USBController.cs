@@ -54,19 +54,14 @@ namespace FanCtrl
             ProductID = productID;
         }
 
-        public virtual bool start()
+        public virtual bool start(uint index)
         {
             return false;
         }
 
         public virtual void stop()
-        { 
-
-        }
-
-        protected void onRecv(byte[] recvArray, int recvDataSize)
         {
-            onRecvHandler(recvArray, recvDataSize);
+
         }
 
         public virtual void send(byte[] buffer)
@@ -78,5 +73,10 @@ namespace FanCtrl
         {
 
         }
+
+        protected void onRecv(byte[] recvArray, int recvDataSize)
+        {
+            onRecvHandler(recvArray, recvDataSize);
+        }        
     }
 }

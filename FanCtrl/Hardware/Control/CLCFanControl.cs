@@ -10,10 +10,14 @@ namespace FanCtrl
     {
         private CLC mCLC = null;
 
-        public CLCFanControl(CLC clc) : base()
+        public CLCFanControl(CLC clc, uint num) : base()
         {
             mCLC = clc;
             Name = "EVGA CLC Fan";
+            if (num > 1)
+            {
+                Name = Name + " #" + num;
+            }
         }
 
         public override void update()

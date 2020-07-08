@@ -10,16 +10,10 @@ using Newtonsoft.Json.Linq;
 
 namespace FanCtrl
 {
-    public class CLC : Liquid
+    public class CLC : USBDevice
     {
         private const byte ENDPOINT_IN = 0x82;
         private const byte ENDPOINT_OUT = 0x02;
-
-        private const string cFileName = "CLC.json";
-
-        private System.Timers.Timer mTimer = new System.Timers.Timer();
-
-        private USBController mUSBController = null;
 
         private int mLastLiquidTemp = 0;
         private int mLastFanRPM = 0;
@@ -31,51 +25,61 @@ namespace FanCtrl
         private int mLastPumpSpeed = 0;
         private int mLastFanPercent = 0;
 
-        private bool mIsSendCustomData = false;
-        private List<byte[]> mCustomDataList = new List<byte[]>();
+        public CLC() : base(USBDeviceType.CLC)
+        {
 
-        public CLC() : base(LiquidCoolerType.CLC) { }
+        }
 
-        public override int getMinFanSpeed()
+        public int getMinFanSpeed()
         {
             return 25;
         }
 
-        public override int getMaxFanSpeed()
+        public int getMaxFanSpeed()
         {
             return 100;
         }
 
-        public override int getMinPumpSpeed()
+        public int getMinPumpSpeed()
         {
             return 50;
         }
 
-        public override int getMaxPumpSpeed()
+        public int getMaxPumpSpeed()
         {
             return 100;
         }
 
-        public override bool start(USBProductID productID)
+        public bool start(bool isSiUSB, uint clcIndex, uint usbIndex)
         {
             Monitor.Enter(mLock);
-            var vendorID = USBVendorID.ASETEK;
-            ProductID = productID;
 
-            // SiUSBController
-            mUSBController = new SiUSBController(vendorID, productID);
-            mUSBController.onRecvHandler += onRecv;
-            if (mUSBController.start() == false)
+            if (clcIndex == 0)
+            {
+                mFileName = "CLC.json";
+            }
+            else
+            {
+                mFileName = string.Format("CLC{0}.json", clcIndex + 1);
+            }
+
+            if (isSiUSB == true)
+            {
+                // SiUSBController
+                mUSBController = new SiUSBController(USBVendorID.ASETEK, USBProductID.CLC);                
+            }
+            else
             {
                 // WinUSBController
-                mUSBController = new WinUSBController(vendorID, productID, ENDPOINT_IN, ENDPOINT_OUT);
-                mUSBController.onRecvHandler += onRecv;
-                if (mUSBController.start() == false)
-                {
-                    Monitor.Exit(mLock);
-                    this.stop();
-                    return false;
-                }
+                mUSBController = new WinUSBController(USBVendorID.ASETEK, USBProductID.CLC, ENDPOINT_IN, ENDPOINT_OUT);
+            }
+
+            mUSBController.onRecvHandler += onRecv;
+            if (mUSBController.start(usbIndex) == false)
+            {
+                Monitor.Exit(mLock);
+                this.stop();
+                return false;
             }
 
             if (this.readFile() == true)
@@ -91,7 +95,7 @@ namespace FanCtrl
             return true;
         }
 
-        public override void stop()
+        public void stop()
         {
             Monitor.Enter(mLock);
             mTimer.Stop();
@@ -196,7 +200,7 @@ namespace FanCtrl
         {
             try
             {
-                var jsonString = File.ReadAllText(cFileName);
+                var jsonString = File.ReadAllText(mFileName);
                 var rootObject = JObject.Parse(jsonString);
 
                 var listObject = rootObject.Value<JArray>("list");
@@ -226,42 +230,13 @@ namespace FanCtrl
                     listObject.Add(hexString);
                 }
                 rootObject["list"] = listObject;
-                File.WriteAllText(cFileName, rootObject.ToString());
+                File.WriteAllText(mFileName, rootObject.ToString());
             }
             catch { }
             Monitor.Exit(mLock);
         }
 
-        public override void setCustomDataList(List<string> hexStringList)
-        {
-            Monitor.Enter(mLock);
-            mCustomDataList.Clear();
-            if (hexStringList.Count == 0)
-            {
-                Monitor.Exit(mLock);
-                return;
-            }
-            for (int i = 0; i < hexStringList.Count; i++)
-            {
-                mCustomDataList.Add(Util.getHexBytes(hexStringList[i]));
-            }
-            mIsSendCustomData = (mCustomDataList.Count > 0);
-            Monitor.Exit(mLock);
-        }
-
-        public override List<string> getCustomDataList()
-        {
-            Monitor.Enter(mLock);
-            var hexStringList = new List<string>();
-            for (int i = 0; i < mCustomDataList.Count; i++)
-            {
-                hexStringList.Add(Util.getHexString(mCustomDataList[i]));
-            }
-            Monitor.Exit(mLock);
-            return hexStringList;
-        }
-
-        public override int getPumpSpeed()
+        public int getPumpSpeed()
         {
             Monitor.Enter(mLock);
             int speed = mLastPumpRPM;
@@ -269,7 +244,7 @@ namespace FanCtrl
             return speed;
         }
 
-        public override void setPumpSpeed(int speed)
+        public void setPumpSpeed(int speed)
         {
             Monitor.Enter(mLock);
             if (speed > this.getMaxPumpSpeed())
@@ -284,7 +259,7 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        public override int getFanSpeed()
+        public int getFanSpeed()
         {
             Monitor.Enter(mLock);
             int speed = mLastFanRPM;
@@ -292,7 +267,7 @@ namespace FanCtrl
             return speed;
         }
 
-        public override void setFanSpeed(int percent)
+        public void setFanSpeed(int percent)
         {
             Monitor.Enter(mLock);
             if (percent > this.getMaxFanSpeed())
@@ -307,7 +282,7 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        public override int getLiquidTemp()
+        public int getLiquidTemp()
         {
             Monitor.Enter(mLock);
             int temp = mLastLiquidTemp;

@@ -55,20 +55,22 @@ namespace FanCtrl
             mEndPointOut = endPointOut;
         }
 
-        public override bool start()
+        public static uint getDeviceCount(USBVendorID vendorID, USBProductID productID)
+        {
+            try
+            {
+                return WinUSBController.count((ushort)vendorID, (ushort)productID);
+            }
+            catch { }
+            return 0;
+        }
+
+        public override bool start(uint index)
         {
             Monitor.Enter(mLock);
             try
             {
-                if (WinUSBController.initUSB() == false)
-                {
-                    Console.WriteLine("WinUSBController.start() : Failed init");
-                    Monitor.Exit(mLock);
-                    this.stop();
-                    return false;
-                }
-
-                mDeviceHandle = WinUSBController.open((ushort)VendorID, (ushort)ProductID);
+                mDeviceHandle = WinUSBController.open(index, (ushort)VendorID, (ushort)ProductID);
                 mIsDeviceOpen = WinUSBController.isOpen(mDeviceHandle);
                 if (mIsDeviceOpen == false)
                 {
@@ -117,8 +119,7 @@ namespace FanCtrl
                 {
                     WinUSBController.close(mDeviceHandle);
                     mIsDeviceOpen = false;
-                }                
-                WinUSBController.exitUSB();
+                }
             }
             catch { }
             Monitor.Exit(mLock);
@@ -255,13 +256,16 @@ namespace FanCtrl
         }
 
         [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern bool initUSB();
+        public static extern bool initUSB();
 
         [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void exitUSB();
+        public static extern void exitUSB();
 
         [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr open(ushort vendorID, ushort productID);
+        private static extern uint count(ushort vendorID, ushort productID);
+
+        [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr open(uint index, ushort vendorID, ushort productID);
 
         [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool isOpen(IntPtr deviceHandle);

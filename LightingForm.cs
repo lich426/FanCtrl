@@ -12,21 +12,20 @@ namespace FanCtrl
 {
     public partial class LightingForm : Form
     {
-        private Liquid mLiquid = null;
-        private RGBnFC mRGBnFC = null;
+        private USBDevice mUSBDevice = null;
 
         private bool mIsCancel = false;
 
         private List<TextBox> mHexTextBoxList = new List<TextBox>();
         private List<Button> mRemoveButtonList = new List<Button>();
 
-        public LightingForm(Liquid liquid)
+        public LightingForm(USBDevice device, int num)
         {
-            mLiquid = liquid;
+            mUSBDevice = device;
             InitializeComponent();
-            this.localizeComponent();            
+            this.localizeComponent(num);            
 
-            var customList = mLiquid.getCustomDataList();
+            var customList = mUSBDevice.getCustomDataList();
             if (customList.Count == 0)
             {
                 this.onAddButtonClick(null, EventArgs.Empty);
@@ -40,41 +39,20 @@ namespace FanCtrl
                 }
             }
         }
-
-        public LightingForm(RGBnFC fc)
+        
+        private void localizeComponent(int num)
         {
-            mRGBnFC = fc;
-            InitializeComponent();
-            this.localizeComponent();
-
-            var customList = mRGBnFC.getCustomDataList();
-            if (customList.Count == 0)
+            if (mUSBDevice.DeviceType == USBDeviceType.Kraken)
             {
-                this.onAddButtonClick(null, EventArgs.Empty);
+                this.Text = StringLib.Kraken_Lighting + string.Format(" ({0})", num);
             }
-            else
+            else if (mUSBDevice.DeviceType == USBDeviceType.CLC)
             {
-                for (int i = 0; i < customList.Count; i++)
-                {
-                    this.onAddButtonClick(null, EventArgs.Empty);
-                    mHexTextBoxList[i].Text = customList[i];
-                }
+                this.Text = StringLib.CLC_Lighting + string.Format(" ({0})", num);
             }
-        }
-
-        private void localizeComponent()
-        {
-            if (mLiquid != null && mLiquid.CoolerType == LiquidCoolerType.Kraken)
+            else if (mUSBDevice.DeviceType == USBDeviceType.RGBnFC)
             {
-                this.Text = StringLib.Kraken_Lighting;
-            }
-            else if (mLiquid != null && mLiquid.CoolerType == LiquidCoolerType.CLC)
-            {
-                this.Text = StringLib.CLC_Lighting;
-            }
-            else if (mRGBnFC != null)
-            {
-                this.Text = StringLib.RGBnFC_Lighting;
+                this.Text = StringLib.RGBnFC_Lighting + string.Format(" ({0})", num);
             }
 
             mAddButton.Text = StringLib.Add;
@@ -195,16 +173,8 @@ namespace FanCtrl
                 hexStringList.Add(text);
             }
 
-            if (mLiquid != null)
-            {
-                mLiquid.setCustomDataList(hexStringList);
-                mLiquid.writeFile();
-            }
-            else if (mRGBnFC != null)
-            {
-                mRGBnFC.setCustomDataList(hexStringList);
-                mRGBnFC.writeFile();
-            }            
+            mUSBDevice.setCustomDataList(hexStringList);
+            mUSBDevice.writeFile();           
         }
 
         private void onOKButtonClick(object sender, EventArgs e)

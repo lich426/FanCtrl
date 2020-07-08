@@ -10,10 +10,14 @@ namespace FanCtrl
     {
         private Kraken mKraken = null;
 
-        public KrakenFanSpeed(Kraken kraken) : base(SENSOR_TYPE.FAN)
+        public KrakenFanSpeed(Kraken kraken, uint num) : base(SENSOR_TYPE.FAN)
         {
             mKraken = kraken;
             Name = "NZXT Kraken Fan";
+            if (num > 1)
+            {
+                Name = Name + " #" + num;
+            }
         }
 
         public override string getString()

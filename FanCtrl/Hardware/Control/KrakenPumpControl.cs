@@ -10,10 +10,14 @@ namespace FanCtrl
     {
         private Kraken mKraken = null;
 
-        public KrakenPumpControl(Kraken kraken) : base()
+        public KrakenPumpControl(Kraken kraken, uint num) : base()
         {
             mKraken = kraken;
             Name = "NZXT Kraken Pump";
+            if (num > 1)
+            {
+                Name = Name + " #" + num;
+            }
         }
 
         public override void update()
