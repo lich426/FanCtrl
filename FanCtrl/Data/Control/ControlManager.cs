@@ -8,12 +8,13 @@ using System.IO;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace FanCtrl
 {
     public class ControlManager
     {
-        private const string cControlFileName = "Control.json";
+        private string mControlFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "Control.json";
 
         private static ControlManager sManager = new ControlManager();
         public static ControlManager getInstance() { return sManager; }
@@ -355,7 +356,7 @@ namespace FanCtrl
             String jsonString;
             try
             {
-                jsonString = File.ReadAllText(cControlFileName);
+                jsonString = File.ReadAllText(mControlFileName);
             }
             catch
             {
@@ -549,7 +550,7 @@ namespace FanCtrl
                 this.writeData(rootObject, "performance", ref mControlDataList[2]);
                 this.writeData(rootObject, "game", ref mControlDataList[3]);
 
-                File.WriteAllText(cControlFileName, rootObject.ToString());
+                File.WriteAllText(mControlFileName, rootObject.ToString());
             }
             catch
             {

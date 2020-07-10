@@ -16,7 +16,7 @@
             이전 버전과의 호환성을 위해 애플리케이션에 가상화가 필요한 경우
             이 요소를 제거합니다.
         -->
-        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
       </requestedPrivileges>
       <applicationRequestMinimum>
         <defaultAssemblyRequest permissionSetReference="Custom" />

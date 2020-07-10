@@ -9,12 +9,13 @@ using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Timers;
+using System.Reflection;
 
 namespace FanCtrl
 {
     public class OSDManager
     {
-        private const string cOSDFileName = "OSD.json";
+        private string mOSDFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "OSD.json";
 
         private static OSDManager sManager = new OSDManager();
         public static OSDManager getInstance() { return sManager; }
@@ -101,7 +102,7 @@ namespace FanCtrl
             String jsonString;
             try
             {
-                jsonString = File.ReadAllText(cOSDFileName);
+                jsonString = File.ReadAllText(mOSDFileName);
             }
             catch
             {
@@ -224,7 +225,7 @@ namespace FanCtrl
                 }
                 rootObject["group"] = groupList;
 
-                File.WriteAllText(cOSDFileName, rootObject.ToString());
+                File.WriteAllText(mOSDFileName, rootObject.ToString());
             }
             catch
             {

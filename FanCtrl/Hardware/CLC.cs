@@ -7,6 +7,7 @@ using System.Threading;
 
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace FanCtrl
 {
@@ -56,11 +57,11 @@ namespace FanCtrl
 
             if (clcIndex == 0)
             {
-                mFileName = "CLC.json";
+                mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "CLC.json";
             }
             else
             {
-                mFileName = string.Format("CLC{0}.json", clcIndex + 1);
+                mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + string.Format("CLC{0}.json", clcIndex + 1);
             }
 
             if (isSiUSB == true)

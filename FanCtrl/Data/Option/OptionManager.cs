@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace FanCtrl
 {
@@ -17,7 +18,7 @@ namespace FanCtrl
 
     public class OptionManager
     {
-        private const string cOptionFileName = "Option.json";
+        private string mOptionFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "Option.json";
 
         private static OptionManager sManager = new OptionManager();
         public static OptionManager getInstance() { return sManager; }
@@ -78,7 +79,7 @@ namespace FanCtrl
         {
             try 
             {
-                var jsonString = File.ReadAllText(cOptionFileName);                
+                var jsonString = File.ReadAllText(mOptionFileName);                
                 var rootObject = JObject.Parse(jsonString);
 
                 Interval = (rootObject.ContainsKey("interval") == true) ? rootObject.Value<int>("interval") : 1000;
@@ -124,7 +125,7 @@ namespace FanCtrl
                 rootObject["fahrenheit"] = IsFahrenheit;
                 rootObject["minimized"] = IsMinimized;
                 rootObject["startup"] = IsStartUp;
-                File.WriteAllText(cOptionFileName, rootObject.ToString());
+                File.WriteAllText(mOptionFileName, rootObject.ToString());
             }
             catch {}
         }

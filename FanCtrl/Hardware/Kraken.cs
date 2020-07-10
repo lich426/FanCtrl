@@ -8,6 +8,7 @@ using System.Threading;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using HidSharp;
+using System.Reflection;
 
 namespace FanCtrl
 {
@@ -66,11 +67,11 @@ namespace FanCtrl
 
             if (index == 0)
             {
-                mFileName = "Kraken.json";
+                mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "Kraken.json";
             }
             else
             {
-                mFileName = string.Format("Kraken{0}.json", index + 1);
+                mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + string.Format("Kraken{0}.json", index + 1);
             }
 
             mPumpSpeed = 50;

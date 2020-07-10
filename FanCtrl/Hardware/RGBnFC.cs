@@ -7,6 +7,7 @@ using System.Threading;
 
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace FanCtrl
 {
@@ -38,11 +39,11 @@ namespace FanCtrl
 
             if (index == 0)
             {
-                mFileName = "RGBnFC.json";
+                mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "RGBnFC.json";
             }
             else
             {
-                mFileName = string.Format("RGBnFC{0}.json", index + 1);
+                mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + string.Format("RGBnFC{0}.json", index + 1);
             }
 
             mUSBController = new HidUSBController(USBVendorID.NZXT, USBProductID.RGBAndFanController);

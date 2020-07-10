@@ -21,44 +21,15 @@ namespace FanCtrl
         [STAThread]
         static void Main(string[] args)
         {
-            if (IsAdministrator() == false)
-            {
-                try
-                {
-                    Program.executeProgram();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
-                return;
-            }
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            sMutex = new Mutex(true, "FanCtrl", out sIsLock);
-            if (sIsLock == false)
+            if (Program.createMutex() == false)
                 return;
 
             Application.Run(new MainForm());
 
-            if(sIsLock == true)
-            {
-                sIsLock = false;
-                sMutex.ReleaseMutex();
-            }
-        }
-
-        public static bool IsAdministrator()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            if (null != identity)
-            {
-                WindowsPrincipal principal = new WindowsPrincipal(identity);
-                return principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
-            return false;
+            Program.releaseMutex();
         }
 
         public static void executeProgram()
@@ -69,6 +40,14 @@ namespace FanCtrl
             procInfo.WorkingDirectory = Environment.CurrentDirectory;
             procInfo.Verb = "runas";
             Process.Start(procInfo);
+        }
+
+        public static bool createMutex()
+        {
+            if (sIsLock == true)
+                return true;
+            sMutex = new Mutex(true, "FanCtrl", out sIsLock);
+            return sIsLock;
         }
 
         public static void releaseMutex()
