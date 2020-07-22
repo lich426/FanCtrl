@@ -52,7 +52,7 @@ namespace FanCtrl
             int gpuAmdNum = 2;
             int gpuNvidiaNum = 2;
             var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
+            for (int i = 0; i < hardwareArray.Count; i++)
             {
                 if (hardwareArray[i].HardwareType == HardwareType.Cpu)
                 {
@@ -94,7 +94,7 @@ namespace FanCtrl
             // Motherboard
             int num = 1;
             var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
+            for (int i = 0; i < hardwareArray.Count; i++)
             {
                 if (hardwareArray[i].HardwareType == HardwareType.Cpu ||
                     hardwareArray[i].HardwareType == HardwareType.GpuAmd ||
@@ -141,7 +141,7 @@ namespace FanCtrl
         {
             int fanNum = 1;
             var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
+            for (int i = 0; i < hardwareArray.Count; i++)
             {
                 if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
                     hardwareArray[i].HardwareType == HardwareType.GpuAmd)
@@ -179,7 +179,7 @@ namespace FanCtrl
         {
             int fanNum = 1;
             var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
+            for (int i = 0; i < hardwareArray.Count; i++)
             {
                 if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
                     hardwareArray[i].HardwareType == HardwareType.GpuAmd)
@@ -219,7 +219,7 @@ namespace FanCtrl
 
             int gpuFanNum = 1;
             var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
+            for (int i = 0; i < hardwareArray.Count; i++)
             {
                 if ((hardwareArray[i].HardwareType == HardwareType.GpuNvidia && isNvAPIWrapper == false) ||
                     (hardwareArray[i].HardwareType == HardwareType.GpuAmd))
@@ -269,7 +269,7 @@ namespace FanCtrl
 
             int gpuFanNum = 1;
             var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
+            for (int i = 0; i < hardwareArray.Count; i++)
             {
                 if ((hardwareArray[i].HardwareType == HardwareType.GpuNvidia && isNvAPIWrapper == false) ||
                     (hardwareArray[i].HardwareType == HardwareType.GpuAmd))
@@ -319,7 +319,7 @@ namespace FanCtrl
             {
                 bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
                 var hardwareArray = mComputer.Hardware;
-                for (int i = 0; i < hardwareArray.Length; i++)
+                for (int i = 0; i < hardwareArray.Count; i++)
                 {
                     if (isNvAPIWrapper == true && hardwareArray[i].HardwareType == HardwareType.GpuNvidia)
                         continue;

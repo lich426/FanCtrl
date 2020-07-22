@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // 기본값으로 할 수 있습니다.
 [assembly: AssemblyVersion("1.2.1")]
 [assembly: AssemblyFileVersion("1.2.1")]
-[assembly: AssemblyInformationalVersion("1.2.1a")]
+[assembly: AssemblyInformationalVersion("1.2.1b")]
