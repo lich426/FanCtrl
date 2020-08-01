@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -148,7 +149,15 @@ namespace FanCtrl
             {                
                 mFanIconTimer.Start();
             }
-        }
+
+            if (OptionManager.getInstance().IsMinimized == true)
+            {
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    this.Close();
+                }));
+            }
+        }        
 
         private void localizeComponent()
         {
@@ -639,7 +648,5 @@ namespace FanCtrl
             };
             form.ShowDialog();
         }
-
-        
     }
 }
