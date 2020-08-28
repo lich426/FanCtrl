@@ -167,11 +167,11 @@ namespace FanCtrl
                     var commandList = new List<byte>();
                     commandList.Add(0x11);
                     commandList.Add(0x00);
-                    commandList.Add(0x14);
-                    commandList.Add(0x20);
-                    commandList.Add(0x2a);
-                    commandList.Add(0x33);
-                    commandList.Add(0x39);
+                    commandList.Add(0x00);
+                    commandList.Add(0x3b);
+                    commandList.Add(0x3c);
+                    commandList.Add(0x3c);
+                    commandList.Add(0x3c);
                     commandList.Add(0x3c);
                     for (int i = 0; i < 6; i++)
                     {
