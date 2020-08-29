@@ -2,6 +2,8 @@
 
 FanCtrl is a software that allows you to automatically control the fan speed on your PC.<br>
 Requires .NET framework 4.6 or higher.<br>
+Requires [Visual redistributable 2019(x64)][15]<br>
+
 <br>
 Gigabyte motherboard : If [AppCenter][2] is installed, it is controlled by communicating with EasytuneEngineService.<br>
 Other motherboard : Use [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1] to obtain sensor temperature, fan rpm, and to control the fan.<br>
@@ -69,3 +71,4 @@ Graph : [ZedGraph][8]<br>
 [12]: https://github.com/lich426/FanCtrl/blob/master/Packet/X3.txt
 [13]: https://github.com/lich426/FanCtrl/blob/master/Packet/clc.txt
 [14]: https://github.com/lich426/FanCtrl/blob/master/Packet/RGBnFC.txt
+[15]: https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
