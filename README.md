@@ -2,9 +2,8 @@
 
 FanCtrl is a software that allows you to automatically control the fan speed on your PC.<br>
 Requires .NET framework 4.6 or higher.<br>
-Requires [Visual redistributable 2019(x64)][15]<br>
+Requires [Visual redistributable 2019(x64)][15]<br><br>
 
-<br>
 Gigabyte motherboard : If [AppCenter][2] is installed, it is controlled by communicating with EasytuneEngineService.<br>
 Other motherboard : Use [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1] to obtain sensor temperature, fan rpm, and to control the fan.<br>
 NZXT Kraken x2 and x3 is support (z3 series is not supported)<br>
