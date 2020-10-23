@@ -54,7 +54,7 @@ Graph : [ZedGraph][8]<br>
  - Not all types of hardware are supported.<br>
 
 ## Donate
-[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=AUCEJ8KGCNJTC&currency_code=USD&source=url)
+<a href="https://www.buymeacoffee.com/lich" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
