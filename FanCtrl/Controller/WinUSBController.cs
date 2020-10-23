@@ -255,11 +255,30 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool initUSB();
+        public static bool init()
+        {
+            try
+            {
+                return WinUSBController.initUSB();
+            }
+            catch { }
+            return false;
+        }
+
+        public static void exit()
+        {
+            try
+            {
+                WinUSBController.exitUSB();
+            }
+            catch { }
+        }
 
         [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void exitUSB();
+        private static extern bool initUSB();
+
+        [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void exitUSB();
 
         [DllImport("libusb.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern uint count(ushort vendorID, ushort productID);

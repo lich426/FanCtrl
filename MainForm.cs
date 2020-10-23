@@ -54,7 +54,6 @@ namespace FanCtrl
             mTrayIcon.ContextMenuStrip = mTrayMenuStrip;
 
             mDonatePictureBox.MouseClick += onDonatePictureBoxClick;
-            mDonateQRPictureBox.MouseClick += onDonatePictureBoxClick;
 
             if (OptionManager.getInstance().read() == false)
             {
@@ -452,7 +451,6 @@ namespace FanCtrl
             mMadeLabel1.Top = mFanGroupBox.Top + mFanGroupBox.Height + 15;
             mMadeLabel2.Top = mFanGroupBox.Top + mFanGroupBox.Height + 32;
             mDonatePictureBox.Top = mFanGroupBox.Top + mFanGroupBox.Height + 17;
-            mDonateQRPictureBox.Top = mFanGroupBox.Top + mFanGroupBox.Height + 3;
             this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;            
         }
 
@@ -636,7 +634,7 @@ namespace FanCtrl
         private void onDonatePictureBoxClick(object sender, MouseEventArgs e)
         {
             Console.WriteLine("MainForm.onDonatePictureBoxClick()");
-            System.Diagnostics.Process.Start("https://bit.ly/3fLvB4L");
+            System.Diagnostics.Process.Start("https://www.buymeacoffee.com/lich");
         }
 
         private void onOSDButtonClick(object sender, EventArgs e)

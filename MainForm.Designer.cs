@@ -40,6 +40,8 @@
             this.mTrayMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mEnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mEnableOSDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mNormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mSilenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mPerformanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,13 +51,9 @@
             this.mExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mMadeLabel1 = new System.Windows.Forms.Label();
             this.mMadeLabel2 = new System.Windows.Forms.Label();
-            this.mDonateQRPictureBox = new System.Windows.Forms.PictureBox();
             this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
             this.mOSDButton = new System.Windows.Forms.Button();
-            this.mEnableOSDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mTrayMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mDonateQRPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,7 +129,7 @@
             this.mShowToolStripMenuItem,
             this.mExitToolStripMenuItem});
             this.mTrayMenuStrip.Name = "mTrayMenuStrip";
-            this.mTrayMenuStrip.Size = new System.Drawing.Size(231, 220);
+            this.mTrayMenuStrip.Size = new System.Drawing.Size(231, 198);
             // 
             // mEnableToolStripMenuItem
             // 
@@ -144,6 +142,18 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(227, 6);
+            // 
+            // mEnableOSDToolStripMenuItem
+            // 
+            this.mEnableOSDToolStripMenuItem.Name = "mEnableOSDToolStripMenuItem";
+            this.mEnableOSDToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.mEnableOSDToolStripMenuItem.Text = "Enable OSD (RTSS)";
+            this.mEnableOSDToolStripMenuItem.Click += new System.EventHandler(this.onTrayManuEnableOSDClick);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(227, 6);
             // 
             // mNormalToolStripMenuItem
             // 
@@ -210,23 +220,12 @@
             this.mMadeLabel2.TabIndex = 8;
             this.mMadeLabel2.Text = "(lich426@gmail.com)";
             // 
-            // mDonateQRPictureBox
-            // 
-            this.mDonateQRPictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonateQRPictureBox.BackgroundImage")));
-            this.mDonateQRPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.mDonateQRPictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonateQRPictureBox.InitialImage")));
-            this.mDonateQRPictureBox.Location = new System.Drawing.Point(151, 68);
-            this.mDonateQRPictureBox.Name = "mDonateQRPictureBox";
-            this.mDonateQRPictureBox.Size = new System.Drawing.Size(50, 50);
-            this.mDonateQRPictureBox.TabIndex = 11;
-            this.mDonateQRPictureBox.TabStop = false;
-            // 
             // mDonatePictureBox
             // 
             this.mDonatePictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.BackgroundImage")));
             this.mDonatePictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.mDonatePictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.InitialImage")));
-            this.mDonatePictureBox.Location = new System.Drawing.Point(208, 82);
+            this.mDonatePictureBox.Location = new System.Drawing.Point(146, 81);
             this.mDonatePictureBox.Name = "mDonatePictureBox";
             this.mDonatePictureBox.Size = new System.Drawing.Size(92, 26);
             this.mDonatePictureBox.TabIndex = 12;
@@ -242,18 +241,6 @@
             this.mOSDButton.UseVisualStyleBackColor = true;
             this.mOSDButton.Click += new System.EventHandler(this.onOSDButtonClick);
             // 
-            // mEnableOSDToolStripMenuItem
-            // 
-            this.mEnableOSDToolStripMenuItem.Name = "mEnableOSDToolStripMenuItem";
-            this.mEnableOSDToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.mEnableOSDToolStripMenuItem.Text = "Enable OSD (RTSS)";
-            this.mEnableOSDToolStripMenuItem.Click += new System.EventHandler(this.onTrayManuEnableOSDClick);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(227, 6);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -263,7 +250,6 @@
             this.Controls.Add(this.mOSDButton);
             this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mDonatePictureBox);
-            this.Controls.Add(this.mDonateQRPictureBox);
             this.Controls.Add(this.mMadeLabel2);
             this.Controls.Add(this.mMadeLabel1);
             this.Controls.Add(this.mFanControlButton);
@@ -277,7 +263,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FanControl";
             this.mTrayMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mDonateQRPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -305,7 +290,6 @@
         private System.Windows.Forms.ToolStripMenuItem mGameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Label mMadeLabel2;
-        private System.Windows.Forms.PictureBox mDonateQRPictureBox;
         private System.Windows.Forms.PictureBox mDonatePictureBox;
         private System.Windows.Forms.Button mOSDButton;
         private System.Windows.Forms.ToolStripMenuItem mEnableOSDToolStripMenuItem;

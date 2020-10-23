@@ -13,10 +13,29 @@ namespace FanCtrl
 {
     class OSDController
     {
-        [DllImport("OSD.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool updateOSD(string osdString);
+        public static bool update(string osdString)
+        {
+            try
+            {
+                return OSDController.updateOSD(osdString);
+            }
+            catch { }
+            return false;
+        }
+
+        public static void release()
+        {
+            try
+            {
+                OSDController.releaseOSD();
+            }
+            catch { }
+        }
 
         [DllImport("OSD.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void releaseOSD();
+        private static extern bool updateOSD(string osdString);
+
+        [DllImport("OSD.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void releaseOSD();
     }
 }

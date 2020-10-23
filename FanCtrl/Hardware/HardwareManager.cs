@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define MY_DEBUG
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Security.AccessControl;
@@ -70,6 +72,10 @@ namespace FanCtrl
 
         public event UpdateTimerEventHandler onUpdateCallback;
         public delegate void UpdateTimerEventHandler();
+
+#if MY_DEBUG
+        private int mDebugUpdateCount = 10;
+#endif
 
         public void start()
         {
@@ -237,7 +243,7 @@ namespace FanCtrl
                         }
                     }
 
-                    if (WinUSBController.initUSB() == true)
+                    if (WinUSBController.init() == true)
                     {
                         // WinUSBController
                         devCount = WinUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
@@ -441,8 +447,8 @@ namespace FanCtrl
                 mPCIMutex = null;
             }
 
-            OSDController.releaseOSD();
-            WinUSBController.exitUSB();
+            OSDController.release();
+            WinUSBController.exit();         
 
             Monitor.Exit(mLock);
         }
@@ -1046,6 +1052,22 @@ namespace FanCtrl
             if (Monitor.TryEnter(mLock) == false)
                 return;
 
+#if MY_DEBUG
+            if (ControlManager.getInstance().ModeIndex == 2)
+            {
+                if (mDebugUpdateCount <= 0)
+                {
+                    Monitor.Exit(mLock);
+                    return;
+                }
+                mDebugUpdateCount--;
+            }
+            else
+            {
+                mDebugUpdateCount = 10;
+            }
+#endif
+
             if (mIsGigabyte == true && mGigabyte != null)
             {
                 mGigabyte.update();
@@ -1169,7 +1191,7 @@ namespace FanCtrl
                 if (osdString.ToString().Length > 0)
                 {
                     var sendString = osdHeaderString + osdString.ToString();
-                    OSDController.updateOSD(sendString);
+                    OSDController.update(sendString);
                     osdManager.IsUpdate = true;
                 }
             }
@@ -1177,7 +1199,7 @@ namespace FanCtrl
             {
                 if (osdManager.IsUpdate == true)
                 {
-                    OSDController.releaseOSD();
+                    OSDController.release();
                     osdManager.IsUpdate = false;
                 }
             }
