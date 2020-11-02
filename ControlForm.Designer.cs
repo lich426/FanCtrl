@@ -296,9 +296,8 @@
             // 
             // ControlForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(924, 504);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(1155, 630);
             this.Controls.Add(this.mUnitComboBox);
             this.Controls.Add(this.mModeGroupBox);
             this.Controls.Add(this.mHysNumericUpDown);

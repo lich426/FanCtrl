@@ -54,6 +54,8 @@
             this.mKrakenCheckBox = new System.Windows.Forms.CheckBox();
             this.mAnimationCheckBox = new System.Windows.Forms.CheckBox();
             this.mFahrenheitCheckBox = new System.Windows.Forms.CheckBox();
+            this.mStartupDelayLabel = new System.Windows.Forms.Label();
+            this.mStartupDelayTextBox = new System.Windows.Forms.TextBox();
             this.mIntervalGroupBox.SuspendLayout();
             this.mLibraryGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -109,7 +111,7 @@
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(11, 448);
+            this.mOKButton.Location = new System.Drawing.Point(12, 473);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(188, 38);
             this.mOKButton.TabIndex = 14;
@@ -300,12 +302,31 @@
             this.mFahrenheitCheckBox.Text = "Fahrenheit (°F)";
             this.mFahrenheitCheckBox.UseVisualStyleBackColor = true;
             // 
+            // mStartupDelayLabel
+            // 
+            this.mStartupDelayLabel.AutoSize = true;
+            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 446);
+            this.mStartupDelayLabel.Name = "mStartupDelayLabel";
+            this.mStartupDelayLabel.Size = new System.Drawing.Size(80, 12);
+            this.mStartupDelayLabel.TabIndex = 15;
+            this.mStartupDelayLabel.Text = "Delay(sec) : ";
+            // 
+            // mStartupDelayTextBox
+            // 
+            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 441);
+            this.mStartupDelayTextBox.MaxLength = 2;
+            this.mStartupDelayTextBox.Name = "mStartupDelayTextBox";
+            this.mStartupDelayTextBox.Size = new System.Drawing.Size(73, 21);
+            this.mStartupDelayTextBox.TabIndex = 2;
+            this.mStartupDelayTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // OptionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(212, 495);
+            this.ClientSize = new System.Drawing.Size(212, 523);
+            this.Controls.Add(this.mStartupDelayTextBox);
+            this.Controls.Add(this.mStartupDelayLabel);
             this.Controls.Add(this.mFahrenheitCheckBox);
             this.Controls.Add(this.mAnimationCheckBox);
             this.Controls.Add(this.mLibraryGroupBox);
@@ -357,5 +378,7 @@
         private System.Windows.Forms.CheckBox mFahrenheitCheckBox;
         private System.Windows.Forms.CheckBox mRGBnFCCheckBox;
         private System.Windows.Forms.Button mRGBnFCButton;
+        private System.Windows.Forms.Label mStartupDelayLabel;
+        private System.Windows.Forms.TextBox mStartupDelayTextBox;
     }
 }

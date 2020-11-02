@@ -151,6 +151,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Delay(sec) :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Delay_Time {
+            get {
+                return ResourceManager.GetString("Delay_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Enable automatic fan control과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Enable_automatic_fan_control {

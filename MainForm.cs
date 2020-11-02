@@ -625,8 +625,6 @@ namespace FanCtrl
                 mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
                 mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
             };
-            mControlForm.StartPosition = FormStartPosition.Manual;
-            mControlForm.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
             mControlForm.ShowDialog();
             mControlForm = null;
         }

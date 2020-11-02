@@ -22,6 +22,8 @@ namespace FanCtrl
         private bool _startup;
         private const string RegistryName = "FanControl";
 
+        public int DelayTime { get; set; }
+
         public StartupControl()
         {
             if (Environment.OSVersion.Platform >= PlatformID.Unix)
@@ -145,7 +147,9 @@ namespace FanCtrl
             TaskDefinition taskDefinition = TaskService.Instance.NewTask();
             taskDefinition.RegistrationInfo.Description = "Starts FanCtrl on Windows startup.";
 
-            taskDefinition.Triggers.Add(new LogonTrigger());
+            var trigger = new LogonTrigger();
+            trigger.Delay = new TimeSpan(0, 0, DelayTime);
+            taskDefinition.Triggers.Add(trigger);
 
             taskDefinition.Settings.StartWhenAvailable = true;
             taskDefinition.Settings.DisallowStartIfOnBatteries = false;

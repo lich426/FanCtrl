@@ -147,6 +147,9 @@
   <data name="Default_color" xml:space="preserve">
     <value>기본 색</value>
   </data>
+  <data name="Delay_Time" xml:space="preserve">
+    <value>지연시간(초) :</value>
+  </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
     <value>자동 팬 제어 활성화</value>
   </data>

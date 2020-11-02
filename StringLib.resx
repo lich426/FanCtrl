@@ -147,6 +147,9 @@
   <data name="Default_color" xml:space="preserve">
     <value>Default color</value>
   </data>
+  <data name="Delay_Time" xml:space="preserve">
+    <value>Delay(sec) :</value>
+  </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
     <value>Enable automatic fan control</value>
   </data>

@@ -62,6 +62,19 @@ namespace FanCtrl
 
         public bool IsMinimized { get; set; }
 
+        public int DelayTime
+        {
+            get
+            {
+                return mStartupControl.DelayTime;
+            }
+            set
+            {
+
+                mStartupControl.DelayTime = value;
+            }
+        }
+
         public bool IsStartUp
         {
             get
@@ -99,6 +112,7 @@ namespace FanCtrl
                 IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("fahrenheit") == true) ? rootObject.Value<bool>("fahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
+                DelayTime = (rootObject.ContainsKey("delay") == true) ? rootObject.Value<int>("delay") : 0;
                 IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
             }
             catch
@@ -124,6 +138,7 @@ namespace FanCtrl
                 rootObject["animation"] = IsAnimation;
                 rootObject["fahrenheit"] = IsFahrenheit;
                 rootObject["minimized"] = IsMinimized;
+                rootObject["delay"] = DelayTime;
                 rootObject["startup"] = IsStartUp;
                 File.WriteAllText(mOptionFileName, rootObject.ToString());
             }

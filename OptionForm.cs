@@ -21,6 +21,7 @@ namespace FanCtrl
             this.localizeComponent();
 
             mToolTip.SetToolTip(mIntervalTextBox, "100 ≤ value ≤ 5000");
+            mToolTip.SetToolTip(mStartupDelayTextBox, "0 ≤ value ≤ 59");
 
             mIntervalTextBox.Text = OptionManager.getInstance().Interval.ToString();
             mIntervalTextBox.KeyPress += onTextBoxKeyPress;
@@ -49,6 +50,8 @@ namespace FanCtrl
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
+
+            mStartupDelayTextBox.Text = OptionManager.getInstance().DelayTime.ToString();
             mStartupCheckBox.Checked = OptionManager.getInstance().IsStartUp;
         }
 
@@ -63,6 +66,7 @@ namespace FanCtrl
             mFahrenheitCheckBox.Text = StringLib.Fahrenheit;
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
             mStartupCheckBox.Text = StringLib.Start_with_Windows;
+            mStartupDelayLabel.Text = StringLib.Delay_Time;
             mLibraryGroupBox.Text = StringLib.Library;
             mOKButton.Text = StringLib.OK;
         }
@@ -91,6 +95,16 @@ namespace FanCtrl
             else if (interval > 5000)
             {
                 interval = 5000;
+            }
+
+            int delayTime = int.Parse(mStartupDelayTextBox.Text);
+            if (delayTime < 0)
+            {
+                delayTime = 0;
+            }
+            else if (delayTime > 59)
+            {
+                delayTime = 59;
             }
 
             var optionManager = OptionManager.getInstance();
@@ -123,7 +137,9 @@ namespace FanCtrl
             optionManager.IsFahrenheit = mFahrenheitCheckBox.Checked;
             optionManager.IsAnimation = mAnimationCheckBox.Checked;
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
-            optionManager.IsStartUp = mStartupCheckBox.Checked;
+            optionManager.DelayTime = delayTime;
+            optionManager.IsStartUp = false;
+            optionManager.IsStartUp = mStartupCheckBox.Checked;            
             optionManager.write();
 
             if (isRestart == true)
@@ -153,16 +169,32 @@ namespace FanCtrl
         private void onTextBoxLeaves(object sender, EventArgs e)
         {
             var textBox = (TextBox)sender;
-            int interval = int.Parse(mIntervalTextBox.Text);
-            if (interval < 100)
+            if (textBox == mIntervalTextBox)
             {
-                interval = 100;
+                int interval = int.Parse(mIntervalTextBox.Text);
+                if (interval < 100)
+                {
+                    interval = 100;
+                }
+                else if (interval > 5000)
+                {
+                    interval = 5000;
+                }
+                mIntervalTextBox.Text = interval.ToString();
             }
-            else if (interval > 5000)
+            else if (textBox == mStartupDelayTextBox)
             {
-                interval = 5000;
-            }
-            mIntervalTextBox.Text = interval.ToString();
+                int delay = int.Parse(mStartupDelayTextBox.Text);
+                if (delay < 0)
+                {
+                    delay = 0;
+                }
+                else if (delay > 59)
+                {
+                    delay = 59;
+                }
+                mStartupDelayTextBox.Text = delay.ToString();
+            }         
         }
 
         private void onKrakenButtonClick(object sender, EventArgs e)
