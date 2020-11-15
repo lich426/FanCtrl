@@ -28,12 +28,13 @@ namespace FanCtrl
         private OptionManager()
         {
             Interval = 1000;
-            IsGigabyte = true;
+            IsGigabyte = false;
             LibraryType = LibraryType.LibreHardwareMonitor;
-            IsNvAPIWrapper = false;
+            IsNvAPIWrapper = true;
             IsDimm = true;
             IsKraken = true;
-            IsCLC = false;
+            IsCLC = true;
+            IsRGBnFC = true;
             IsAnimation = true;
             IsFahrenheit = false;
             IsMinimized = false;
@@ -97,23 +98,23 @@ namespace FanCtrl
 
                 Interval = (rootObject.ContainsKey("interval") == true) ? rootObject.Value<int>("interval") : 1000;
 
-                IsGigabyte = (rootObject.ContainsKey("gigabyte") == true) ? rootObject.Value<bool>("gigabyte") : true;
+                IsGigabyte = (rootObject.ContainsKey("gigabyte") == true) ? rootObject.Value<bool>("gigabyte") : false;
 
                 if (rootObject.ContainsKey("library") == false)
                     LibraryType = LibraryType.LibreHardwareMonitor;
                 else
                     LibraryType = (rootObject.Value<int>("library") == 0) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
 
-                IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : false;
+                IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : true;
                 IsDimm = (rootObject.ContainsKey("dimm") == true) ? rootObject.Value<bool>("dimm") : true;
                 IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
-                IsCLC= (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : false;
-                IsRGBnFC = (rootObject.ContainsKey("rgbnfc") == true) ? rootObject.Value<bool>("rgbnfc") : false;
+                IsCLC = (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : true;
+                IsRGBnFC = (rootObject.ContainsKey("rgbnfc") == true) ? rootObject.Value<bool>("rgbnfc") : true;
                 IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("fahrenheit") == true) ? rootObject.Value<bool>("fahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
-                DelayTime = (rootObject.ContainsKey("delay") == true) ? rootObject.Value<int>("delay") : 0;
                 IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
+                DelayTime = (rootObject.ContainsKey("delay") == true) ? rootObject.Value<int>("delay") : 0;
             }
             catch
             {
@@ -138,8 +139,8 @@ namespace FanCtrl
                 rootObject["animation"] = IsAnimation;
                 rootObject["fahrenheit"] = IsFahrenheit;
                 rootObject["minimized"] = IsMinimized;
-                rootObject["delay"] = DelayTime;
                 rootObject["startup"] = IsStartUp;
+                rootObject["delay"] = DelayTime;
                 File.WriteAllText(mOptionFileName, rootObject.ToString());
             }
             catch {}
