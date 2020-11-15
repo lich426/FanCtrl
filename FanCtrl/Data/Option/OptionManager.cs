@@ -30,7 +30,7 @@ namespace FanCtrl
             Interval = 1000;
             IsGigabyte = false;
             LibraryType = LibraryType.LibreHardwareMonitor;
-            IsNvAPIWrapper = true;
+            IsNvAPIWrapper = false;
             IsDimm = true;
             IsKraken = true;
             IsCLC = true;
@@ -105,7 +105,7 @@ namespace FanCtrl
                 else
                     LibraryType = (rootObject.Value<int>("library") == 0) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
 
-                IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : true;
+                IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : false;
                 IsDimm = (rootObject.ContainsKey("dimm") == true) ? rootObject.Value<bool>("dimm") : true;
                 IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
                 IsCLC = (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : true;

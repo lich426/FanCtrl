@@ -134,7 +134,11 @@ namespace FanCtrl
             // NvAPIWrapper
             if(OptionManager.getInstance().IsNvAPIWrapper == true)
             {
-                NVIDIA.Initialize();
+                try
+                {
+                    NVIDIA.Initialize();
+                }
+                catch { }                
             }
 
             this.createTemp();
