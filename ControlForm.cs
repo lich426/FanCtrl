@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,6 +84,9 @@ namespace FanCtrl
                     mGraph.Width = mGraph.Width + widthGap;
                     mGraph.Height = mGraph.Height + heightGap;
 
+                    mPresetLabel.Left = mPresetLabel.Left + widthGap;
+                    mPresetLoadButton.Left = mPresetLoadButton.Left + widthGap;
+                    mPresetSaveButton.Left = mPresetSaveButton.Left + widthGap;
                     mUnitLabel.Left = mUnitLabel.Left + widthGap;
                     mUnitComboBox.Left = mUnitComboBox.Left + widthGap;
                     mHysLabel.Left = mHysLabel.Left + widthGap;
@@ -157,6 +163,9 @@ namespace FanCtrl
             mAddButton.Text = StringLib.Add;
             mRemoveButton.Text = StringLib.Remove;
             mGraphGroupBox.Text = StringLib.Graph;
+            mPresetLabel.Text = StringLib.Preset;
+            mPresetLoadButton.Text = StringLib.Load;
+            mPresetSaveButton.Text = StringLib.Save;
             mUnitLabel.Text = StringLib.Unit;
             mHysLabel.Text = StringLib.Hysteresis;
             mStepCheckBox.Text = StringLib.Step;
@@ -273,6 +282,9 @@ namespace FanCtrl
             mLineItem.Symbol.Size = 10.0f;
             mLineItem.Symbol.Fill = new Fill(Color.White);
 
+            mPresetLabel.Visible = false;
+            mPresetLoadButton.Visible = false;
+            mPresetSaveButton.Visible = false;
             mUnitLabel.Visible = false;
             mUnitComboBox.Visible = false;
             mGraph.Visible = false;
@@ -337,6 +349,9 @@ namespace FanCtrl
 
         private void onSensorComboBoxIndexChanged(object sender, EventArgs e)
         {
+            mPresetLabel.Visible = false;
+            mPresetLoadButton.Visible = false;
+            mPresetSaveButton.Visible = false;
             mUnitLabel.Visible = false;
             mUnitComboBox.Visible = false;
             mGraph.Visible = false;
@@ -540,6 +555,9 @@ namespace FanCtrl
             var items = mFanListView.SelectedItems;
             if (items == null || items.Count == 0)
             {
+                mPresetLabel.Visible = false;
+                mPresetLoadButton.Visible = false;
+                mPresetSaveButton.Visible = false;
                 mUnitLabel.Visible = false;
                 mUnitComboBox.Visible = false;
                 mGraph.Visible = false;
@@ -550,6 +568,9 @@ namespace FanCtrl
                 return;
             }
 
+            mPresetLabel.Visible = true;
+            mPresetLoadButton.Visible = true;
+            mPresetSaveButton.Visible = true;
             mUnitLabel.Visible = true;
             mUnitComboBox.Visible = true;
             mGraph.Visible = true;
@@ -649,6 +670,122 @@ namespace FanCtrl
             mFanListView.EndUpdate();
         }
 
+        private void onPresetLoadButtonClick(object sender, EventArgs e)
+        {
+            if (mSelectedFanData == null)
+                return;
+
+            string nowDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string presetDirectory = nowDirectory + "\\preset";
+            if (Directory.Exists(presetDirectory) == false)
+            {
+                presetDirectory = nowDirectory;
+            }
+
+            var ofd = new OpenFileDialog();
+            ofd.Title = StringLib.Load;
+            ofd.InitialDirectory = presetDirectory;
+            ofd.Filter = "Preset file (*.preset) | *.preset;";
+            var dr = ofd.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                try
+                {
+                    string fileName = ofd.FileName;
+                    string jsonString = File.ReadAllText(fileName);
+
+                    // check data
+                    var rootObject = JObject.Parse(jsonString);
+                    bool isStep = rootObject.Value<bool>("step");
+                    int hysteresis = rootObject.Value<int>("hysteresis");
+                    var unit = (FanValueUnit)rootObject.Value<int>("unit");
+                    
+                    var valueList = rootObject.Value<JArray>("value");
+                    if (unit == FanValueUnit.Size_1)
+                    {
+                        if (valueList.Count != FanData.MAX_FAN_VALUE_SIZE_1)
+                            throw new Exception();
+                    }
+                    else if (unit == FanValueUnit.Size_5)
+                    {
+                        if (valueList.Count != FanData.MAX_FAN_VALUE_SIZE_5)
+                            throw new Exception();
+                    }
+                    else if (unit == FanValueUnit.Size_10)
+                    {
+                        if (valueList.Count != FanData.MAX_FAN_VALUE_SIZE_10)
+                            throw new Exception();
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+
+                    mSelectedFanData.IsStep = isStep;
+                    mSelectedFanData.Hysteresis = hysteresis;
+                    mSelectedFanData.Unit = unit;
+                    mSelectedFanData.setChangeUnitAndFanValue(unit);
+                    for (int i = 0; i < valueList.Count; i++)
+                    {
+                        int value = valueList[i].Value<int>();
+                        mSelectedFanData.ValueList[i] = value;
+                    }
+
+                    // setGraphFromSelectedFanData
+                    this.setGraphFromSelectedFanData();
+
+                    mUnitComboBox.SelectedIndex = (int)mSelectedFanData.Unit;
+                    mStepCheckBox.Checked = mSelectedFanData.IsStep;
+                    mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
+                    mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
+                    mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
+
+                    this.onUpdateTimer();
+                }
+                catch
+                {
+                    MessageBox.Show(StringLib.Failed_to_read_preset_file);
+                }
+            }
+        }
+
+        private void onPresetSaveButtonClick(object sender, EventArgs e)
+        {
+            if (mSelectedFanData == null)
+                return;
+
+            string nowDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string presetDirectory = nowDirectory + "\\preset";
+            if (Directory.Exists(presetDirectory) == false)
+            {
+                presetDirectory = nowDirectory;
+            }
+
+            var sfd = new SaveFileDialog();
+            sfd.Title = StringLib.Save;
+            sfd.InitialDirectory = presetDirectory;
+            sfd.Filter = "Preset file (*.preset) | *.preset;";
+            var dr = sfd.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                var rootObject = new JObject();
+                rootObject["step"] = mSelectedFanData.IsStep;
+                rootObject["hysteresis"] = mSelectedFanData.Hysteresis;
+                rootObject["unit"] = (int)mSelectedFanData.Unit;
+
+                var valueList = new JArray();
+                for (int i = 0; i < mSelectedFanData.getMaxFanValue(); i++)
+                {
+                    int value = mSelectedFanData.ValueList[i];
+                    valueList.Add(value);
+                }
+                rootObject["value"] = valueList;
+
+                string fileName = sfd.FileName;
+                File.WriteAllText(fileName, rootObject.ToString());
+            }
+        }
+
         private void onApplyButtonClick(object sender, EventArgs e)
         {
             for (int i = 0; i < mControlDataList.Count; i++)
@@ -679,6 +816,6 @@ namespace FanCtrl
         {
             this.onApplyButtonClick(sender, e);
             this.Close();
-        }
+        }        
     }
 }

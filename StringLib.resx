@@ -165,6 +165,9 @@
   <data name="Fahrenheit" xml:space="preserve">
     <value>Fahrenheit (°F)</value>
   </data>
+  <data name="Failed_to_read_preset_file" xml:space="preserve">
+    <value>Failed to read preset file!</value>
+  </data>
   <data name="Fan" xml:space="preserve">
     <value>Fan</value>
   </data>
@@ -201,6 +204,9 @@
   <data name="Lighting" xml:space="preserve">
     <value>Lighting</value>
   </data>
+  <data name="Load" xml:space="preserve">
+    <value>Load</value>
+  </data>
   <data name="Made1" xml:space="preserve">
     <value>Made by Lich</value>
   </data>
@@ -228,11 +234,17 @@
   <data name="Performance" xml:space="preserve">
     <value>Performance</value>
   </data>
+  <data name="Preset" xml:space="preserve">
+    <value>Preset :</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
   <data name="RGBnFC_Lighting" xml:space="preserve">
     <value>NZXT RGB＆Fan Controller Lighting</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>Sensor</value>

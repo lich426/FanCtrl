@@ -1,6 +1,4 @@
-﻿//#define MY_DEBUG
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Security.AccessControl;
@@ -752,8 +750,8 @@ namespace FanCtrl
                             var value = e.Current;
                             int coolerID = value.CoolerId;
                             int speed = value.CurrentLevel;
-                            int minSpeed = value.DefaultMinimumLevel;
-                            int maxSpeed = value.DefaultMaximumLevel;
+                            int minSpeed = 0;// value.DefaultMinimumLevel;
+                            int maxSpeed = 100;// value.DefaultMaximumLevel;
 
                             var name = "GPU Fan Control #" + gpuFanNum++;
                             while (this.isExistControl(name) == true)

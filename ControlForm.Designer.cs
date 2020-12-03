@@ -39,6 +39,7 @@
             this.mFanListView = new System.Windows.Forms.ListView();
             this.mFanComboBox = new System.Windows.Forms.ComboBox();
             this.mGraphGroupBox = new System.Windows.Forms.GroupBox();
+            this.mPresetLabel = new System.Windows.Forms.Label();
             this.mUnitLabel = new System.Windows.Forms.Label();
             this.mHysLabel = new System.Windows.Forms.Label();
             this.mStepCheckBox = new System.Windows.Forms.CheckBox();
@@ -52,6 +53,8 @@
             this.mSilenceRadioButton = new System.Windows.Forms.RadioButton();
             this.mNormalRadioButton = new System.Windows.Forms.RadioButton();
             this.mUnitComboBox = new System.Windows.Forms.ComboBox();
+            this.mPresetLoadButton = new System.Windows.Forms.Button();
+            this.mPresetSaveButton = new System.Windows.Forms.Button();
             this.mSensorGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
@@ -144,6 +147,7 @@
             // 
             // mGraphGroupBox
             // 
+            this.mGraphGroupBox.Controls.Add(this.mPresetLabel);
             this.mGraphGroupBox.Controls.Add(this.mUnitLabel);
             this.mGraphGroupBox.Controls.Add(this.mHysLabel);
             this.mGraphGroupBox.Controls.Add(this.mStepCheckBox);
@@ -154,6 +158,16 @@
             this.mGraphGroupBox.TabIndex = 4;
             this.mGraphGroupBox.TabStop = false;
             this.mGraphGroupBox.Text = "Graph";
+            // 
+            // mPresetLabel
+            // 
+            this.mPresetLabel.AutoSize = true;
+            this.mPresetLabel.Location = new System.Drawing.Point(226, 1);
+            this.mPresetLabel.Name = "mPresetLabel";
+            this.mPresetLabel.Size = new System.Drawing.Size(49, 12);
+            this.mPresetLabel.TabIndex = 5;
+            this.mPresetLabel.Text = "Preset :";
+            this.mPresetLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // mUnitLabel
             // 
@@ -294,10 +308,32 @@
             this.mUnitComboBox.Size = new System.Drawing.Size(44, 20);
             this.mUnitComboBox.TabIndex = 4;
             // 
+            // mPresetLoadButton
+            // 
+            this.mPresetLoadButton.Location = new System.Drawing.Point(506, 56);
+            this.mPresetLoadButton.Name = "mPresetLoadButton";
+            this.mPresetLoadButton.Size = new System.Drawing.Size(57, 23);
+            this.mPresetLoadButton.TabIndex = 6;
+            this.mPresetLoadButton.Text = "Load";
+            this.mPresetLoadButton.UseVisualStyleBackColor = true;
+            this.mPresetLoadButton.Click += new System.EventHandler(this.onPresetLoadButtonClick);
+            // 
+            // mPresetSaveButton
+            // 
+            this.mPresetSaveButton.Location = new System.Drawing.Point(565, 56);
+            this.mPresetSaveButton.Name = "mPresetSaveButton";
+            this.mPresetSaveButton.Size = new System.Drawing.Size(57, 23);
+            this.mPresetSaveButton.TabIndex = 7;
+            this.mPresetSaveButton.Text = "Save";
+            this.mPresetSaveButton.UseVisualStyleBackColor = true;
+            this.mPresetSaveButton.Click += new System.EventHandler(this.onPresetSaveButtonClick);
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1155, 630);
+            this.Controls.Add(this.mPresetSaveButton);
+            this.Controls.Add(this.mPresetLoadButton);
             this.Controls.Add(this.mUnitComboBox);
             this.Controls.Add(this.mModeGroupBox);
             this.Controls.Add(this.mHysNumericUpDown);
@@ -349,5 +385,8 @@
         private System.Windows.Forms.RadioButton mNormalRadioButton;
         private System.Windows.Forms.Label mUnitLabel;
         private System.Windows.Forms.ComboBox mUnitComboBox;
+        private System.Windows.Forms.Label mPresetLabel;
+        private System.Windows.Forms.Button mPresetLoadButton;
+        private System.Windows.Forms.Button mPresetSaveButton;
     }
 }

@@ -205,6 +205,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Failed to read preset file!과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Failed_to_read_preset_file {
+            get {
+                return ResourceManager.GetString("Failed_to_read_preset_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Fan과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Fan {
@@ -313,6 +322,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Load과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Load {
+            get {
+                return ResourceManager.GetString("Load", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Made by Lich과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Made1 {
@@ -394,6 +412,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Preset :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Preset {
+            get {
+                return ResourceManager.GetString("Preset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Remove과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Remove {
@@ -408,6 +435,15 @@ namespace FanCtrl {
         internal static string RGBnFC_Lighting {
             get {
                 return ResourceManager.GetString("RGBnFC_Lighting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         
