@@ -723,7 +723,6 @@ namespace FanCtrl
 
                     mSelectedFanData.IsStep = isStep;
                     mSelectedFanData.Hysteresis = hysteresis;
-                    mSelectedFanData.Unit = unit;
                     mSelectedFanData.setChangeUnitAndFanValue(unit);
                     for (int i = 0; i < valueList.Count; i++)
                     {
