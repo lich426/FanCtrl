@@ -122,14 +122,6 @@ namespace FanCtrl
                     mIsUpdateGraph = true;
                 };
 
-                this.FormClosing += (s, e) =>
-                {
-                    ControlManager.getInstance().Width = mNormalLastSize.Width;
-                    ControlManager.getInstance().Height = mNormalLastSize.Height;
-                    ControlManager.getInstance().IsMaximize = (this.WindowState == FormWindowState.Maximized);
-                    ControlManager.getInstance().write();
-                };
-
                 if (ControlManager.getInstance().IsMaximize == true)
                 {
                     this.WindowState = FormWindowState.Maximized;

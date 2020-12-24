@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace FanCtrl
@@ -31,6 +32,10 @@ namespace FanCtrl
         private List<Icon> mFanIconList = new List<Icon>();
         private int mFanIconIndex = 0;
         private System.Windows.Forms.Timer mFanIconTimer = new System.Windows.Forms.Timer();
+
+        private int mDeviceCheckCount = 0;
+        private System.Timers.Timer mDeviceCheckTimer = new System.Timers.Timer();
+        private object mDeviceCheckTimerLock = new object();
 
         public MainForm()
         {
@@ -81,73 +86,71 @@ namespace FanCtrl
         {
             base.OnLoad(e);
 
-            var hardwareManager = HardwareManager.getInstance();
-            var controlManager = ControlManager.getInstance();
-
-            hardwareManager.onUpdateCallback += onUpdate;
-            hardwareManager.start();
-
-            // name
-            controlManager.setNameCount(0, hardwareManager.getSensorCount());
-            controlManager.setNameCount(1, hardwareManager.getFanCount());
-            controlManager.setNameCount(2, hardwareManager.getControlCount());
-
-            for(int i = 0; i < hardwareManager.getSensorCount(); i++)
+            this.Enabled = false;
+            mLoadingPanel.Visible = true;
+            mDeviceCheckTimer.Interval = 100;
+            mDeviceCheckTimer.Elapsed += (object sender2, ElapsedEventArgs e2) =>
             {
-                var temp = hardwareManager.getSensor(i);
-                controlManager.setName(0, i, true, temp.Name);
-                controlManager.setName(0, i, false, temp.Name);
-            }
+                if (Monitor.TryEnter(mDeviceCheckTimerLock) == false)
+                    return;
 
-            for (int i = 0; i < hardwareManager.getFanCount(); i++)
-            {
-                var temp = hardwareManager.getFan(i);
-                controlManager.setName(1, i, true, temp.Name);
-                controlManager.setName(1, i, false, temp.Name);
-            }
+                mDeviceCheckCount++;
 
-            for (int i = 0; i < hardwareManager.getControlCount(); i++)
-            {
-                var temp = hardwareManager.getControl(i);
-                controlManager.setName(2, i, true, temp.Name);
-                controlManager.setName(2, i, false, temp.Name);
-            }
-
-            if (controlManager.read() == false)
-            {
-                MessageBox.Show(StringLib.Not_Match);
-            }
-            else
-            {
-                if (controlManager.checkData() == false)
+                bool isErrorMessage = false;
+                if (checkDevice() == false)
                 {
-                    MessageBox.Show(StringLib.Not_Match);
+                    if (mDeviceCheckCount >= 5)
+                    {
+                        isErrorMessage = true;                     
+                    }
+                    else
+                    {
+                        HardwareManager.getInstance().stop();
+                        ControlManager.getInstance().reset();
+                        Monitor.Exit(mDeviceCheckTimerLock);
+                        return;
+                    }
                 }
-            }
 
-            // OSDManager
-            OSDManager.getInstance().read();
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    // OSDManager
+                    OSDManager.getInstance().read();
 
-            this.createComponent();
-            this.ActiveControl = mFanControlButton;
+                    this.createComponent();
+                    this.ActiveControl = mFanControlButton;
 
-            mEnableToolStripMenuItem.Checked = controlManager.IsEnable;
-            mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
-            mNormalToolStripMenuItem.Checked = (controlManager.ModeIndex == 0);
-            mSilenceToolStripMenuItem.Checked = (controlManager.ModeIndex == 1);
-            mPerformanceToolStripMenuItem.Checked = (controlManager.ModeIndex == 2);
-            mGameToolStripMenuItem.Checked = (controlManager.ModeIndex == 3);
+                    mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
+                    mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
+                    mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
+                    mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
+                    mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
+                    mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
 
-            // startUpdate
-            hardwareManager.startUpdate();
+                    // startUpdate
+                    HardwareManager.getInstance().startUpdate();
 
-            // start icon update
-            mFanIconTimer.Interval = 100;
-            mFanIconTimer.Tick += onFanIconTimer;
-            if (OptionManager.getInstance().IsAnimation == true)
-            {                
-                mFanIconTimer.Start();
-            }
+                    // start icon update
+                    mFanIconTimer.Interval = 100;
+                    mFanIconTimer.Tick += onFanIconTimer;
+                    if (OptionManager.getInstance().IsAnimation == true)
+                    {
+                        mFanIconTimer.Start();
+                    }
+
+                    mLoadingPanel.Visible = false;
+                    this.Enabled = true;
+
+                    if (isErrorMessage == true)
+                    {
+                        MessageBox.Show(StringLib.Not_Match, StringLib.Error);
+                    }
+                }));
+                
+                mDeviceCheckTimer.Stop();
+                Monitor.Exit(mDeviceCheckTimerLock);
+            };
+            mDeviceCheckTimer.Start();
 
             if (OptionManager.getInstance().IsMinimized == true)
             {
@@ -193,6 +196,47 @@ namespace FanCtrl
                 this.Visible = false;
                 e.Cancel = true;
             }
+        }
+
+        private bool checkDevice()
+        {
+            var hardwareManager = HardwareManager.getInstance();
+            var controlManager = ControlManager.getInstance();
+
+            hardwareManager.onUpdateCallback += onUpdate;
+            hardwareManager.start();
+
+            // name
+            controlManager.setNameCount(0, hardwareManager.getSensorCount());
+            controlManager.setNameCount(1, hardwareManager.getFanCount());
+            controlManager.setNameCount(2, hardwareManager.getControlCount());
+
+            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
+            {
+                var temp = hardwareManager.getSensor(i);
+                controlManager.setName(0, i, true, temp.Name);
+                controlManager.setName(0, i, false, temp.Name);
+            }
+
+            for (int i = 0; i < hardwareManager.getFanCount(); i++)
+            {
+                var temp = hardwareManager.getFan(i);
+                controlManager.setName(1, i, true, temp.Name);
+                controlManager.setName(1, i, false, temp.Name);
+            }
+
+            for (int i = 0; i < hardwareManager.getControlCount(); i++)
+            {
+                var temp = hardwareManager.getControl(i);
+                controlManager.setName(2, i, true, temp.Name);
+                controlManager.setName(2, i, false, temp.Name);
+            }
+
+            if (controlManager.read() == false || controlManager.checkData() == false)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void onFanIconTimer(object sender, EventArgs e)

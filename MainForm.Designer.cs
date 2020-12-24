@@ -53,8 +53,11 @@
             this.mMadeLabel2 = new System.Windows.Forms.Label();
             this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
             this.mOSDButton = new System.Windows.Forms.Button();
+            this.mLoadingPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.mTrayMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
+            this.mLoadingPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mTempGroupBox
@@ -241,11 +244,29 @@
             this.mOSDButton.UseVisualStyleBackColor = true;
             this.mOSDButton.Click += new System.EventHandler(this.onOSDButtonClick);
             // 
+            // mLoadingPanel
+            // 
+            this.mLoadingPanel.Controls.Add(this.label1);
+            this.mLoadingPanel.Location = new System.Drawing.Point(9, 7);
+            this.mLoadingPanel.Name = "mLoadingPanel";
+            this.mLoadingPanel.Size = new System.Drawing.Size(701, 106);
+            this.mLoadingPanel.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(321, 46);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 12);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Loading...";
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(719, 122);
+            this.Controls.Add(this.mLoadingPanel);
             this.Controls.Add(this.mOSDButton);
             this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mDonatePictureBox);
@@ -263,6 +284,8 @@
             this.Text = "FanControl";
             this.mTrayMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).EndInit();
+            this.mLoadingPanel.ResumeLayout(false);
+            this.mLoadingPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -293,6 +316,8 @@
         private System.Windows.Forms.Button mOSDButton;
         private System.Windows.Forms.ToolStripMenuItem mEnableOSDToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.Panel mLoadingPanel;
+        private System.Windows.Forms.Label label1;
     }
 }
 
