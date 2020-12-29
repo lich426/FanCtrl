@@ -14,7 +14,7 @@ namespace FanCtrl
 {
     public class Kraken : USBDevice
     {
-        private const long SEND_DELAY_TIME = 5000;
+        private const long SEND_DELAY_TIME = 500;
 
         private int mLastLiquidTemp = 0;
         private int mLastFanRPM = 0;
@@ -83,6 +83,7 @@ namespace FanCtrl
             mFanLastSendTime = 0;
 
             mUSBController = new HidUSBController(USBVendorID.NZXT, productID);
+            ((HidUSBController)mUSBController).ReadTimeout = 5000;
             mUSBController.onRecvHandler += onRecv;
             if(mUSBController.start(index) == false)
             {

@@ -26,6 +26,18 @@ namespace FanCtrl
         private List<byte[]> mSendArrayList = new List<byte[]>();
         private object mSendArrayListLock = new object();
 
+        private int mReadTimeout = -1;
+        public int ReadTimeout
+        {
+            get => mReadTimeout;
+            set
+            {
+                mReadTimeout = value;
+                if (mHidStream != null)
+                    mHidStream.ReadTimeout = mReadTimeout;
+            }
+        }
+
         public HidUSBController(USBVendorID vendorID, USBProductID productID) : base(vendorID, productID)
         {
 
@@ -71,6 +83,8 @@ namespace FanCtrl
                                 return false;
                             }
                             mIsOpen = true;
+                            if (mReadTimeout >= 0)
+                                mHidStream.ReadTimeout = mReadTimeout;
                             break;
                         }
                         i++;
