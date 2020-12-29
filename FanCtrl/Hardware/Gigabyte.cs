@@ -63,23 +63,26 @@ namespace FanCtrl
                 var temperatureList = new List<float>();
                 mGigabyteSmartGuardianFanControlModule.GetHardwareMonitorDatas(ref temperatureList, ref mGigabyteFanSpeedList);
 
-                var management = new GraphicsCardServiceManagement();
-                if (management.IsProcessExist() == true)
-                {
-                    mGigabyteGraphicsCardControlModule = new GraphicsCardControlModule();
-                    if (mGigabyteGraphicsCardControlModule.AmdGpuCount > 0)
+                try {
+                    var management = new GraphicsCardServiceManagement();
+                    if (management.IsProcessExist() == true)
                     {
-                        mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteAmdRadeonGraphicsModuleList);
-                    }
-
-                    if (isNvAPIWrapper == false)
-                    {
-                        if (mGigabyteGraphicsCardControlModule.NvidiaGpuCount > 0)
+                        mGigabyteGraphicsCardControlModule = new GraphicsCardControlModule();
+                        if (mGigabyteGraphicsCardControlModule.AmdGpuCount > 0)
                         {
-                            mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteNvidiaGeforceGraphicsModuleList);
+                            mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteAmdRadeonGraphicsModuleList);
+                        }
+
+                        if (isNvAPIWrapper == false)
+                        {
+                            if (mGigabyteGraphicsCardControlModule.NvidiaGpuCount > 0)
+                            {
+                                mGigabyteGraphicsCardControlModule.GetObjects(ref mGigabyteNvidiaGeforceGraphicsModuleList);
+                            }
                         }
                     }
                 }
+                catch {}
 
                 this.unlockBus();
                 return true;
@@ -380,6 +383,8 @@ namespace FanCtrl
 
         private float onGetGigabyteFanSpeed(int index)
         {
+            if (mGigabyteFanSpeedList.Count <= index)
+                return 0;
             return mGigabyteFanSpeedList[index];
         }
 
@@ -412,6 +417,8 @@ namespace FanCtrl
 
         private float onGetGigabyteTemperature(int index)
         {
+            if (mGigabyteTemperatureList.Count <= index)
+                return 0;
             return mGigabyteTemperatureList[index];
         }
 
