@@ -20,6 +20,7 @@ namespace FanCtrl
         private delegate void RecvDelegate();
         private delegate void SendDelegate();
 
+        private uint mIndex = 0;
         private bool mIsSend = false;
         private List<byte[]> mSendArrayList = new List<byte[]>();
         private object mSendArrayListLock = new object();
@@ -52,6 +53,7 @@ namespace FanCtrl
         {
             try
             {
+                mIndex = index;
                 uint i = 0;
                 int venderID = (int)this.VendorID;
                 int productID = (int)this.ProductID;
@@ -169,7 +171,14 @@ namespace FanCtrl
                     }
                 }
             }
-            catch { }
+            catch {
+                mSendArrayList.Clear();
+                mIsSend = false;
+                Monitor.Exit(mSendArrayListLock);
+                this.stop();
+                this.start(mIndex);
+                return;
+            }
             mSendArrayList.Clear();
             mIsSend = false;
             Monitor.Exit(mSendArrayListLock);
