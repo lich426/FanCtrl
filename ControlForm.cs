@@ -439,7 +439,7 @@ namespace FanCtrl
             if (mSelectedFanData != null)
             {
                 mSelectedFanData.ValueList[mSelectedIndex] = (int)y;
-            }            
+            }
 
             for (int i = 0; i < mSelectedIndex; i++)
             {
@@ -483,9 +483,9 @@ namespace FanCtrl
             var control = hardwareManager.getControl(mSelectedFanData.Index);
             if (sensor == null || control == null)
                 return;
-            
+
             mNowPoint[0].X = (double)sensor.Value;
-            mNowPoint[0].Y = (double)control.LastValue;            
+            mNowPoint[0].Y = (double)control.LastValue;
             mGraph.Refresh();
         }
 
@@ -691,7 +691,7 @@ namespace FanCtrl
                     bool isStep = rootObject.Value<bool>("step");
                     int hysteresis = rootObject.Value<int>("hysteresis");
                     var unit = (FanValueUnit)rootObject.Value<int>("unit");
-                    
+
                     var valueList = rootObject.Value<JArray>("value");
                     if (unit == FanValueUnit.Size_1)
                     {
@@ -807,6 +807,6 @@ namespace FanCtrl
         {
             this.onApplyButtonClick(sender, e);
             this.Close();
-        }        
+        }
     }
 }

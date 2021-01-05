@@ -33,7 +33,7 @@ namespace FanCtrl
         {
             uint count = 0;
             try
-            {                
+            {
                 int venderID2 = (int)vendorID;
                 int productID2 = (int)productID;
                 foreach (HidDevice dev in DeviceList.Local.GetHidDevices(venderID2))
@@ -42,7 +42,7 @@ namespace FanCtrl
                     {
                         count++;
                     }
-                }                
+                }
             }
             catch { }
             return count;
@@ -112,7 +112,7 @@ namespace FanCtrl
             {
                 this.writeAsync();
             }
-            Monitor.Exit(mSendArrayListLock);            
+            Monitor.Exit(mSendArrayListLock);
         }
 
         public override void send(List<byte[]> bufferList)

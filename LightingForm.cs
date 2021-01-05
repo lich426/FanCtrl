@@ -23,7 +23,7 @@ namespace FanCtrl
         {
             mUSBDevice = device;
             InitializeComponent();
-            this.localizeComponent(num);            
+            this.localizeComponent(num);
 
             var customList = mUSBDevice.getCustomDataList();
             if (customList.Count == 0)
@@ -39,7 +39,7 @@ namespace FanCtrl
                 }
             }
         }
-        
+
         private void localizeComponent(int num)
         {
             if (mUSBDevice.DeviceType == USBDeviceType.Kraken)
@@ -125,7 +125,7 @@ namespace FanCtrl
                 if(mHexTextBoxList.Count > 0)
                 {
                     mHexTextBoxList[0].Text = "";
-                }                
+                }
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace FanCtrl
             }
 
             mUSBDevice.setCustomDataList(hexStringList);
-            mUSBDevice.writeFile();           
+            mUSBDevice.writeFile();
         }
 
         private void onOKButtonClick(object sender, EventArgs e)
@@ -183,6 +183,6 @@ namespace FanCtrl
             this.Close();
         }
 
-        
+
     }
 }

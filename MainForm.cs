@@ -25,7 +25,7 @@ namespace FanCtrl
         private List<TextBox> mFanNameTextBoxList = new List<TextBox>();
         private List<TextBox> mControlTextBoxList = new List<TextBox>();
         private List<Label> mControlLabelList = new List<Label>();
-        private List<TextBox> mControlNameTextBoxList = new List<TextBox>();        
+        private List<TextBox> mControlNameTextBoxList = new List<TextBox>();
 
         private ControlForm mControlForm = null;
 
@@ -101,7 +101,7 @@ namespace FanCtrl
                 {
                     if (mDeviceCheckCount >= 5)
                     {
-                        isErrorMessage = true;                     
+                        isErrorMessage = true;
                     }
                     else
                     {
@@ -146,7 +146,7 @@ namespace FanCtrl
                         MessageBox.Show(StringLib.Not_Match, StringLib.Error);
                     }
                 }));
-                
+
                 mDeviceCheckTimer.Stop();
                 Monitor.Exit(mDeviceCheckTimerLock);
             };
@@ -159,7 +159,7 @@ namespace FanCtrl
                     this.Close();
                 }));
             }
-        }        
+        }
 
         private void localizeComponent()
         {
@@ -314,7 +314,7 @@ namespace FanCtrl
         }
 
         private void onTrayMenuShow(object sender, EventArgs e)
-        {            
+        {
             this.ShowInTaskbar = true;
             this.Visible = true;
             this.Activate();
@@ -486,7 +486,7 @@ namespace FanCtrl
             {
                 mTempGroupBox.Height = mControlGroupBox.Height;
                 mFanGroupBox.Height = mControlGroupBox.Height;
-            }            
+            }
 
             // position
             mOSDButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
@@ -495,7 +495,7 @@ namespace FanCtrl
             mMadeLabel1.Top = mFanGroupBox.Top + mFanGroupBox.Height + 15;
             mMadeLabel2.Top = mFanGroupBox.Top + mFanGroupBox.Height + 32;
             mDonatePictureBox.Top = mFanGroupBox.Top + mFanGroupBox.Height + 17;
-            this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;            
+            this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;
         }
 
         private void onControlTextBoxKeyPress(object sender, KeyPressEventArgs e)
@@ -601,7 +601,7 @@ namespace FanCtrl
             this.BeginInvoke(new Action(delegate ()
             {
                 var hardwareManager = HardwareManager.getInstance();
-                
+
                 for (int i = 0; i < hardwareManager.getSensorCount(); i++)
                 {
                     var sensor = hardwareManager.getSensor(i);
@@ -636,7 +636,7 @@ namespace FanCtrl
                     mControlForm.onUpdateTimer();
             }));
         }
-        
+
 
         private void onOptionButtonClick(object sender, EventArgs e)
         {
@@ -672,7 +672,7 @@ namespace FanCtrl
             mControlForm.ShowDialog();
             mControlForm = null;
         }
-        
+
         private void onDonatePictureBoxClick(object sender, MouseEventArgs e)
         {
             Console.WriteLine("MainForm.onDonatePictureBoxClick()");
