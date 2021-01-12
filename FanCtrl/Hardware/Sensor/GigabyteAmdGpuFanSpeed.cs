@@ -30,6 +30,6 @@ namespace FanCtrl
             float speed = onGetGigabyteAmdFanSpeedHandler(mIndex);
             Value = (int)Math.Round(speed);
         }
-        
+
     }
 }

@@ -283,7 +283,7 @@ namespace FanCtrl
                     {
                         for (int j = 0; j < mControlDataList[i].Count; j++)
                         {
-                            var controlData = mControlDataList[i][j];                            
+                            var controlData = mControlDataList[i][j];
                             for(int k = 0; k < controlData.FanDataList.Count; k++)
                             {
                                 var fanData = controlData.FanDataList[k];
@@ -295,7 +295,7 @@ namespace FanCtrl
                             }
                         }
                     }
-                }                
+                }
             }
 
             Monitor.Exit(mLock);

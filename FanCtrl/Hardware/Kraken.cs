@@ -27,11 +27,11 @@ namespace FanCtrl
         private int mLastFanPercent = 0;
 
         private long mPumpLastSendTime = 0;
-        private long mFanLastSendTime = 0;        
+        private long mFanLastSendTime = 0;
 
         public Kraken() : base(USBDeviceType.Kraken)
         {
-            
+
         }
 
         public int getMinFanSpeed()
@@ -135,7 +135,7 @@ namespace FanCtrl
                             mLastLiquidTemp = temp;
                             mLastPumpRPM = pump;
                         }
-                    }                    
+                    }
                 }
                 // X2
                 else
@@ -152,7 +152,7 @@ namespace FanCtrl
                             mLastPumpRPM = pump;
                             mLastFanRPM = fan;
                         }
-                    }                    
+                    }
                 }
             }
             catch { }

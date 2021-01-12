@@ -32,7 +32,7 @@ namespace FanCtrl
 
         private int[] mValueList = null;
         public int[] ValueList
-        { 
+        {
             get { return mValueList; }
         }
 
@@ -213,7 +213,7 @@ namespace FanCtrl
             if (prevValue == nextValue)
             {
                 return prevValue;
-            }               
+            }
 
             double x1 = prevIndex * this.getDivideValue();
             double y1 = (double)prevValue;

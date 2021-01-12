@@ -40,7 +40,7 @@ namespace FanCtrl
             IsMinimized = false;
             IsStartUp = false;
         }
-        
+
         public int Interval { get; set; }
 
         public bool IsGigabyte { get; set; }
@@ -91,9 +91,9 @@ namespace FanCtrl
 
         public bool read()
         {
-            try 
+            try
             {
-                var jsonString = File.ReadAllText(mOptionFileName);                
+                var jsonString = File.ReadAllText(mOptionFileName);
                 var rootObject = JObject.Parse(jsonString);
 
                 Interval = (rootObject.ContainsKey("interval") == true) ? rootObject.Value<int>("interval") : 1000;

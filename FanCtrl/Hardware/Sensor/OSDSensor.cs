@@ -57,7 +57,7 @@ namespace FanCtrl
             Name = name;
             mIndex = index;
             mSubIndex = subIndex;
-        }        
+        }
 
         public override string getString()
         {

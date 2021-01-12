@@ -32,7 +32,7 @@ namespace FanCtrl
 
         public override void update()
         {
-            double temp = 0.0f;            
+            double temp = 0.0f;
             if(mLHMSensor != null && mLHMSensor.Value.HasValue == true)
             {
                 temp = (double)mLHMSensor.Value;

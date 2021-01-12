@@ -39,7 +39,7 @@ namespace FanCtrl
                 }
             }
             Console.WriteLine();
-        }        
+        }
 
         public static byte[] getHexBytes(string hexString)
         {

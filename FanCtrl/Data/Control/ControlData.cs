@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FanCtrl
-{    
+{
     public class ControlData
     {
         public int Index { get; set; }

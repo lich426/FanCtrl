@@ -112,7 +112,7 @@ namespace FanCtrl
             catch (Exception e)
             {
                 Console.WriteLine("SiUSBController.start() : Failed catch({0})", e.Message);
-                
+
             }
             Monitor.Exit(mLock);
             this.stop();
@@ -214,7 +214,7 @@ namespace FanCtrl
                 return dwNumDevices;
             }
             catch { }
-            return 0;            
+            return 0;
         }
 
         private static bool open(uint index, ref IntPtr deviceHandle)
@@ -227,7 +227,7 @@ namespace FanCtrl
                 return (status == SIUSBXP.SI_SUCCESS);
             }
             catch { }
-            return false;            
+            return false;
         }
 
         private static void close(IntPtr deviceHandle)
@@ -251,7 +251,7 @@ namespace FanCtrl
             catch { }
             return -200;
         }
-        
+
         private static int getPID(uint index, StringBuilder builder)
         {
             try

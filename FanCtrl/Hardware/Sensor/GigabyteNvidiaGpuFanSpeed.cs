@@ -30,6 +30,6 @@ namespace FanCtrl
             float speed = onGetGigabyteNvidiaFanSpeedHandler(mIndex);
             Value = (int)Math.Round(speed);
         }
-        
+
     }
 }

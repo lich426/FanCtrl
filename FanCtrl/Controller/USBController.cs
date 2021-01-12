@@ -77,6 +77,6 @@ namespace FanCtrl
         protected void onRecv(byte[] recvArray, int recvDataSize)
         {
             onRecvHandler(recvArray, recvDataSize);
-        }        
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace FanCtrl
             mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
             mKrakenButton.Enabled = (HardwareManager.getInstance().getKrakenList().Count > 0);
 
-            mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;            
+            mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;
             mCLCButton.Enabled = (HardwareManager.getInstance().getCLCList().Count > 0);
 
             mRGBnFCCheckBox.Checked = OptionManager.getInstance().IsRGBnFC;
@@ -139,7 +139,7 @@ namespace FanCtrl
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
             optionManager.DelayTime = delayTime;
             optionManager.IsStartUp = false;
-            optionManager.IsStartUp = mStartupCheckBox.Checked;            
+            optionManager.IsStartUp = mStartupCheckBox.Checked;
             optionManager.write();
 
             if (isRestart == true)
@@ -194,7 +194,7 @@ namespace FanCtrl
                     delay = 59;
                 }
                 mStartupDelayTextBox.Text = delay.ToString();
-            }         
+            }
         }
 
         private void onKrakenButtonClick(object sender, EventArgs e)

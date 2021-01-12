@@ -34,10 +34,10 @@ namespace FanCtrl
         public event AddChangeValueHandler AddChangeValue;
 
         public Gigabyte() { }
-        
+
         public bool start()
         {
-            bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;            
+            bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
             try
             {
                 var controller = new EngineServiceController("EasyTuneEngineService");
@@ -105,7 +105,7 @@ namespace FanCtrl
                 }
                 controller.Dispose();
             }
-            catch { }            
+            catch { }
         }
 
         public void stop()
@@ -174,7 +174,7 @@ namespace FanCtrl
 
                 var sensor = new GigabyteTemp(name, i);
                 sensor.onGetGigabyteTemperatureHandler += onGetGigabyteTemperature;
-                sensorList.Add(sensor);                
+                sensorList.Add(sensor);
             }
 
             num = 2;
@@ -261,7 +261,7 @@ namespace FanCtrl
                     fanList.Add(fan);
                 }
             }
-        }        
+        }
 
         public void createControl(ref List<BaseControl> controlList)
         {
@@ -286,7 +286,7 @@ namespace FanCtrl
 
                 double pwm = (double)config.FanConfig.StartPWM;
                 int value = (int)Math.Round(pwm / 255.0f * 100.0f);
-                
+
                 var control = new GigabyteFanControl(name, i, value);
                 control.onSetGigabyteControlHandler += onSetGigabyteControl;
                 controlList.Add(control);
@@ -392,7 +392,7 @@ namespace FanCtrl
             {
                 mGigabyteAmdRadeonGraphicsModuleList[index].GetFanSpeed(ref speed, ref type);
             }
-            catch { }            
+            catch { }
             this.unlockBus();
             return speed;
         }

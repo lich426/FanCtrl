@@ -140,7 +140,7 @@ namespace FanCtrl
                 return osdString.ToString();
             }
             catch { }
-            return "";            
+            return "";
         }
 
         public OSDItem clone()

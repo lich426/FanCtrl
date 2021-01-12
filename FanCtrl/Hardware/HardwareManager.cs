@@ -50,10 +50,10 @@ namespace FanCtrl
         public List<RGBnFC> getRGBnFCList() { return mRGBnFCList; }
 
         // Temperature sensor List
-        private List<BaseSensor> mSensorList = new List<BaseSensor>();        
+        private List<BaseSensor> mSensorList = new List<BaseSensor>();
 
         // Fan List
-        private List<BaseSensor> mFanList = new List<BaseSensor>();       
+        private List<BaseSensor> mFanList = new List<BaseSensor>();
 
         // Control List
         private List<BaseControl> mControlList = new List<BaseControl>();
@@ -109,7 +109,7 @@ namespace FanCtrl
                 mIsGigabyte = false;
                 Gigabyte.stopService();
             }
-            
+
             if (mIsGigabyte == false)
             {
                 mGigabyte = null;
@@ -136,7 +136,7 @@ namespace FanCtrl
                 {
                     NVIDIA.Initialize();
                 }
-                catch { }                
+                catch { }
             }
 
             this.createTemp();
@@ -145,7 +145,7 @@ namespace FanCtrl
 
             // NZXT Kraken
             if (OptionManager.getInstance().IsKraken == true)
-            {                
+            {
                 try
                 {
                     uint num = 1;
@@ -345,7 +345,7 @@ namespace FanCtrl
                     }
                 }
                 this.unlockSMBus();
-            }            
+            }
 
             // Motherboard temperature
             this.createMotherBoardTemp();
@@ -359,7 +359,7 @@ namespace FanCtrl
             this.createOSDSensor();
 
             Monitor.Exit(mLock);
-        }        
+        }
 
         public void stop()
         {
@@ -450,7 +450,7 @@ namespace FanCtrl
             }
 
             OSDController.release();
-            WinUSBController.exit();         
+            WinUSBController.exit();
 
             Monitor.Exit(mLock);
         }
@@ -516,7 +516,7 @@ namespace FanCtrl
             {
                 mPCIMutex.WaitOne();
             }
-            catch { }            
+            catch { }
         }
 
         private void unlockBus()
@@ -549,7 +549,7 @@ namespace FanCtrl
                 mSMBusMutex.WaitOne();
                 return true;
             }
-            catch { }            
+            catch { }
             return false;
         }
 
@@ -560,7 +560,7 @@ namespace FanCtrl
                 mSMBusMutex.ReleaseMutex();
             }
             catch { }
-        }        
+        }
 
         private void createTemp()
         {
@@ -580,7 +580,7 @@ namespace FanCtrl
             else
             {
                 mOHM.createTemp(ref mSensorList);
-            }            
+            }
         }
 
         private void createMotherBoardTemp()
@@ -666,7 +666,7 @@ namespace FanCtrl
                         mSensorList.Add(temp);
                     }
                 }
-                catch { }                
+                catch { }
                 this.unlockBus();
             }
         }
@@ -713,7 +713,7 @@ namespace FanCtrl
                         }
                     }
                 }
-                catch { }                
+                catch { }
                 this.unlockBus();
             }
         }
@@ -765,7 +765,7 @@ namespace FanCtrl
                         }
                     }
                 }
-                catch { }                
+                catch { }
                 this.unlockBus();
             }
         }
@@ -811,7 +811,7 @@ namespace FanCtrl
                         osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Video Decoding", i, subIndex++);
                         osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
                         mOSDSensorList.Add(osdSensor);
-                        
+
                         osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Core", i, subIndex++);
                         osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
                         mOSDSensorList.Add(osdSensor);
@@ -921,7 +921,7 @@ namespace FanCtrl
             this.lockBus();
             int temp = 0;
             try
-            {                
+            {
                 var gpuArray = PhysicalGPU.GetPhysicalGPUs();
                 if (index >= gpuArray.Length)
                 {
@@ -937,7 +937,7 @@ namespace FanCtrl
                     break;
                 }
             }
-            catch { }            
+            catch { }
             this.unlockBus();
             return temp;
         }
@@ -985,7 +985,7 @@ namespace FanCtrl
                 var info = gpuArray[index].CoolerInformation;
                 info.SetCoolerSettings(coolerID, value);
             }
-            catch { }            
+            catch { }
             this.unlockBus();
         }
 
@@ -993,13 +993,13 @@ namespace FanCtrl
         {
             double value = 0;
             if (libraryType == OSDLibraryType.NvApiWrapper)
-            {                
+            {
                 this.lockBus();
                 try
                 {
                     var gpuArray = PhysicalGPU.GetPhysicalGPUs();
                     var gpu = gpuArray[index];
-                    
+
                     switch (subIndex)
                     {
                         case 0:
@@ -1224,7 +1224,7 @@ namespace FanCtrl
             mChangeControlList.Add(control);
             Monitor.Exit(mLock);
             return value;
-        }        
+        }
 
         public int getSensorCount()
         {

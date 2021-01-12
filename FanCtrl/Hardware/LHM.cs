@@ -261,7 +261,7 @@ namespace FanCtrl
                     }
                 }
             }
-        }        
+        }
 
         public void createGPUFanControl(ref List<BaseControl> controlList)
         {
@@ -459,7 +459,7 @@ namespace FanCtrl
             }
             return false;
         }
-                
+
         /////////////////////////// Visitor ///////////////////////////
         public void VisitComputer(IComputer computer)
         {

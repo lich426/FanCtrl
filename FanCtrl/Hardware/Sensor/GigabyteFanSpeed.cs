@@ -14,7 +14,7 @@ namespace FanCtrl
         public event OnGetGigabyteFanSpeedHandler onGetGigabyteFanSpeedHandler;
 
         private int mIndex = -1;
-        
+
         public GigabyteFanSpeed(string name, int index) : base(SENSOR_TYPE.FAN)
         {
             Name = name;
@@ -31,6 +31,6 @@ namespace FanCtrl
             float speed = onGetGigabyteFanSpeedHandler(mIndex);
             Value = (int)Math.Round(speed);
         }
-        
+
     }
 }

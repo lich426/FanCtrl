@@ -163,7 +163,7 @@ namespace FanCtrl
                         {
                             Console.WriteLine(String.Format("WinUSBController.threadFunc() : Failed write({0})", ret));
                         }
-                    }                    
+                    }
 
                     ret = this.endTransactionRead(recvArray);
                     if (ret < 0)
@@ -174,7 +174,7 @@ namespace FanCtrl
                         continue;
                     }
 
-                    this.onReport(recvArray, ret);                    
+                    this.onReport(recvArray, ret);
                 }
                 catch { }
                 Monitor.Exit(mLock);

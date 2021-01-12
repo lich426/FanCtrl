@@ -22,7 +22,7 @@ namespace FanCtrl
         private int[] mLastFanPercent = new int[MAX_FAN_COUNT];
 
         private long mFanLastSendTime = Util.getNowMS();
-        
+
         public RGBnFC() : base(USBDeviceType.RGBnFC)
         {
             for (int i = 0; i < MAX_FAN_COUNT; i++)
@@ -223,7 +223,7 @@ namespace FanCtrl
             catch { }
             Monitor.Exit(mLock);
         }
-        
+
         public int getMinFanSpeed(int index)
         {
             return 20;

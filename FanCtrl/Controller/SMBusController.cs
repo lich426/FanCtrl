@@ -14,7 +14,7 @@ namespace FanCtrl
     class SMBusController
     {
         private static bool sIsOpen = false;
-        public static bool IsOpen { 
+        public static bool IsOpen {
             get {
                 Monitor.Enter(sLock);
                 bool isOpen = sIsOpen;
@@ -37,7 +37,7 @@ namespace FanCtrl
             {
                 Monitor.Exit(sLock);
                 return true;
-            }               
+            }
 
             try
             {
@@ -166,7 +166,7 @@ namespace FanCtrl
             var datas = SMBusController.getData(pByteArrayData);
             int dataSize = SMBusController.getDataSize(pByteArrayData);
             var retData = new byte[dataSize];
-            Marshal.Copy(datas, retData, 0, dataSize);            
+            Marshal.Copy(datas, retData, 0, dataSize);
             return retData;
         }
 

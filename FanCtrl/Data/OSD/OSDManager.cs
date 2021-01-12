@@ -95,7 +95,7 @@ namespace FanCtrl
             this.clear();
             Monitor.Exit(mLock);
         }
-        
+
         public void read()
         {
             Monitor.Enter(mLock);
@@ -171,7 +171,7 @@ namespace FanCtrl
                     }
                 }
             }
-            catch 
+            catch
             {
                 this.clear();
                 Monitor.Exit(mLock);

@@ -15,7 +15,7 @@ namespace FanCtrl
 
         private int mIndex = 0;
         private int mCooerID = 0;
-        
+
         public NvAPIFanSpeed(string name, int index, int coolerID) : base(SENSOR_TYPE.FAN)
         {
             Name = name;
@@ -32,6 +32,6 @@ namespace FanCtrl
         {
             Value = onGetNvAPIFanSpeedHandler(mIndex, mCooerID);
         }
-        
+
     }
 }

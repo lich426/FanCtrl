@@ -67,7 +67,7 @@ namespace FanCtrl
             if (isSiUSB == true)
             {
                 // SiUSBController
-                mUSBController = new SiUSBController(USBVendorID.ASETEK, USBProductID.CLC);                
+                mUSBController = new SiUSBController(USBVendorID.ASETEK, USBProductID.CLC);
             }
             else
             {
@@ -191,7 +191,7 @@ namespace FanCtrl
                     }
                     mUSBController.send(mCustomDataList);
                     mIsSendCustomData = false;
-                }                
+                }
             }
             catch { }
             Monitor.Exit(mLock);
@@ -256,7 +256,7 @@ namespace FanCtrl
             {
                 speed = this.getMinPumpSpeed();
             }
-            mPumpSpeed = speed;          
+            mPumpSpeed = speed;
             Monitor.Exit(mLock);
         }
 

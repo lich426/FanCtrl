@@ -65,7 +65,7 @@ namespace FanCtrl
             for (int i = 0; i < mItemList.Count; i++)
             {
                 var item = mItemList[i];
-                osdString.Append(item.getOSDString(Digit));                
+                osdString.Append(item.getOSDString(Digit));
             }
 
             osdString.Append("\n");
