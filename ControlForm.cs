@@ -23,7 +23,7 @@ namespace FanCtrl
         private bool mIsUpdateGraph = true;
         private bool mIsResize = false;
 
-        private int mSelectedSensorIndex = -1;
+        private int mSelectedTempIndex = -1;
 
         private int mSelectedIndex = -1;
         private PointPairList mPointList = null;
@@ -32,9 +32,11 @@ namespace FanCtrl
         private PointPairList mNowPoint = null;
         private LineItem mNowPointLineItem = null;
 
-        private int mModeIndex = 0;
-        private List<List<ControlData>> mControlDataList = new List<List<ControlData>>();
+        private MODE_TYPE mModeType = MODE_TYPE.NORMAL;
+        private List<ControlData>[] mControlDataList = new List<ControlData>[4];
         private FanData mSelectedFanData = null;
+
+        private List<BaseControl> mListViewBaseControlList = new List<BaseControl>();
 
         public event EventHandler onApplyCallback;
 
@@ -43,102 +45,94 @@ namespace FanCtrl
             InitializeComponent();
             this.localizeComponent();
 
-            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(0));
-            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(1));
-            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(2));
-            mControlDataList.Add(ControlManager.getInstance().getCloneControlDataList(3));
-            mModeIndex = ControlManager.getInstance().ModeIndex;
+            mControlDataList[0] = ControlManager.getInstance().getCloneControlDataList(MODE_TYPE.NORMAL);
+            mControlDataList[1] = ControlManager.getInstance().getCloneControlDataList(MODE_TYPE.SILENCE);
+            mControlDataList[2] = ControlManager.getInstance().getCloneControlDataList(MODE_TYPE.PERFORMANCE);
+            mControlDataList[3] = ControlManager.getInstance().getCloneControlDataList(MODE_TYPE.GAME);
+
+            mModeType = ControlManager.getInstance().ModeType;
 
             this.initControl();
             this.initGraph();
 
-            // Can only resize windows with Windows 10
-            if (System.Environment.OSVersion.Version.Major >= 10)
-            {
-                this.SetStyle(ControlStyles.UserPaint |
+            this.SetStyle(ControlStyles.UserPaint |
                             ControlStyles.OptimizedDoubleBuffer |
                             ControlStyles.AllPaintingInWmPaint |
                             ControlStyles.SupportsTransparentBackColor, true);
-                this.Resize += (sender, e) =>
-                {
-                    if (mIsResize == true)
-                        return;
-                    mIsResize = true;
+            this.Resize += (sender, e) =>
+            {
+                if (mIsResize == true)
+                    return;
+                mIsResize = true;
 
-                    //Console.WriteLine("Size : {0}, {1}", this.Width, this.Height);
+                //Console.WriteLine("Size : {0}, {1}", this.Width, this.Height);
 
-                    int widthGap = this.Width - mLastSize.Width;
-                    int heightGap = this.Height - mLastSize.Height;
+                int widthGap = this.Width - mLastSize.Width;
+                int heightGap = this.Height - mLastSize.Height;
 
-                    //Console.WriteLine("Gap : {0}, {1}", widthGap, heightGap);
+                //Console.WriteLine("Gap : {0}, {1}", widthGap, heightGap);
 
-                    mFanGroupBox.Height = mFanGroupBox.Height + heightGap;
-                    mFanListView.Height = mFanListView.Height + heightGap;
-                    mRemoveButton.Top = mRemoveButton.Top + heightGap;
+                mFanGroupBox.Height = mFanGroupBox.Height + heightGap;
+                mFanListView.Height = mFanListView.Height + heightGap;
+                mRemoveButton.Top = mRemoveButton.Top + heightGap;
 
-                    mModeGroupBox.Width = mModeGroupBox.Width + widthGap;
+                mModeGroupBox.Width = mModeGroupBox.Width + widthGap;
 
-                    mGraphGroupBox.Width = mGraphGroupBox.Width + widthGap;
-                    mGraphGroupBox.Height = mGraphGroupBox.Height + heightGap;
+                mGraphGroupBox.Width = mGraphGroupBox.Width + widthGap;
+                mGraphGroupBox.Height = mGraphGroupBox.Height + heightGap;
 
-                    mGraph.Width = mGraph.Width + widthGap;
-                    mGraph.Height = mGraph.Height + heightGap;
+                mGraph.Width = mGraph.Width + widthGap;
+                mGraph.Height = mGraph.Height + heightGap;
 
-                    mPresetLabel.Left = mPresetLabel.Left + widthGap;
-                    mPresetLoadButton.Left = mPresetLoadButton.Left + widthGap;
-                    mPresetSaveButton.Left = mPresetSaveButton.Left + widthGap;
-                    mUnitLabel.Left = mUnitLabel.Left + widthGap;
-                    mUnitComboBox.Left = mUnitComboBox.Left + widthGap;
-                    mHysLabel.Left = mHysLabel.Left + widthGap;
-                    mHysNumericUpDown.Left = mHysNumericUpDown.Left + widthGap;
-                    mStepCheckBox.Left = mStepCheckBox.Left + widthGap;
+                mPresetLabel.Left = mPresetLabel.Left + widthGap;
+                mPresetLoadButton.Left = mPresetLoadButton.Left + widthGap;
+                mPresetSaveButton.Left = mPresetSaveButton.Left + widthGap;
+                mUnitLabel.Left = mUnitLabel.Left + widthGap;
+                mUnitComboBox.Left = mUnitComboBox.Left + widthGap;
+                mHysLabel.Left = mHysLabel.Left + widthGap;
+                mHysNumericUpDown.Left = mHysNumericUpDown.Left + widthGap;
+                mStepCheckBox.Left = mStepCheckBox.Left + widthGap;
 
-                    mApplyButton.Left = mApplyButton.Left + widthGap;
-                    mApplyButton.Top = mApplyButton.Top + heightGap;
+                mApplyButton.Left = mApplyButton.Left + widthGap;
+                mApplyButton.Top = mApplyButton.Top + heightGap;
 
-                    mOKButton.Left = mOKButton.Left + widthGap;
-                    mOKButton.Top = mOKButton.Top + heightGap;
+                mOKButton.Left = mOKButton.Left + widthGap;
+                mOKButton.Top = mOKButton.Top + heightGap;
 
-                    mLastSize.Width = this.Width;
-                    mLastSize.Height = this.Height;
-
-                    if (this.WindowState != FormWindowState.Maximized)
-                    {
-                        mNormalLastSize.Width = this.Width;
-                        mNormalLastSize.Height = this.Height;
-                    }
-
-                    mIsResize = false;
-                };
-
-                this.ResizeBegin += (s, e) =>
-                {
-                    mIsUpdateGraph = false;
-                    this.SuspendLayout();
-                };
-                this.ResizeEnd += (s, e) =>
-                {
-                    this.ResumeLayout();
-                    mIsUpdateGraph = true;
-                };
-
-                if (ControlManager.getInstance().IsMaximize == true)
-                {
-                    this.WindowState = FormWindowState.Maximized;
-                }
-
-                this.Width = ControlManager.getInstance().Width;
-                this.Height = ControlManager.getInstance().Height;
                 mLastSize.Width = this.Width;
                 mLastSize.Height = this.Height;
-                mNormalLastSize.Width = this.Width;
-                mNormalLastSize.Height = this.Height;
-            }
-            else
+
+                if (this.WindowState != FormWindowState.Maximized)
+                {
+                    mNormalLastSize.Width = this.Width;
+                    mNormalLastSize.Height = this.Height;
+                }
+
+                mIsResize = false;
+            };
+
+            this.ResizeBegin += (s, e) =>
             {
-                this.MaximizeBox = false;
-                this.FormBorderStyle = FormBorderStyle.FixedSingle;
+                mIsUpdateGraph = false;
+                this.SuspendLayout();
+            };
+            this.ResizeEnd += (s, e) =>
+            {
+                this.ResumeLayout();
+                mIsUpdateGraph = true;
+            };
+
+            if (ControlManager.getInstance().IsMaximize == true)
+            {
+                this.WindowState = FormWindowState.Maximized;
             }
+
+            this.Width = ControlManager.getInstance().Width;
+            this.Height = ControlManager.getInstance().Height;
+            mLastSize.Width = this.Width;
+            mLastSize.Height = this.Height;
+            mNormalLastSize.Width = this.Width;
+            mNormalLastSize.Height = this.Height;
         }
 
         private void localizeComponent()
@@ -150,7 +144,7 @@ namespace FanCtrl
             mSilenceRadioButton.Text = StringLib.Silence;
             mPerformanceRadioButton.Text = StringLib.Performance;
             mGameRadioButton.Text = StringLib.Game;
-            mSensorGroupBox.Text = StringLib.Sensor;
+            mTempGroupBox.Text = StringLib.Target_Temp;
             mFanGroupBox.Text = StringLib.Fan;
             mAddButton.Text = StringLib.Add;
             mRemoveButton.Text = StringLib.Remove;
@@ -171,17 +165,17 @@ namespace FanCtrl
 
             mEnableCheckBox.Checked = ControlManager.getInstance().IsEnable;
 
-            mNormalRadioButton.Checked = (mModeIndex == 0);
-            mSilenceRadioButton.Checked = (mModeIndex == 1);
-            mPerformanceRadioButton.Checked = (mModeIndex == 2);
-            mGameRadioButton.Checked = (mModeIndex == 3);
+            mNormalRadioButton.Checked = (mModeType == MODE_TYPE.NORMAL);
+            mSilenceRadioButton.Checked = (mModeType == MODE_TYPE.SILENCE);
+            mPerformanceRadioButton.Checked = (mModeType == MODE_TYPE.PERFORMANCE);
+            mGameRadioButton.Checked = (mModeType == MODE_TYPE.GAME);
 
             mNormalRadioButton.Click += onRadioButtonClick;
             mSilenceRadioButton.Click += onRadioButtonClick;
             mPerformanceRadioButton.Click += onRadioButtonClick;
             mGameRadioButton.Click += onRadioButtonClick;
 
-            mSensorComboBox.SelectedIndexChanged += onSensorComboBoxIndexChanged;
+            mTempComboBox.SelectedIndexChanged += onTempComboBoxIndexChanged;
 
             mFanListView.Columns.Add("MyColumn", -2, HorizontalAlignment.Center);
             mFanListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -196,20 +190,23 @@ namespace FanCtrl
 
             mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
 
-            for (int i = 0; i < controlManager.getNameCount(0); i++)
+            var tempBaseList = HardwareManager.getInstance().TempBaseList;
+            var controlBaseList = HardwareManager.getInstance().ControlBaseList;
+
+            for (int i = 0; i < tempBaseList.Count; i++)
             {
-                mSensorComboBox.Items.Add(controlManager.getName(0, i, false));
+                mTempComboBox.Items.Add(tempBaseList[i].Name);
             }
 
-            for (int i = 0; i < controlManager.getNameCount(2); i++)
+            for (int i = 0; i < controlBaseList.Count; i++)
             {
-                mFanComboBox.Items.Add(controlManager.getName(2, i, false));
+                mFanComboBox.Items.Add(controlBaseList[i].Name);
             }
 
-            if (mSensorComboBox.Items.Count > 0)
+            if (mTempComboBox.Items.Count > 0)
             {
-                mSensorComboBox.SelectedIndex = 0;
-                mSelectedSensorIndex = 0;
+                mTempComboBox.SelectedIndex = 0;
+                mSelectedTempIndex = 0;
             }
 
             if (mFanComboBox.Items.Count > 0)
@@ -321,25 +318,29 @@ namespace FanCtrl
 
         private void onRadioButtonClick(object sender, EventArgs e)
         {
-            int index = -1;
-            if(sender == mNormalRadioButton)            index = 0;
-            else if (sender == mSilenceRadioButton)     index = 1;
-            else if (sender == mPerformanceRadioButton) index = 2;
-            else                                         index = 3;
-            if (index == mModeIndex)
+            MODE_TYPE modeType = MODE_TYPE.NORMAL;
+            if(sender == mNormalRadioButton)
+                modeType = MODE_TYPE.NORMAL;
+            else if (sender == mSilenceRadioButton)
+                modeType = MODE_TYPE.SILENCE;
+            else if (sender == mPerformanceRadioButton)
+                modeType = MODE_TYPE.PERFORMANCE;
+            else
+                modeType = MODE_TYPE.GAME;
+            if (modeType == mModeType)
                 return;
 
-            mModeIndex = index;
+            mModeType = modeType;
 
-            mNormalRadioButton.Checked = (mModeIndex == 0);
-            mSilenceRadioButton.Checked = (mModeIndex == 1);
-            mPerformanceRadioButton.Checked = (mModeIndex == 2);
-            mGameRadioButton.Checked = (mModeIndex == 3);
+            mNormalRadioButton.Checked = (mModeType == MODE_TYPE.NORMAL);
+            mSilenceRadioButton.Checked = (mModeType == MODE_TYPE.SILENCE);
+            mPerformanceRadioButton.Checked = (mModeType == MODE_TYPE.PERFORMANCE);
+            mGameRadioButton.Checked = (mModeType == MODE_TYPE.GAME);
 
-            this.onSensorComboBoxIndexChanged(null, EventArgs.Empty);
+            this.onTempComboBoxIndexChanged(null, EventArgs.Empty);
         }
 
-        private void onSensorComboBoxIndexChanged(object sender, EventArgs e)
+        private void onTempComboBoxIndexChanged(object sender, EventArgs e)
         {
             mPresetLabel.Visible = false;
             mPresetLoadButton.Visible = false;
@@ -352,21 +353,32 @@ namespace FanCtrl
             mHysNumericUpDown.Visible = false;
             mSelectedFanData = null;
 
+            mListViewBaseControlList.Clear();
             mFanListView.BeginUpdate();
             mFanListView.Clear();
 
-            mSelectedSensorIndex = mSensorComboBox.SelectedIndex;
-            var controlData = this.getControlData(mSelectedSensorIndex);
+            mSelectedTempIndex = mTempComboBox.SelectedIndex;
+            var controlData = this.getControlData(mSelectedTempIndex);
             if(controlData == null)
             {
                 mFanListView.EndUpdate();
                 return;
             }
 
+            var controlBaseMap = HardwareManager.getInstance().ControlBaseMap;
             for (int i = 0; i < controlData.FanDataList.Count; i++)
             {
                 var fanData = controlData.FanDataList[i];
-                mFanListView.Items.Add(fanData.Name);
+
+                string fanID = fanData.ID;
+                if (controlBaseMap.ContainsKey(fanID) == false)
+                {
+                    continue;
+                }
+
+                var device = controlBaseMap[fanID];
+                mListViewBaseControlList.Add(device);
+                mFanListView.Items.Add(device.Name);
             }
             mFanListView.EndUpdate();
         }
@@ -439,7 +451,7 @@ namespace FanCtrl
             if (mSelectedFanData != null)
             {
                 mSelectedFanData.ValueList[mSelectedIndex] = (int)y;
-            }            
+            }
 
             for (int i = 0; i < mSelectedIndex; i++)
             {
@@ -468,8 +480,8 @@ namespace FanCtrl
 
         public void onUpdateTimer()
         {
-            if (mSensorComboBox.Items.Count == 0 ||
-                mSelectedSensorIndex == -1 ||
+            if (mTempComboBox.Items.Count == 0 ||
+                mSelectedTempIndex == -1 ||
                 mFanComboBox.Items.Count == 0 ||
                 mSelectedFanData == null ||
                 mNowPoint == null ||
@@ -478,24 +490,42 @@ namespace FanCtrl
                 return;
             }
 
+            var items = mFanListView.SelectedItems;
+            if (items == null || items.Count == 0)
+                return;
+
+            int itemIndex = items[0].Index;
             var hardwareManager = HardwareManager.getInstance();
-            var sensor = hardwareManager.getSensor(mSelectedSensorIndex);
-            var control = hardwareManager.getControl(mSelectedFanData.Index);
-            if (sensor == null || control == null)
+            var tempBaseList = hardwareManager.TempBaseList;
+            var controlBaseList = hardwareManager.ControlBaseList;
+
+            if (mSelectedTempIndex >= tempBaseList.Count || itemIndex >= mListViewBaseControlList.Count)
+                return;
+
+            var tempDevice = tempBaseList[mSelectedTempIndex];
+            var controlDevice = mListViewBaseControlList[itemIndex];
+            if (tempDevice == null || controlDevice == null)
                 return;
             
-            mNowPoint[0].X = (double)sensor.Value;
-            mNowPoint[0].Y = (double)control.LastValue;            
+            mNowPoint[0].X = (double)tempDevice.Value;
+            mNowPoint[0].Y = (double)controlDevice.LastValue;            
             mGraph.Refresh();
         }
 
-        private ControlData getControlData(int sensorIndex)
+        private ControlData getControlData(int tempIndex)
         {
+            var tempBaseList = HardwareManager.getInstance().TempBaseList;
+            if (tempIndex >= tempBaseList.Count)
+                return null;
+
+            string id = tempBaseList[tempIndex].ID;
+
             ControlData controlData = null;
-            for (int i = 0; i < mControlDataList[mModeIndex].Count; i++)
+            int modeIndex = (int)mModeType;
+            for (int i = 0; i < mControlDataList[modeIndex].Count; i++)
             {
-                var tempControlData = mControlDataList[mModeIndex][i];
-                if (tempControlData.Index == sensorIndex)
+                var tempControlData = mControlDataList[modeIndex][i];
+                if (tempControlData.ID.Equals(id) == true)
                 {
                     controlData = tempControlData;
                     break;
@@ -504,17 +534,21 @@ namespace FanCtrl
             return controlData;
         }
 
-        private FanData getFanData(int sensorIndex, int fanIndex)
+        private FanData getFanData(int tempIndex, int fanIndex)
         {
-            var controlData = this.getControlData(sensorIndex);
+            var controlData = this.getControlData(tempIndex);
             if (controlData == null)
                 return null;
 
+            if (fanIndex >= mListViewBaseControlList.Count)
+                return null;
+
+            var device = mListViewBaseControlList[fanIndex];
             FanData fanData = null;
             for (int i = 0; i < controlData.FanDataList.Count; i++)
             {
                 var tempFanData = controlData.FanDataList[i];
-                if (tempFanData.Index == fanIndex)
+                if (tempFanData.ID.Equals(device.ID) == true)
                 {
                     fanData = tempFanData;
                     break;
@@ -523,9 +557,9 @@ namespace FanCtrl
             return fanData;
         }
 
-        private FanData getFanData(int sensorIndex, string fanName)
+        private FanData getFanData(int tempIndex, string id)
         {
-            var controlData = this.getControlData(sensorIndex);
+            var controlData = this.getControlData(tempIndex);
             if (controlData == null)
                 return null;
 
@@ -533,7 +567,7 @@ namespace FanCtrl
             for (int i = 0; i < controlData.FanDataList.Count; i++)
             {
                 var tempFanData = controlData.FanDataList[i];
-                if (tempFanData.Name.Equals(fanName) == true)
+                if (tempFanData.ID.Equals(id) == true)
                 {
                     fanData = tempFanData;
                     break;
@@ -571,7 +605,10 @@ namespace FanCtrl
             mHysNumericUpDown.Visible = true;
 
             var item = items[0];
-            mSelectedFanData = this.getFanData(mSelectedSensorIndex, item.Text);
+            int itemIndex = item.Index;
+            mSelectedFanData = this.getFanData(mSelectedTempIndex, itemIndex);
+            if (mSelectedFanData == null)
+                return;
 
             // setGraphFromSelectedFanData
             this.setGraphFromSelectedFanData();
@@ -607,32 +644,39 @@ namespace FanCtrl
 
         private void onAddButtonClick(object sender, EventArgs e)
         {
-            if (mSensorComboBox.Items.Count == 0 || mFanComboBox.Items.Count == 0)
+            if (mTempComboBox.Items.Count == 0 || mFanComboBox.Items.Count == 0)
                 return;
 
-            int sensorIndex = mSelectedSensorIndex;
+            int modeIndex = (int)mModeType;
+            int tempIndex = mSelectedTempIndex;
             int fanIndex = mFanComboBox.SelectedIndex;
 
-            var controlManager = ControlManager.getInstance();
-            var sensorName = controlManager.getName(0, sensorIndex, false);
-            var fanControlName = controlManager.getName(2, fanIndex, false);
+            var tempBaseList = HardwareManager.getInstance().TempBaseList;
+            var controlBaseList = HardwareManager.getInstance().ControlBaseList;
 
-            var controlData = this.getControlData(sensorIndex);
+            if (tempIndex >= tempBaseList.Count || fanIndex >= controlBaseList.Count)
+                return;
+
+            var tempDevice = tempBaseList[tempIndex];
+            var controlDevice = controlBaseList[fanIndex];
+
+            var controlData = this.getControlData(tempIndex);
             if(controlData == null)
             {
-                controlData = new ControlData(sensorIndex, sensorName);
-                mControlDataList[mModeIndex].Add(controlData);
+                controlData = new ControlData(tempDevice.ID);
+                mControlDataList[modeIndex].Add(controlData);
             }
 
             mFanListView.BeginUpdate();
 
-            var fanData = this.getFanData(sensorIndex, fanIndex);
+            var fanData = this.getFanData(tempIndex, controlDevice.ID);
             if(fanData == null)
             {
-                fanData = new FanData(fanIndex, fanControlName, FanValueUnit.Size_5, true, 0);
+                fanData = new FanData(controlDevice.ID, FanValueUnit.Size_5, true, 0);
                 controlData.FanDataList.Add(fanData);
 
-                mFanListView.Items.Add(fanData.Name);
+                mListViewBaseControlList.Add(controlDevice);
+                mFanListView.Items.Add(controlDevice.Name);
             }
 
             mFanListView.EndUpdate();
@@ -645,16 +689,13 @@ namespace FanCtrl
                 return;
 
             var item = items[0];
-            var controlData = this.getControlData(mSelectedSensorIndex);
-            for(int i = 0; i < controlData.FanDataList.Count; i++)
-            {
-                var fanData = controlData.FanDataList[i];
-                if(fanData.Name.Equals(item.Text) == true)
-                {
-                    controlData.FanDataList.RemoveAt(i);
-                    break;
-                }
-            }
+            int itemIndex = item.Index;
+            var controlData = this.getControlData(mSelectedTempIndex);
+            if (controlData == null)
+                return;
+
+            mListViewBaseControlList.RemoveAt(itemIndex);
+            controlData.FanDataList.RemoveAt(itemIndex);
 
             mSelectedFanData = null;
             mFanListView.BeginUpdate();
@@ -779,7 +820,7 @@ namespace FanCtrl
 
         private void onApplyButtonClick(object sender, EventArgs e)
         {
-            for (int i = 0; i < mControlDataList.Count; i++)
+            for (int i = 0; i < mControlDataList.Length; i++)
             {
                 for (int j = 0; j < mControlDataList[i].Count; j++)
                 {
@@ -789,14 +830,14 @@ namespace FanCtrl
                         mControlDataList[i][j].FanDataList[k].LastChangedValue = 0;
                     }
                 }
-                ControlManager.getInstance().setControlDataList(i, mControlDataList[i]);
+                ControlManager.getInstance().setControlDataList((MODE_TYPE)i, mControlDataList[i]);
             }
 
             ControlManager.getInstance().Width = mNormalLastSize.Width;
             ControlManager.getInstance().Height = mNormalLastSize.Height;
             ControlManager.getInstance().IsMaximize = (this.WindowState == FormWindowState.Maximized);
 
-            ControlManager.getInstance().ModeIndex = mModeIndex;
+            ControlManager.getInstance().ModeType = mModeType;
             ControlManager.getInstance().IsEnable = mEnableCheckBox.Checked;
             ControlManager.getInstance().write();
 

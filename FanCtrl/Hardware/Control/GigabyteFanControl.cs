@@ -15,8 +15,9 @@ namespace FanCtrl
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
-        public GigabyteFanControl(string name, int index, int value) : base()
+        public GigabyteFanControl(string id, string name, int index, int value) : base(LIBRARY_TYPE.Gigabyte)
         {
+            ID = id;
             Name = name;
             mIndex = index;
             Value = value;

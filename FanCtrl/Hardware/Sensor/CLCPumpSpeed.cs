@@ -10,8 +10,9 @@ namespace FanCtrl
     {
         private CLC mCLC = null;
 
-        public CLCPumpSpeed(CLC clc, uint num) : base(SENSOR_TYPE.FAN)
+        public CLCPumpSpeed(string id, CLC clc, uint num) : base(LIBRARY_TYPE.EVGA_CLC)
         {
+            ID = id;
             mCLC = clc;
             Name = "EVGA CLC Pump";
             if (num > 1)

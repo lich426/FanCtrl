@@ -10,8 +10,9 @@ namespace FanCtrl
     {
         private CLC mCLC = null;
 
-        public CLCLiquidTemp(CLC clc, uint num) : base(SENSOR_TYPE.TEMPERATURE)
+        public CLCLiquidTemp(string id, CLC clc, uint num) : base(LIBRARY_TYPE.EVGA_CLC)
         {
+            ID = id;
             mCLC = clc;
             Name = "EVGA CLC Liquid";
             if (num > 1)

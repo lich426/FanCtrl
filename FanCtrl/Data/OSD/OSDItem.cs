@@ -7,40 +7,11 @@ using System.Threading.Tasks;
 
 namespace FanCtrl
 {
-    public enum OSDItemType : int
-    {
-        Sensor = 0,
-        Fan,
-        Control,
-        Predefined,
-        Unknown,
-    }
-
-    public enum OSDUnitType : int
-    {
-        Temperature = 0,
-        RPM,
-        Percent,
-        MHz,
-        kHz,
-        KB,
-        MB,
-        GB,
-        MBPerSec,
-        Voltage,
-        Power,
-        FPS,
-        Blank,
-        Unknown,
-    }
-
     public class OSDItem
     {
-        public OSDItemType ItemType { get; set; }
-
         public OSDUnitType UnitType { get; set; }
 
-        public int Index { get; set; } = 0;
+        public string ID { get; set; }
 
         public bool IsColor { get; set; } = false;
 
@@ -71,52 +42,54 @@ namespace FanCtrl
 
                 // Value
                 var hardwareManager = HardwareManager.getInstance();
-                if (ItemType == OSDItemType.Sensor)
+
+                if (UnitType == OSDUnitType.FPS)
                 {
-                    var sensor = hardwareManager.getSensor(Index);
-                    if (sensor == null)
-                        return "";
-                    int value = sensor.Value;
-                    value = (OptionManager.getInstance().IsFahrenheit == true) ? Util.getFahrenheit(value) : value;
-                    osdString.Append(value.ToString());
+                    osdString.Append("<FR>");
                 }
-                else if (ItemType == OSDItemType.Fan)
+                else if (UnitType == OSDUnitType.Blank)
                 {
-                    var fan = hardwareManager.getFan(Index);
-                    if (fan == null)
-                        return "";
-                    int value = fan.Value;
-                    osdString.Append(value.ToString());
-                }
-                else if (ItemType == OSDItemType.Control)
-                {
-                    var control = hardwareManager.getControl(Index);
-                    if (control == null)
-                        return "";
-                    int value = control.Value;
-                    osdString.Append(value.ToString());
-                }
-                else if (ItemType == OSDItemType.Predefined)
-                {
-                    if(UnitType == OSDUnitType.FPS)
-                    {
-                        osdString.Append("<FR>");
-                    }
-                    else if(UnitType == OSDUnitType.Blank)
-                    {
-                        osdString.Append(" ");
-                    }
-                    else
-                    {
-                        var sensor = hardwareManager.getOSDSensor(Index);
-                        if (sensor == null)
-                            return "";
-                        osdString.Append(sensor.getString());
-                    }
+                    osdString.Append(" ");
                 }
                 else
                 {
-                    return "";
+                    var tempBaseMap = hardwareManager.TempBaseMap;
+                    var fanBaseMap = hardwareManager.FanBaseMap;
+                    var controlBaseMap = hardwareManager.ControlBaseMap;
+                    var osdMap = hardwareManager.OSDSensorMap;
+                    
+                    if (tempBaseMap.ContainsKey(ID) == true)
+                    {
+                        var device = tempBaseMap[ID];
+                        int value = device.Value;
+                        value = (OptionManager.getInstance().IsFahrenheit == true) ? Util.getFahrenheit(value) : value;
+                        osdString.Append(value.ToString());
+                    }
+
+                    else if (fanBaseMap.ContainsKey(ID) == true)
+                    {
+                        var device = fanBaseMap[ID];
+                        int value = device.Value;
+                        osdString.Append(value.ToString());
+                    }
+
+                    else if (controlBaseMap.ContainsKey(ID) == true)
+                    {
+                        var device = controlBaseMap[ID];
+                        int value = device.Value;
+                        osdString.Append(value.ToString());
+                    }
+
+                    else if (osdMap.ContainsKey(ID) == true)
+                    {
+                        var sensor = osdMap[ID];
+                        osdString.Append(sensor.getString());
+                    }
+
+                    else
+                    {
+                        return "";
+                    }
                 }
 
                 // Value postfix
@@ -146,9 +119,8 @@ namespace FanCtrl
         public OSDItem clone()
         {
             var item = new OSDItem();
-            item.ItemType = this.ItemType;
             item.UnitType = this.UnitType;
-            item.Index = this.Index;
+            item.ID = this.ID;
             item.IsColor = this.IsColor;
             item.Color = Color.FromArgb(this.Color.R, this.Color.G, this.Color.B);
             return item;

@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.2.9.0</ApplicationVersion>
+    <ApplicationVersion>1.3.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -44,7 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -182,16 +182,27 @@
     <Compile Include="FanCtrl\Hardware\Control\GigabyteAmdGpuFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\GigabyteFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\GigabyteNvidiaGpuFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\HardwareControl.cs" />
+    <Compile Include="FanCtrl\Hardware\Control\OHMControl.cs" />
+    <Compile Include="FanCtrl\Hardware\Control\LHMControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\HardwareGpuControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\NvAPIFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenPumpControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\RGBnFCControl.cs" />
+    <Compile Include="FanCtrl\Hardware\BaseDevice.cs" />
+    <Compile Include="FanCtrl\Hardware\HardwareDevice.cs" />
     <Compile Include="FanCtrl\Hardware\Gigabyte.cs" />
     <Compile Include="FanCtrl\Hardware\HardwareManager.cs" />
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
+    <Compile Include="FanCtrl\Hardware\OSD\OHMOSDSensor.cs" />
+    <Compile Include="FanCtrl\Hardware\OSD\LHMOSDSensor.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\OHMFanSpeed.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\LHMFanSpeed.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\OHMTemp.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\LHMTemp.cs" />
+    <Compile Include="FanCtrl\Hardware\Define.cs" />
+    <Compile Include="FanCtrl\Hardware\OSD\NvAPIOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\USBDevice.cs" />
     <Compile Include="FanCtrl\Hardware\OHM.cs" />
     <Compile Include="FanCtrl\Hardware\RGBnFC.cs" />
@@ -205,20 +216,17 @@
     <Compile Include="FanCtrl\Hardware\Sensor\GigabyteNvidiaGpuFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\GigabyteNvidiaGpuTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\GigabyteTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\HardwareMotherBoardTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\NvAPIFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\NvAPITemp.cs" />
     <Compile Include="FanCtrl\Data\Option\OptionManager.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\BaseSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\HardwareFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\HardwareTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\KrakenFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\KrakenLiquidTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\KrakenPumpSpeed.cs" />
     <Compile Include="FanCtrl\Data\Option\StartupControl.cs" />
     <Compile Include="FanCtrl\Controller\SMBusController.cs" />
     <Compile Include="FanCtrl\Controller\USBController.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\OSDSensor.cs" />
+    <Compile Include="FanCtrl\Hardware\OSD\OSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\RGBnFCFanSpeed.cs" />
     <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />

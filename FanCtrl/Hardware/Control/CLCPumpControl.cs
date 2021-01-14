@@ -10,8 +10,9 @@ namespace FanCtrl
     {
         private CLC mCLC = null;
 
-        public CLCPumpControl(CLC clc, uint num) : base()
+        public CLCPumpControl(string id, CLC clc, uint num) : base(LIBRARY_TYPE.EVGA_CLC)
         {
+            ID = id;
             mCLC = clc;
             Name = "EVGA CLC Pump";
             if (num > 1)

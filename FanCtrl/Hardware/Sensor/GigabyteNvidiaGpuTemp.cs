@@ -14,9 +14,10 @@ namespace FanCtrl
 
         private int mIndex = -1;
 
-        public GigabyteNvidiaGpuTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
+        public GigabyteNvidiaGpuTemp(string id, string name, int index) : base(LIBRARY_TYPE.Gigabyte)
         {
-            Name = name;// module.ProductName;
+            ID = id;
+            Name = name;
             mIndex = index;
         }
 

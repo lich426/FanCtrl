@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlForm));
             this.mEnableCheckBox = new System.Windows.Forms.CheckBox();
-            this.mSensorGroupBox = new System.Windows.Forms.GroupBox();
-            this.mSensorComboBox = new System.Windows.Forms.ComboBox();
+            this.mTempGroupBox = new System.Windows.Forms.GroupBox();
+            this.mTempComboBox = new System.Windows.Forms.ComboBox();
             this.mFanGroupBox = new System.Windows.Forms.GroupBox();
             this.mRemoveButton = new System.Windows.Forms.Button();
             this.mAddButton = new System.Windows.Forms.Button();
@@ -55,7 +55,7 @@
             this.mUnitComboBox = new System.Windows.Forms.ComboBox();
             this.mPresetLoadButton = new System.Windows.Forms.Button();
             this.mPresetSaveButton = new System.Windows.Forms.Button();
-            this.mSensorGroupBox.SuspendLayout();
+            this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).BeginInit();
@@ -72,24 +72,24 @@
             this.mEnableCheckBox.Text = "Enable automatic fan control";
             this.mEnableCheckBox.UseVisualStyleBackColor = true;
             // 
-            // mSensorGroupBox
+            // mTempGroupBox
             // 
-            this.mSensorGroupBox.Controls.Add(this.mSensorComboBox);
-            this.mSensorGroupBox.Location = new System.Drawing.Point(12, 61);
-            this.mSensorGroupBox.Name = "mSensorGroupBox";
-            this.mSensorGroupBox.Size = new System.Drawing.Size(208, 51);
-            this.mSensorGroupBox.TabIndex = 1;
-            this.mSensorGroupBox.TabStop = false;
-            this.mSensorGroupBox.Text = "Sensor";
+            this.mTempGroupBox.Controls.Add(this.mTempComboBox);
+            this.mTempGroupBox.Location = new System.Drawing.Point(12, 61);
+            this.mTempGroupBox.Name = "mTempGroupBox";
+            this.mTempGroupBox.Size = new System.Drawing.Size(208, 51);
+            this.mTempGroupBox.TabIndex = 1;
+            this.mTempGroupBox.TabStop = false;
+            this.mTempGroupBox.Text = "Temperature Sensor";
             // 
-            // mSensorComboBox
+            // mTempComboBox
             // 
-            this.mSensorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.mSensorComboBox.FormattingEnabled = true;
-            this.mSensorComboBox.Location = new System.Drawing.Point(7, 21);
-            this.mSensorComboBox.Name = "mSensorComboBox";
-            this.mSensorComboBox.Size = new System.Drawing.Size(195, 20);
-            this.mSensorComboBox.TabIndex = 1;
+            this.mTempComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mTempComboBox.FormattingEnabled = true;
+            this.mTempComboBox.Location = new System.Drawing.Point(7, 21);
+            this.mTempComboBox.Name = "mTempComboBox";
+            this.mTempComboBox.Size = new System.Drawing.Size(195, 20);
+            this.mTempComboBox.TabIndex = 1;
             // 
             // mFanGroupBox
             // 
@@ -341,7 +341,7 @@
             this.Controls.Add(this.mOKButton);
             this.Controls.Add(this.mGraphGroupBox);
             this.Controls.Add(this.mFanGroupBox);
-            this.Controls.Add(this.mSensorGroupBox);
+            this.Controls.Add(this.mTempGroupBox);
             this.Controls.Add(this.mEnableCheckBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
@@ -349,7 +349,7 @@
             this.Name = "ControlForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FanControl";
-            this.mSensorGroupBox.ResumeLayout(false);
+            this.mTempGroupBox.ResumeLayout(false);
             this.mFanGroupBox.ResumeLayout(false);
             this.mGraphGroupBox.ResumeLayout(false);
             this.mGraphGroupBox.PerformLayout();
@@ -364,8 +364,8 @@
         #endregion
 
         private System.Windows.Forms.CheckBox mEnableCheckBox;
-        private System.Windows.Forms.GroupBox mSensorGroupBox;
-        private System.Windows.Forms.ComboBox mSensorComboBox;
+        private System.Windows.Forms.GroupBox mTempGroupBox;
+        private System.Windows.Forms.ComboBox mTempComboBox;
         private System.Windows.Forms.GroupBox mFanGroupBox;
         private System.Windows.Forms.ListView mFanListView;
         private System.Windows.Forms.ComboBox mFanComboBox;

@@ -14,7 +14,7 @@ namespace FanCtrl
         private LibreHardwareMonitor.Hardware.ISensor mLHMSensor = null;
         private OpenHardwareMonitor.Hardware.ISensor mOHMSensor = null;
 
-        public HardwareGpuControl(LibreHardwareMonitor.Hardware.ISensor sensor, string name) : base()
+        public HardwareGpuControl(LibreHardwareMonitor.Hardware.ISensor sensor, string name) : base(LIBRARY_TYPE.LHM)
         {
             mLHMSensor = sensor;
             Name = name;
@@ -22,7 +22,7 @@ namespace FanCtrl
             LastValue = 0;
         }
 
-        public HardwareGpuControl(OpenHardwareMonitor.Hardware.ISensor sensor, string name) : base()
+        public HardwareGpuControl(OpenHardwareMonitor.Hardware.ISensor sensor, string name) : base(LIBRARY_TYPE.OHM)
         {
             mOHMSensor = sensor;
             Name = name;

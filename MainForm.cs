@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -18,29 +19,39 @@ namespace FanCtrl
     public partial class MainForm : Form
     {
         private bool mIsExit = false;
+        private bool mIsFirstLoad = true;
 
-        private List<Label> mSensorLabelList = new List<Label>();
-        private List<TextBox> mSensorNameTextBoxList = new List<TextBox>();
+        private List<Label> mTempLabelList = new List<Label>();
+        private List<TextBox> mTempNameTextBoxList = new List<TextBox>();
         private List<Label> mFanLabelList = new List<Label>();
         private List<TextBox> mFanNameTextBoxList = new List<TextBox>();
         private List<TextBox> mControlTextBoxList = new List<TextBox>();
         private List<Label> mControlLabelList = new List<Label>();
-        private List<TextBox> mControlNameTextBoxList = new List<TextBox>();        
+        private List<TextBox> mControlNameTextBoxList = new List<TextBox>();
 
         private ControlForm mControlForm = null;
 
         private List<Icon> mFanIconList = new List<Icon>();
         private int mFanIconIndex = 0;
-        private System.Windows.Forms.Timer mFanIconTimer = new System.Windows.Forms.Timer();
+        private System.Windows.Forms.Timer mFanIconTimer = null;
 
-        private int mDeviceCheckCount = 0;
-        private System.Timers.Timer mDeviceCheckTimer = new System.Timers.Timer();
-        private object mDeviceCheckTimerLock = new object();
+        private Thread mStartThread = null;
+
+        private bool mIsFirstShow = false;
+        private bool mIsVisible = true;
+
+        private bool mIsUserResize = true;
+
+        private int mOriginHeight = 155;
+        private int mNowHeight = 155;
 
         public MainForm()
         {
             InitializeComponent();
             this.localizeComponent();
+
+            this.MinimumSize = new Size(this.Width, mOriginHeight);
+            this.MaximumSize = new Size(this.Width, Int32.MaxValue);
 
             this.FormClosing += onClosing;
 
@@ -56,9 +67,9 @@ namespace FanCtrl
             mTrayIcon.Icon = mFanIconList[0];
             mTrayIcon.Visible = true;
             mTrayIcon.MouseDoubleClick += onTrayIconDBClicked;
-            mTrayIcon.ContextMenuStrip = mTrayMenuStrip;
-
             mDonatePictureBox.MouseClick += onDonatePictureBoxClick;
+
+            HardwareManager.getInstance().onUpdateCallback += onUpdate;
 
             if (OptionManager.getInstance().read() == false)
             {
@@ -79,87 +90,10 @@ namespace FanCtrl
                 this.Visible = false;
                 this.WindowState = FormWindowState.Minimized;
                 this.ShowInTaskbar = false;
+                mIsVisible = false;
+                mIsFirstShow = false;
             }
         }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            this.Enabled = false;
-            mLoadingPanel.Visible = true;
-            mDeviceCheckTimer.Interval = 100;
-            mDeviceCheckTimer.Elapsed += (object sender2, ElapsedEventArgs e2) =>
-            {
-                if (Monitor.TryEnter(mDeviceCheckTimerLock) == false)
-                    return;
-
-                mDeviceCheckCount++;
-
-                bool isErrorMessage = false;
-                if (checkDevice() == false)
-                {
-                    if (mDeviceCheckCount >= 5)
-                    {
-                        isErrorMessage = true;                     
-                    }
-                    else
-                    {
-                        HardwareManager.getInstance().stop();
-                        ControlManager.getInstance().reset();
-                        Monitor.Exit(mDeviceCheckTimerLock);
-                        return;
-                    }
-                }
-
-                this.BeginInvoke(new Action(delegate ()
-                {
-                    // OSDManager
-                    OSDManager.getInstance().read();
-
-                    this.createComponent();
-                    this.ActiveControl = mFanControlButton;
-
-                    mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
-                    mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
-                    mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
-                    mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
-                    mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
-                    mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
-
-                    // startUpdate
-                    HardwareManager.getInstance().startUpdate();
-
-                    // start icon update
-                    mFanIconTimer.Interval = 100;
-                    mFanIconTimer.Tick += onFanIconTimer;
-                    if (OptionManager.getInstance().IsAnimation == true)
-                    {
-                        mFanIconTimer.Start();
-                    }
-
-                    mLoadingPanel.Visible = false;
-                    this.Enabled = true;
-
-                    if (isErrorMessage == true)
-                    {
-                        MessageBox.Show(StringLib.Not_Match, StringLib.Error);
-                    }
-                }));
-                
-                mDeviceCheckTimer.Stop();
-                Monitor.Exit(mDeviceCheckTimerLock);
-            };
-            mDeviceCheckTimer.Start();
-
-            if (OptionManager.getInstance().IsMinimized == true)
-            {
-                this.BeginInvoke(new Action(delegate ()
-                {
-                    this.Close();
-                }));
-            }
-        }        
 
         private void localizeComponent()
         {
@@ -183,6 +117,189 @@ namespace FanCtrl
             mExitToolStripMenuItem.Text = StringLib.Exit;
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            this.SetStyle(ControlStyles.UserPaint |
+                            ControlStyles.OptimizedDoubleBuffer |
+                            ControlStyles.AllPaintingInWmPaint |
+                            ControlStyles.SupportsTransparentBackColor, true);
+
+            this.Resize += (s2, e2) =>
+            {
+                if (mIsUserResize == false)
+                {
+                    mIsUserResize = true;
+                    return;
+                }
+
+                mNowHeight = this.Height;
+                this.resizeForm();
+            };
+
+            if (OptionManager.getInstance().IsMinimized == true)
+            {
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    this.Close();
+                }));
+            }
+
+            // reload
+            this.reload();
+        }
+
+        private void reload()
+        {
+            this.Enabled = false;
+
+            mLoadingPanel.Visible = true;
+            mTrayIcon.ContextMenuStrip = null;
+
+            mTempPanel.Controls.Clear();
+            mFanPanel.Controls.Clear();
+            mControlPanel.Controls.Clear();
+
+            mTempLabelList.Clear();
+            mTempNameTextBoxList.Clear();
+            mFanLabelList.Clear();
+            mFanNameTextBoxList.Clear();
+            mControlTextBoxList.Clear();
+            mControlLabelList.Clear();
+            mControlNameTextBoxList.Clear();
+
+            if (mFanIconTimer != null)
+            {
+                mFanIconTimer.Stop();
+                mFanIconTimer.Dispose();
+                mFanIconTimer = null;
+            }
+            
+            mTrayIcon.Icon = mFanIconList[0];
+            mFanIconIndex = 0;
+
+            mNowHeight = mOriginHeight;
+            this.resizeForm();
+
+            mStartThread = new Thread(new ThreadStart(() =>
+            {
+                int checkCount = (mIsFirstLoad == true) ? 3 : 0;
+                mIsFirstLoad = false;
+                while (true)
+                {
+                    // start hardware manager
+                    HardwareManager.getInstance().start();
+
+                    // set hardware name
+                    bool isDifferent = false;
+                    if (HardwareManager.getInstance().read(ref isDifferent) == false)
+                        break;
+
+                    if (isDifferent == true && checkCount > 0)
+                    {
+                        // restart
+                        HardwareManager.getInstance().stop();
+                        Thread.Sleep(100);
+                        checkCount--;
+                        continue;
+                    }
+                    break;
+                }
+
+                // set hardware name to file
+                HardwareManager.getInstance().write();
+
+                // read auto fan curve
+                ControlManager.getInstance().read();
+
+                // read osd data
+                OSDManager.getInstance().read();
+
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    this.onMainLoad();
+                }));
+            }));
+            mStartThread.Start();
+        }
+
+        private void onMainLoad()
+        {
+            this.createComponent();
+            this.ActiveControl = mFanControlButton;
+
+            mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
+            mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
+            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.NORMAL);
+            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.SILENCE);
+            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE);
+            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.GAME);
+
+            // startUpdate
+            HardwareManager.getInstance().startUpdate();
+
+            // start icon update
+            mTrayIcon.ContextMenuStrip = mTrayMenuStrip;
+            mFanIconTimer = new System.Windows.Forms.Timer();
+            mFanIconTimer.Interval = 100;
+            mFanIconTimer.Tick += onFanIconTimer;
+            if (OptionManager.getInstance().IsAnimation == true)
+            {
+                mFanIconTimer.Start();
+            }
+
+            mLoadingPanel.Visible = false;
+
+            if (mIsVisible == true)
+            {
+                mIsFirstShow = true;
+                this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2,
+                                          (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2);
+            }
+                        
+            this.Enabled = true;
+        }
+
+        private void resizeForm()
+        {
+            // origin size
+            int groupBoxHeight = 53;
+            int panelHeight = 35;
+            int madeLabelPoint1 = 78;
+            int madeLabelPoint2 = 95;
+            int donatePictureBoxPoint = 81;
+            int buttonPoint = 71;
+
+            int gap = mNowHeight - mOriginHeight;
+
+            groupBoxHeight = groupBoxHeight + gap;
+            panelHeight = panelHeight + gap;
+            madeLabelPoint1 = madeLabelPoint1 + gap;
+            madeLabelPoint2 = madeLabelPoint2 + gap;
+            donatePictureBoxPoint = donatePictureBoxPoint + gap;
+            buttonPoint = buttonPoint + gap;
+
+            mTempGroupBox.Height = groupBoxHeight;
+            mFanGroupBox.Height = groupBoxHeight;
+            mControlGroupBox.Height = groupBoxHeight;
+
+            mTempPanel.Height = panelHeight;
+            mFanPanel.Height = panelHeight;
+            mControlPanel.Height = panelHeight;
+
+            mMadeLabel1.Top = madeLabelPoint1;
+            mMadeLabel2.Top = madeLabelPoint2;
+            mDonatePictureBox.Top = donatePictureBoxPoint;
+
+            mOSDButton.Top = buttonPoint;
+            mOptionButton.Top = buttonPoint;
+            mFanControlButton.Top = buttonPoint;
+
+            mIsUserResize = false;
+            this.Height = mNowHeight;
+        }
+
         private void onClosing(object sender, FormClosingEventArgs e)
         {
             if (mControlForm != null)
@@ -193,50 +310,10 @@ namespace FanCtrl
 
             if (mIsExit == false)
             {
+                mIsVisible = false;
                 this.Visible = false;
                 e.Cancel = true;
             }
-        }
-
-        private bool checkDevice()
-        {
-            var hardwareManager = HardwareManager.getInstance();
-            var controlManager = ControlManager.getInstance();
-
-            hardwareManager.onUpdateCallback += onUpdate;
-            hardwareManager.start();
-
-            // name
-            controlManager.setNameCount(0, hardwareManager.getSensorCount());
-            controlManager.setNameCount(1, hardwareManager.getFanCount());
-            controlManager.setNameCount(2, hardwareManager.getControlCount());
-
-            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
-            {
-                var temp = hardwareManager.getSensor(i);
-                controlManager.setName(0, i, true, temp.Name);
-                controlManager.setName(0, i, false, temp.Name);
-            }
-
-            for (int i = 0; i < hardwareManager.getFanCount(); i++)
-            {
-                var temp = hardwareManager.getFan(i);
-                controlManager.setName(1, i, true, temp.Name);
-                controlManager.setName(1, i, false, temp.Name);
-            }
-
-            for (int i = 0; i < hardwareManager.getControlCount(); i++)
-            {
-                var temp = hardwareManager.getControl(i);
-                controlManager.setName(2, i, true, temp.Name);
-                controlManager.setName(2, i, false, temp.Name);
-            }
-
-            if (controlManager.read() == false || controlManager.checkData() == false)
-            {
-                return false;
-            }
-            return true;
         }
 
         private void onFanIconTimer(object sender, EventArgs e)
@@ -251,12 +328,7 @@ namespace FanCtrl
 
         private void onTrayIconDBClicked(object sender, MouseEventArgs e)
         {
-            this.ShowInTaskbar = true;
-            this.Visible = true;
-            this.Activate();
-
-            if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
+            this.onTrayMenuShow(null, EventArgs.Empty);
         }
 
         private void onTrayMenuEnableClick(object sender, EventArgs e)
@@ -275,52 +347,63 @@ namespace FanCtrl
 
         private void onTrayMenuNormalClick(object sender, EventArgs e)
         {
-            ControlManager.getInstance().ModeIndex = 0;
-            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
-            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
-            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
-            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
+            ControlManager.getInstance().ModeType = MODE_TYPE.NORMAL;
+            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.NORMAL);
+            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.SILENCE);
+            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE);
+            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.GAME);
             ControlManager.getInstance().write();
         }
 
         private void onTrayMenuSilenceClick(object sender, EventArgs e)
         {
-            ControlManager.getInstance().ModeIndex = 1;
-            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
-            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
-            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
-            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
+            ControlManager.getInstance().ModeType = MODE_TYPE.SILENCE;
+            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.NORMAL);
+            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.SILENCE);
+            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE);
+            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.GAME);
             ControlManager.getInstance().write();
         }
 
         private void onTrayMenuPerformanceClick(object sender, EventArgs e)
         {
-            ControlManager.getInstance().ModeIndex = 2;
-            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
-            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
-            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
-            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
+            ControlManager.getInstance().ModeType = MODE_TYPE.PERFORMANCE;
+            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.NORMAL);
+            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.SILENCE);
+            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE);
+            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.GAME);
             ControlManager.getInstance().write();
         }
 
         private void onTrayMenuGameClick(object sender, EventArgs e)
         {
-            ControlManager.getInstance().ModeIndex = 3;
-            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
-            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
-            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
-            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
+            ControlManager.getInstance().ModeType = MODE_TYPE.GAME;
+            mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.NORMAL);
+            mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.SILENCE);
+            mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE);
+            mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.GAME);
             ControlManager.getInstance().write();
         }
 
         private void onTrayMenuShow(object sender, EventArgs e)
-        {            
+        {
+            if (this.Enabled == false)
+                return;
+
+            mIsVisible = true;
             this.ShowInTaskbar = true;
             this.Visible = true;
             this.Activate();
 
             if (this.WindowState == FormWindowState.Minimized)
                 this.WindowState = FormWindowState.Normal;
+
+            if (mIsFirstShow == false)
+            {
+                this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2,
+                                          (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2);
+                mIsFirstShow = true;
+            }
         }
 
         private void onTrayMenuExit(object sender, EventArgs e)
@@ -333,7 +416,13 @@ namespace FanCtrl
 
             HardwareManager.getInstance().stop();
 
-            mFanIconTimer.Stop();
+            if (mFanIconTimer != null)
+            {
+                mFanIconTimer.Stop();
+                mFanIconTimer.Dispose();
+                mFanIconTimer = null;
+            }
+            
             mTrayIcon.Visible = false;
 
             mIsExit = true;
@@ -341,256 +430,452 @@ namespace FanCtrl
             Application.Exit();
         }
 
-        private void onRestartProgram(object sender, EventArgs e)
-        {
-            if (mControlForm != null)
-            {
-                mControlForm.Close();
-                mControlForm = null;
-            }
-
-            HardwareManager.getInstance().stop();
-
-            mFanIconTimer.Stop();
-            mTrayIcon.Visible = false;
-
-            Program.releaseMutex();
-            Program.executeProgram();
-
-            mIsExit = true;
-            Environment.Exit(0);
-        }
-
         private void createComponent()
         {
             var hardwareManager = HardwareManager.getInstance();
             var controlManager = ControlManager.getInstance();
 
+            int tempHeight = mTempPanel.Height;
+            int fanHeight = mFanPanel.Height;
+            int controlHeight = mControlPanel.Height;
+
             // temperature
-            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
+            int pointY = 15;
+            for (int i = 0; i < hardwareManager.TempList.Count(); i++)
             {
-                var label = new Label();
-                label.Location = new System.Drawing.Point(3, 25 + i * 25);
-                label.Name = "sensorLabel" + i.ToString();
-                label.Size = new System.Drawing.Size(40, 23);
-                label.Text = "";
-                label.AutoSize = false;
-                label.TextAlign = ContentAlignment.TopRight;
-                mTempGroupBox.Controls.Add(label);
-                mSensorLabelList.Add(label);
+                var tempList = hardwareManager.TempList[i];
+                if (tempList.Count == 0)
+                    continue;
 
-                var textBox = new TextBox();
-                textBox.Location = new System.Drawing.Point(label.Left + label.Width + 5, label.Top - 5);
-                textBox.Name = "sensorName" + i.ToString();
-                textBox.Size = new System.Drawing.Size(mTempGroupBox.Width - 60, 23);
-                textBox.Multiline = false;
-                textBox.MaxLength = 40;
-                textBox.Text = controlManager.getName(0, i, false);
-                textBox.Leave += onSensorNameTextBoxLeaves;
-                mTempGroupBox.Controls.Add(textBox);
-                mSensorNameTextBoxList.Add(textBox);
+                var libLabel = new Label();
+                libLabel.Location = new System.Drawing.Point(15, pointY);
+                libLabel.Text = Define.cLibraryTypeString[i];
+                libLabel.AutoSize = true;
+                libLabel.ForeColor = Color.Red;
+                libLabel.Font = new Font(libLabel.Font, FontStyle.Bold);
+                mTempPanel.Controls.Add(libLabel);
 
-                if (i < hardwareManager.getSensorCount() - 1)
+                var libLabel2 = new Label();
+                libLabel2.Location = new System.Drawing.Point(5, pointY + 5);
+                libLabel2.Size = new System.Drawing.Size(mTempPanel.Width - 30, 2);
+                libLabel2.AutoSize = false;
+                libLabel2.BorderStyle = BorderStyle.Fixed3D;
+                mTempPanel.Controls.Add(libLabel2);
+
+                pointY = pointY + 21;
+                tempHeight = tempHeight + 21;
+
+                for (int j = 0; j < tempList.Count; j++)
                 {
-                    mTempGroupBox.Height = mTempGroupBox.Height + 25;
+                    var hardwareDevice = tempList[j];
+
+                    var hardwareLabel = new Label();
+                    hardwareLabel.Location = new System.Drawing.Point(25, pointY);
+                    hardwareLabel.AutoSize = true;
+                    hardwareLabel.Height = 20;
+                    hardwareLabel.Text = hardwareDevice.Name;
+                    hardwareLabel.ForeColor = Color.Blue;
+                    mTempPanel.Controls.Add(hardwareLabel);
+
+                    var hardwareLabel2 = new Label();
+                    hardwareLabel2.Location = new System.Drawing.Point(20, pointY + 5);
+                    hardwareLabel2.Size = new System.Drawing.Size(190, 2);
+                    hardwareLabel2.AutoSize = false;
+                    hardwareLabel2.BorderStyle = BorderStyle.Fixed3D;
+                    mTempPanel.Controls.Add(hardwareLabel2);
+
+                    pointY = pointY + 25;
+                    tempHeight = tempHeight + 25;
+
+                    for (int k = 0; k < hardwareDevice.DeviceList.Count; k++)
+                    {
+                        var device = hardwareDevice.DeviceList[k];
+
+                        var label = new Label();
+                        label.Location = new System.Drawing.Point(3, pointY);
+                        label.Size = new System.Drawing.Size(40, 23);
+                        label.Text = "";
+                        label.AutoSize = false;
+                        label.TextAlign = ContentAlignment.TopRight;
+                        mTempPanel.Controls.Add(label);
+                        mTempLabelList.Add(label);
+
+                        var textBox = new TextBox();
+                        textBox.Location = new System.Drawing.Point(label.Right + 5, label.Top - 5);
+                        textBox.Size = new System.Drawing.Size(mTempPanel.Width - 70, 23);
+                        textBox.Multiline = false;
+                        textBox.MaxLength = 40;
+                        textBox.Text = device.Name;
+                        textBox.Leave += (object sender, EventArgs e) =>
+                        {
+                            this.onNameTextBoxLeaves((TextBox)sender, NAME_TYPE.TEMPERATURE, ref mTempNameTextBoxList);
+                        };
+                        textBox.KeyDown += (object sender, KeyEventArgs e) =>
+                        {
+                            if (e.KeyCode == Keys.Enter)
+                            {
+                                this.onNameTextBoxLeaves((TextBox)sender, NAME_TYPE.TEMPERATURE, ref mTempNameTextBoxList);
+                            }
+                        };
+                        mTempPanel.Controls.Add(textBox);
+                        mTempNameTextBoxList.Add(textBox);
+
+                        pointY = pointY + 25;
+                        tempHeight = tempHeight + 25;
+                    }
+
+                    pointY = pointY + 10;
+                    tempHeight = tempHeight + 10;
                 }
             }
 
-            // fan
-            for (int i = 0; i < hardwareManager.getFanCount(); i++)
+            tempHeight = tempHeight - 30;
+
+            int maxHeight = Screen.PrimaryScreen.WorkingArea.Height - 200;
+            if (tempHeight > maxHeight)
             {
-                var label = new Label();
-                label.Location = new System.Drawing.Point(10, 25 + i * 25);
-                label.Name = "fanLabel" + i.ToString();
-                label.Size = new System.Drawing.Size(60, 23);
-                label.Text = "";
-                label.AutoSize = false;
-                label.TextAlign = ContentAlignment.TopRight;
-                mFanGroupBox.Controls.Add(label);
-                mFanLabelList.Add(label);
+                int gap = tempHeight - maxHeight;
+                tempHeight = tempHeight - gap;
+            }
 
-                var textBox = new TextBox();
-                textBox.Location = new System.Drawing.Point(label.Left + label.Width + 5, label.Top - 5);
-                textBox.Name = "fanName" + i.ToString();
-                textBox.Size = new System.Drawing.Size(mFanGroupBox.Width - 85, 23);
-                textBox.Multiline = false;
-                textBox.MaxLength = 40;
-                textBox.Text = controlManager.getName(1, i, false);
-                textBox.Leave += onFanNameTextBoxLeaves;
-                mFanGroupBox.Controls.Add(textBox);
-                mFanNameTextBoxList.Add(textBox);
+            pointY = 15;
+            for (int i = 0; i < hardwareManager.FanList.Count(); i++)
+            {
+                var fanList = hardwareManager.FanList[i];
+                if (fanList.Count == 0)
+                    continue;
 
-                if (i < hardwareManager.getFanCount() - 1)
+                var libLabel = new Label();
+                libLabel.Location = new System.Drawing.Point(15, pointY);
+                libLabel.Text = Define.cLibraryTypeString[i];
+                libLabel.AutoSize = true;
+                libLabel.ForeColor = Color.Red;
+                libLabel.Font = new Font(libLabel.Font, FontStyle.Bold);
+                mFanPanel.Controls.Add(libLabel);
+
+                var libLabel2 = new Label();
+                libLabel2.Location = new System.Drawing.Point(5, pointY + 5);
+                libLabel2.Size = new System.Drawing.Size(mFanPanel.Width - 30, 2);
+                libLabel2.AutoSize = false;
+                libLabel2.BorderStyle = BorderStyle.Fixed3D;
+                mFanPanel.Controls.Add(libLabel2);
+
+                pointY = pointY + 21;
+                fanHeight = fanHeight + 21;
+
+                for (int j = 0; j < fanList.Count; j++)
                 {
-                    mFanGroupBox.Height = mFanGroupBox.Height + 25;
+                    var hardwareDevice = fanList[j];
+
+                    var hardwareLabel = new Label();
+                    hardwareLabel.Location = new System.Drawing.Point(25, pointY);
+                    hardwareLabel.AutoSize = true;
+                    hardwareLabel.Height = 20;
+                    hardwareLabel.Text = hardwareDevice.Name;
+                    hardwareLabel.ForeColor = Color.Blue;
+                    mFanPanel.Controls.Add(hardwareLabel);
+
+                    var hardwareLabel2 = new Label();
+                    hardwareLabel2.Location = new System.Drawing.Point(20, pointY + 5);
+                    hardwareLabel2.Size = new System.Drawing.Size(190, 2);
+                    hardwareLabel2.AutoSize = false;
+                    hardwareLabel2.BorderStyle = BorderStyle.Fixed3D;
+                    mFanPanel.Controls.Add(hardwareLabel2);
+
+                    pointY = pointY + 25;
+                    fanHeight = fanHeight + 25;
+
+                    for (int k = 0; k < hardwareDevice.DeviceList.Count; k++)
+                    {
+                        var device = hardwareDevice.DeviceList[k];
+
+                        var label = new Label();
+                        label.Location = new System.Drawing.Point(3, pointY);
+                        label.Size = new System.Drawing.Size(60, 23);
+                        label.Text = "";
+                        label.AutoSize = false;
+                        label.TextAlign = ContentAlignment.TopRight;
+                        mFanPanel.Controls.Add(label);
+                        mFanLabelList.Add(label);
+
+                        var textBox = new TextBox();
+                        textBox.Location = new System.Drawing.Point(label.Right + 5, label.Top - 5);
+                        textBox.Size = new System.Drawing.Size(mFanPanel.Width - 90, 23);
+                        textBox.Multiline = false;
+                        textBox.MaxLength = 40;
+                        textBox.Text = device.Name;
+                        textBox.Leave += (object sender, EventArgs e) =>
+                        {
+                            this.onNameTextBoxLeaves((TextBox)sender, NAME_TYPE.FAN, ref mFanNameTextBoxList);
+                        };
+                        textBox.KeyDown += (object sender, KeyEventArgs e) =>
+                        {
+                            if (e.KeyCode == Keys.Enter)
+                            {
+                                this.onNameTextBoxLeaves((TextBox)sender, NAME_TYPE.FAN, ref mFanNameTextBoxList);
+                            }
+                        };
+                        mFanPanel.Controls.Add(textBox);
+                        mFanNameTextBoxList.Add(textBox);
+
+                        pointY = pointY + 25;
+                        fanHeight = fanHeight + 25;
+                    }
+
+                    pointY = pointY + 10;
+                    fanHeight = fanHeight + 10;
                 }
             }
 
-            // set groupbox height
-            if (mFanGroupBox.Height > mTempGroupBox.Height)
-                mTempGroupBox.Height = mFanGroupBox.Height;
+            fanHeight = fanHeight - 30;
+
+            if (fanHeight > maxHeight)
+            {
+                int gap = fanHeight - maxHeight;
+                fanHeight = fanHeight - gap;
+            }
+
+            // set height
+            if (fanHeight > tempHeight)
+            {
+                tempHeight = fanHeight;
+            }
             else
-                mFanGroupBox.Height = mTempGroupBox.Height;
-
-            // control
-            for (int i = 0; i < hardwareManager.getControlCount(); i++)
             {
-                var textBox = new TextBox();
-                textBox.Location = new System.Drawing.Point(10, 20 + i * 25);
-                textBox.Name = "controlTextBox" + i.ToString();
-                textBox.Size = new System.Drawing.Size(40, 23);
-                textBox.Multiline = false;
-                textBox.MaxLength = 3;
-                textBox.Text = "" + hardwareManager.getControl(i).Value;
-                textBox.KeyPress += onControlTextBoxKeyPress;
-                textBox.TextChanged += onControlTextBoxChanges;
-                mControlGroupBox.Controls.Add(textBox);
-                mControlTextBoxList.Add(textBox);
+                fanHeight = tempHeight;
+            }
 
-                int minValue = hardwareManager.getControl(i).getMinSpeed();
-                int maxValue = hardwareManager.getControl(i).getMaxSpeed();
-                var tooltipString = minValue + " ≤  value ≤ " + maxValue;
-                mToolTip.SetToolTip(textBox, tooltipString);
+            pointY = 15;
+            for (int i = 0; i < hardwareManager.ControlList.Count(); i++)
+            {
+                var controlList = hardwareManager.ControlList[i];
+                if (controlList.Count == 0)
+                    continue;
 
-                var label = new Label();
-                label.Location = new System.Drawing.Point(textBox.Left + textBox.Width + 2, 25 + i * 25);
-                label.Name = "controlLabel" + i.ToString();
-                label.Size = new System.Drawing.Size(15, 23);
-                label.Text = "%";
-                mControlGroupBox.Controls.Add(label);
-                mControlLabelList.Add(label);
+                var libLabel = new Label();
+                libLabel.Location = new System.Drawing.Point(15, pointY);
+                libLabel.Text = Define.cLibraryTypeString[i];
+                libLabel.AutoSize = true;
+                libLabel.ForeColor = Color.Red;
+                libLabel.Font = new Font(libLabel.Font, FontStyle.Bold);
+                mControlPanel.Controls.Add(libLabel);
 
-                var textBox2 = new TextBox();
-                textBox2.Location = new System.Drawing.Point(label.Left + label.Width + 5, label.Top - 5);
-                textBox2.Name = "controlName" + i.ToString();
-                textBox2.Size = new System.Drawing.Size(mControlGroupBox.Width - 85, 23);
-                textBox2.Multiline = false;
-                textBox2.MaxLength = 40;
-                textBox2.Text = controlManager.getName(2, i, false);
-                textBox2.Leave += onFanControlNameTextBoxLeaves;
-                mControlGroupBox.Controls.Add(textBox2);
-                mControlNameTextBoxList.Add(textBox2);
+                var libLabel2 = new Label();
+                libLabel2.Location = new System.Drawing.Point(5, pointY + 5);
+                libLabel2.Size = new System.Drawing.Size(mControlPanel.Width - 30, 2);
+                libLabel2.AutoSize = false;
+                libLabel2.BorderStyle = BorderStyle.Fixed3D;
+                mControlPanel.Controls.Add(libLabel2);
 
-                if (i < hardwareManager.getControlCount() - 1)
+                pointY = pointY + 21;
+                controlHeight = controlHeight + 21;
+
+                for (int j = 0; j < controlList.Count; j++)
                 {
-                    mControlGroupBox.Height = mControlGroupBox.Height + 25;
+                    var hardwareDevice = controlList[j];
+
+                    var hardwareLabel = new Label();
+                    hardwareLabel.Location = new System.Drawing.Point(25, pointY);
+                    hardwareLabel.AutoSize = true;
+                    hardwareLabel.Height = 20;
+                    hardwareLabel.Text = hardwareDevice.Name;
+                    hardwareLabel.ForeColor = Color.Blue;
+                    mControlPanel.Controls.Add(hardwareLabel);
+
+                    var hardwareLabel2 = new Label();
+                    hardwareLabel2.Location = new System.Drawing.Point(20, pointY + 5);
+                    hardwareLabel2.Size = new System.Drawing.Size(190, 2);
+                    hardwareLabel2.AutoSize = false;
+                    hardwareLabel2.BorderStyle = BorderStyle.Fixed3D;
+                    mControlPanel.Controls.Add(hardwareLabel2);
+
+                    pointY = pointY + 25;
+                    controlHeight = controlHeight + 25;
+
+                    for (int k = 0; k < hardwareDevice.DeviceList.Count; k++)
+                    {
+                        var device = (BaseControl)hardwareDevice.DeviceList[k];
+
+                        var textBox = new TextBox();
+                        textBox.Location = new System.Drawing.Point(10, pointY - 5);
+                        textBox.Size = new System.Drawing.Size(40, 23);
+                        textBox.Multiline = false;
+                        textBox.MaxLength = 3;
+                        textBox.Text = "" + device.Value;
+                        textBox.KeyPress += (object sender, KeyPressEventArgs e) =>
+                        {
+                            if (e.KeyChar == (char)Keys.Enter)
+                            {
+                                this.onControlTextBoxLeaves(sender, EventArgs.Empty);
+                            }
+                            else if (char.IsDigit(e.KeyChar) == false)
+                            {
+                                e.Handled = true;
+                            }
+                        };
+                        textBox.Leave += onControlTextBoxLeaves;
+
+                        mControlPanel.Controls.Add(textBox);
+                        mControlTextBoxList.Add(textBox);
+
+                        int minValue = device.getMinSpeed();
+                        int maxValue = device.getMaxSpeed();
+                        var tooltipString = minValue + " ≤  value ≤ " + maxValue;
+                        mToolTip.SetToolTip(textBox, tooltipString);
+
+                        var label = new Label();
+                        label.Location = new System.Drawing.Point(textBox.Right + 2, pointY);
+                        label.Size = new System.Drawing.Size(15, 23);
+                        label.Text = "%";
+                        mControlPanel.Controls.Add(label);
+                        mControlLabelList.Add(label);
+
+                        var textBox2 = new TextBox();
+                        textBox2.Location = new System.Drawing.Point(label.Right + 5, label.Top - 5);
+                        textBox2.Size = new System.Drawing.Size(mControlPanel.Width - 95, 23);
+                        textBox2.Multiline = false;
+                        textBox2.MaxLength = 40;
+                        textBox2.Text = device.Name;
+                        textBox2.Leave += (object sender, EventArgs e) =>
+                        {
+                            this.onNameTextBoxLeaves((TextBox)sender, NAME_TYPE.CONTOL, ref mControlNameTextBoxList);
+                        };
+                        textBox2.KeyDown += (object sender, KeyEventArgs e) =>
+                        {
+                            if (e.KeyCode == Keys.Enter)
+                            {
+                                this.onNameTextBoxLeaves((TextBox)sender, NAME_TYPE.CONTOL, ref mControlNameTextBoxList);
+                            }
+                        };
+                        mControlPanel.Controls.Add(textBox2);
+                        mControlNameTextBoxList.Add(textBox2);
+
+                        pointY = pointY + 25;
+                        controlHeight = controlHeight + 25;
+                    }
+
+                    pointY = pointY + 10;
+                    controlHeight = controlHeight + 10;
                 }
             }
 
-            // set groupbox height
-            if (mFanGroupBox.Height > mControlGroupBox.Height)
+            controlHeight = controlHeight - 30;
+
+            if (controlHeight > maxHeight)
             {
-                mControlGroupBox.Height = mFanGroupBox.Height;
+                int gap = controlHeight - maxHeight;
+                controlHeight = controlHeight - gap;
+            }
+
+            // set height
+            if (fanHeight > controlHeight)
+            {
+                controlHeight = fanHeight;
             }
             else
             {
-                mTempGroupBox.Height = mControlGroupBox.Height;
-                mFanGroupBox.Height = mControlGroupBox.Height;
-            }            
+                tempHeight = controlHeight;
+                fanHeight = controlHeight;
+            }
 
-            // position
-            mOSDButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
-            mOptionButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
-            mFanControlButton.Top = mFanGroupBox.Top + mFanGroupBox.Height + 10;
-            mMadeLabel1.Top = mFanGroupBox.Top + mFanGroupBox.Height + 15;
-            mMadeLabel2.Top = mFanGroupBox.Top + mFanGroupBox.Height + 32;
-            mDonatePictureBox.Top = mFanGroupBox.Top + mFanGroupBox.Height + 17;
-            this.Height = mFanGroupBox.Height + mOptionButton.Height + 70;            
+            int originPanelHeight = 35;
+            int heightGap = tempHeight - originPanelHeight;
+            mNowHeight = mNowHeight + heightGap;
+
+            this.resizeForm();
         }
 
-        private void onControlTextBoxKeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (char.IsDigit(e.KeyChar) == false)
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void onControlTextBoxChanges(object sender, EventArgs e)
+        private void onControlTextBoxLeaves(object sender, EventArgs e)
         {
             var textBox = (TextBox)sender;
-            if (textBox.Focused == false)
-                return;
-
             var hardwareManager = HardwareManager.getInstance();
-            int value = int.Parse(textBox.Text);
-            for (int i = 0; i < mControlTextBoxList.Count; i++)
-            {
-                if (mControlTextBoxList[i].Equals(sender) == true)
-                {
-                    int minValue = hardwareManager.getControl(i).getMinSpeed();
-                    int maxValue = hardwareManager.getControl(i).getMaxSpeed();
+            var controlBaseList = hardwareManager.ControlBaseList;
 
-                    if(value >= minValue && value <= maxValue)
+            try
+            {
+                int value = int.Parse(textBox.Text);
+                for (int i = 0; i < mControlTextBoxList.Count; i++)
+                {
+                    if (mControlTextBoxList[i].Equals(sender) == true)
                     {
-                        int changeValue = hardwareManager.addChangeValue(value, hardwareManager.getControl(i));
-                        if (changeValue != value)
+                        var controlDevice = controlBaseList[i];
+                        int originValue = controlDevice.Value;
+
+                        int minValue = controlBaseList[i].getMinSpeed();
+                        int maxValue = controlBaseList[i].getMaxSpeed();
+
+                        if (value >= minValue && value <= maxValue)
                         {
-                            textBox.Text = changeValue.ToString();
+                            int changeValue = hardwareManager.addChangeValue(value, controlDevice);
+                            if (changeValue != originValue)
+                            {
+                                textBox.Text = changeValue.ToString();
+                            }
                         }
+                        else
+                        {
+                            textBox.Text = originValue.ToString();
+                            var tooltipString = minValue + " ≤  value ≤ " + maxValue;
+                            mToolTip.Show(tooltipString, textBox, 2000);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
+            catch { }
         }
 
-        private void onSensorNameTextBoxLeaves(object sender, EventArgs e)
+        private void onNameTextBoxLeaves(TextBox textBox, NAME_TYPE nameType, ref List<TextBox> nameTextBoxList)
         {
-            this.onNameTextBoxLeaves((TextBox)sender, 0, ref mSensorNameTextBoxList);
-        }
-
-        private void onFanNameTextBoxLeaves(object sender, EventArgs e)
-        {
-            this.onNameTextBoxLeaves((TextBox)sender, 1, ref mFanNameTextBoxList);
-        }
-
-        private void onFanControlNameTextBoxLeaves(object sender, EventArgs e)
-        {
-            this.onNameTextBoxLeaves((TextBox)sender, 2, ref mControlNameTextBoxList);
-        }
-
-        private void onNameTextBoxLeaves(TextBox textBox, int type, ref List<TextBox> nameTextBoxList)
-        {
-            var controlManager = ControlManager.getInstance();
-            int index = -1;
-            int num = 2;
-            string name = textBox.Text;
-
-            while (true)
+            try
             {
-                bool isExist = false;
+                string name = textBox.Text;
+                int index = -1;
                 for (int i = 0; i < nameTextBoxList.Count; i++)
                 {
                     if (nameTextBoxList[i] == textBox)
                     {
-                        if (name.Length == 0)
-                        {
-                            textBox.Text = controlManager.getName(type, i, false);
-                            return;
-                        }
-
                         index = i;
-                        continue;
-                    }
-
-                    else if (nameTextBoxList[i].Text.Equals(name) == true)
-                    {
-                        isExist = true;
                         break;
                     }
                 }
 
-                if (isExist == true)
+                if (index < 0)
+                    return;
+
+                BaseDevice device = null;
+                if (nameType == NAME_TYPE.TEMPERATURE)
                 {
-                    name = textBox.Text + " #" + num++;
-                    continue;
+                    device = HardwareManager.getInstance().TempBaseList[index];
+                }
+                else if (nameType == NAME_TYPE.FAN)
+                {
+                    device = HardwareManager.getInstance().FanBaseList[index];
+                }
+                else
+                {
+                    device = HardwareManager.getInstance().ControlBaseList[index];
                 }
 
+                string originName = device.Name;
+                if (name.Length == 0)
+                {
+                    name = originName;
+                }
+
+                device.Name = name;
                 textBox.Text = name;
-                controlManager.setName(type, index, false, name);
-                break;
+
+                var osdSensorMap = HardwareManager.getInstance().OSDSensorMap;
+                if (osdSensorMap.ContainsKey(device.ID) == true)
+                {
+                    var sensor = osdSensorMap[device.ID];
+                    sensor.Name = name;
+                }
+
+                HardwareManager.getInstance().write();
             }
-            controlManager.write();
+            catch { }
         }
 
         private void onUpdate()
@@ -601,34 +886,25 @@ namespace FanCtrl
             this.BeginInvoke(new Action(delegate ()
             {
                 var hardwareManager = HardwareManager.getInstance();
-                
-                for (int i = 0; i < hardwareManager.getSensorCount(); i++)
-                {
-                    var sensor = hardwareManager.getSensor(i);
-                    if (sensor == null)
-                        break;
 
-                    mSensorLabelList[i].Text = sensor.getString();
+                for (int i = 0; i < hardwareManager.TempBaseList.Count; i++)
+                {
+                    var device = hardwareManager.TempBaseList[i];
+                    mTempLabelList[i].Text = device.getString();
                 }
 
-                for (int i = 0; i < hardwareManager.getFanCount(); i++)
+                for (int i = 0; i < hardwareManager.FanBaseList.Count; i++)
                 {
-                    var fan = hardwareManager.getFan(i);
-                    if (fan == null)
-                        break;
-
-                    mFanLabelList[i].Text = fan.getString();
+                    var device = hardwareManager.FanBaseList[i];
+                    mFanLabelList[i].Text = device.getString();
                 }
 
-                for (int i = 0; i < hardwareManager.getControlCount(); i++)
+                for (int i = 0; i < hardwareManager.ControlBaseList.Count; i++)
                 {
-                    var control = hardwareManager.getControl(i);
-                    if (control == null)
-                        break;
-
+                    var device = hardwareManager.ControlBaseList[i];
                     if (mControlTextBoxList[i].Focused == false)
                     {
-                        mControlTextBoxList[i].Text = control.Value.ToString();
+                        mControlTextBoxList[i].Text = device.Value.ToString();
                     }
                 }
 
@@ -641,20 +917,62 @@ namespace FanCtrl
         private void onOptionButtonClick(object sender, EventArgs e)
         {
             var form = new OptionForm();
-            form.OnExitHandler += onRestartProgram;
-            if (form.ShowDialog() == DialogResult.OK)
+            var result = form.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                HardwareManager.getInstance().restartTimer(OptionManager.getInstance().Interval);
+                HardwareManager.getInstance().restartTimer();
 
                 // start icon update
                 if (OptionManager.getInstance().IsAnimation == true)
                 {
-                    mFanIconTimer.Start();
+                    if (mFanIconTimer == null)
+                    {
+                        mFanIconTimer = new System.Windows.Forms.Timer();
+                        mFanIconTimer.Interval = 100;
+                        mFanIconTimer.Tick += onFanIconTimer;
+                        mFanIconTimer.Start();
+                    }
                 }
                 else
                 {
-                    mFanIconTimer.Stop();
+                    if (mFanIconTimer != null)
+                    {
+                        mFanIconTimer.Stop();
+                        mFanIconTimer.Dispose();
+                        mFanIconTimer = null;
+                    }
+
+                    mTrayIcon.Icon = mFanIconList[0];
+                    mFanIconIndex = 0;
                 }
+            }
+
+            // Changed option data
+            else if(result == DialogResult.Yes)
+            {
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    HardwareManager.getInstance().stop();
+                    ControlManager.getInstance().reset();
+                    OSDManager.getInstance().reset();
+                    this.reload();
+                }));
+            }
+
+            // Reset option data
+            else if (result == DialogResult.No)
+            {
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    HardwareManager.getInstance().stop();
+                    HardwareManager.getInstance().write();
+                    ControlManager.getInstance().reset();
+                    ControlManager.getInstance().write();
+                    OSDManager.getInstance().reset();
+                    OSDManager.getInstance().write();
+
+                    this.reload();
+                }));
             }
         }
 
@@ -664,10 +982,10 @@ namespace FanCtrl
             mControlForm.onApplyCallback += (sender2, e2) =>
             {
                 mEnableToolStripMenuItem.Checked = ControlManager.getInstance().IsEnable;
-                mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 0);
-                mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 1);
-                mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 2);
-                mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeIndex == 3);
+                mNormalToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.NORMAL);
+                mSilenceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.SILENCE);
+                mPerformanceToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE);
+                mGameToolStripMenuItem.Checked = (ControlManager.getInstance().ModeType == MODE_TYPE.GAME);
             };
             mControlForm.ShowDialog();
             mControlForm = null;

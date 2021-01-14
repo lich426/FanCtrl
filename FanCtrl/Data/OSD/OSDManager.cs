@@ -15,7 +15,7 @@ namespace FanCtrl
 {
     public class OSDManager
     {
-        private string mOSDFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "OSD.json";
+        public string mOSDFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "OSD.json";
 
         private static OSDManager sManager = new OSDManager();
         public static OSDManager getInstance() { return sManager; }
@@ -86,6 +86,7 @@ namespace FanCtrl
         private void clear()
         {
             mIsEnable = false;
+            mIsTime = false;
             mGroupList.Clear();
         }
 
@@ -114,14 +115,16 @@ namespace FanCtrl
 
             try
             {
+                var osdMap = HardwareManager.getInstance().OSDSensorMap;
+
                 var rootObject = JObject.Parse(jsonString);
 
-                mIsEnable = (rootObject.ContainsKey("enable") == true) ? rootObject.Value<bool>("enable") : false;
-                mIsTime = (rootObject.ContainsKey("time") == true) ? rootObject.Value<bool>("time") : false;
+                mIsEnable = (rootObject.ContainsKey("IsEnable") == true) ? rootObject.Value<bool>("IsEnable") : false;
+                mIsTime = (rootObject.ContainsKey("IsTime") == true) ? rootObject.Value<bool>("IsTime") : false;
 
-                if (rootObject.ContainsKey("group") == true)
+                if (rootObject.ContainsKey("Group") == true)
                 {
-                    var groupList = rootObject.Value<JArray>("group");
+                    var groupList = rootObject.Value<JArray>("Group");
                     for(int i = 0; i < groupList.Count; i++)
                     {
                         var groupObject = (JObject)groupList[i];
@@ -146,21 +149,22 @@ namespace FanCtrl
                             {
                                 var itemObject = (JObject)itemList[j];
 
-                                var itemType = (itemObject.ContainsKey("itemType") == false) ? (int)OSDItemType.Unknown : itemObject.Value<int>("itemType");
                                 var unitType = (itemObject.ContainsKey("unitType") == false) ? (int)OSDUnitType.Unknown : itemObject.Value<int>("unitType");
-                                int index = (itemObject.ContainsKey("index") == false) ? 0 : itemObject.Value<int>("index");
+                                string id = (itemObject.ContainsKey("id") == false) ? "" : itemObject.Value<string>("id");
                                 isColor = (itemObject.ContainsKey("isColor") == false) ? false : itemObject.Value<bool>("isColor");
                                 r = (itemObject.ContainsKey("r") == false) ? (byte)0xFF : itemObject.Value<byte>("r");
                                 g = (itemObject.ContainsKey("g") == false) ? (byte)0xFF : itemObject.Value<byte>("g");
                                 b = (itemObject.ContainsKey("b") == false) ? (byte)0xFF : itemObject.Value<byte>("b");
 
-                                if (itemType >= (int)OSDItemType.Unknown || unitType >= (int)OSDUnitType.Unknown)
+                                if (unitType >= (int)OSDUnitType.Unknown || id.Length == 0)
+                                    continue;
+
+                                if (osdMap.ContainsKey(id) == false)
                                     continue;
 
                                 var item = new OSDItem();
-                                item.ItemType = (OSDItemType)itemType;
                                 item.UnitType = (OSDUnitType)unitType;
-                                item.Index = index;
+                                item.ID = id;
                                 item.IsColor = isColor;
                                 item.Color = Color.FromArgb(r, g, b);
                                 group.ItemList.Add(item);
@@ -187,8 +191,8 @@ namespace FanCtrl
             try
             {
                 var rootObject = new JObject();
-                rootObject["enable"] = mIsEnable;
-                rootObject["time"] = mIsTime;
+                rootObject["IsEnable"] = mIsEnable;
+                rootObject["IsTime"] = mIsTime;
 
                 var groupList = new JArray();
                 for(int i = 0; i < mGroupList.Count; i++)
@@ -209,9 +213,8 @@ namespace FanCtrl
                         var item = group.ItemList[j];
 
                         var itemObject = new JObject();
-                        itemObject["itemType"] = (int)item.ItemType;
                         itemObject["unitType"] = (int)item.UnitType;
-                        itemObject["index"] = item.Index;
+                        itemObject["id"] = item.ID;
                         itemObject["isColor"] = item.IsColor;
                         itemObject["r"] = item.Color.R;
                         itemObject["g"] = item.Color.G;
@@ -223,7 +226,7 @@ namespace FanCtrl
 
                     groupList.Add(groupObject);
                 }
-                rootObject["group"] = groupList;
+                rootObject["Group"] = groupList;
 
                 File.WriteAllText(mOSDFileName, rootObject.ToString());
             }

@@ -7,6 +7,11 @@ namespace FanCtrl
 {
     public class OHM : IVisitor
     {
+        private const string mIDPrefixTemperature = "OHM/Temp";
+        private const string mIDPrefixFan = "OHM/Fan";
+        private const string mIDPrefixControl = "OHM/Control";
+        private const string mIDPrefixOSD = "OHM/OSD";        
+
         private bool mIsStart = false;
 
         private Computer mComputer = null;
@@ -20,11 +25,12 @@ namespace FanCtrl
             mIsStart = true;
 
             mComputer = new Computer();
-            mComputer.CPUEnabled = true;
+            mComputer.CPUEnabled = OptionManager.getInstance().IsOHMCpu;
+            mComputer.MainboardEnabled = OptionManager.getInstance().IsOHMMotherboard;
+            mComputer.FanControllerEnabled = OptionManager.getInstance().IsOHMContolled;
+            mComputer.GPUEnabled = OptionManager.getInstance().IsOHMGpu;
+            mComputer.HDDEnabled = OptionManager.getInstance().IsOHMStorage;
             mComputer.RAMEnabled = true;
-            mComputer.MainboardEnabled = true;
-            mComputer.FanControllerEnabled = true;
-            mComputer.GPUEnabled = true;
 
             mComputer.Open();
             mComputer.Accept(this);
@@ -43,78 +49,24 @@ namespace FanCtrl
             }
         }
 
-        public void createTemp(ref List<BaseSensor> sensorList)
+        public void createTemp(ref List<HardwareDevice> deviceList)
         {
-            bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
-
-            // CPU, GPU
-            int cpuNum = 2;
-            int GpuAtiNum = 2;
-            int gpuNvidiaNum = 2;
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Length; i++)
             {
-                if (hardwareArray[i].HardwareType == HardwareType.CPU)
-                {
-                    string name = hardwareArray[i].Name;
-                    while (this.isExistTemp(ref sensorList, name) == true)
-                    {
-                        name = hardwareArray[i].Name + " #" + cpuNum++;
-                    }
-                    var sensor = new HardwareTemp(hardwareArray[i], name);
-                    sensorList.Add(sensor);
-                }
-
-                if (hardwareArray[i].HardwareType == HardwareType.GpuAti)
-                {
-                    string name = hardwareArray[i].Name;
-                    while (this.isExistTemp(ref sensorList, name) == true)
-                    {
-                        name = hardwareArray[i].Name + " #" + GpuAtiNum++;
-                    }
-                    var sensor = new HardwareTemp(hardwareArray[i], name);
-                    sensorList.Add(sensor);
-                }
-
-                else if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia && isNvAPIWrapper == false)
-                {
-                    string name = hardwareArray[i].Name;
-                    while (this.isExistTemp(ref sensorList, name) == true)
-                    {
-                        name = hardwareArray[i].Name + " #" + gpuNvidiaNum++;
-                    }
-                    var sensor = new HardwareTemp(hardwareArray[i], name);
-                    sensorList.Add(sensor);
-                }
-            }
-        }
-
-        public void createMotherBoardTemp(ref List<BaseSensor> sensorList)
-        {
-            // Motherboard
-            int num = 1;
-            var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
-            {
-                if (hardwareArray[i].HardwareType == HardwareType.CPU ||
-                    hardwareArray[i].HardwareType == HardwareType.GpuAti ||
-                    hardwareArray[i].HardwareType == HardwareType.GpuNvidia)
-                {
-                    continue;
-                }
+                string hardwareName = (hardwareArray[i].Name.Length > 0) ? hardwareArray[i].Name : "Unknown";
+                var device = new HardwareDevice(hardwareName);
 
                 var sensorArray = hardwareArray[i].Sensors;
                 for (int j = 0; j < sensorArray.Length; j++)
                 {
-                    if (sensorArray[j].SensorType != OpenHardwareMonitor.Hardware.SensorType.Temperature)
+                    if (sensorArray[j].SensorType != SensorType.Temperature)
                         continue;
 
-                    string originName = sensorArray[j].Name.ToUpper();
-                    if (originName.Contains("CPU") == true)
-                        continue;
-
-                    var sensor = new HardwareMotherBoardTemp(sensorArray[j], "Motherboard #" + num++);
-                    sensorList.Add(sensor);
+                    string id = string.Format("{0}{1}", mIDPrefixTemperature, sensorArray[j].Identifier.ToString());
+                    string name = (sensorArray[j].Name.Length > 0) ? sensorArray[j].Name : "Temperature";
+                    var sensor = new OHMTemp(id, sensorArray[j], name);
+                    device.addDevice(sensor);
                 }
 
                 var subHardwareArray = hardwareArray[i].SubHardware;
@@ -123,78 +75,41 @@ namespace FanCtrl
                     var subSensorList = subHardwareArray[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
-                        if (subSensorList[k].SensorType != OpenHardwareMonitor.Hardware.SensorType.Temperature)
+                        if (subSensorList[k].SensorType != SensorType.Temperature)
                             continue;
 
-                        string originName = subSensorList[k].Name.ToUpper();
-                        if (originName.Contains("CPU") == true)
-                            continue;
-
-                        var sensor = new HardwareMotherBoardTemp(subSensorList[k], "Motherboard #" + num++);
-                        sensorList.Add(sensor);
+                        string id = string.Format("{0}{1}", mIDPrefixTemperature, subSensorList[k].Identifier.ToString());
+                        string name = (subSensorList[k].Name.Length > 0) ? subSensorList[k].Name : "Temperature";
+                        var sensor = new OHMTemp(id, subSensorList[k], name);
+                        device.addDevice(sensor);
                     }
+                }
+
+                if (device.DeviceList.Count > 0)
+                {
+                    deviceList.Add(device);
                 }
             }
         }
 
-        public void createFan(ref List<BaseSensor> fanList)
+        public void createFan(ref List<HardwareDevice> deviceList)
         {
-            int fanNum = 1;
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Length; i++)
             {
-                if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
-                    hardwareArray[i].HardwareType == HardwareType.GpuAti)
-                {
-                    continue;
-                }
+                string hardwareName = (hardwareArray[i].Name.Length > 0) ? hardwareArray[i].Name : "Unknown";
+                var device = new HardwareDevice(hardwareName);
 
                 var sensorArray = hardwareArray[i].Sensors;
                 for (int j = 0; j < sensorArray.Length; j++)
                 {
-                    if (sensorArray[j].SensorType != OpenHardwareMonitor.Hardware.SensorType.Fan)
+                    if (sensorArray[j].SensorType != SensorType.Fan)
                         continue;
 
-                    var fan = new HardwareFanSpeed(sensorArray[j], "Fan #" + fanNum++);
-                    fanList.Add(fan);
-                }
-
-                var subHardwareArray = hardwareArray[i].SubHardware;
-                for (int j = 0; j < subHardwareArray.Length; j++)
-                {
-                    var subSensorArray = subHardwareArray[j].Sensors;
-                    for (int k = 0; k < subSensorArray.Length; k++)
-                    {
-                        if (subSensorArray[k].SensorType != OpenHardwareMonitor.Hardware.SensorType.Fan)
-                            continue;
-
-                        var fan = new HardwareFanSpeed(subSensorArray[k], "Fan #" + fanNum++);
-                        fanList.Add(fan);
-                    }
-                }
-            }
-        }
-
-        public void createControl(ref List<BaseControl> controlList)
-        {
-            int fanNum = 1;
-            var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
-            {
-                if (hardwareArray[i].HardwareType == HardwareType.GpuNvidia ||
-                    hardwareArray[i].HardwareType == HardwareType.GpuAti)
-                {
-                    continue;
-                }
-
-                var sensorArray = hardwareArray[i].Sensors;
-                for (int j = 0; j < sensorArray.Length; j++)
-                {
-                    if (sensorArray[j].SensorType != OpenHardwareMonitor.Hardware.SensorType.Control)
-                        continue;
-
-                    var control = new HardwareControl(sensorArray[j], "Fan Control #" + fanNum++);
-                    controlList.Add(control);
+                    string id = string.Format("{0}{1}", mIDPrefixFan, sensorArray[j].Identifier.ToString());
+                    string name = (sensorArray[j].Name.Length > 0) ? sensorArray[j].Name : "Fan";
+                    var sensor = new OHMFanSpeed(id, sensorArray[j], name);
+                    device.addDevice(sensor);
                 }
 
                 var subHardwareArray = hardwareArray[i].SubHardware;
@@ -203,207 +118,146 @@ namespace FanCtrl
                     var subSensorList = subHardwareArray[j].Sensors;
                     for (int k = 0; k < subSensorList.Length; k++)
                     {
-                        if (subSensorList[k].SensorType != OpenHardwareMonitor.Hardware.SensorType.Control)
+                        if (subSensorList[k].SensorType != SensorType.Fan)
                             continue;
 
-                        var control = new HardwareControl(subSensorList[k], "Fan Control #" + fanNum++);
-                        controlList.Add(control);
+                        string id = string.Format("{0}{1}", mIDPrefixFan, subSensorList[k].Identifier.ToString());
+                        string name = (subSensorList[k].Name.Length > 0) ? subSensorList[k].Name : "Fan";
+                        var sensor = new OHMFanSpeed(id, subSensorList[k], name);
+                        device.addDevice(sensor);
                     }
+                }
+
+                if (device.DeviceList.Count > 0)
+                {
+                    deviceList.Add(device);
                 }
             }
         }
 
-        public void createGPUFan(ref List<BaseSensor> fanList)
+        public void createControl(ref List<HardwareDevice> deviceList)
         {
-            bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
-
-            int gpuFanNum = 1;
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Length; i++)
             {
-                if ((hardwareArray[i].HardwareType == HardwareType.GpuNvidia && isNvAPIWrapper == false) ||
-                    (hardwareArray[i].HardwareType == HardwareType.GpuAti))
+                string hardwareName = (hardwareArray[i].Name.Length > 0) ? hardwareArray[i].Name : "Unknown";
+                var device = new HardwareDevice(hardwareName);
+
+                var sensorArray = hardwareArray[i].Sensors;
+                for (int j = 0; j < sensorArray.Length; j++)
                 {
-                    var sensorArray = hardwareArray[i].Sensors;
-                    for (int j = 0; j < sensorArray.Length; j++)
+                    if (sensorArray[j].SensorType != SensorType.Control)
+                        continue;
+
+                    string id = string.Format("{0}{1}", mIDPrefixControl, sensorArray[j].Identifier.ToString());
+                    string name = (sensorArray[j].Name.Length > 0) ? sensorArray[j].Name : "Control";
+                    var sensor = new OHMControl(id, sensorArray[j], name);
+                    device.addDevice(sensor);
+                }
+
+                var subHardwareArray = hardwareArray[i].SubHardware;
+                for (int j = 0; j < subHardwareArray.Length; j++)
+                {
+                    var subSensorList = subHardwareArray[j].Sensors;
+                    for (int k = 0; k < subSensorList.Length; k++)
                     {
-                        if (sensorArray[j].SensorType == OpenHardwareMonitor.Hardware.SensorType.Fan)
-                        {
-                            var name = "GPU Fan #" + gpuFanNum++;
-                            while (this.isExistFan(ref fanList, name) == true)
-                            {
-                                name = "GPU Fan #" + gpuFanNum++;
-                            }
+                        if (subSensorList[k].SensorType != SensorType.Control)
+                            continue;
 
-                            var fan = new HardwareFanSpeed(sensorArray[j], name);
-                            fanList.Add(fan);
-                        }
+                        string id = string.Format("{0}{1}", mIDPrefixControl, subSensorList[k].Identifier.ToString());
+                        string name = (subSensorList[k].Name.Length > 0) ? subSensorList[k].Name : "Control";
+                        var sensor = new OHMControl(id, subSensorList[k], name);
+                        device.addDevice(sensor);
                     }
+                }
 
-                    var subHardwareArray = hardwareArray[i].SubHardware;
-                    for (int j = 0; j < subHardwareArray.Length; j++)
-                    {
-                        var subSensorList = subHardwareArray[j].Sensors;
-                        for (int k = 0; k < subSensorList.Length; k++)
-                        {
-                            if (subSensorList[k].SensorType == OpenHardwareMonitor.Hardware.SensorType.Fan)
-                            {
-                                var name = "GPU Fan #" + gpuFanNum++;
-                                while (this.isExistFan(ref fanList, name) == true)
-                                {
-                                    name = "GPU Fan #" + gpuFanNum++;
-                                }
-
-                                var fan = new HardwareFanSpeed(subSensorList[k], name);
-                                fanList.Add(fan);
-                            }
-                        }
-                    }
+                if (device.DeviceList.Count > 0)
+                {
+                    deviceList.Add(device);
                 }
             }
         }
 
-        public void createGPUFanControl(ref List<BaseControl> controlList)
-        {
-            bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
-
-            int gpuFanNum = 1;
-            var hardwareArray = mComputer.Hardware;
-            for (int i = 0; i < hardwareArray.Length; i++)
-            {
-                if ((hardwareArray[i].HardwareType == HardwareType.GpuNvidia && isNvAPIWrapper == false) ||
-                    (hardwareArray[i].HardwareType == HardwareType.GpuAti))
-                {
-                    var sensorArray = hardwareArray[i].Sensors;
-                    for (int j = 0; j < sensorArray.Length; j++)
-                    {
-                        if (sensorArray[j].SensorType == OpenHardwareMonitor.Hardware.SensorType.Control)
-                        {
-                            var name = "GPU Fan Control #" + gpuFanNum++;
-                            while (this.isExistControl(ref controlList, name) == true)
-                            {
-                                name = "GPU Fan Control #" + gpuFanNum++;
-                            }
-
-                            var control = new HardwareControl(sensorArray[j], name);
-                            controlList.Add(control);
-                        }
-                    }
-
-                    var subHardwareArray = hardwareArray[i].SubHardware;
-                    for (int j = 0; j < subHardwareArray.Length; j++)
-                    {
-                        var subSensorList = subHardwareArray[j].Sensors;
-                        for (int k = 0; k < subSensorList.Length; k++)
-                        {
-                            if (subSensorList[k].SensorType == OpenHardwareMonitor.Hardware.SensorType.Control)
-                            {
-                                var name = "GPU Fan Control #" + gpuFanNum++;
-                                while (this.isExistControl(ref controlList, name) == true)
-                                {
-                                    name = "GPU Fan Control #" + gpuFanNum++;
-                                }
-
-                                var control = new HardwareControl(subSensorList[k], name);
-                                controlList.Add(control);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void createOSDSensor(ref List<OSDSensor> osdList)
+        public void createOSDSensor(List<OSDSensor> osdList, Dictionary<string, OSDSensor> osdMap)
         {
             try
             {
-                bool isNvAPIWrapper = OptionManager.getInstance().IsNvAPIWrapper;
                 var hardwareArray = mComputer.Hardware;
                 for (int i = 0; i < hardwareArray.Length; i++)
                 {
-                    if (isNvAPIWrapper == true && hardwareArray[i].HardwareType == HardwareType.GpuNvidia)
-                        continue;
-
                     var sensorArray = hardwareArray[i].Sensors;
-                    this.setOSDSensor(sensorArray, SensorType.Load, ref osdList);
-                    this.setOSDSensor(sensorArray, SensorType.Clock, ref osdList);
-                    this.setOSDSensor(sensorArray, SensorType.Voltage, ref osdList);
-                    this.setOSDSensor(sensorArray, SensorType.Data, ref osdList);
-                    this.setOSDSensor(sensorArray, SensorType.SmallData, ref osdList);
-                    this.setOSDSensor(sensorArray, SensorType.Power, ref osdList);
-                    this.setOSDSensor(sensorArray, SensorType.Throughput, ref osdList);
+                    this.setOSDSensor(sensorArray, SensorType.Load, osdList, osdMap);
+                    this.setOSDSensor(sensorArray, SensorType.Clock, osdList, osdMap);
+                    this.setOSDSensor(sensorArray, SensorType.Voltage, osdList, osdMap);
+                    this.setOSDSensor(sensorArray, SensorType.Data, osdList, osdMap);
+                    this.setOSDSensor(sensorArray, SensorType.SmallData, osdList, osdMap);
+                    this.setOSDSensor(sensorArray, SensorType.Power, osdList, osdMap);
+                    this.setOSDSensor(sensorArray, SensorType.Throughput, osdList, osdMap);
 
                     var subHardwareArray = hardwareArray[i].SubHardware;
                     for (int j = 0; j < subHardwareArray.Length; j++)
                     {
                         var subSensorArray = subHardwareArray[j].Sensors;
-                        this.setOSDSensor(subSensorArray, SensorType.Load, ref osdList);
-                        this.setOSDSensor(subSensorArray, SensorType.Clock, ref osdList);
-                        this.setOSDSensor(subSensorArray, SensorType.Voltage, ref osdList);
-                        this.setOSDSensor(subSensorArray, SensorType.Data, ref osdList);
-                        this.setOSDSensor(subSensorArray, SensorType.SmallData, ref osdList);
-                        this.setOSDSensor(subSensorArray, SensorType.Power, ref osdList);
-                        this.setOSDSensor(subSensorArray, SensorType.Throughput, ref osdList);
+                        this.setOSDSensor(subSensorArray, SensorType.Load, osdList, osdMap);
+                        this.setOSDSensor(subSensorArray, SensorType.Clock, osdList, osdMap);
+                        this.setOSDSensor(subSensorArray, SensorType.Voltage, osdList, osdMap);
+                        this.setOSDSensor(subSensorArray, SensorType.Data, osdList, osdMap);
+                        this.setOSDSensor(subSensorArray, SensorType.SmallData, osdList, osdMap);
+                        this.setOSDSensor(subSensorArray, SensorType.Power, osdList, osdMap);
+                        this.setOSDSensor(subSensorArray, SensorType.Throughput, osdList, osdMap);
                     }
                 }
             }
             catch { }
         }
 
-        private void setOSDSensor(ISensor[] sensorArray, SensorType sensorType, ref List<OSDSensor> osdList)
+        private void setOSDSensor(ISensor[] sensorArray, SensorType sensorType, List<OSDSensor> osdList, Dictionary<string, OSDSensor> osdMap)
         {
-            var sensorList = new List<ISensor>();
             for (int i = 0; i < sensorArray.Length; i++)
             {
+                var sensor = sensorArray[i];
                 if (sensorArray[i].SensorType != sensorType)
                 {
                     continue;
                 }
-                sensorList.Add(sensorArray[i]);
-            }
 
-            for (int i = 0; i < sensorList.Count; i++)
-            {
-                var sensor = sensorList[i];
-
-                int index = osdList.Count;
                 OSDUnitType unitType = OSDUnitType.Unknown;
-                string sensorName = "";
-                switch (sensorList[i].SensorType)
+                string prefix = "";
+                switch (sensorArray[i].SensorType)
                 {
                     case SensorType.Voltage:
                         unitType = OSDUnitType.Voltage;
-                        sensorName = "[Voltage]  ";
+                        prefix = "[Voltage] ";
                         break;
 
                     case SensorType.Power:
                         unitType = OSDUnitType.Power;
-                        sensorName = "[Power] ";
+                        prefix = "[Power] ";
                         break;
 
                     case SensorType.Load:
                         unitType = OSDUnitType.Percent;
-                        sensorName = "[Load] ";
+                        prefix = "[Load] ";
                         break;
 
                     case SensorType.Clock:
                         unitType = OSDUnitType.MHz;
-                        sensorName = "[Clock] ";
+                        prefix = "[Clock] ";
                         break;
 
                     case SensorType.Data:
                         unitType = OSDUnitType.GB;
-                        sensorName = "[Data] ";
+                        prefix = "[Data] ";
                         break;
 
                     case SensorType.SmallData:
                         unitType = OSDUnitType.MB;
-                        sensorName = "[Data] ";
+                        prefix = "[Data] ";
                         break;
 
                     case SensorType.Throughput:
                         unitType = OSDUnitType.MBPerSec;
-                        sensorName = "[Throughput] ";
+                        prefix = "[Throughput] ";
                         break;
 
                     default:
@@ -414,50 +268,16 @@ namespace FanCtrl
                 if (unitType == OSDUnitType.Unknown)
                     continue;
 
-                var osdSensor = new OSDSensor(sensorList[i], unitType, sensorName + sensorList[i].Name, index);
+                string id = string.Format("{0}{1}", mIDPrefixOSD, sensor.Identifier.ToString());
+                var osdSensor = new OHMOSDSensor(id, prefix, sensorArray[i].Name, unitType, sensor);
                 osdList.Add(osdSensor);
+                osdMap.Add(id, osdSensor);
             }
         }
 
         public void update()
         {
             mComputer.Accept(this);
-        }
-
-        private bool isExistTemp(ref List<BaseSensor> sensorList, string name)
-        {
-            for (int i = 0; i < sensorList.Count; i++)
-            {
-                if (sensorList[i].Name.Equals(name) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool isExistFan(ref List<BaseSensor> fanList, string name)
-        {
-            for (int i = 0; i < fanList.Count; i++)
-            {
-                if (fanList[i].Name.Equals(name) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool isExistControl(ref List<BaseControl> controlList, string name)
-        {
-            for (int i = 0; i < controlList.Count; i++)
-            {
-                if (controlList[i].Name.Equals(name) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         /////////////////////////// Visitor ///////////////////////////

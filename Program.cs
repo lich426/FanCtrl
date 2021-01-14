@@ -32,16 +32,6 @@ namespace FanCtrl
             Program.releaseMutex();
         }
 
-        public static void executeProgram()
-        {
-            ProcessStartInfo procInfo = new ProcessStartInfo();
-            procInfo.UseShellExecute = true;
-            procInfo.FileName = Application.ExecutablePath;
-            procInfo.WorkingDirectory = Environment.CurrentDirectory;
-            procInfo.Verb = "runas";
-            Process.Start(procInfo);
-        }
-
         public static bool createMutex()
         {
             if (sIsLock == true)

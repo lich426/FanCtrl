@@ -11,8 +11,9 @@ namespace FanCtrl
         private RGBnFC mRGBnFC = null;
         private int mIndex = 0;
 
-        public RGBnFCControl(RGBnFC fc, int index, uint num) : base()
+        public RGBnFCControl(string id, RGBnFC fc, int index, uint num) : base(LIBRARY_TYPE.RGBnFC)
         {
+            ID = id;
             mRGBnFC = fc;
             mIndex = index;
             Name = "NZXT RGB＆Fan #" + num;

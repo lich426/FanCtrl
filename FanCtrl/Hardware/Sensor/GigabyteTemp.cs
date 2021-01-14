@@ -15,8 +15,9 @@ namespace FanCtrl
 
         private int mIndex = -1;
 
-        public GigabyteTemp(string name, int index) : base(SENSOR_TYPE.TEMPERATURE)
+        public GigabyteTemp(string id, string name, int index) : base(LIBRARY_TYPE.Gigabyte)
         {
+            ID = id;
             Name = name;
             mIndex = index;
         }

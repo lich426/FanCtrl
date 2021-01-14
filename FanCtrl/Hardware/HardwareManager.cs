@@ -6,13 +6,18 @@ using System.Security.Principal;
 using NvAPIWrapper;
 using NvAPIWrapper.GPU;
 using System.Text;
+using System.IO;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 namespace FanCtrl
 {
     public class HardwareManager
     {
+        public string mHardwareFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "Hardware.json";
+
         // Singletone
-        private HardwareManager(){}
+        private HardwareManager() { }
         private static HardwareManager sManager = new HardwareManager();
         public static HardwareManager getInstance() { return sManager; }
 
@@ -28,7 +33,6 @@ namespace FanCtrl
         private Mutex mPCIMutex = null;
 
         // Gigabyte
-        private bool mIsGigabyte = false;
         private Gigabyte mGigabyte = null;
 
         // LibreHardwareMonitor
@@ -38,35 +42,39 @@ namespace FanCtrl
         private OHM mOHM = null;
 
         // NZXT Kraken
-        private List<Kraken> mKrakenList = new List<Kraken>();
-        public List<Kraken> getKrakenList() { return mKrakenList; }
+        public List<Kraken> KrakenList { get; } = new List<Kraken>();
 
         // EVGA CLC
-        private List<CLC> mCLCList = new List<CLC>();
-        public List<CLC> getCLCList() { return mCLCList; }
+        public List<CLC> CLCList { get; } = new List<CLC>();
 
         // NZXT RGB & Fan Controller
-        private List<RGBnFC> mRGBnFCList = new List<RGBnFC>();
-        public List<RGBnFC> getRGBnFCList() { return mRGBnFCList; }
+        public List<RGBnFC> RGBnFCList { get; } = new List<RGBnFC>();
 
-        // Temperature sensor List
-        private List<BaseSensor> mSensorList = new List<BaseSensor>();        
+        // Temperature sensor
+        public List<List<HardwareDevice>> TempList { get; } = new List<List<HardwareDevice>>();
+        public List<BaseSensor> TempBaseList { get; } = new List<BaseSensor>();
+        public Dictionary<string, BaseSensor> TempBaseMap { get; } = new Dictionary<string, BaseSensor>();
 
-        // Fan List
-        private List<BaseSensor> mFanList = new List<BaseSensor>();       
+        // Fan
+        public List<List<HardwareDevice>> FanList { get; } = new List<List<HardwareDevice>>();
+        public List<BaseSensor> FanBaseList { get; } = new List<BaseSensor>();
+        public Dictionary<string, BaseSensor> FanBaseMap { get; } = new Dictionary<string, BaseSensor>();
 
-        // Control List
-        private List<BaseControl> mControlList = new List<BaseControl>();
+        // Control
+        public List<List<HardwareDevice>> ControlList { get; } = new List<List<HardwareDevice>>();
+        public List<BaseControl> ControlBaseList { get; } = new List<BaseControl>();
+        public Dictionary<string, BaseControl> ControlBaseMap { get; } = new Dictionary<string, BaseControl>();
 
         // OSD sensor List
-        private List<OSDSensor> mOSDSensorList = new List<OSDSensor>();
+        public List<OSDSensor> OSDSensorList { get; } = new List<OSDSensor>();
+        public Dictionary<string, OSDSensor> OSDSensorMap { get; } = new Dictionary<string, OSDSensor>();
 
         // next tick change value
         private List<int> mChangeValueList = new List<int>();
         private List<BaseControl> mChangeControlList = new List<BaseControl>();
 
         // update timer
-        private System.Timers.Timer mUpdateTimer = new System.Timers.Timer();
+        private System.Timers.Timer mUpdateTimer = null;
 
         public event UpdateTimerEventHandler onUpdateCallback;
         public delegate void UpdateTimerEventHandler();
@@ -94,39 +102,68 @@ namespace FanCtrl
             mutexName = "Global\\Access_PCI";
             this.createBusMutex(mutexName, ref mPCIMutex);
 
+            // create list
+            for (int i = 0; i < (int)LIBRARY_TYPE.MAX; i++)
+            {
+                TempList.Add(new List<HardwareDevice>());
+                FanList.Add(new List<HardwareDevice>());
+                ControlList.Add(new List<HardwareDevice>());
+            }
+
             // Gigabyte
-            if(OptionManager.getInstance().IsGigabyte == true)
+            if (OptionManager.getInstance().IsGigabyte == true)
             {
                 mGigabyte = new Gigabyte();
-                mGigabyte.AddChangeValue += addChangeValue;
                 mGigabyte.LockBus += lockBus;
                 mGigabyte.UnlockBus += unlockBus;
 
-                mIsGigabyte = mGigabyte.start();
-            }
-            else
-            {
-                mIsGigabyte = false;
-                Gigabyte.stopService();
-            }
-            
-            if (mIsGigabyte == false)
-            {
-                mGigabyte = null;
-
-                // LibreHardwareMonitor
-                if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
+                if (mGigabyte.start() == false)
                 {
-                    mLHM = new LHM();
-                    mLHM.start();
+                    mGigabyte = null;
                 }
-
-                // OpenHardwareMonitor
                 else
                 {
-                    mOHM = new OHM();
-                    mOHM.start();
+                    var tempList = TempList[(int)LIBRARY_TYPE.Gigabyte];
+                    mGigabyte.createTemp(ref tempList);
+
+                    var fanList = FanList[(int)LIBRARY_TYPE.Gigabyte];
+                    mGigabyte.createFan(ref fanList);
+
+                    var controlList = ControlList[(int)LIBRARY_TYPE.Gigabyte];
+                    mGigabyte.createControl(ref controlList);
                 }
+            }
+            
+            // LHM
+            if (OptionManager.getInstance().IsLHM == true)
+            {
+                mLHM = new LHM();
+                mLHM.start();
+
+                var tempList = TempList[(int)LIBRARY_TYPE.LHM];
+                mLHM.createTemp(ref tempList);
+
+                var fanList = FanList[(int)LIBRARY_TYPE.LHM];
+                mLHM.createFan(ref fanList);
+
+                var controlList = ControlList[(int)LIBRARY_TYPE.LHM];
+                mLHM.createControl(ref controlList);
+            }
+
+            // OHM
+            if (OptionManager.getInstance().IsOHM == true)
+            {
+                mOHM = new OHM();
+                mOHM.start();
+
+                var tempList = TempList[(int)LIBRARY_TYPE.OHM];
+                mOHM.createTemp(ref tempList);
+
+                var fanList = FanList[(int)LIBRARY_TYPE.OHM];
+                mOHM.createFan(ref fanList);
+
+                var controlList = ControlList[(int)LIBRARY_TYPE.OHM];
+                mOHM.createControl(ref controlList);
             }
 
             // NvAPIWrapper
@@ -136,176 +173,67 @@ namespace FanCtrl
                 {
                     NVIDIA.Initialize();
                 }
-                catch { }                
-            }
-
-            this.createTemp();
-            this.createFan();
-            this.createControl();
-
-            // NZXT Kraken
-            if (OptionManager.getInstance().IsKraken == true)
-            {                
-                try
-                {
-                    uint num = 1;
-
-                    // X2
-                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX2);
-                    for (uint i = 0; i < devCount; i++)
-                    {
-                        var kraken = new Kraken();
-                        if (kraken.start(i, USBProductID.KrakenX2) == true)
-                        {
-                            mKrakenList.Add(kraken);
-
-                            var sensor = new KrakenLiquidTemp(kraken, num);
-                            mSensorList.Add(sensor);
-
-                            var fan = new KrakenFanSpeed(kraken, num);
-                            mFanList.Add(fan);
-
-                            var pump = new KrakenPumpSpeed(kraken, num);
-                            mFanList.Add(pump);
-
-                            var fanControl = new KrakenFanControl(kraken, num);
-                            mControlList.Add(fanControl);
-                            this.addChangeValue(30, fanControl);
-
-                            var pumpControl = new KrakenPumpControl(kraken, num);
-                            mControlList.Add(pumpControl);
-                            this.addChangeValue(50, pumpControl);
-
-                            num++;
-                        }
-                    }
-
-                    // X3
-                    devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX3);
-                    for (uint i = 0; i < devCount; i++)
-                    {
-                        var kraken = new Kraken();
-                        if (kraken.start(i, USBProductID.KrakenX3) == true)
-                        {
-                            mKrakenList.Add(kraken);
-
-                            var sensor = new KrakenLiquidTemp(kraken, num);
-                            mSensorList.Add(sensor);
-
-                            var pump = new KrakenPumpSpeed(kraken, num);
-                            mFanList.Add(pump);
-
-                            var pumpControl = new KrakenPumpControl(kraken, num);
-                            mControlList.Add(pumpControl);
-                            this.addChangeValue(50, pumpControl);
-
-                            num++;
-                        }
-                    }
-                }
                 catch { }
-            }
 
-            // EVGA CLC
-            if (OptionManager.getInstance().IsCLC == true)
-            {
                 try
                 {
-                    uint num = 1;
-                    uint clcIndex = 0;
-
-                    // SiUSBController
-                    uint devCount = SiUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
-                    for (uint i = 0; i < devCount; i++)
+                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                    for (int i = 0; i < gpuArray.Length; i++)
                     {
-                        var clc = new CLC();
-                        if (clc.start(true, clcIndex, i) == true)
+                        var gpu = gpuArray[i];
+                        var hardwareName = gpu.FullName;
+
+                        // temperature
+                        var id = string.Format("NvAPIWrapper/{0}/{1}/Temp", hardwareName, i);
+                        var name = "GPU Core";
+                        var temp = new NvAPITemp(id, name, i);
+                        temp.onGetNvAPITemperatureHandler += onGetNvAPITemperature;
+
+                        var tempDevice = new HardwareDevice(hardwareName);
+                        tempDevice.addDevice(temp);
+
+                        var tempList = TempList[(int)LIBRARY_TYPE.NvAPIWrapper];
+                        tempList.Add(tempDevice);
+
+                        var fanDevice = new HardwareDevice(hardwareName);
+                        var controlDevice = new HardwareDevice(hardwareName);
+
+                        int num = 1;
+                        var e = gpuArray[i].CoolerInformation.Coolers.GetEnumerator();
+                        while (e.MoveNext())
                         {
-                            mCLCList.Add(clc);
+                            var value = e.Current;
+                            int coolerID = value.CoolerId;
+                            int speed = value.CurrentLevel;
+                            int minSpeed = 0;// value.DefaultMinimumLevel;
+                            int maxSpeed = 100;// value.DefaultMaximumLevel;
 
-                            var sensor = new CLCLiquidTemp(clc, num);
-                            mSensorList.Add(sensor);
+                            // fan
+                            id = string.Format("NvAPIWrapper/{0}/{1}/Fan/{2}", hardwareName, i, coolerID);
+                            name = "GPU Fan #" + num;
+                            var fan = new NvAPIFanSpeed(id, name, i, coolerID);
+                            fan.onGetNvAPIFanSpeedHandler += onGetNvAPIFanSpeed;
+                            fanDevice.addDevice(fan);
 
-                            var fan = new CLCFanSpeed(clc, num);
-                            mFanList.Add(fan);
-
-                            var pump = new CLCPumpSpeed(clc, num);
-                            mFanList.Add(pump);
-
-                            var fanControl = new CLCFanControl(clc, num);
-                            mControlList.Add(fanControl);
-                            this.addChangeValue(25, fanControl);
-
-                            var pumpControl = new CLCPumpControl(clc, num);
-                            mControlList.Add(pumpControl);
-                            this.addChangeValue(50, pumpControl);
-
-                            clcIndex++;
+                            // control
+                            id = string.Format("NvAPIWrapper/{0}/{1}/Control/{2}", hardwareName, i, coolerID);
+                            name = "GPU Fan #" + num;
+                            var control = new NvAPIFanControl(id, name, i, coolerID, speed, minSpeed, maxSpeed);
+                            control.onSetNvAPIControlHandler += onSetNvApiControl;
+                            controlDevice.addDevice(control);
                             num++;
                         }
-                    }
 
-                    if (WinUSBController.init() == true)
-                    {
-                        // WinUSBController
-                        devCount = WinUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
-                        for (uint i = 0; i < devCount; i++)
+                        if (fanDevice.DeviceList.Count > 0)
                         {
-                            var clc = new CLC();
-                            if (clc.start(false, clcIndex, i) == true)
-                            {
-                                mCLCList.Add(clc);
-
-                                var sensor = new CLCLiquidTemp(clc, num);
-                                mSensorList.Add(sensor);
-
-                                var fan = new CLCFanSpeed(clc, num);
-                                mFanList.Add(fan);
-
-                                var pump = new CLCPumpSpeed(clc, num);
-                                mFanList.Add(pump);
-
-                                var fanControl = new CLCFanControl(clc, num);
-                                mControlList.Add(fanControl);
-                                this.addChangeValue(25, fanControl);
-
-                                var pumpControl = new CLCPumpControl(clc, num);
-                                mControlList.Add(pumpControl);
-                                this.addChangeValue(50, pumpControl);
-
-                                clcIndex++;
-                                num++;
-                            }
+                            var fanList = FanList[(int)LIBRARY_TYPE.NvAPIWrapper];
+                            fanList.Add(fanDevice);
                         }
-                    }
-                }
-                catch { }
-            }
 
-            if (OptionManager.getInstance().IsRGBnFC == true)
-            {
-                try
-                {
-                    uint num = 1;
-                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.RGBAndFanController);
-                    for (uint i = 0; i < devCount; i++)
-                    {
-                        var rgb = new RGBnFC();
-                        if (rgb.start(i) == true)
+                        if (controlDevice.DeviceList.Count > 0)
                         {
-                            mRGBnFCList.Add(rgb);
-
-                            for (int j = 0; j < RGBnFC.MAX_FAN_COUNT; j++)
-                            {
-                                var fan = new RGBnFCFanSpeed(rgb, j, num);
-                                mFanList.Add(fan);
-
-                                var control = new RGBnFCControl(rgb, j, num);
-                                mControlList.Add(control);
-                                this.addChangeValue(control.getMinSpeed(), control);
-
-                                num++;
-                            }
+                            var controlList = ControlList[(int)LIBRARY_TYPE.NvAPIWrapper];
+                            controlList.Add(controlDevice);
                         }
                     }
                 }
@@ -315,9 +243,12 @@ namespace FanCtrl
             // DIMM thermal sensor
             if (OptionManager.getInstance().IsDimm == true)
             {
+                this.lockBus();
                 this.lockSMBus(0);
                 if (SMBusController.open(false) == true)
                 {
+                    var device = new HardwareDevice("DIMM");
+
                     int num = 1;
                     int busCount = SMBusController.getCount();
 
@@ -336,30 +267,361 @@ namespace FanCtrl
 
                                 if (detectBytes[j] == (byte)j)
                                 {
-                                    var sensor = new DimmTemp("DIMM #" + num++, i, detectBytes[j]);
-                                    sensor.onSetDimmTemperature += onSetDimmTemperature;
-                                    mSensorList.Add(sensor);
+                                    var id = string.Format("DIMM/{0}/{1}", i, j);
+                                    var temp = new DimmTemp(id, "DIMM #" + num++, i, detectBytes[j]);
+                                    temp.onSetDimmTemperature += onSetDimmTemperature;
+                                    device.addDevice(temp);
                                 }
                             }
                         }
                     }
+
+                    if (device.DeviceList.Count > 0)
+                    {
+                        var tempList = TempList[(int)LIBRARY_TYPE.DIMM];
+                        tempList.Add(device);
+                    }
                 }
                 this.unlockSMBus();
-            }            
+                this.unlockBus();
+            }
 
-            // Motherboard temperature
-            this.createMotherBoardTemp();
+            // NZXT Kraken
+            if (OptionManager.getInstance().IsKraken == true)
+            {                
+                try
+                {
+                    uint num = 1;
 
-            // GPU
-            this.createGPUTemp();
-            this.createGPUFan();
-            this.createGPUControl();
+                    // X2
+                    var tempDevice = new HardwareDevice("NZXT Kraken X2");
+                    var fanDevice = new HardwareDevice("NZXT Kraken X2");
+                    var controlDevice = new HardwareDevice("NZXT Kraken X2");
+                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX2);
+                    for (uint i = 0; i < devCount; i++)
+                    {
+                        var kraken = new Kraken();
+                        if (kraken.start(i, USBProductID.KrakenX2) == true)
+                        {
+                            KrakenList.Add(kraken);
+
+                            var id = string.Format("NZXT/KrakenX2/{0}/Temp", i);
+                            var temp = new KrakenLiquidTemp(id, kraken, num);
+                            tempDevice.addDevice(temp);
+
+                            id = string.Format("NZXT/KrakenX2/{0}/Fan", i);
+                            var fan = new KrakenFanSpeed(id, kraken, num);
+                            fanDevice.addDevice(fan);
+
+                            id = string.Format("NZXT/KrakenX2/{0}/Pump", i);
+                            var pump = new KrakenPumpSpeed(id, kraken, num);
+                            fanDevice.addDevice(pump);
+
+                            id = string.Format("NZXT/KrakenX2/{0}/Control/Fan", i);
+                            var fanControl = new KrakenFanControl(id, kraken, num);
+                            controlDevice.addDevice(fanControl);
+                            this.addChangeValue(30, fanControl, false);
+
+                            id = string.Format("NZXT/KrakenX2/{0}/Control/Pump", i);
+                            var pumpControl = new KrakenPumpControl(id, kraken, num);
+                            controlDevice.addDevice(pumpControl);
+                            this.addChangeValue(50, pumpControl, false);
+
+                            num++;
+                        }
+                    }
+
+                    if (tempDevice.DeviceList.Count > 0)
+                    {
+                        var tempList = TempList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        tempList.Add(tempDevice);
+                    }
+
+                    if (fanDevice.DeviceList.Count > 0)
+                    {
+                        var fanList = FanList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        fanList.Add(fanDevice);
+                    }
+
+                    if (controlDevice.DeviceList.Count > 0)
+                    {
+                        var controlList = ControlList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        controlList.Add(controlDevice);
+                    }
+
+                    // X3
+                    tempDevice = new HardwareDevice("NZXT Kraken X3");
+                    fanDevice = new HardwareDevice("NZXT Kraken X3");
+                    controlDevice = new HardwareDevice("NZXT Kraken X3");
+                    devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX3);
+                    for (uint i = 0; i < devCount; i++)
+                    {
+                        var kraken = new Kraken();
+                        if (kraken.start(i, USBProductID.KrakenX3) == true)
+                        {
+                            KrakenList.Add(kraken);
+
+                            var id = string.Format("NZXT/KrakenX3/{0}/Temp", i);
+                            var temp = new KrakenLiquidTemp(id, kraken, num);
+                            tempDevice.addDevice(temp);
+
+                            id = string.Format("NZXT/KrakenX3/{0}/Pump", i);
+                            var pump = new KrakenPumpSpeed(id, kraken, num);
+                            fanDevice.addDevice(pump);
+
+                            id = string.Format("NZXT/KrakenX3/{0}/Control/Pump", i);
+                            var pumpControl = new KrakenPumpControl(id, kraken, num);
+                            controlDevice.addDevice(pumpControl);
+                            this.addChangeValue(50, pumpControl, false);
+
+                            num++;
+                        }
+                    }
+
+                    if (tempDevice.DeviceList.Count > 0)
+                    {
+                        var tempList = TempList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        tempList.Add(tempDevice);
+                    }
+
+                    if (fanDevice.DeviceList.Count > 0)
+                    {
+                        var fanList = FanList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        fanList.Add(fanDevice);
+                    }
+
+                    if (controlDevice.DeviceList.Count > 0)
+                    {
+                        var controlList = ControlList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        controlList.Add(controlDevice);
+                    }
+                }
+                catch { }
+            }
+
+            // EVGA CLC
+            if (OptionManager.getInstance().IsCLC == true)
+            {
+                try
+                {
+                    uint num = 1;
+                    uint clcIndex = 0;
+
+                    // SiUSBController
+                    var tempDevice = new HardwareDevice("EVGA CLC");
+                    var fanDevice = new HardwareDevice("EVGA CLC");
+                    var controlDevice = new HardwareDevice("EVGA CLC");
+                    uint devCount = SiUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
+                    for (uint i = 0; i < devCount; i++)
+                    {
+                        var clc = new CLC();
+                        if (clc.start(true, clcIndex, i) == true)
+                        {
+                            CLCList.Add(clc);
+
+                            var id = string.Format("EVGA/CLC/{0}/Temp", i);
+                            var temp = new CLCLiquidTemp(id, clc, num);
+                            tempDevice.addDevice(temp);
+
+                            id = string.Format("EVGA/CLC/{0}/Fan", i);
+                            var fan = new CLCFanSpeed(id, clc, num);
+                            fanDevice.addDevice(fan);
+
+                            id = string.Format("EVGA/CLC/{0}/Pump", i);
+                            var pump = new CLCPumpSpeed(id, clc, num);
+                            fanDevice.addDevice(pump);
+
+                            id = string.Format("EVGA/CLC/{0}/Control/Fan", i);
+                            var fanControl = new CLCFanControl(id, clc, num);
+                            controlDevice.addDevice(fanControl);
+                            this.addChangeValue(25, fanControl, false);
+
+                            id = string.Format("EVGA/CLC/{0}/Control/Pump", i);
+                            var pumpControl = new CLCPumpControl(id, clc, num);
+                            controlDevice.addDevice(pumpControl);
+                            this.addChangeValue(50, pumpControl, false);
+
+                            clcIndex++;
+                            num++;
+                        }
+                    }
+
+                    if (tempDevice.DeviceList.Count > 0)
+                    {
+                        var tempList = TempList[(int)LIBRARY_TYPE.EVGA_CLC];
+                        tempList.Add(tempDevice);
+                    }
+
+                    if (fanDevice.DeviceList.Count > 0)
+                    {
+                        var fanList = FanList[(int)LIBRARY_TYPE.EVGA_CLC];
+                        fanList.Add(fanDevice);
+                    }
+
+                    if (controlDevice.DeviceList.Count > 0)
+                    {
+                        var controlList = ControlList[(int)LIBRARY_TYPE.EVGA_CLC];
+                        controlList.Add(controlDevice);
+                    }
+
+                    if (WinUSBController.init() == true)
+                    {
+                        tempDevice = new HardwareDevice("EVGA CLC");
+                        fanDevice = new HardwareDevice("EVGA CLC");
+                        controlDevice = new HardwareDevice("EVGA CLC");
+
+                        // WinUSBController
+                        devCount = WinUSBController.getDeviceCount(USBVendorID.ASETEK, USBProductID.CLC);
+                        for (uint i = 0; i < devCount; i++)
+                        {
+                            var clc = new CLC();
+                            if (clc.start(false, clcIndex, i) == true)
+                            {
+                                CLCList.Add(clc);
+
+                                var id = string.Format("EVGA/CLC/{0}/Temp", i);
+                                var temp = new CLCLiquidTemp(id, clc, num);
+                                tempDevice.addDevice(temp);
+
+                                id = string.Format("EVGA/CLC/{0}/Fan", i);
+                                var fan = new CLCFanSpeed(id, clc, num);
+                                fanDevice.addDevice(fan);
+
+                                id = string.Format("EVGA/CLC/{0}/Pump", i);
+                                var pump = new CLCPumpSpeed(id, clc, num);
+                                fanDevice.addDevice(pump);
+
+                                id = string.Format("EVGA/CLC/{0}/Control/Fan", i);
+                                var fanControl = new CLCFanControl(id, clc, num);
+                                controlDevice.addDevice(fanControl);
+                                this.addChangeValue(25, fanControl, false);
+
+                                id = string.Format("EVGA/CLC/{0}/Control/Pump", i);
+                                var pumpControl = new CLCPumpControl(id, clc, num);
+                                controlDevice.addDevice(pumpControl);
+                                this.addChangeValue(50, pumpControl, false);
+
+                                clcIndex++;
+                                num++;
+                            }
+                        }
+
+                        if (tempDevice.DeviceList.Count > 0)
+                        {
+                            var tempList = TempList[(int)LIBRARY_TYPE.EVGA_CLC];
+                            tempList.Add(tempDevice);
+                        }
+
+                        if (fanDevice.DeviceList.Count > 0)
+                        {
+                            var fanList = FanList[(int)LIBRARY_TYPE.EVGA_CLC];
+                            fanList.Add(fanDevice);
+                        }
+
+                        if (controlDevice.DeviceList.Count > 0)
+                        {
+                            var controlList = ControlList[(int)LIBRARY_TYPE.EVGA_CLC];
+                            controlList.Add(controlDevice);
+                        }
+                    }
+                }
+                catch { }
+            }
+
+            if (OptionManager.getInstance().IsRGBnFC == true)
+            {
+                try
+                {
+                    var fanDevice = new HardwareDevice("NZXT RGB & Fan Controller");
+                    var controlDevice = new HardwareDevice("NZXT RGB & Fan Controller");
+                    uint num = 1;
+                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.RGBAndFanController);
+                    for (uint i = 0; i < devCount; i++)
+                    {
+                        var rgb = new RGBnFC();
+                        if (rgb.start(i) == true)
+                        {
+                            RGBnFCList.Add(rgb);
+
+                            for (int j = 0; j < RGBnFC.MAX_FAN_COUNT; j++)
+                            {
+                                var id = string.Format("NZXT/RGBnFC/{0}/Fan/{1}", i, j);
+                                var fan = new RGBnFCFanSpeed(id, rgb, j, num);
+                                fanDevice.addDevice(fan);
+
+                                id = string.Format("NZXT/RGBnFC/{0}/Control/{1}", i, j);
+                                var control = new RGBnFCControl(id, rgb, j, num);
+                                controlDevice.addDevice(control);
+                                this.addChangeValue(control.getMinSpeed(), control, false);
+
+                                num++;
+                            }
+                        }
+                    }
+
+                    if (fanDevice.DeviceList.Count > 0)
+                    {
+                        var fanList = FanList[(int)LIBRARY_TYPE.RGBnFC];
+                        fanList.Add(fanDevice);
+                    }
+
+                    if (controlDevice.DeviceList.Count > 0)
+                    {
+                        var controlList = ControlList[(int)LIBRARY_TYPE.RGBnFC];
+                        controlList.Add(controlDevice);
+                    }                    
+                }
+                catch { }
+            }
+
+            for (int i = 0; i < TempList.Count; i++)
+            {
+                var deviceList = TempList[i];
+                for (int j = 0; j < deviceList.Count; j++)
+                {
+                    var device = deviceList[j];
+                    for (int k = 0; k < device.DeviceList.Count; k++)
+                    {
+                        var temp = device.DeviceList[k];
+                        TempBaseList.Add((BaseSensor)temp);
+                        TempBaseMap.Add(temp.ID, (BaseSensor)temp);
+                    }
+                }
+            }
+            for (int i = 0; i < FanList.Count; i++)
+            {
+                var deviceList = FanList[i];
+                for (int j = 0; j < deviceList.Count; j++)
+                {
+                    var device = deviceList[j];
+                    for (int k = 0; k < device.DeviceList.Count; k++)
+                    {
+                        var fan = device.DeviceList[k];
+                        FanBaseList.Add((BaseSensor)fan);
+                        FanBaseMap.Add(fan.ID, (BaseSensor)fan);
+                    }
+                }
+            }
+            for (int i = 0; i < ControlList.Count; i++)
+            {
+                var deviceList = ControlList[i];
+                for (int j = 0; j < deviceList.Count; j++)
+                {
+                    var device = deviceList[j];
+                    for (int k = 0; k < device.DeviceList.Count; k++)
+                    {
+                        var control = device.DeviceList[k];
+                        ControlBaseList.Add((BaseControl)control);
+                        ControlBaseMap.Add(control.ID, (BaseControl)control);
+                    }
+                }
+            }
 
             // osd sensor
             this.createOSDSensor();
 
             Monitor.Exit(mLock);
-        }        
+        }
 
         public void stop()
         {
@@ -371,10 +633,18 @@ namespace FanCtrl
             }
             mIsStart = false;
 
-            mChangeControlList.Clear();
-            mChangeValueList.Clear();
+            if (mUpdateTimer != null)
+            {
+                mUpdateTimer.Stop();
+                mUpdateTimer.Dispose();
+                mUpdateTimer = null;
+            }
 
-            mUpdateTimer.Stop();
+            if (mGigabyte != null)
+            {
+                mGigabyte.stop();
+                mGigabyte = null;
+            }
 
             if (mLHM != null)
             {
@@ -388,46 +658,53 @@ namespace FanCtrl
                 mOHM = null;
             }
 
-            for (int i = 0; i < mKrakenList.Count; i++)
+            for (int i = 0; i < KrakenList.Count; i++)
             {
                 try
                 {
-                    mKrakenList[i].stop();
+                    KrakenList[i].stop();
                 }
                 catch { }
             }
-            mKrakenList.Clear();
+            KrakenList.Clear();
 
-            for (int i = 0; i < mCLCList.Count; i++)
+            for (int i = 0; i < CLCList.Count; i++)
             {
                 try
                 {
-                    mCLCList[i].stop();
+                    CLCList[i].stop();
                 }
                 catch { }
             }
-            mCLCList.Clear();
+            CLCList.Clear();
 
-            for (int i = 0; i < mRGBnFCList.Count; i++)
+            for (int i = 0; i < RGBnFCList.Count; i++)
             {
                 try
                 {
-                    mRGBnFCList[i].stop();
+                    RGBnFCList[i].stop();
                 }
                 catch { }
             }
-            mRGBnFCList.Clear();
+            RGBnFCList.Clear();
 
-            if (mIsGigabyte == true && mGigabyte != null)
-            {
-                mIsGigabyte = false;
-                mGigabyte.stop();
-                mGigabyte = null;
-            }
+            mChangeControlList.Clear();
+            mChangeValueList.Clear();
 
-            mSensorList.Clear();
-            mFanList.Clear();
-            mControlList.Clear();
+            TempList.Clear();
+            FanList.Clear();
+            ControlList.Clear();
+
+            TempBaseList.Clear();
+            FanBaseList.Clear();
+            ControlBaseList.Clear();
+
+            TempBaseMap.Clear();
+            FanBaseMap.Clear();
+            ControlBaseMap.Clear();
+
+            OSDSensorList.Clear();
+            OSDSensorMap.Clear();
 
             SMBusController.close();
 
@@ -464,6 +741,7 @@ namespace FanCtrl
                 return;
             }
 
+            mUpdateTimer = new System.Timers.Timer();
             mUpdateTimer.Interval = OptionManager.getInstance().Interval;
             mUpdateTimer.Elapsed += onUpdateTimer;
             mUpdateTimer.Start();
@@ -471,7 +749,7 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
-        public void restartTimer(int interval)
+        public void restartTimer()
         {
             Monitor.Enter(mLock);
             if (mIsStart == false)
@@ -479,7 +757,18 @@ namespace FanCtrl
                 Monitor.Exit(mLock);
                 return;
             }
-            mUpdateTimer.Interval = interval;
+
+            if (mUpdateTimer != null)
+            {
+                mUpdateTimer.Stop();
+                mUpdateTimer.Dispose();
+                mUpdateTimer = null;
+            }
+
+            mUpdateTimer = new System.Timers.Timer();
+            mUpdateTimer.Interval = OptionManager.getInstance().Interval;
+            mUpdateTimer.Elapsed += onUpdateTimer;
+            mUpdateTimer.Start();
             Monitor.Exit(mLock);
         }
 
@@ -539,7 +828,7 @@ namespace FanCtrl
             {
                 try
                 {
-                    return mSMBusMutex.WaitOne(ms);
+                    return mSMBusMutex.WaitOne(ms, false);
                 }
                 catch { }
                 return false;
@@ -561,329 +850,183 @@ namespace FanCtrl
             }
             catch { }
         }        
-
-        private void createTemp()
-        {
-            // Gigabyte
-            if (mIsGigabyte == true)
-            {
-                mGigabyte.createTemp(ref mSensorList);
-            }
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHM.createTemp(ref mSensorList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHM.createTemp(ref mSensorList);
-            }            
-        }
-
-        private void createMotherBoardTemp()
-        {
-            if (mIsGigabyte == true)
-                return;
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHM.createMotherBoardTemp(ref mSensorList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHM.createMotherBoardTemp(ref mSensorList);
-            }
-        }
-
-        private void createFan()
-        {
-            // Gigabyte
-            if (mIsGigabyte == true)
-            {
-                mGigabyte.createFan(ref mFanList);
-            }
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHM.createFan(ref mFanList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHM.createFan(ref mFanList);
-            }
-        }
-
-        private void createControl()
-        {
-            // Gigabyte
-            if (mIsGigabyte == true)
-            {
-                mGigabyte.createControl(ref mControlList);
-            }
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHM.createControl(ref mControlList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHM.createControl(ref mControlList);
-            }
-        }
-
-        private void createGPUTemp()
-        {
-            if (OptionManager.getInstance().IsNvAPIWrapper == true)
-            {
-                this.lockBus();
-                try
-                {
-                    int gpuNum = 2;
-                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                    for (int i = 0; i < gpuArray.Length; i++)
-                    {
-                        var gpu = gpuArray[i];
-                        var name = gpu.FullName;
-                        while (this.isExistTemp(name) == true)
-                        {
-                            name = gpu.FullName + " #" + gpuNum++;
-                        }
-
-                        var temp = new NvAPITemp(name, i);
-                        temp.onGetNvAPITemperatureHandler += onGetNvAPITemperature;
-                        mSensorList.Add(temp);
-                    }
-                }
-                catch { }                
-                this.unlockBus();
-            }
-        }
-
-        private void createGPUFan()
-        {
-            // Gigabyte
-            if (mIsGigabyte == true) { }
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHM.createGPUFan(ref mFanList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHM.createGPUFan(ref mFanList);
-            }
-
-            if (OptionManager.getInstance().IsNvAPIWrapper == true)
-            {
-                this.lockBus();
-                try
-                {
-                    int gpuFanNum = 1;
-                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                    for (int i = 0; i < gpuArray.Length; i++)
-                    {
-                        var e = gpuArray[i].CoolerInformation.Coolers.GetEnumerator();
-                        while (e.MoveNext())
-                        {
-                            var value = e.Current;
-                            var name = "GPU Fan #" + gpuFanNum++;
-                            while (this.isExistFan(name) == true)
-                            {
-                                name = "GPU Fan #" + gpuFanNum++;
-                            }
-
-                            var fan = new NvAPIFanSpeed(name, i, value.CoolerId);
-                            fan.onGetNvAPIFanSpeedHandler += onGetNvAPIFanSpeed;
-                            mFanList.Add(fan);
-                        }
-                    }
-                }
-                catch { }                
-                this.unlockBus();
-            }
-        }
-
-        private void createGPUControl()
-        {
-            // Gigabyte
-            if (mIsGigabyte == true) { }
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
-            {
-                mLHM.createGPUFanControl(ref mControlList);
-            }
-
-            // OpenHardwareMonitor
-            else
-            {
-                mOHM.createGPUFanControl(ref mControlList);
-            }
-
-            if (OptionManager.getInstance().IsNvAPIWrapper == true)
-            {
-                this.lockBus();
-                try
-                {
-                    int gpuFanNum = 1;
-                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                    for (int i = 0; i < gpuArray.Length; i++)
-                    {
-                        var e = gpuArray[i].CoolerInformation.Coolers.GetEnumerator();
-                        while (e.MoveNext())
-                        {
-                            var value = e.Current;
-                            int coolerID = value.CoolerId;
-                            int speed = value.CurrentLevel;
-                            int minSpeed = 0;// value.DefaultMinimumLevel;
-                            int maxSpeed = 100;// value.DefaultMaximumLevel;
-
-                            var name = "GPU Fan Control #" + gpuFanNum++;
-                            while (this.isExistControl(name) == true)
-                            {
-                                name = "GPU Fan Control #" + gpuFanNum++;
-                            }
-
-                            var control = new NvAPIFanControl(name, i, coolerID, speed, minSpeed, maxSpeed);
-                            control.onSetNvAPIControlHandler += onSetNvApiControl;
-                            mControlList.Add(control);
-                        }
-                    }
-                }
-                catch { }                
-                this.unlockBus();
-            }
-        }
-
+        
         private void createOSDSensor()
         {
-            if (mIsGigabyte == true) {}
-
-            // LibreHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.LibreHardwareMonitor)
+            // Temp
+            for (int i = 0; i < TempBaseList.Count; i++)
             {
-                mLHM.createOSDSensor(ref mOSDSensorList);
+                var device = TempBaseList[i];
+                string id = device.ID;
+                string prefix = "[" + StringLib.Temperature + "] ";
+                string name = device.Name;
+                var osdSensor = new OSDSensor(id, prefix, name, OSDUnitType.Temperature);
+                OSDSensorList.Add(osdSensor);
+                OSDSensorMap.Add(id, osdSensor);
             }
 
-            // OpenHardwareMonitor
-            else if (OptionManager.getInstance().LibraryType == LibraryType.OpenHardwareMonitor)
+            // Fan
+            for (int i = 0; i < FanBaseList.Count; i++)
             {
-                mOHM.createOSDSensor(ref mOSDSensorList);
+                var device = FanBaseList[i];
+                string id = device.ID;
+                string prefix = "[" + StringLib.Fan_speed + "] ";
+                string name = device.Name;
+                var osdSensor = new OSDSensor(id, prefix, name, OSDUnitType.RPM);
+                OSDSensorList.Add(osdSensor);
+                OSDSensorMap.Add(id, osdSensor);
             }
 
+            // Control
+            for (int i = 0; i < ControlBaseList.Count; i++)
+            {
+                var device = ControlBaseList[i];
+                string id = device.ID;
+                string prefix = "[" + StringLib.Fan_control + "] ";
+                string name = device.Name;
+                var osdSensor = new OSDSensor(id, prefix, name, OSDUnitType.Percent);
+                OSDSensorList.Add(osdSensor);
+                OSDSensorMap.Add(id, osdSensor);
+            }
+
+            // Framerate
+            string id2 = "OSD/Framerate";
+            string prefix2 = "[" + StringLib.ETC + "] ";
+            string name2 = "Framerate";
+            var osdSensor2 = new OSDSensor(id2, prefix2, name2,  OSDUnitType.FPS);
+            OSDSensorList.Add(osdSensor2);
+            OSDSensorMap.Add(id2, osdSensor2);
+
+            // Blank
+            id2 = "OSD/Blank";
+            name2 = "Blank";
+            osdSensor2 = new OSDSensor(id2, prefix2, name2, OSDUnitType.Blank);
+            OSDSensorList.Add(osdSensor2);
+            OSDSensorMap.Add(id2, osdSensor2);
+
+            //////////////// other sensor ////////////////
+            // LHM
+            if (OptionManager.getInstance().IsLHM == true && mLHM != null)
+            {
+                mLHM.createOSDSensor(OSDSensorList, OSDSensorMap);
+            }
+
+            // OHM
+            if (OptionManager.getInstance().IsOHM == true && mOHM != null)
+            {
+                mOHM.createOSDSensor(OSDSensorList, OSDSensorMap);
+            }
+
+            // NvAPIWrapper
             if (OptionManager.getInstance().IsNvAPIWrapper == true)
             {
-                this.lockBus();
                 try
                 {
+                    string idPrefix = "NvAPIWrapper/OSD";
                     var gpuArray = PhysicalGPU.GetPhysicalGPUs();
                     for (int i = 0; i < gpuArray.Length; i++)
                     {
                         int subIndex = 0;
 
-                        var osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Graphics", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        string id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        string prefix = "[Clock] ";
+                        string name = "GPU Graphics";
+                        var osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Memory", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Clock] ";
+                        name = "GPU Memory";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Processor", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Clock] ";
+                        name = "GPU Processor";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.kHz, "[Clock] GPU Video Decoding", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
-                        
-                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Core", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Clock] ";
+                        name = "GPU Video Decoding";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Frame Buffer", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Load] ";
+                        name = "GPU Core";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Video Engine", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Load] ";
+                        name = "GPU Frame Buffer";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Bus Interface", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Load] ";
+                        name = "GPU Video Engine";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.Percent, "[Load] GPU Memory", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Load] ";
+                        name = "GPU Bus Interface";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.KB, "[Data] GPU Memory Free", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Load] ";
+                        name = "GPU Memory";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.KB, "[Data] GPU Memory Used", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Data] ";
+                        name = "GPU Memory Free";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.KB, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
 
-                        osdSensor = new OSDSensor(OSDUnitType.KB, "[Data] GPU Memory Total", i, subIndex++);
-                        osdSensor.onOSDSensorUpdate += onOSDSensorUpdate;
-                        mOSDSensorList.Add(osdSensor);
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Data] ";
+                        name = "GPU Memory Used";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.KB, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
+
+                        id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        prefix = "[Data] ";
+                        name = "GPU Memory Total";
+                        osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.KB, i, subIndex++);
+                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        OSDSensorList.Add(osdSensor);
+                        OSDSensorMap.Add(id, osdSensor);
                     }
                 }
                 catch { }
-                this.unlockBus();
             }
-        }
-
-        private bool isExistTemp(string name)
-        {
-            for (int i = 0; i < mSensorList.Count; i++)
-            {
-                if (mSensorList[i].Name.Equals(name) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool isExistFan(string name)
-        {
-            for (int i = 0; i < mFanList.Count; i++)
-            {
-                if (mFanList[i].Name.Equals(name) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool isExistControl(string name)
-        {
-            for (int i = 0; i < mControlList.Count; i++)
-            {
-                if (mControlList[i].Name.Equals(name) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private void onSetDimmTemperature(object sender, int busIndex, byte address)
@@ -918,7 +1061,6 @@ namespace FanCtrl
 
         private int onGetNvAPITemperature(int index)
         {
-            this.lockBus();
             int temp = 0;
             try
             {                
@@ -937,14 +1079,12 @@ namespace FanCtrl
                     break;
                 }
             }
-            catch { }            
-            this.unlockBus();
+            catch { }
             return temp;
         }
 
         private int onGetNvAPIFanSpeed(int index, int coolerID)
         {
-            this.lockBus();
             int speed = 0;
             try
             {
@@ -967,13 +1107,11 @@ namespace FanCtrl
                 }
             }
             catch { }
-            this.unlockBus();
             return speed;
         }
 
         private void onSetNvApiControl(int index, int coolerID, int value)
         {
-            this.lockBus();
             try
             {
                 var gpuArray = PhysicalGPU.GetPhysicalGPUs();
@@ -985,67 +1123,61 @@ namespace FanCtrl
                 var info = gpuArray[index].CoolerInformation;
                 info.SetCoolerSettings(coolerID, value);
             }
-            catch { }            
-            this.unlockBus();
+            catch { }
         }
 
-        private double onOSDSensorUpdate(OSDLibraryType libraryType, int index, int subIndex)
+        private double onNvAPIOSDSensorUpdate(int index, int subIndex)
         {
             double value = 0;
-            if (libraryType == OSDLibraryType.NvApiWrapper)
-            {                
-                this.lockBus();
-                try
+            try
+            {
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                var gpu = gpuArray[index];
+
+                switch (subIndex)
                 {
-                    var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                    var gpu = gpuArray[index];
-                    
-                    switch (subIndex)
-                    {
-                        case 0:
-                            value = (double)gpu.CurrentClockFrequencies.GraphicsClock.Frequency;
-                            break;
-                        case 1:
-                            value = (double)gpu.CurrentClockFrequencies.MemoryClock.Frequency;
-                            break;
-                        case 2:
-                            value = (double)gpu.CurrentClockFrequencies.ProcessorClock.Frequency;
-                            break;
-                        case 3:
-                            value = (double)gpu.CurrentClockFrequencies.VideoDecodingClock.Frequency;
-                            break;
-                        case 4:
-                            value = (double)gpu.UsageInformation.GPU.Percentage;
-                            break;
-                        case 5:
-                            value = (double)gpu.UsageInformation.FrameBuffer.Percentage;
-                            break;
-                        case 6:
-                            value = (double)gpu.UsageInformation.VideoEngine.Percentage;
-                            break;
-                        case 7:
-                            value = (double)gpu.UsageInformation.BusInterface.Percentage;
-                            break;
-                        case 8:
-                            value = (double)(((double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB) / (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB * 100.0);
-                            break;
-                        case 9:
-                            value = (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB;
-                            break;
-                        case 10:
-                            value = (double)(gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB);
-                            break;
-                        case 11:
-                            value = (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB;
-                            break;
-                        default:
-                            value = 0;
-                            break;
-                    }
+                    case 0:
+                        value = (double)gpu.CurrentClockFrequencies.GraphicsClock.Frequency;
+                        break;
+                    case 1:
+                        value = (double)gpu.CurrentClockFrequencies.MemoryClock.Frequency;
+                        break;
+                    case 2:
+                        value = (double)gpu.CurrentClockFrequencies.ProcessorClock.Frequency;
+                        break;
+                    case 3:
+                        value = (double)gpu.CurrentClockFrequencies.VideoDecodingClock.Frequency;
+                        break;
+                    case 4:
+                        value = (double)gpu.UsageInformation.GPU.Percentage;
+                        break;
+                    case 5:
+                        value = (double)gpu.UsageInformation.FrameBuffer.Percentage;
+                        break;
+                    case 6:
+                        value = (double)gpu.UsageInformation.VideoEngine.Percentage;
+                        break;
+                    case 7:
+                        value = (double)gpu.UsageInformation.BusInterface.Percentage;
+                        break;
+                    case 8:
+                        value = (double)(((double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB) / (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB * 100.0);
+                        break;
+                    case 9:
+                        value = (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB;
+                        break;
+                    case 10:
+                        value = (double)(gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB);
+                        break;
+                    case 11:
+                        value = (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB;
+                        break;
+                    default:
+                        value = 0;
+                        break;
                 }
-                catch { }
-                this.unlockBus();
             }
+            catch { }
             return value;
         }
 
@@ -1055,7 +1187,7 @@ namespace FanCtrl
                 return;
 
 #if MY_DEBUG
-            if (ControlManager.getInstance().ModeIndex == 2)
+            if (ControlManager.getInstance().ModeType == MODE_TYPE.PERFORMANCE)
             {
                 if (mDebugUpdateCount <= 0)
                 {
@@ -1070,93 +1202,143 @@ namespace FanCtrl
             }
 #endif
 
-            if (mIsGigabyte == true && mGigabyte != null)
+            try
             {
-                mGigabyte.update();
-            }
-
-            if (mLHM != null)
-            {
-                mLHM.update();
-            }
-
-            if (mOHM != null)
-            {
-                mOHM.update();
-            }
-
-            for (int i = 0; i < mSensorList.Count; i++)
-            {
-                mSensorList[i].update();
-            }
-
-            for (int i = 0; i < mFanList.Count; i++)
-            {
-                mFanList[i].update();
-            }
-
-            for (int i = 0; i < mControlList.Count; i++)
-            {
-                mControlList[i].update();
-            }
-
-            // change value
-            bool isExistChange = false;
-            if (mChangeValueList.Count > 0)
-            {
-                for (int i = 0; i < mChangeControlList.Count; i++)
+                if (mGigabyte != null)
                 {
-                    isExistChange = true;
-                    mChangeControlList[i].setSpeed(mChangeValueList[i]);
+                    mGigabyte.update();
                 }
-                mChangeControlList.Clear();
-                mChangeValueList.Clear();
             }
+            catch { }
 
-            // Control
-            var controlManager = ControlManager.getInstance();
-            if (controlManager.IsEnable == true && isExistChange == false)
+            try
             {
-                var controlDictionary = new Dictionary<int, BaseControl>();
-                int modeIndex = controlManager.ModeIndex;
-
-                for (int i = 0; i < controlManager.getControlDataCount(modeIndex); i++)
+                if (mLHM != null)
                 {
-                    var controlData = controlManager.getControlData(modeIndex, i);
-                    if (controlData == null)
-                        break;
+                    mLHM.update();
+                }
+            }
+            catch { }
 
-                    int sensorIndex = controlData.Index;
-                    int temperature = mSensorList[sensorIndex].Value;
+            try
+            {
+                if (mOHM != null)
+                {
+                    mOHM.update();
+                }
+            }
+            catch { }
 
-                    for (int j = 0; j < controlData.FanDataList.Count; j++)
+            try
+            {
+                for (int i = 0; i < (int)LIBRARY_TYPE.MAX; i++)
+                {
+                    var tempList = TempList[i];
+                    for (int j = 0; j < tempList.Count; j++)
                     {
-                        var fanData = controlData.FanDataList[j];
-                        int controlIndex = fanData.Index;
-                        int percent = fanData.getValue(temperature);
-
-                        var control = mControlList[controlIndex];
-
-                        if (controlDictionary.ContainsKey(controlIndex) == false)
+                        var deviceList = tempList[j].DeviceList;
+                        for (int k = 0; k < deviceList.Count; k++)
                         {
-                            controlDictionary[controlIndex] = control;
-                            control.NextValue = percent;
+                            var temp = deviceList[k];
+                            temp.update();
                         }
-                        else
+                    }
+
+                    var fanList = FanList[i];
+                    for (int j = 0; j < fanList.Count; j++)
+                    {
+                        var deviceList = fanList[j].DeviceList;
+                        for (int k = 0; k < deviceList.Count; k++)
                         {
-                            control.NextValue = (control.NextValue >= percent) ? control.NextValue : percent;
+                            var fan = deviceList[k];
+                            fan.update();
+                        }
+                    }
+
+                    var controlList = ControlList[i];
+                    for (int j = 0; j < controlList.Count; j++)
+                    {
+                        var deviceList = controlList[j].DeviceList;
+                        for (int k = 0; k < deviceList.Count; k++)
+                        {
+                            var control = deviceList[k];
+                            control.update();
                         }
                     }
                 }
+            }
+            catch { }
 
-                foreach (var keyPair in controlDictionary)
+            try
+            {
+                // change value
+                bool isExistChange = false;
+                if (mChangeValueList.Count > 0)
                 {
-                    var control = keyPair.Value;
-                    if (control.Value == control.NextValue)
-                        continue;
-                    control.setSpeed(control.NextValue);
+                    for (int i = 0; i < mChangeControlList.Count; i++)
+                    {
+                        isExistChange = true;
+                        mChangeControlList[i].setSpeed(mChangeValueList[i]);
+                    }
+                    mChangeControlList.Clear();
+                    mChangeValueList.Clear();
+                }
+
+                // Control
+                var controlDictionary = new Dictionary<string, BaseControl>();
+                var controlManager = ControlManager.getInstance();
+                if (controlManager.IsEnable == true && isExistChange == false)
+                {
+                    var tempBaseMap = HardwareManager.getInstance().TempBaseMap;
+                    var controlBaseMap = HardwareManager.getInstance().ControlBaseMap;
+
+                    var controlDataList = controlManager.getControlDataList(controlManager.ModeType);
+                    for (int i = 0; i < controlDataList.Count; i++)
+                    {
+                        var controlData = controlDataList[i];
+                        if (controlData == null)
+                            break;
+
+                        string tempID = controlData.ID;
+                        if (tempBaseMap.ContainsKey(tempID) == false)
+                            continue;
+
+                        var tempDevice = tempBaseMap[tempID];
+                        int temperature = tempDevice.Value;
+
+                        for (int j = 0; j < controlData.FanDataList.Count; j++)
+                        {
+                            var fanData = controlData.FanDataList[j];
+
+                            string fanID = fanData.ID;
+                            if (controlBaseMap.ContainsKey(fanID) == false)
+                                continue;
+
+                            var controlDevice = controlBaseMap[fanID];
+                            int percent = fanData.getValue(temperature);
+
+                            if (controlDictionary.ContainsKey(fanID) == false)
+                            {
+                                controlDictionary.Add(fanID, controlDevice);
+                                controlDevice.NextValue = percent;
+                            }
+                            else
+                            {
+                                controlDevice.NextValue = (controlDevice.NextValue >= percent) ? controlDevice.NextValue : percent;
+                            }
+                        }
+                    }
+
+                    foreach (var keyPair in controlDictionary)
+                    {
+                        var control = keyPair.Value;
+                        if (control.Value == control.NextValue)
+                            continue;
+                        control.setSpeed(control.NextValue);
+                    }
                 }
             }
+            catch { }            
 
             // onUpdateCallback
             onUpdateCallback();
@@ -1205,13 +1387,15 @@ namespace FanCtrl
                     osdManager.IsUpdate = false;
                 }
             }
-
             Monitor.Exit(mLock);
         }
 
-        public int addChangeValue(int value, BaseControl control)
+        public int addChangeValue(int value, BaseControl control, bool isLock = true)
         {
-            Monitor.Enter(mLock);
+            if (isLock == true)
+            {
+                Monitor.Enter(mLock);
+            }            
             if (value < control.getMinSpeed())
             {
                 value = control.getMinSpeed();
@@ -1222,92 +1406,181 @@ namespace FanCtrl
             }
             mChangeValueList.Add(value);
             mChangeControlList.Add(control);
-            Monitor.Exit(mLock);
+
+            if (isLock == true)
+            {
+                Monitor.Exit(mLock);
+            }
             return value;
-        }        
-
-        public int getSensorCount()
-        {
-            Monitor.Enter(mLock);
-            int count = mSensorList.Count;
-            Monitor.Exit(mLock);
-            return count;
         }
 
-        public BaseSensor getSensor(int index)
+        public bool read(ref bool isDifferent)
         {
             Monitor.Enter(mLock);
-            if (index >= mSensorList.Count)
+            String jsonString;
+            try
+            {
+                jsonString = File.ReadAllText(mHardwareFileName);
+            }
+            catch
             {
                 Monitor.Exit(mLock);
-                return null;
+                this.write();
+                return false;
             }
-            var sensor = mSensorList[index];
-            Monitor.Exit(mLock);
-            return sensor;
-        }
 
-        public int getFanCount()
-        {
-            Monitor.Enter(mLock);
-            int count = mFanList.Count;
-            Monitor.Exit(mLock);
-            return count;
-        }
+            try
+            {
+                var rootObject = JObject.Parse(jsonString);
 
-        public BaseSensor getFan(int index)
-        {
-            Monitor.Enter(mLock);
-            if (index >= mFanList.Count)
+                // name
+                if (rootObject.ContainsKey("name") == true)
+                {
+                    var nameObject = rootObject.Value<JObject>("name");
+
+                    // temperature name
+                    if (nameObject.ContainsKey("temp") == true)
+                    {
+                        var list = nameObject.Value<JArray>("temp");
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var jobject = list[i];
+                            string id = jobject.Value<string>("id");
+                            string name = jobject.Value<string>("name");
+
+                            if (TempBaseMap.ContainsKey(id) == false)
+                            {
+                                isDifferent = true;
+                                continue;
+                            }
+
+                            var device = TempBaseMap[id];
+                            device.Name = name;
+
+                            if (OSDSensorMap.ContainsKey(id) == true)
+                            {
+                                var sensor = OSDSensorMap[id];
+                                sensor.Name = name;
+                            }
+                        }
+                    }
+
+                    // fan name
+                    if (nameObject.ContainsKey("fan") == true)
+                    {
+                        var list = nameObject.Value<JArray>("fan");
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var jobject = list[i];
+                            string id = jobject.Value<string>("id");
+                            string name = jobject.Value<string>("name");
+
+                            if (FanBaseMap.ContainsKey(id) == false)
+                            {
+                                isDifferent = true;
+                                continue;
+                            }
+
+                            var device = FanBaseMap[id];
+                            device.Name = name;
+
+                            if (OSDSensorMap.ContainsKey(id) == true)
+                            {
+                                var sensor = OSDSensorMap[id];
+                                sensor.Name = name;
+                            }
+                        }
+                    }
+
+                    // control name
+                    if (nameObject.ContainsKey("control") == true)
+                    {
+                        var list = nameObject.Value<JArray>("control");
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var jobject = list[i];
+                            string id = jobject.Value<string>("id");
+                            string name = jobject.Value<string>("name");
+
+                            if (ControlBaseMap.ContainsKey(id) == false)
+                            {
+                                isDifferent = true;
+                                continue;
+                            }
+
+                            var device = ControlBaseMap[id];
+                            device.Name = name;
+
+                            if (OSDSensorMap.ContainsKey(id) == true)
+                            {
+                                var sensor = OSDSensorMap[id];
+                                sensor.Name = name;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
             {
                 Monitor.Exit(mLock);
-                return null;
+                return false;
             }
-            var fan = mFanList[index];
             Monitor.Exit(mLock);
-            return fan;
+            return true;
         }
 
-        public int getControlCount()
+        public void write()
         {
             Monitor.Enter(mLock);
-            int count = mControlList.Count;
-            Monitor.Exit(mLock);
-            return count;
-        }
-
-        public BaseControl getControl(int index)
-        {
-            Monitor.Enter(mLock);
-            if (index >= mControlList.Count)
+            try
             {
-                Monitor.Exit(mLock);
-                return null;
-            }
-            var control = mControlList[index];
-            Monitor.Exit(mLock);
-            return control;
-        }
+                var rootObject = new JObject();
 
-        public int getOSDSensorCount()
-        {
-            Monitor.Enter(mLock);
-            int count = mOSDSensorList.Count;
-            Monitor.Exit(mLock);
-            return count;
-        }
+                // name
+                var nameObject = new JObject();
 
-        public OSDSensor getOSDSensor(int index)
-        {
-            Monitor.Enter(mLock);
-            if (index >= mOSDSensorList.Count)
-            {
-                Monitor.Exit(mLock);
-                return null;
+                // temp name
+                var tempList = new JArray();
+                for (int i = 0; i < TempBaseList.Count; i++)
+                {
+                    var device = TempBaseList[i];
+                    var jobject = new JObject();
+                    jobject["id"] = device.ID;
+                    jobject["name"] = device.Name;
+                    tempList.Add(jobject);
+                }
+                nameObject["temp"] = tempList;
+
+                // fan name
+                var fanList = new JArray();
+                for (int i = 0; i < FanBaseList.Count; i++)
+                {
+                    var device = FanBaseList[i];
+                    var jobject = new JObject();
+                    jobject["id"] = device.ID;
+                    jobject["name"] = device.Name;
+                    fanList.Add(jobject);
+                }
+                nameObject["fan"] = fanList;
+
+                // control name
+                var controlList = new JArray();
+                for (int i = 0; i < ControlBaseList.Count; i++)
+                {
+                    var device = ControlBaseList[i];
+                    var jobject = new JObject();
+                    jobject["id"] = device.ID;
+                    jobject["name"] = device.Name;
+                    controlList.Add(jobject);
+                }
+                nameObject["control"] = controlList;
+
+                rootObject["name"] = nameObject;
+
+                File.WriteAllText(mHardwareFileName, rootObject.ToString());
             }
-            var other = mOSDSensorList[index];
+            catch { }
             Monitor.Exit(mLock);
-            return other;
         }
     }
 }

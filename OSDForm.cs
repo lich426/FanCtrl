@@ -42,69 +42,15 @@ namespace FanCtrl
             this.enableItemConrol(false);
 
             var hardwareManager = HardwareManager.getInstance();
-            var controlManager = ControlManager.getInstance();
-
-            // Sensor
-            for (int i = 0; i < hardwareManager.getSensorCount(); i++)
+            var osdSensorList = hardwareManager.OSDSensorList;
+            for (int i = 0; i < osdSensorList.Count; i++)
             {
-                var sensor = hardwareManager.getSensor(i);
+                var sensor = osdSensorList[i];
                 var item = new OSDItem();
-                item.ItemType = OSDItemType.Sensor;
-                item.UnitType = OSDUnitType.Temperature;
-                item.Index = i;
+                item.UnitType = sensor.UnitType;
+                item.ID = sensor.ID;
                 mComboBoxItemList.Add(item);
-                mItemComboBox.Items.Add("[" + StringLib.Temperature + "] " + controlManager.getName(0, i, false));
-            }
-
-            // Fan
-            for (int i = 0; i < hardwareManager.getFanCount(); i++)
-            {
-                var fan = hardwareManager.getFan(i);
-                var item = new OSDItem();
-                item.ItemType = OSDItemType.Fan;
-                item.UnitType = OSDUnitType.RPM;
-                item.Index = i;
-                mComboBoxItemList.Add(item);
-                mItemComboBox.Items.Add("[" + StringLib.Fan_speed + "] " + controlManager.getName(1, i, false));
-            }
-
-            // Control
-            for (int i = 0; i < hardwareManager.getControlCount(); i++)
-            {
-                var control = hardwareManager.getControl(i);
-                var item = new OSDItem();
-                item.ItemType = OSDItemType.Control;
-                item.UnitType = OSDUnitType.Percent;
-                item.Index = i;
-                mComboBoxItemList.Add(item);
-                mItemComboBox.Items.Add("[" + StringLib.Fan_control + "] " + controlManager.getName(2, i, false));
-            }
-
-            // Predefined
-            // Framerate
-            var osdItem = new OSDItem();
-            osdItem.ItemType = OSDItemType.Predefined;
-            osdItem.UnitType = OSDUnitType.FPS;
-            mComboBoxItemList.Add(osdItem);
-            mItemComboBox.Items.Add("[" + StringLib.ETC + "] Framerate");
-
-            // Blank
-            osdItem = new OSDItem();
-            osdItem.ItemType = OSDItemType.Predefined;
-            osdItem.UnitType = OSDUnitType.Blank;
-            mComboBoxItemList.Add(osdItem);
-            mItemComboBox.Items.Add("[" + StringLib.ETC + "] Blank");
-
-            // osd sensor
-            for (int i = 0; i < hardwareManager.getOSDSensorCount(); i++)
-            {
-                var osdSensor = hardwareManager.getOSDSensor(i);
-                var item = new OSDItem();
-                item.ItemType = OSDItemType.Predefined;
-                item.UnitType = osdSensor.UnitType;
-                item.Index = i;
-                mComboBoxItemList.Add(item);
-                mItemComboBox.Items.Add(osdSensor.Name);
+                mItemComboBox.Items.Add(sensor.Prefix + sensor.Name);
             }
 
             mItemComboBox.SelectedIndex = 0;
@@ -169,7 +115,7 @@ namespace FanCtrl
                     return;
 
                 var hardwareManager = HardwareManager.getInstance();
-                var controlManager = ControlManager.getInstance();
+                var osdSensorMap = hardwareManager.OSDSensorMap;
 
                 var group = mGroupList[index];
                 mDigitNumericUpDown.Value = group.Digit;
@@ -188,34 +134,14 @@ namespace FanCtrl
                         listItem.BackColor = item.Color;
                     }
 
-                    if(item.ItemType == OSDItemType.Sensor)
+                    string id = item.ID;
+                    if (osdSensorMap.ContainsKey(id) == false)
                     {
-                        listItem.SubItems.Add("[" + StringLib.Temperature + "] " + controlManager.getName(0, item.Index, false));                        
-                    }
-                    else if (item.ItemType == OSDItemType.Fan)
-                    {
-                        listItem.SubItems.Add("[" + StringLib.Fan_speed + "] " + controlManager.getName(1, item.Index, false));
-                    }
-                    else if (item.ItemType == OSDItemType.Control)
-                    {
-                        listItem.SubItems.Add("[" + StringLib.Fan_control + "] " + controlManager.getName(2, item.Index, false));
-                    }
-                    else if (item.ItemType == OSDItemType.Predefined)
-                    {
-                        if(item.UnitType == OSDUnitType.FPS)
-                        {
-                            listItem.SubItems.Add("[" + StringLib.ETC + "] Framerate");
-                        }
-                        else if(item.UnitType == OSDUnitType.Blank)
-                        {
-                            listItem.SubItems.Add("[" + StringLib.ETC + "] Blank");
-                        }
-                        else
-                        {
-                            listItem.SubItems.Add(hardwareManager.getOSDSensor(item.Index).Name);
-                        }
+                        continue;
                     }
 
+                    var sensor = osdSensorMap[id];
+                    listItem.SubItems.Add(sensor.Prefix + sensor.Name);
                     listItem.UseItemStyleForSubItems = false;
                     mItemListView.Items.Add(listItem);
                 }

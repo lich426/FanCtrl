@@ -403,11 +403,20 @@ namespace FanCtrl {
         }
         
         /// <summary>
-        ///   Changing the library will reset the fan settings and require the program to be restarted.과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Do you want to change the library?과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
-        internal static string OptionRestart {
+        internal static string OptionChange {
             get {
-                return ResourceManager.GetString("OptionRestart", resourceCulture);
+                return ResourceManager.GetString("OptionChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Do you want to reset?과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string OptionReset {
+            get {
+                return ResourceManager.GetString("OptionReset", resourceCulture);
             }
         }
         
@@ -435,6 +444,15 @@ namespace FanCtrl {
         internal static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Reset과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
             }
         }
         
@@ -525,6 +543,15 @@ namespace FanCtrl {
         internal static string Step {
             get {
                 return ResourceManager.GetString("Step", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Target temperautre sensor과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Target_Temp {
+            get {
+                return ResourceManager.GetString("Target_Temp", resourceCulture);
             }
         }
         

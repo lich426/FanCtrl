@@ -16,8 +16,9 @@ namespace FanCtrl
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
-        public NvAPIFanControl(string name, int index, int coolerID, int value, int minSpeed, int maxSpeed) : base()
+        public NvAPIFanControl(string id, string name, int index, int coolerID, int value, int minSpeed, int maxSpeed) : base(LIBRARY_TYPE.NvAPIWrapper)
         {
+            ID = id;
             Name = name;
             mIndex = index;
             mCoolerID = coolerID;

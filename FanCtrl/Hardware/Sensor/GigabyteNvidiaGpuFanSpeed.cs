@@ -14,8 +14,9 @@ namespace FanCtrl
 
         private int mIndex = -1;
 
-        public GigabyteNvidiaFanSpeed(string name, int index) : base(SENSOR_TYPE.FAN)
+        public GigabyteNvidiaFanSpeed(string id, string name, int index) : base(LIBRARY_TYPE.Gigabyte)
         {
+            ID = id;
             Name = name;
             mIndex = index;
         }

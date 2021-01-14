@@ -24,8 +24,9 @@ FanCtrl은 Desktop PC에서 팬을 제어하는 프로그램입니다.<br>
 ![Option](https://github.com/lich426/FanCtrl/blob/master/img/option.png)<br>
 - Gigabyte : [AppCenter][2](기가바이트 유틸리티)가 설치되어 있으면, AppCenter를 통해 제어됩니다.<br>
   (없을 경우 LibreHardwareMonitor 또는 OpenHardwareMonitor로 제어됨)<br>
-- LibreHardwareMonitor 또는 OpenHardwareMonitor : 센서, 팬 속도, 팬 제어 라이브러리를 어떤 것을 사용할 지 선택합니다.<br>
-- NvAPIWrapper : NVIDIA 그래픽카드 제어 라이브러리를 NvAPIWrapper로 변경합니다.<br>
+- LibreHardwareMonitor : 라이브러리를 사용할 것인지 선택 가능하고, 제어에 필요한 디바이스를 선택 할 수 있습니다.<br>
+- OpenHardwareMonitor : 라이브러리를 사용할 것인지 선택 가능하고, 제어에 필요한 디바이스를 선택 할 수 있습니다.<br>
+- NvAPIWrapper : NVIDIA 그래픽카드 제어 라이브러리인 NvAPIWrapper를 추가할 수 있습니다.<br>
 - DIMM sensor : DIMM 온도 센서를 지원합니다.(지스킬 램등)<br>
 - NZXT Kraken : NZXT Kraken X2, X3 지원<br>
 - EVGA CLC : EVGA CLC 지원<br>
@@ -34,7 +35,8 @@ FanCtrl은 Desktop PC에서 팬을 제어하는 프로그램입니다.<br>
 - 화씨온도표시 : 온도를 화씨온도로 합니다.<br>
 - 최소화 모드로 시작 : 프로그램 실행 시에 최소화로 시작됩니다.<br>
 - 윈도우 시작 시 자동실행 : 윈도우 시작 시 자동으로 실행됩니다.<br>
-- 지연시간(초) : 윈도우 시작 시 자동 실행되기 전에 딜레이 시간입니다.<br> 
+- 지연시간(초) : 윈도우 시작 시 자동 실행되기 전에 딜레이 시간입니다.<br>
+- 초기화 : 모든 설정 및 라이브러리를 초기화 합니다.<br>
 
 ## 팬 제어 설정
 ![Auto Fan Control](https://github.com/lich426/FanCtrl/blob/master/img/7.png)<br>

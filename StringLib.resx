@@ -231,8 +231,11 @@
   <data name="Option" xml:space="preserve">
     <value>Option</value>
   </data>
-  <data name="OptionRestart" xml:space="preserve">
-    <value>Changing the library will reset the fan settings and require the program to be restarted.</value>
+  <data name="OptionChange" xml:space="preserve">
+    <value>Do you want to change the library?</value>
+  </data>
+  <data name="OptionReset" xml:space="preserve">
+    <value>Do you want to reset?</value>
   </data>
   <data name="Performance" xml:space="preserve">
     <value>Performance</value>
@@ -242,6 +245,9 @@
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
   </data>
   <data name="RGBnFC_Lighting" xml:space="preserve">
     <value>NZXT RGB＆Fan Controller Lighting</value>
@@ -272,6 +278,9 @@
   </data>
   <data name="Step" xml:space="preserve">
     <value>Step</value>
+  </data>
+  <data name="Target_Temp" xml:space="preserve">
+    <value>Target temperautre sensor</value>
   </data>
   <data name="Temperature" xml:space="preserve">
     <value>Temperature</value>

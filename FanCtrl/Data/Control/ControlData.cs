@@ -8,24 +8,21 @@ namespace FanCtrl
 {    
     public class ControlData
     {
-        public int Index { get; set; }
-
-        public string Name { get; set; }
+        public string ID { get; set; }
 
         private List<FanData> mFanDataList = new List<FanData>();
         public List<FanData> FanDataList {
             get { return mFanDataList; }
         }
 
-        public ControlData(int index, string name)
+        public ControlData(string id)
         {
-            Index = index;
-            Name = name;
+            ID = id;
         }
 
         public ControlData clone()
         {
-            var controlData = new ControlData(Index, Name);
+            var controlData = new ControlData(ID);
             for (int i = 0; i < mFanDataList.Count; i++)
                 controlData.FanDataList.Add(mFanDataList[i].clone());
             return controlData;

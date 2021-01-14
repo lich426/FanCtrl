@@ -4,23 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibreHardwareMonitor.Hardware;
-using OpenHardwareMonitor.Hardware;
 
 namespace FanCtrl
 {
-    public class NvAPITemp : BaseSensor
+    public class LHMTemp : BaseSensor
     {
-        public delegate int OnGetNvAPITemperatureHandler(int index);
+        // ISensor
+        private ISensor mSensor = null;
 
-        public event OnGetNvAPITemperatureHandler onGetNvAPITemperatureHandler;
-
-        private int mIndex = -1;
-
-        public NvAPITemp(string id, string name, int index) : base(LIBRARY_TYPE.NvAPIWrapper)
+        public LHMTemp(string id, ISensor sensor, string name) : base(LIBRARY_TYPE.LHM)
         {
             ID = id;
+            mSensor = sensor;
             Name = name;
-            mIndex = index;
         }
 
         public override string getString()
@@ -32,7 +28,11 @@ namespace FanCtrl
         }
         public override void update()
         {
-            Value = onGetNvAPITemperatureHandler(mIndex);
+            double temp = ((mSensor.Value.HasValue == true) ? Math.Round((double)mSensor.Value) : 0);
+            if (temp > 0.0f)
+            {
+                Value = (int)temp;
+            }
         }
     }
 }

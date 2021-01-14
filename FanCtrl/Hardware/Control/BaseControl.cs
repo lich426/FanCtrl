@@ -7,7 +7,7 @@ using LibreHardwareMonitor.Hardware;
 
 namespace FanCtrl
 {
-    public class BaseControl
+    public class BaseControl : BaseDevice
     {
         // Value
         public int Value { get; set; }
@@ -16,18 +16,12 @@ namespace FanCtrl
 
         public int LastValue { get; set; }
 
-        public string Name { get; set; }
-
-        public BaseControl()
+        public BaseControl(LIBRARY_TYPE type)
         {
+            Type = type;
             Value = 0;
             NextValue = 0;
             LastValue = 0;
-        }
-
-        public virtual void update()
-        {
-
         }
 
         public virtual int getMinSpeed()

@@ -10,8 +10,9 @@ namespace FanCtrl
     {
         private Kraken mKraken = null;
 
-        public KrakenLiquidTemp(Kraken kraken, uint num) : base(SENSOR_TYPE.TEMPERATURE)
+        public KrakenLiquidTemp(string id, Kraken kraken, uint num) : base(LIBRARY_TYPE.NZXT_Kraken)
         {
+            ID = id;
             mKraken = kraken;
             Name = "NZXT Kraken Liquid";
             if (num > 1)

@@ -38,16 +38,32 @@
             this.mOKButton = new System.Windows.Forms.Button();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mLibraryGroupBox = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.mOHMStorageCheckBox = new System.Windows.Forms.CheckBox();
+            this.mOHMControllerCheckBox = new System.Windows.Forms.CheckBox();
+            this.mOHMGPUCheckBox = new System.Windows.Forms.CheckBox();
+            this.mOHMMBCheckBox = new System.Windows.Forms.CheckBox();
+            this.mOHMCPUCheckBox = new System.Windows.Forms.CheckBox();
+            this.mOHMCheckBox = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.mLHMStorageCheckBox = new System.Windows.Forms.CheckBox();
+            this.mLHMControllerCheckBox = new System.Windows.Forms.CheckBox();
+            this.mLHMGPUCheckBox = new System.Windows.Forms.CheckBox();
+            this.mLHMMBCheckBox = new System.Windows.Forms.CheckBox();
+            this.mLHMCPUCheckBox = new System.Windows.Forms.CheckBox();
+            this.mLHMCheckBox = new System.Windows.Forms.CheckBox();
+            this.mGigabyteGPUCheckBox = new System.Windows.Forms.CheckBox();
+            this.mGigabyteCPUCheckBox = new System.Windows.Forms.CheckBox();
+            this.mGigabyteCheckBox = new System.Windows.Forms.CheckBox();
             this.mRGBnFCButton = new System.Windows.Forms.Button();
             this.mRGBnFCCheckBox = new System.Windows.Forms.CheckBox();
             this.mDimmCheckBox = new System.Windows.Forms.CheckBox();
             this.mCLCButton = new System.Windows.Forms.Button();
             this.mKrakenButton = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.mGigabyteCheckBox = new System.Windows.Forms.CheckBox();
-            this.mLibraryRadioButton1 = new System.Windows.Forms.RadioButton();
-            this.mLibraryRadioButton2 = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
             this.mCLCCheckBox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.mNvApiCheckBox = new System.Windows.Forms.CheckBox();
@@ -56,9 +72,9 @@
             this.mFahrenheitCheckBox = new System.Windows.Forms.CheckBox();
             this.mStartupDelayLabel = new System.Windows.Forms.Label();
             this.mStartupDelayTextBox = new System.Windows.Forms.TextBox();
+            this.mResetButton = new System.Windows.Forms.Button();
             this.mIntervalGroupBox.SuspendLayout();
             this.mLibraryGroupBox.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mIntervalGroupBox
@@ -75,7 +91,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(159, 30);
+            this.label1.Location = new System.Drawing.Point(162, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 12);
             this.label1.TabIndex = 1;
@@ -86,35 +102,35 @@
             this.mIntervalTextBox.Location = new System.Drawing.Point(13, 21);
             this.mIntervalTextBox.MaxLength = 4;
             this.mIntervalTextBox.Name = "mIntervalTextBox";
-            this.mIntervalTextBox.Size = new System.Drawing.Size(142, 21);
+            this.mIntervalTextBox.Size = new System.Drawing.Size(143, 21);
             this.mIntervalTextBox.TabIndex = 0;
             // 
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 397);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 686);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
-            this.mMinimizeCheckBox.TabIndex = 12;
+            this.mMinimizeCheckBox.TabIndex = 26;
             this.mMinimizeCheckBox.Text = "Start minimized";
             this.mMinimizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 422);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 711);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
-            this.mStartupCheckBox.TabIndex = 13;
+            this.mStartupCheckBox.TabIndex = 27;
             this.mStartupCheckBox.Text = "Start with Windows";
             this.mStartupCheckBox.UseVisualStyleBackColor = true;
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(12, 473);
+            this.mOKButton.Location = new System.Drawing.Point(84, 762);
             this.mOKButton.Name = "mOKButton";
-            this.mOKButton.Size = new System.Drawing.Size(188, 38);
-            this.mOKButton.TabIndex = 14;
+            this.mOKButton.Size = new System.Drawing.Size(116, 38);
+            this.mOKButton.TabIndex = 30;
             this.mOKButton.Text = "OK";
             this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
@@ -125,187 +141,352 @@
             // 
             // mLibraryGroupBox
             // 
+            this.mLibraryGroupBox.Controls.Add(this.label8);
+            this.mLibraryGroupBox.Controls.Add(this.label7);
+            this.mLibraryGroupBox.Controls.Add(this.label6);
+            this.mLibraryGroupBox.Controls.Add(this.label3);
+            this.mLibraryGroupBox.Controls.Add(this.label5);
+            this.mLibraryGroupBox.Controls.Add(this.mOHMStorageCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mOHMControllerCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mOHMGPUCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mOHMMBCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mOHMCPUCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mOHMCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.label4);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMStorageCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMControllerCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMGPUCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMMBCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMCPUCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mGigabyteGPUCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mGigabyteCPUCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mGigabyteCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mRGBnFCButton);
             this.mLibraryGroupBox.Controls.Add(this.mRGBnFCCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mDimmCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mCLCButton);
             this.mLibraryGroupBox.Controls.Add(this.mKrakenButton);
-            this.mLibraryGroupBox.Controls.Add(this.panel1);
-            this.mLibraryGroupBox.Controls.Add(this.label3);
             this.mLibraryGroupBox.Controls.Add(this.mCLCCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.label2);
             this.mLibraryGroupBox.Controls.Add(this.mNvApiCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mKrakenCheckBox);
             this.mLibraryGroupBox.Location = new System.Drawing.Point(12, 77);
             this.mLibraryGroupBox.Name = "mLibraryGroupBox";
-            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 258);
+            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 553);
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
             // 
-            // mRGBnFCButton
+            // label8
             // 
-            this.mRGBnFCButton.Location = new System.Drawing.Point(116, 222);
-            this.mRGBnFCButton.Name = "mRGBnFCButton";
-            this.mRGBnFCButton.Size = new System.Drawing.Size(64, 23);
-            this.mRGBnFCButton.TabIndex = 11;
-            this.mRGBnFCButton.Text = "Lighting";
-            this.mRGBnFCButton.UseVisualStyleBackColor = true;
-            this.mRGBnFCButton.Click += new System.EventHandler(this.onRGBnFCButtonClick);
+            this.label8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label8.Location = new System.Drawing.Point(4, 505);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(180, 2);
+            this.label8.TabIndex = 31;
             // 
-            // mRGBnFCCheckBox
+            // label7
             // 
-            this.mRGBnFCCheckBox.Location = new System.Drawing.Point(8, 219);
-            this.mRGBnFCCheckBox.Name = "mRGBnFCCheckBox";
-            this.mRGBnFCCheckBox.Size = new System.Drawing.Size(104, 30);
-            this.mRGBnFCCheckBox.TabIndex = 10;
-            this.mRGBnFCCheckBox.Text = "NZXT RGB＆Fan Controller";
-            this.mRGBnFCCheckBox.UseVisualStyleBackColor = true;
+            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label7.Location = new System.Drawing.Point(4, 467);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(180, 2);
+            this.label7.TabIndex = 30;
             // 
-            // mDimmCheckBox
+            // label6
             // 
-            this.mDimmCheckBox.AutoSize = true;
-            this.mDimmCheckBox.Location = new System.Drawing.Point(8, 129);
-            this.mDimmCheckBox.Name = "mDimmCheckBox";
-            this.mDimmCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.mDimmCheckBox.TabIndex = 5;
-            this.mDimmCheckBox.Text = "DIMM sensor";
-            this.mDimmCheckBox.UseVisualStyleBackColor = true;
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label6.Location = new System.Drawing.Point(4, 431);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(180, 2);
+            this.label6.TabIndex = 29;
             // 
-            // mCLCButton
+            // label3
             // 
-            this.mCLCButton.Location = new System.Drawing.Point(116, 192);
-            this.mCLCButton.Name = "mCLCButton";
-            this.mCLCButton.Size = new System.Drawing.Size(64, 23);
-            this.mCLCButton.TabIndex = 9;
-            this.mCLCButton.Text = "Lighting";
-            this.mCLCButton.UseVisualStyleBackColor = true;
-            this.mCLCButton.Click += new System.EventHandler(this.onCLCButtonClick);
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label3.Location = new System.Drawing.Point(4, 397);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(180, 2);
+            this.label3.TabIndex = 28;
             // 
-            // mKrakenButton
+            // label5
             // 
-            this.mKrakenButton.Location = new System.Drawing.Point(116, 162);
-            this.mKrakenButton.Name = "mKrakenButton";
-            this.mKrakenButton.Size = new System.Drawing.Size(64, 23);
-            this.mKrakenButton.TabIndex = 7;
-            this.mKrakenButton.Text = "Lighting";
-            this.mKrakenButton.UseVisualStyleBackColor = true;
-            this.mKrakenButton.Click += new System.EventHandler(this.onKrakenButtonClick);
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label5.Location = new System.Drawing.Point(5, 365);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(180, 2);
+            this.label5.TabIndex = 27;
             // 
-            // panel1
+            // mOHMStorageCheckBox
             // 
-            this.panel1.Controls.Add(this.mGigabyteCheckBox);
-            this.panel1.Controls.Add(this.mLibraryRadioButton1);
-            this.panel1.Controls.Add(this.mLibraryRadioButton2);
-            this.panel1.Location = new System.Drawing.Point(5, 20);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(177, 66);
-            this.panel1.TabIndex = 6;
+            this.mOHMStorageCheckBox.AutoSize = true;
+            this.mOHMStorageCheckBox.Location = new System.Drawing.Point(17, 344);
+            this.mOHMStorageCheckBox.Name = "mOHMStorageCheckBox";
+            this.mOHMStorageCheckBox.Size = new System.Drawing.Size(67, 16);
+            this.mOHMStorageCheckBox.TabIndex = 15;
+            this.mOHMStorageCheckBox.Text = "Storage";
+            this.mOHMStorageCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mOHMControllerCheckBox
+            // 
+            this.mOHMControllerCheckBox.AutoSize = true;
+            this.mOHMControllerCheckBox.Location = new System.Drawing.Point(17, 322);
+            this.mOHMControllerCheckBox.Name = "mOHMControllerCheckBox";
+            this.mOHMControllerCheckBox.Size = new System.Drawing.Size(78, 16);
+            this.mOHMControllerCheckBox.TabIndex = 14;
+            this.mOHMControllerCheckBox.Text = "Controller";
+            this.mOHMControllerCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mOHMGPUCheckBox
+            // 
+            this.mOHMGPUCheckBox.AutoSize = true;
+            this.mOHMGPUCheckBox.Location = new System.Drawing.Point(17, 300);
+            this.mOHMGPUCheckBox.Name = "mOHMGPUCheckBox";
+            this.mOHMGPUCheckBox.Size = new System.Drawing.Size(49, 16);
+            this.mOHMGPUCheckBox.TabIndex = 13;
+            this.mOHMGPUCheckBox.Text = "GPU";
+            this.mOHMGPUCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mOHMMBCheckBox
+            // 
+            this.mOHMMBCheckBox.AutoSize = true;
+            this.mOHMMBCheckBox.Location = new System.Drawing.Point(17, 278);
+            this.mOHMMBCheckBox.Name = "mOHMMBCheckBox";
+            this.mOHMMBCheckBox.Size = new System.Drawing.Size(95, 16);
+            this.mOHMMBCheckBox.TabIndex = 12;
+            this.mOHMMBCheckBox.Text = "Motherboard";
+            this.mOHMMBCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mOHMCPUCheckBox
+            // 
+            this.mOHMCPUCheckBox.AutoSize = true;
+            this.mOHMCPUCheckBox.Location = new System.Drawing.Point(17, 256);
+            this.mOHMCPUCheckBox.Name = "mOHMCPUCheckBox";
+            this.mOHMCPUCheckBox.Size = new System.Drawing.Size(49, 16);
+            this.mOHMCPUCheckBox.TabIndex = 11;
+            this.mOHMCPUCheckBox.Text = "CPU";
+            this.mOHMCPUCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mOHMCheckBox
+            // 
+            this.mOHMCheckBox.AutoSize = true;
+            this.mOHMCheckBox.Location = new System.Drawing.Point(6, 234);
+            this.mOHMCheckBox.Name = "mOHMCheckBox";
+            this.mOHMCheckBox.Size = new System.Drawing.Size(150, 16);
+            this.mOHMCheckBox.TabIndex = 10;
+            this.mOHMCheckBox.Text = "OpenHardwareMonitor";
+            this.mOHMCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label4.Location = new System.Drawing.Point(5, 226);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(180, 2);
+            this.label4.TabIndex = 20;
+            // 
+            // mLHMStorageCheckBox
+            // 
+            this.mLHMStorageCheckBox.AutoSize = true;
+            this.mLHMStorageCheckBox.Location = new System.Drawing.Point(17, 206);
+            this.mLHMStorageCheckBox.Name = "mLHMStorageCheckBox";
+            this.mLHMStorageCheckBox.Size = new System.Drawing.Size(67, 16);
+            this.mLHMStorageCheckBox.TabIndex = 9;
+            this.mLHMStorageCheckBox.Text = "Storage";
+            this.mLHMStorageCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mLHMControllerCheckBox
+            // 
+            this.mLHMControllerCheckBox.AutoSize = true;
+            this.mLHMControllerCheckBox.Location = new System.Drawing.Point(17, 184);
+            this.mLHMControllerCheckBox.Name = "mLHMControllerCheckBox";
+            this.mLHMControllerCheckBox.Size = new System.Drawing.Size(78, 16);
+            this.mLHMControllerCheckBox.TabIndex = 8;
+            this.mLHMControllerCheckBox.Text = "Controller";
+            this.mLHMControllerCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mLHMGPUCheckBox
+            // 
+            this.mLHMGPUCheckBox.AutoSize = true;
+            this.mLHMGPUCheckBox.Location = new System.Drawing.Point(17, 162);
+            this.mLHMGPUCheckBox.Name = "mLHMGPUCheckBox";
+            this.mLHMGPUCheckBox.Size = new System.Drawing.Size(49, 16);
+            this.mLHMGPUCheckBox.TabIndex = 7;
+            this.mLHMGPUCheckBox.Text = "GPU";
+            this.mLHMGPUCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mLHMMBCheckBox
+            // 
+            this.mLHMMBCheckBox.AutoSize = true;
+            this.mLHMMBCheckBox.Location = new System.Drawing.Point(17, 140);
+            this.mLHMMBCheckBox.Name = "mLHMMBCheckBox";
+            this.mLHMMBCheckBox.Size = new System.Drawing.Size(95, 16);
+            this.mLHMMBCheckBox.TabIndex = 6;
+            this.mLHMMBCheckBox.Text = "Motherboard";
+            this.mLHMMBCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mLHMCPUCheckBox
+            // 
+            this.mLHMCPUCheckBox.AutoSize = true;
+            this.mLHMCPUCheckBox.Location = new System.Drawing.Point(17, 118);
+            this.mLHMCPUCheckBox.Name = "mLHMCPUCheckBox";
+            this.mLHMCPUCheckBox.Size = new System.Drawing.Size(49, 16);
+            this.mLHMCPUCheckBox.TabIndex = 5;
+            this.mLHMCPUCheckBox.Text = "CPU";
+            this.mLHMCPUCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mLHMCheckBox
+            // 
+            this.mLHMCheckBox.AutoSize = true;
+            this.mLHMCheckBox.Location = new System.Drawing.Point(6, 96);
+            this.mLHMCheckBox.Name = "mLHMCheckBox";
+            this.mLHMCheckBox.Size = new System.Drawing.Size(148, 16);
+            this.mLHMCheckBox.TabIndex = 4;
+            this.mLHMCheckBox.Text = "LibreHardwareMonitor";
+            this.mLHMCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mGigabyteGPUCheckBox
+            // 
+            this.mGigabyteGPUCheckBox.AutoSize = true;
+            this.mGigabyteGPUCheckBox.Location = new System.Drawing.Point(17, 64);
+            this.mGigabyteGPUCheckBox.Name = "mGigabyteGPUCheckBox";
+            this.mGigabyteGPUCheckBox.Size = new System.Drawing.Size(49, 16);
+            this.mGigabyteGPUCheckBox.TabIndex = 3;
+            this.mGigabyteGPUCheckBox.Text = "GPU";
+            this.mGigabyteGPUCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mGigabyteCPUCheckBox
+            // 
+            this.mGigabyteCPUCheckBox.AutoSize = true;
+            this.mGigabyteCPUCheckBox.Location = new System.Drawing.Point(17, 42);
+            this.mGigabyteCPUCheckBox.Name = "mGigabyteCPUCheckBox";
+            this.mGigabyteCPUCheckBox.Size = new System.Drawing.Size(128, 16);
+            this.mGigabyteCPUCheckBox.TabIndex = 2;
+            this.mGigabyteCPUCheckBox.Text = "CPU, Motherboard";
+            this.mGigabyteCPUCheckBox.UseVisualStyleBackColor = true;
             // 
             // mGigabyteCheckBox
             // 
             this.mGigabyteCheckBox.AutoSize = true;
-            this.mGigabyteCheckBox.Location = new System.Drawing.Point(3, 3);
+            this.mGigabyteCheckBox.Location = new System.Drawing.Point(6, 20);
             this.mGigabyteCheckBox.Name = "mGigabyteCheckBox";
             this.mGigabyteCheckBox.Size = new System.Drawing.Size(174, 16);
             this.mGigabyteCheckBox.TabIndex = 1;
             this.mGigabyteCheckBox.Text = "Gigabyte (with AppCenter)";
             this.mGigabyteCheckBox.UseVisualStyleBackColor = true;
             // 
-            // mLibraryRadioButton1
+            // mRGBnFCButton
             // 
-            this.mLibraryRadioButton1.AutoSize = true;
-            this.mLibraryRadioButton1.Location = new System.Drawing.Point(3, 26);
-            this.mLibraryRadioButton1.Name = "mLibraryRadioButton1";
-            this.mLibraryRadioButton1.Size = new System.Drawing.Size(147, 16);
-            this.mLibraryRadioButton1.TabIndex = 2;
-            this.mLibraryRadioButton1.TabStop = true;
-            this.mLibraryRadioButton1.Text = "LibreHardwareMonitor";
-            this.mLibraryRadioButton1.UseVisualStyleBackColor = true;
+            this.mRGBnFCButton.Location = new System.Drawing.Point(114, 516);
+            this.mRGBnFCButton.Name = "mRGBnFCButton";
+            this.mRGBnFCButton.Size = new System.Drawing.Size(64, 23);
+            this.mRGBnFCButton.TabIndex = 23;
+            this.mRGBnFCButton.Text = "Lighting";
+            this.mRGBnFCButton.UseVisualStyleBackColor = true;
+            this.mRGBnFCButton.Click += new System.EventHandler(this.onRGBnFCButtonClick);
             // 
-            // mLibraryRadioButton2
+            // mRGBnFCCheckBox
             // 
-            this.mLibraryRadioButton2.AutoSize = true;
-            this.mLibraryRadioButton2.Location = new System.Drawing.Point(3, 48);
-            this.mLibraryRadioButton2.Name = "mLibraryRadioButton2";
-            this.mLibraryRadioButton2.Size = new System.Drawing.Size(149, 16);
-            this.mLibraryRadioButton2.TabIndex = 3;
-            this.mLibraryRadioButton2.TabStop = true;
-            this.mLibraryRadioButton2.Text = "OpenHardwareMonitor";
-            this.mLibraryRadioButton2.UseVisualStyleBackColor = true;
+            this.mRGBnFCCheckBox.Location = new System.Drawing.Point(6, 513);
+            this.mRGBnFCCheckBox.Name = "mRGBnFCCheckBox";
+            this.mRGBnFCCheckBox.Size = new System.Drawing.Size(104, 30);
+            this.mRGBnFCCheckBox.TabIndex = 22;
+            this.mRGBnFCCheckBox.Text = "NZXT RGB＆Fan Controller";
+            this.mRGBnFCCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // mDimmCheckBox
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 148);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(179, 12);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "-----------------------------";
+            this.mDimmCheckBox.AutoSize = true;
+            this.mDimmCheckBox.Location = new System.Drawing.Point(6, 409);
+            this.mDimmCheckBox.Name = "mDimmCheckBox";
+            this.mDimmCheckBox.Size = new System.Drawing.Size(100, 16);
+            this.mDimmCheckBox.TabIndex = 17;
+            this.mDimmCheckBox.Text = "DIMM sensor";
+            this.mDimmCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mCLCButton
+            // 
+            this.mCLCButton.Location = new System.Drawing.Point(114, 476);
+            this.mCLCButton.Name = "mCLCButton";
+            this.mCLCButton.Size = new System.Drawing.Size(64, 23);
+            this.mCLCButton.TabIndex = 21;
+            this.mCLCButton.Text = "Lighting";
+            this.mCLCButton.UseVisualStyleBackColor = true;
+            this.mCLCButton.Click += new System.EventHandler(this.onCLCButtonClick);
+            // 
+            // mKrakenButton
+            // 
+            this.mKrakenButton.Location = new System.Drawing.Point(114, 438);
+            this.mKrakenButton.Name = "mKrakenButton";
+            this.mKrakenButton.Size = new System.Drawing.Size(64, 23);
+            this.mKrakenButton.TabIndex = 19;
+            this.mKrakenButton.Text = "Lighting";
+            this.mKrakenButton.UseVisualStyleBackColor = true;
+            this.mKrakenButton.Click += new System.EventHandler(this.onKrakenButtonClick);
             // 
             // mCLCCheckBox
             // 
             this.mCLCCheckBox.AutoSize = true;
-            this.mCLCCheckBox.Location = new System.Drawing.Point(8, 196);
+            this.mCLCCheckBox.Location = new System.Drawing.Point(6, 480);
             this.mCLCCheckBox.Name = "mCLCCheckBox";
             this.mCLCCheckBox.Size = new System.Drawing.Size(86, 16);
-            this.mCLCCheckBox.TabIndex = 8;
+            this.mCLCCheckBox.TabIndex = 20;
             this.mCLCCheckBox.Text = "EVGA CLC";
             this.mCLCCheckBox.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 89);
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label2.Location = new System.Drawing.Point(5, 86);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(179, 12);
+            this.label2.Size = new System.Drawing.Size(180, 2);
             this.label2.TabIndex = 4;
-            this.label2.Text = "-----------------------------";
             // 
             // mNvApiCheckBox
             // 
             this.mNvApiCheckBox.AutoSize = true;
-            this.mNvApiCheckBox.Location = new System.Drawing.Point(8, 105);
+            this.mNvApiCheckBox.Location = new System.Drawing.Point(6, 374);
             this.mNvApiCheckBox.Name = "mNvApiCheckBox";
             this.mNvApiCheckBox.Size = new System.Drawing.Size(104, 16);
-            this.mNvApiCheckBox.TabIndex = 4;
+            this.mNvApiCheckBox.TabIndex = 16;
             this.mNvApiCheckBox.Text = "NvAPIWrapper";
             this.mNvApiCheckBox.UseVisualStyleBackColor = true;
             // 
             // mKrakenCheckBox
             // 
             this.mKrakenCheckBox.AutoSize = true;
-            this.mKrakenCheckBox.Location = new System.Drawing.Point(8, 167);
+            this.mKrakenCheckBox.Location = new System.Drawing.Point(6, 443);
             this.mKrakenCheckBox.Name = "mKrakenCheckBox";
             this.mKrakenCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.mKrakenCheckBox.TabIndex = 6;
+            this.mKrakenCheckBox.TabIndex = 18;
             this.mKrakenCheckBox.Text = "NZXT Kraken";
             this.mKrakenCheckBox.UseVisualStyleBackColor = true;
             // 
             // mAnimationCheckBox
             // 
             this.mAnimationCheckBox.AutoSize = true;
-            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 347);
+            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 636);
             this.mAnimationCheckBox.Name = "mAnimationCheckBox";
             this.mAnimationCheckBox.Size = new System.Drawing.Size(137, 16);
-            this.mAnimationCheckBox.TabIndex = 10;
+            this.mAnimationCheckBox.TabIndex = 24;
             this.mAnimationCheckBox.Text = "Tray Icon animation";
             this.mAnimationCheckBox.UseVisualStyleBackColor = true;
             // 
             // mFahrenheitCheckBox
             // 
             this.mFahrenheitCheckBox.AutoSize = true;
-            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 372);
+            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 661);
             this.mFahrenheitCheckBox.Name = "mFahrenheitCheckBox";
             this.mFahrenheitCheckBox.Size = new System.Drawing.Size(108, 16);
-            this.mFahrenheitCheckBox.TabIndex = 11;
+            this.mFahrenheitCheckBox.TabIndex = 25;
             this.mFahrenheitCheckBox.Text = "Fahrenheit (°F)";
             this.mFahrenheitCheckBox.UseVisualStyleBackColor = true;
             // 
             // mStartupDelayLabel
             // 
             this.mStartupDelayLabel.AutoSize = true;
-            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 446);
+            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 735);
             this.mStartupDelayLabel.Name = "mStartupDelayLabel";
             this.mStartupDelayLabel.Size = new System.Drawing.Size(80, 12);
             this.mStartupDelayLabel.TabIndex = 15;
@@ -313,18 +494,29 @@
             // 
             // mStartupDelayTextBox
             // 
-            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 441);
+            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 730);
             this.mStartupDelayTextBox.MaxLength = 2;
             this.mStartupDelayTextBox.Name = "mStartupDelayTextBox";
             this.mStartupDelayTextBox.Size = new System.Drawing.Size(73, 21);
-            this.mStartupDelayTextBox.TabIndex = 2;
+            this.mStartupDelayTextBox.TabIndex = 28;
             this.mStartupDelayTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // mResetButton
+            // 
+            this.mResetButton.Location = new System.Drawing.Point(12, 762);
+            this.mResetButton.Name = "mResetButton";
+            this.mResetButton.Size = new System.Drawing.Size(66, 38);
+            this.mResetButton.TabIndex = 29;
+            this.mResetButton.Text = "Reset";
+            this.mResetButton.UseVisualStyleBackColor = true;
+            this.mResetButton.Click += new System.EventHandler(this.onResetButtonClick);
             // 
             // OptionForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(212, 523);
+            this.ClientSize = new System.Drawing.Size(209, 805);
+            this.Controls.Add(this.mResetButton);
             this.Controls.Add(this.mStartupDelayTextBox);
             this.Controls.Add(this.mStartupDelayLabel);
             this.Controls.Add(this.mFahrenheitCheckBox);
@@ -345,8 +537,6 @@
             this.mIntervalGroupBox.PerformLayout();
             this.mLibraryGroupBox.ResumeLayout(false);
             this.mLibraryGroupBox.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -362,12 +552,7 @@
         private System.Windows.Forms.Button mOKButton;
         private System.Windows.Forms.ToolTip mToolTip;
         private System.Windows.Forms.GroupBox mLibraryGroupBox;
-        private System.Windows.Forms.RadioButton mLibraryRadioButton2;
-        private System.Windows.Forms.RadioButton mLibraryRadioButton1;
         private System.Windows.Forms.CheckBox mNvApiCheckBox;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox mKrakenCheckBox;
         private System.Windows.Forms.Button mCLCButton;
         private System.Windows.Forms.Button mKrakenButton;
@@ -380,5 +565,27 @@
         private System.Windows.Forms.Button mRGBnFCButton;
         private System.Windows.Forms.Label mStartupDelayLabel;
         private System.Windows.Forms.TextBox mStartupDelayTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox mLHMControllerCheckBox;
+        private System.Windows.Forms.CheckBox mLHMGPUCheckBox;
+        private System.Windows.Forms.CheckBox mLHMMBCheckBox;
+        private System.Windows.Forms.CheckBox mLHMCPUCheckBox;
+        private System.Windows.Forms.CheckBox mLHMCheckBox;
+        private System.Windows.Forms.CheckBox mGigabyteGPUCheckBox;
+        private System.Windows.Forms.CheckBox mGigabyteCPUCheckBox;
+        private System.Windows.Forms.CheckBox mLHMStorageCheckBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox mOHMStorageCheckBox;
+        private System.Windows.Forms.CheckBox mOHMControllerCheckBox;
+        private System.Windows.Forms.CheckBox mOHMGPUCheckBox;
+        private System.Windows.Forms.CheckBox mOHMMBCheckBox;
+        private System.Windows.Forms.CheckBox mOHMCPUCheckBox;
+        private System.Windows.Forms.CheckBox mOHMCheckBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button mResetButton;
     }
 }

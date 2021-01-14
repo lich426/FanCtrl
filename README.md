@@ -15,6 +15,7 @@ DIMM thermal sensor is support<br>
 ![Auto Fan Control](https://github.com/lich426/FanCtrl/blob/master/img/2.png)<br>
 <br>
 ## On Screen Display (RTSS)
+Requires [Rivatuner statistics server][16]<br>
 GROUP stands for one line, and ITEM is the data to display.<br>
 ![OSD](https://github.com/lich426/FanCtrl/blob/master/img/5.png)<br>
 ![OSD2](https://github.com/lich426/FanCtrl/blob/master/img/6.png)<br>
@@ -71,3 +72,4 @@ Graph : [ZedGraph][8]<br>
 [13]: https://github.com/lich426/FanCtrl/blob/master/Packet/clc.txt
 [14]: https://github.com/lich426/FanCtrl/blob/master/Packet/RGBnFC.txt
 [15]: https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
+[16]: https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html

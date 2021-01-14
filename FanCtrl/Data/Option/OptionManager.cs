@@ -10,12 +10,6 @@ using System.Reflection;
 
 namespace FanCtrl
 {
-    public enum LibraryType
-    {
-        LibreHardwareMonitor = 0,
-        OpenHardwareMonitor,
-    };
-
     public class OptionManager
     {
         private string mOptionFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "Option.json";
@@ -27,36 +21,48 @@ namespace FanCtrl
 
         private OptionManager()
         {
-            Interval = 1000;
-            IsGigabyte = false;
-            LibraryType = LibraryType.LibreHardwareMonitor;
-            IsNvAPIWrapper = false;
-            IsDimm = true;
-            IsKraken = true;
-            IsCLC = true;
-            IsRGBnFC = true;
-            IsAnimation = true;
-            IsFahrenheit = false;
-            IsMinimized = false;
-            IsStartUp = false;
+            this.reset();
         }
         
         public int Interval { get; set; }
 
+        // Gigabyte
         public bool IsGigabyte { get; set; }
+        public bool IsGigabyteMotherboard { get; set; }
+        public bool IsGigabyteGpu { get; set; }
 
-        public LibraryType LibraryType { get; set; }
+        // LibreHardwareMonitor
+        public bool IsLHM { get; set; }
+        public bool IsLHMCpu { get; set; }
+        public bool IsLHMMotherboard { get; set; }
+        public bool IsLHMGpu { get; set; }
+        public bool IsLHMContolled { get; set; }
+        public bool IsLHMStorage { get; set; }
 
+        // OpenHardwareMonitor
+        public bool IsOHM { get; set; }
+        public bool IsOHMCpu { get; set; }
+        public bool IsOHMMotherboard { get; set; }
+        public bool IsOHMGpu { get; set; }
+        public bool IsOHMContolled { get; set; }
+        public bool IsOHMStorage { get; set; }
+
+        // NvApiWrapper
         public bool IsNvAPIWrapper { get; set; }
 
+        // Dimm
         public bool IsDimm { get; set; }
 
+        // NZXT Kraken X2, X3
         public bool IsKraken { get; set; }
 
+        // EVGA CLC
         public bool IsCLC { get; set; }
 
+        // NZXT Fan&Contoller
         public bool IsRGBnFC { get; set; }
 
+        // Other options
         public bool IsAnimation { get; set; }
 
         public bool IsFahrenheit { get; set; }
@@ -89,6 +95,39 @@ namespace FanCtrl
             }
         }
 
+        public void reset()
+        {
+            Interval = 1000;
+
+            IsGigabyte = false;
+            IsGigabyteMotherboard = true;
+            IsGigabyteGpu = true;
+
+            IsLHM = true;
+            IsLHMCpu = true;
+            IsLHMMotherboard = true;
+            IsLHMGpu = false;
+            IsLHMContolled = true;
+            IsLHMStorage = false;
+
+            IsOHM = false;
+            IsOHMCpu = true;
+            IsOHMMotherboard = true;
+            IsOHMGpu = true;
+            IsOHMContolled = true;
+            IsOHMStorage = true;
+
+            IsNvAPIWrapper = true;
+            IsDimm = true;
+            IsKraken = true;
+            IsCLC = true;
+            IsRGBnFC = true;
+
+            IsAnimation = true;
+            IsFahrenheit = false;
+            IsMinimized = false;
+        }
+
         public bool read()
         {
             try 
@@ -96,25 +135,37 @@ namespace FanCtrl
                 var jsonString = File.ReadAllText(mOptionFileName);                
                 var rootObject = JObject.Parse(jsonString);
 
-                Interval = (rootObject.ContainsKey("interval") == true) ? rootObject.Value<int>("interval") : 1000;
+                Interval = (rootObject.ContainsKey("Interval") == true) ? rootObject.Value<int>("Interval") : 1000;
 
-                IsGigabyte = (rootObject.ContainsKey("gigabyte") == true) ? rootObject.Value<bool>("gigabyte") : false;
+                IsGigabyte = (rootObject.ContainsKey("IsGigabyte") == true) ? rootObject.Value<bool>("IsGigabyte") : false;
+                IsGigabyteMotherboard = (rootObject.ContainsKey("IsGigabyteMotherboard") == true) ? rootObject.Value<bool>("IsGigabyteMotherboard") : true;
+                IsGigabyteGpu = (rootObject.ContainsKey("IsGigabyteGpu") == true) ? rootObject.Value<bool>("IsGigabyteGpu") : true;
 
-                if (rootObject.ContainsKey("library") == false)
-                    LibraryType = LibraryType.LibreHardwareMonitor;
-                else
-                    LibraryType = (rootObject.Value<int>("library") == 0) ? LibraryType.LibreHardwareMonitor : LibraryType.OpenHardwareMonitor;
+                IsLHM = (rootObject.ContainsKey("IsLHM") == true) ? rootObject.Value<bool>("IsLHM") : true;
+                IsLHMCpu = (rootObject.ContainsKey("IsLHMCpu") == true) ? rootObject.Value<bool>("IsLHMCpu") : true;
+                IsLHMMotherboard = (rootObject.ContainsKey("IsLHMMotherboard") == true) ? rootObject.Value<bool>("IsLHMMotherboard") : true;
+                IsLHMGpu = (rootObject.ContainsKey("IsLHMGpu") == true) ? rootObject.Value<bool>("IsLHMGpu") : true;
+                IsLHMContolled = (rootObject.ContainsKey("IsLHMContolled") == true) ? rootObject.Value<bool>("IsLHMContolled") : true;
+                IsLHMStorage = (rootObject.ContainsKey("IsLHMStorage") == true) ? rootObject.Value<bool>("IsLHMStorage") : true;
 
-                IsNvAPIWrapper = (rootObject.ContainsKey("nvapi") == true) ? rootObject.Value<bool>("nvapi") : false;
-                IsDimm = (rootObject.ContainsKey("dimm") == true) ? rootObject.Value<bool>("dimm") : true;
-                IsKraken = (rootObject.ContainsKey("kraken") == true) ? rootObject.Value<bool>("kraken") : true;
-                IsCLC = (rootObject.ContainsKey("clc") == true) ? rootObject.Value<bool>("clc") : true;
-                IsRGBnFC = (rootObject.ContainsKey("rgbnfc") == true) ? rootObject.Value<bool>("rgbnfc") : true;
-                IsAnimation = (rootObject.ContainsKey("animation") == true) ? rootObject.Value<bool>("animation") : true;
-                IsFahrenheit = (rootObject.ContainsKey("fahrenheit") == true) ? rootObject.Value<bool>("fahrenheit") : false;
-                IsMinimized = (rootObject.ContainsKey("minimized") == true) ? rootObject.Value<bool>("minimized") : false;
-                IsStartUp = (rootObject.ContainsKey("startup") == true) ? rootObject.Value<bool>("startup") : false;
-                DelayTime = (rootObject.ContainsKey("delay") == true) ? rootObject.Value<int>("delay") : 0;
+                IsOHM = (rootObject.ContainsKey("IsOHM") == true) ? rootObject.Value<bool>("IsOHM") : false;
+                IsOHMCpu = (rootObject.ContainsKey("IsOHMCpu") == true) ? rootObject.Value<bool>("IsOHMCpu") : true;
+                IsOHMMotherboard = (rootObject.ContainsKey("IsOHMMotherboard") == true) ? rootObject.Value<bool>("IsOHMMotherboard") : true;
+                IsOHMGpu = (rootObject.ContainsKey("IsOHMGpu") == true) ? rootObject.Value<bool>("IsOHMGpu") : true;
+                IsOHMContolled = (rootObject.ContainsKey("IsOHMContolled") == true) ? rootObject.Value<bool>("IsOHMContolled") : true;
+                IsOHMStorage = (rootObject.ContainsKey("IsOHMStorage") == true) ? rootObject.Value<bool>("IsOHMStorage") : true;
+
+                IsNvAPIWrapper = (rootObject.ContainsKey("IsNvAPIWrapper") == true) ? rootObject.Value<bool>("IsNvAPIWrapper") : true;
+                IsDimm = (rootObject.ContainsKey("IsDimm") == true) ? rootObject.Value<bool>("IsDimm") : true;
+                IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : true;
+                IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : true;
+                IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : true;
+                
+                IsAnimation = (rootObject.ContainsKey("IsAnimation") == true) ? rootObject.Value<bool>("IsAnimation") : true;
+                IsFahrenheit = (rootObject.ContainsKey("IsFahrenheit") == true) ? rootObject.Value<bool>("IsFahrenheit") : false;
+                IsMinimized = (rootObject.ContainsKey("IsMinimized") == true) ? rootObject.Value<bool>("IsMinimized") : false;
+
+                DelayTime = (rootObject.ContainsKey("DelayTime") == true) ? rootObject.Value<int>("DelayTime") : 0;
             }
             catch
             {
@@ -128,19 +179,38 @@ namespace FanCtrl
             try
             {
                 var rootObject = new JObject();
-                rootObject["interval"] = Interval;
-                rootObject["gigabyte"] = IsGigabyte;
-                rootObject["library"] = (LibraryType == LibraryType.LibreHardwareMonitor) ? 0 : 1;
-                rootObject["dimm"] = IsDimm;
-                rootObject["nvapi"] = IsNvAPIWrapper;
-                rootObject["kraken"] = IsKraken;
-                rootObject["clc"] = IsCLC;
-                rootObject["rgbnfc"] = IsRGBnFC;
-                rootObject["animation"] = IsAnimation;
-                rootObject["fahrenheit"] = IsFahrenheit;
-                rootObject["minimized"] = IsMinimized;
-                rootObject["startup"] = IsStartUp;
-                rootObject["delay"] = DelayTime;
+                rootObject["Interval"] = Interval;
+                
+                rootObject["IsGigabyte"] = IsGigabyte;
+                rootObject["IsGigabyteMotherboard"] = IsGigabyteMotherboard;
+                rootObject["IsGigabyteGpu"] = IsGigabyteGpu;
+
+                rootObject["IsLHM"] = IsLHM;
+                rootObject["IsLHMCpu"] = IsLHMCpu;
+                rootObject["IsLHMMotherboard"] = IsLHMMotherboard;
+                rootObject["IsLHMGpu"] = IsLHMGpu;
+                rootObject["IsLHMContolled"] = IsLHMContolled;
+                rootObject["IsLHMStorage"] = IsLHMStorage;
+
+                rootObject["IsOHM"] = IsOHM;
+                rootObject["IsOHMCpu"] = IsOHMCpu;
+                rootObject["IsOHMMotherboard"] = IsOHMMotherboard;
+                rootObject["IsOHMGpu"] = IsOHMGpu;
+                rootObject["IsOHMContolled"] = IsOHMContolled;
+                rootObject["IsOHMStorage"] = IsOHMStorage;
+
+                rootObject["IsNvAPIWrapper"] = IsNvAPIWrapper;
+                rootObject["IsDimm"] = IsDimm;                
+                rootObject["IsKraken"] = IsKraken;
+                rootObject["IsCLC"] = IsCLC;
+                rootObject["IsRGBnFC"] = IsRGBnFC;
+
+                rootObject["IsAnimation"] = IsAnimation;
+                rootObject["IsFahrenheit"] = IsFahrenheit;
+                rootObject["IsMinimized"] = IsMinimized;
+
+                rootObject["DelayTime"] = DelayTime;
+
                 File.WriteAllText(mOptionFileName, rootObject.ToString());
             }
             catch {}

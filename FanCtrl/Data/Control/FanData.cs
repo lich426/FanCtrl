@@ -20,9 +20,7 @@ namespace FanCtrl
         public const int MAX_FAN_VALUE_SIZE_5 = 21;
         public const int MAX_FAN_VALUE_SIZE_10 = 11;
 
-        public int Index { get; set; }
-
-        public string Name { get; set; }
+        public string ID { get; set; }
 
         public FanValueUnit Unit { get; set; }
 
@@ -39,10 +37,9 @@ namespace FanCtrl
         public int LastChangedValue { get; set; }
         public int LastChangedTemp { get; set; }
 
-        public FanData(int index, string name, FanValueUnit unit, bool isStep, int hysteresis)
+        public FanData(string id, FanValueUnit unit, bool isStep, int hysteresis)
         {
-            Index = index;
-            Name = name;
+            ID = id;
             IsStep = isStep;
             Hysteresis = hysteresis;
             Unit = unit;
@@ -55,7 +52,7 @@ namespace FanCtrl
 
         public FanData clone()
         {
-            var fanData = new FanData(Index, Name, Unit, IsStep, Hysteresis);
+            var fanData = new FanData(ID, Unit, IsStep, Hysteresis);
             for (int i = 0; i < this.getMaxFanValue(); i++)
             {
                 fanData.ValueList[i] = mValueList[i];

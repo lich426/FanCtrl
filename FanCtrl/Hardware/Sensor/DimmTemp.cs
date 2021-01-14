@@ -15,8 +15,9 @@ namespace FanCtrl
         private int mBusIndex = 0;
         private byte mAddress = 0;
 
-        public DimmTemp(string name, int busIndex, byte address) : base(SENSOR_TYPE.TEMPERATURE)
+        public DimmTemp(string id, string name, int busIndex, byte address) : base(LIBRARY_TYPE.DIMM)
         {
+            ID = id;
             Name = name;
             mBusIndex = busIndex;
             mAddress = address;

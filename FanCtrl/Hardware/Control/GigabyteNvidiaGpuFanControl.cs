@@ -15,8 +15,9 @@ namespace FanCtrl
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
-        public GigabyteNvidiaGpuFanControl(string name, int index, int minSpeed, int maxSpeed) : base()
+        public GigabyteNvidiaGpuFanControl(string id, string name, int index, int minSpeed, int maxSpeed) : base(LIBRARY_TYPE.Gigabyte)
         {
+            ID = id;
             Name = name;
             mIndex = index;
             mMinSpeed = minSpeed;

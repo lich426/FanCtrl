@@ -31,8 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mTempGroupBox = new System.Windows.Forms.GroupBox();
+            this.mTempPanel = new System.Windows.Forms.Panel();
             this.mFanGroupBox = new System.Windows.Forms.GroupBox();
+            this.mFanPanel = new System.Windows.Forms.Panel();
             this.mControlGroupBox = new System.Windows.Forms.GroupBox();
+            this.mControlPanel = new System.Windows.Forms.Panel();
             this.mFanControlButton = new System.Windows.Forms.Button();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mOptionButton = new System.Windows.Forms.Button();
@@ -55,6 +58,9 @@
             this.mOSDButton = new System.Windows.Forms.Button();
             this.mLoadingPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.mTempGroupBox.SuspendLayout();
+            this.mFanGroupBox.SuspendLayout();
+            this.mControlGroupBox.SuspendLayout();
             this.mTrayMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
             this.mLoadingPanel.SuspendLayout();
@@ -62,34 +68,61 @@
             // 
             // mTempGroupBox
             // 
+            this.mTempGroupBox.Controls.Add(this.mTempPanel);
             this.mTempGroupBox.Location = new System.Drawing.Point(12, 12);
             this.mTempGroupBox.Name = "mTempGroupBox";
-            this.mTempGroupBox.Size = new System.Drawing.Size(252, 53);
+            this.mTempGroupBox.Size = new System.Drawing.Size(272, 53);
             this.mTempGroupBox.TabIndex = 0;
             this.mTempGroupBox.TabStop = false;
             this.mTempGroupBox.Text = "Temperature";
             // 
+            // mTempPanel
+            // 
+            this.mTempPanel.AutoScroll = true;
+            this.mTempPanel.Location = new System.Drawing.Point(5, 12);
+            this.mTempPanel.Name = "mTempPanel";
+            this.mTempPanel.Size = new System.Drawing.Size(261, 35);
+            this.mTempPanel.TabIndex = 0;
+            // 
             // mFanGroupBox
             // 
-            this.mFanGroupBox.Location = new System.Drawing.Point(270, 12);
+            this.mFanGroupBox.Controls.Add(this.mFanPanel);
+            this.mFanGroupBox.Location = new System.Drawing.Point(290, 12);
             this.mFanGroupBox.Name = "mFanGroupBox";
-            this.mFanGroupBox.Size = new System.Drawing.Size(217, 53);
+            this.mFanGroupBox.Size = new System.Drawing.Size(272, 53);
             this.mFanGroupBox.TabIndex = 1;
             this.mFanGroupBox.TabStop = false;
             this.mFanGroupBox.Text = "Fan speed";
             // 
+            // mFanPanel
+            // 
+            this.mFanPanel.AutoScroll = true;
+            this.mFanPanel.Location = new System.Drawing.Point(6, 12);
+            this.mFanPanel.Name = "mFanPanel";
+            this.mFanPanel.Size = new System.Drawing.Size(260, 35);
+            this.mFanPanel.TabIndex = 1;
+            // 
             // mControlGroupBox
             // 
-            this.mControlGroupBox.Location = new System.Drawing.Point(493, 12);
+            this.mControlGroupBox.Controls.Add(this.mControlPanel);
+            this.mControlGroupBox.Location = new System.Drawing.Point(568, 12);
             this.mControlGroupBox.Name = "mControlGroupBox";
-            this.mControlGroupBox.Size = new System.Drawing.Size(217, 53);
+            this.mControlGroupBox.Size = new System.Drawing.Size(306, 53);
             this.mControlGroupBox.TabIndex = 2;
             this.mControlGroupBox.TabStop = false;
             this.mControlGroupBox.Text = "Fan control";
             // 
+            // mControlPanel
+            // 
+            this.mControlPanel.AutoScroll = true;
+            this.mControlPanel.Location = new System.Drawing.Point(6, 12);
+            this.mControlPanel.Name = "mControlPanel";
+            this.mControlPanel.Size = new System.Drawing.Size(294, 35);
+            this.mControlPanel.TabIndex = 2;
+            // 
             // mFanControlButton
             // 
-            this.mFanControlButton.Location = new System.Drawing.Point(588, 75);
+            this.mFanControlButton.Location = new System.Drawing.Point(752, 71);
             this.mFanControlButton.Name = "mFanControlButton";
             this.mFanControlButton.Size = new System.Drawing.Size(122, 38);
             this.mFanControlButton.TabIndex = 5;
@@ -103,7 +136,7 @@
             // 
             // mOptionButton
             // 
-            this.mOptionButton.Location = new System.Drawing.Point(460, 75);
+            this.mOptionButton.Location = new System.Drawing.Point(624, 71);
             this.mOptionButton.Name = "mOptionButton";
             this.mOptionButton.Size = new System.Drawing.Size(122, 38);
             this.mOptionButton.TabIndex = 6;
@@ -236,7 +269,7 @@
             // 
             // mOSDButton
             // 
-            this.mOSDButton.Location = new System.Drawing.Point(332, 75);
+            this.mOSDButton.Location = new System.Drawing.Point(496, 71);
             this.mOSDButton.Name = "mOSDButton";
             this.mOSDButton.Size = new System.Drawing.Size(122, 38);
             this.mOSDButton.TabIndex = 13;
@@ -247,15 +280,15 @@
             // mLoadingPanel
             // 
             this.mLoadingPanel.Controls.Add(this.label1);
-            this.mLoadingPanel.Location = new System.Drawing.Point(9, 7);
+            this.mLoadingPanel.Location = new System.Drawing.Point(5, 3);
             this.mLoadingPanel.Name = "mLoadingPanel";
-            this.mLoadingPanel.Size = new System.Drawing.Size(701, 106);
+            this.mLoadingPanel.Size = new System.Drawing.Size(874, 111);
             this.mLoadingPanel.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(321, 46);
+            this.label1.Location = new System.Drawing.Point(403, 50);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 12);
             this.label1.TabIndex = 0;
@@ -264,8 +297,7 @@
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(719, 122);
+            this.ClientSize = new System.Drawing.Size(883, 116);
             this.Controls.Add(this.mLoadingPanel);
             this.Controls.Add(this.mOSDButton);
             this.Controls.Add(this.mOptionButton);
@@ -276,12 +308,14 @@
             this.Controls.Add(this.mControlGroupBox);
             this.Controls.Add(this.mFanGroupBox);
             this.Controls.Add(this.mTempGroupBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FanControl";
+            this.Text = "FanCtrl";
+            this.mTempGroupBox.ResumeLayout(false);
+            this.mFanGroupBox.ResumeLayout(false);
+            this.mControlGroupBox.ResumeLayout(false);
             this.mTrayMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).EndInit();
             this.mLoadingPanel.ResumeLayout(false);
@@ -318,6 +352,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Panel mLoadingPanel;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel mTempPanel;
+        private System.Windows.Forms.Panel mFanPanel;
+        private System.Windows.Forms.Panel mControlPanel;
     }
 }
 

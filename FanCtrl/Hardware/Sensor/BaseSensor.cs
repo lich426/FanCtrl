@@ -6,31 +6,12 @@ using System.Threading.Tasks;
 
 namespace FanCtrl
 {
-    public enum SENSOR_TYPE
+    public class BaseSensor : BaseDevice
     {
-        // temperature
-        TEMPERATURE,
-
-        // fan speed
-        FAN,
-
-        // OSD sensor
-        OSD,
-
-        UNKNOWN,
-    };
-
-    public class BaseSensor
-    {
-        // Sensor type
-        public SENSOR_TYPE Type { get; }
-
         // Value
         public int Value { get; set; }
 
-        public string Name { get; set; }
-
-        public BaseSensor(SENSOR_TYPE type)
+        public BaseSensor(LIBRARY_TYPE type)
         {
             Type = type;
             Value = 0;
@@ -39,12 +20,6 @@ namespace FanCtrl
         public virtual string getString()
         {
             return "";
-        }
-
-        public virtual void update()
-        {
-
-        }
-        
+        }        
     }
 }
