@@ -169,6 +169,7 @@ namespace FanCtrl
             // NvAPIWrapper
             if(OptionManager.getInstance().IsNvAPIWrapper == true)
             {
+                this.lockBus();
                 try
                 {
                     NVIDIA.Initialize();
@@ -238,6 +239,7 @@ namespace FanCtrl
                     }
                 }
                 catch { }
+                this.unlockBus();
             }
 
             // DIMM thermal sensor
@@ -920,6 +922,7 @@ namespace FanCtrl
             // NvAPIWrapper
             if (OptionManager.getInstance().IsNvAPIWrapper == true)
             {
+                this.lockBus();
                 try
                 {
                     string idPrefix = "NvAPIWrapper/OSD";
@@ -1026,6 +1029,7 @@ namespace FanCtrl
                     }
                 }
                 catch { }
+                this.unlockBus();
             }
         }
 
@@ -1061,6 +1065,7 @@ namespace FanCtrl
 
         private int onGetNvAPITemperature(int index)
         {
+            this.lockBus();
             int temp = 0;
             try
             {                
@@ -1080,11 +1085,13 @@ namespace FanCtrl
                 }
             }
             catch { }
+            this.unlockBus();
             return temp;
         }
 
         private int onGetNvAPIFanSpeed(int index, int coolerID)
         {
+            this.lockBus();
             int speed = 0;
             try
             {
@@ -1107,11 +1114,13 @@ namespace FanCtrl
                 }
             }
             catch { }
+            this.unlockBus();
             return speed;
         }
 
         private void onSetNvApiControl(int index, int coolerID, int value)
         {
+            this.lockBus();
             try
             {
                 var gpuArray = PhysicalGPU.GetPhysicalGPUs();
@@ -1124,10 +1133,12 @@ namespace FanCtrl
                 info.SetCoolerSettings(coolerID, value);
             }
             catch { }
+            this.unlockBus();
         }
 
         private double onNvAPIOSDSensorUpdate(int index, int subIndex)
         {
+            this.lockBus();
             double value = 0;
             try
             {
@@ -1178,6 +1189,7 @@ namespace FanCtrl
                 }
             }
             catch { }
+            this.unlockBus();
             return value;
         }
 
