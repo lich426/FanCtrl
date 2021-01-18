@@ -515,7 +515,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(209, 805);
+            this.ClientSize = new System.Drawing.Size(209, 809);
             this.Controls.Add(this.mResetButton);
             this.Controls.Add(this.mStartupDelayTextBox);
             this.Controls.Add(this.mStartupDelayLabel);

@@ -18,6 +18,18 @@ namespace FanCtrl
             InitializeComponent();
             this.localizeComponent();
 
+            if (Screen.PrimaryScreen.WorkingArea.Height < this.Height)
+            {
+                this.AutoScroll = true;
+                this.AutoSizeMode = AutoSizeMode.GrowOnly;
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+                this.Width = this.Width + 10;
+                this.Height = this.Height - 100;
+
+                this.MinimumSize = new Size(this.Width, 300);
+                this.MaximumSize = new Size(this.Width, Int32.MaxValue);
+            }            
+
             mToolTip.SetToolTip(mIntervalTextBox, "100 ≤ value ≤ 5000");
             mToolTip.SetToolTip(mStartupDelayTextBox, "0 ≤ value ≤ 59");
 

@@ -16,6 +16,7 @@ namespace FanCtrl
     {
         // HidDevice
         private HidStream mHidStream = null;
+        private bool mIsOpen = false;
 
         private delegate void RecvDelegate();
         private delegate void SendDelegate();
@@ -69,6 +70,7 @@ namespace FanCtrl
                                 this.stop();
                                 return false;
                             }
+                            mIsOpen = true;
                             break;
                         }
                         i++;
@@ -90,6 +92,7 @@ namespace FanCtrl
         {
             try
             {
+                mIsOpen = false;
                 if (mHidStream != null)
                 {
                     mHidStream.Close();
@@ -139,12 +142,19 @@ namespace FanCtrl
 
         private void read()
         {
+            if (mIsOpen == false)
+                return;
+
             try
             {
                 if (mHidStream != null && mHidStream.CanRead == true)
                 {
                     var buffer = mHidStream.Read();
                     this.onRecv(buffer, buffer.Length);
+                    this.readAsync();
+                }
+                else
+                {
                     this.readAsync();
                 }
             }
