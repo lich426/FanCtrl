@@ -14,7 +14,7 @@ namespace FanCtrl
 {
     public class Kraken : USBDevice
     {
-        private const long SEND_DELAY_TIME = 5000;
+        private long SEND_DELAY_TIME = 5000;
 
         private int mLastLiquidTemp = 0;
         private int mLastFanRPM = 0;
@@ -26,8 +26,7 @@ namespace FanCtrl
         private int mLastPumpSpeed = 0;
         private int mLastFanPercent = 0;
 
-        private long mPumpLastSendTime = 0;
-        private long mFanLastSendTime = 0;        
+        private long mLastSendTime = 0;      
 
         public Kraken() : base(USBDeviceType.Kraken)
         {
@@ -79,8 +78,7 @@ namespace FanCtrl
             mLastPumpSpeed = 0;
             mLastFanPercent = 0;
 
-            mPumpLastSendTime = 0;
-            mFanLastSendTime = 0;
+            mLastSendTime = 0;
 
             mUSBController = new HidUSBController(USBVendorID.NZXT, productID);
             mUSBController.onRecvHandler += onRecv;
@@ -166,47 +164,40 @@ namespace FanCtrl
 
             try
             {
-                long startTime = Util.getNowMS();
-
-                // pump
-                if (mPumpSpeed != mLastPumpSpeed || mPumpLastSendTime == 0 || startTime - mPumpLastSendTime >= SEND_DELAY_TIME)
+                // X3
+                if (mUSBController.ProductID == USBProductID.KrakenX3)
                 {
                     mLastPumpSpeed = mPumpSpeed;
-                    mPumpLastSendTime = startTime;
 
-                    // X3
-                    if (mUSBController.ProductID == USBProductID.KrakenX3)
+                    var commandList = new List<byte>();
+                    commandList.Add(0x72);
+                    commandList.Add(0x01);
+                    commandList.Add(0x00);
+                    commandList.Add(0x00);
+                    for (int i = 0; i < 40; i++)
                     {
-                        var commandList = new List<byte>();
-                        commandList.Add(0x72);
-                        commandList.Add(0x01);
-                        commandList.Add(0x00);
-                        commandList.Add(0x00);
-                        for (int i = 0; i < 40; i++)
-                        {
-                            commandList.Add(Convert.ToByte(mPumpSpeed));
-                        }
-                        mUSBController.send(commandList.ToArray());
+                        commandList.Add(Convert.ToByte(mPumpSpeed));
                     }
+                    mUSBController.send(commandList.ToArray());
+                }
 
-                    // X2
-                    else
+                // X2
+                else
+                {
+                    long startTime = Util.getNowMS();
+                    if (mPumpSpeed != mLastPumpSpeed || mFanPercent != mLastFanPercent || startTime - mLastSendTime >= SEND_DELAY_TIME)
                     {
+                        mLastSendTime = startTime;
+
+                        mLastPumpSpeed = mPumpSpeed;
                         var command = new byte[] { 0x02, 0x4d, 0x40, 0x00, Convert.ToByte(mPumpSpeed) };
                         mUSBController.send(command);
+
+                        mLastFanPercent = mFanPercent;
+                        command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(mFanPercent) };
+                        mUSBController.send(command);
                     }
-                }
-
-                // fan
-                if ((mUSBController.ProductID == USBProductID.KrakenX2) &&
-                    (mFanPercent != mLastFanPercent || mFanLastSendTime == 0 || startTime - mFanLastSendTime >= SEND_DELAY_TIME))
-                {
-                    mLastFanPercent = mFanPercent;
-                    mFanLastSendTime = startTime;
-
-                    var command = new byte[] { 0x02, 0x4d, 0x00, 0x00, Convert.ToByte(mFanPercent) };
-                    mUSBController.send(command);
-                }
+                }                
 
                 // lighting
                 if (mIsSendCustomData == true && mCustomDataList.Count > 0)

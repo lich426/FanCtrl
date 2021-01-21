@@ -111,6 +111,26 @@ namespace FanCtrl
             return null;
         }
 
+        public static byte i2cDetectWithAddress(int index, byte address)
+        {
+            Monitor.Enter(sLock);
+            if (sIsOpen == false)
+            {
+                Monitor.Exit(sLock);
+                return 0x00;
+            }
+
+            try
+            {
+                byte data = SMBusController.getI2CDetectWithAddress(index, address);
+                Monitor.Exit(sLock);
+                return data;
+            }
+            catch { }
+            Monitor.Exit(sLock);
+            return 0x00;
+        }
+
         public static byte[] i2cByteData(int index, byte address, int length)
         {
             Monitor.Enter(sLock);
@@ -181,6 +201,9 @@ namespace FanCtrl
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr getI2CDetect(int smbusIndex);
+
+        [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern byte getI2CDetectWithAddress(int smbusIndex, byte address);
 
         [DllImport("SMBus.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr getI2CByteData(int smbusIndex, byte address, int length);

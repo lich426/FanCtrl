@@ -1006,5 +1006,39 @@ namespace FanCtrl
             };
             form.ShowDialog();
         }
+
+        private const int WM_POWERBROADCAST = 0x218;
+        private const int PBT_APMQUERYSUSPEND = 0x0;
+        private const int PBT_APMRESUMESUSPEND = 0x7;
+        private const int PBT_APMSUSPEND = 0x4;
+
+        protected override void WndProc(ref Message msg)
+        {
+            switch (msg.Msg)
+            {
+                case WM_POWERBROADCAST:
+                    switch (msg.WParam.ToInt32())
+                    {
+                        case PBT_APMQUERYSUSPEND:
+                        case PBT_APMSUSPEND:
+                            Console.WriteLine("MainForm.WndProc() : enter power saving mode");
+                            break;
+                        case PBT_APMRESUMESUSPEND:
+                            Console.WriteLine("MainForm.WndProc() : exit power saving mode");
+                            this.BeginInvoke(new Action(delegate ()
+                            {
+                                HardwareManager.getInstance().stop();
+                                ControlManager.getInstance().reset();
+                                OSDManager.getInstance().reset();
+
+                                mIsFirstLoad = true;
+                                this.reload();
+                            }));
+                            break;
+                    }
+                    break;
+            }
+            base.WndProc(ref msg);
+        }
     }
 }

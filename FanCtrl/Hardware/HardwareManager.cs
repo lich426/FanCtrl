@@ -245,47 +245,37 @@ namespace FanCtrl
             // DIMM thermal sensor
             if (OptionManager.getInstance().IsDimm == true)
             {
-                this.lockBus();
                 this.lockSMBus(0);
                 if (SMBusController.open(false) == true)
                 {
-                    var device = new HardwareDevice("DIMM");
-
-                    int num = 1;
                     int busCount = SMBusController.getCount();
-
-                    for (int i = 0; i < busCount; i++)
+                    if (busCount > 0)
                     {
-                        var detectBytes = SMBusController.i2cDetect(i);
-                        if (detectBytes != null)
+                        int num = 1;
+                        var device = new HardwareDevice("DIMM");
+
+                        // 0x18 ~ 0x20
+                        for (int i = 24; i <= 32; i++)
                         {
-                            // 0x18 ~ 0x20
-                            for (int j = 0; j < detectBytes.Length; j++)
+                            byte data = SMBusController.i2cDetectWithAddress(0, (byte)i);
+                            if (data == (byte)i)
                             {
-                                if (j < 24)
-                                    continue;
-                                else if (j > 32)
-                                    break;
-
-                                if (detectBytes[j] == (byte)j)
-                                {
-                                    var id = string.Format("DIMM/{0}/{1}", i, j);
-                                    var temp = new DimmTemp(id, "DIMM #" + num++, i, detectBytes[j]);
-                                    temp.onSetDimmTemperature += onSetDimmTemperature;
-                                    device.addDevice(temp);
-                                }
+                                var id = string.Format("DIMM/0/{0}", i);
+                                var temp = new DimmTemp(id, "DIMM #" + num++, data);
+                                temp.onSetDimmTemperature += onSetDimmTemperature;
+                                device.addDevice(temp);
                             }
+                            Thread.Sleep(10);
                         }
-                    }
 
-                    if (device.DeviceList.Count > 0)
-                    {
-                        var tempList = TempList[(int)LIBRARY_TYPE.DIMM];
-                        tempList.Add(device);
+                        if (device.DeviceList.Count > 0)
+                        {
+                            var tempList = TempList[(int)LIBRARY_TYPE.DIMM];
+                            tempList.Add(device);
+                        }
                     }
                 }
                 this.unlockSMBus();
-                this.unlockBus();
             }
 
             // NZXT Kraken
@@ -802,7 +792,6 @@ namespace FanCtrl
                 mISABusMutex.WaitOne();
             }
             catch { }
-
             try
             {
                 mPCIMutex.WaitOne();
@@ -826,19 +815,11 @@ namespace FanCtrl
 
         private bool lockSMBus(int ms)
         {
-            if (ms > 0)
-            {
-                try
-                {
-                    return mSMBusMutex.WaitOne(ms, false);
-                }
-                catch { }
-                return false;
-            }
             try
             {
-                mSMBusMutex.WaitOne();
-                return true;
+                if (ms <= 0)
+                    return mSMBusMutex.WaitOne();
+                return mSMBusMutex.WaitOne(ms, false);
             }
             catch { }            
             return false;
@@ -1033,14 +1014,14 @@ namespace FanCtrl
             }
         }
 
-        private void onSetDimmTemperature(object sender, int busIndex, byte address)
+        private void onSetDimmTemperature(object sender, byte address)
         {
             var sensor = (DimmTemp)sender;
 
             if (this.lockSMBus(10) == false)
                 return;
 
-            var wordArray = SMBusController.i2cWordData(busIndex, address, 10);
+            var wordArray = SMBusController.i2cWordData(0, address, 10);
             if(wordArray == null)
             {
                 this.unlockSMBus();
@@ -1060,6 +1041,7 @@ namespace FanCtrl
                     sensor.Value = (int)value;
                 }
             }
+            Thread.Sleep(10);
             return;
         }
 

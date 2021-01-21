@@ -348,7 +348,7 @@
             this.MinimumSize = new System.Drawing.Size(940, 543);
             this.Name = "ControlForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "FanControl";
+            this.Text = "FanCtrl";
             this.mTempGroupBox.ResumeLayout(false);
             this.mFanGroupBox.ResumeLayout(false);
             this.mGraphGroupBox.ResumeLayout(false);
