@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LibreHardwareMonitor.Hardware;
-using OpenHardwareMonitor.Hardware;
+using NvAPIWrapper.GPU;
 
 namespace FanCtrl
 {
     public class NvAPITemp : BaseSensor
     {
-        public delegate int OnGetNvAPITemperatureHandler(int index);
-
-        public event OnGetNvAPITemperatureHandler onGetNvAPITemperatureHandler;
+        public delegate void LockBusHandler();
+        public event LockBusHandler LockBus;
+        public event LockBusHandler UnlockBus;
 
         private int mIndex = -1;
 
@@ -32,7 +31,20 @@ namespace FanCtrl
         }
         public override void update()
         {
-            Value = onGetNvAPITemperatureHandler(mIndex);
+            LockBus();
+            try
+            {
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                var e = gpuArray[mIndex].ThermalInformation.ThermalSensors.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    var value = e.Current;
+                    Value = value.CurrentTemperature;
+                    break;
+                }
+            }
+            catch { }
+            UnlockBus();
         }
     }
 }

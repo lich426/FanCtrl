@@ -28,6 +28,8 @@ namespace FanCtrl
 
         public int Hysteresis { get; set; }
 
+        public int Auto { get; set; }
+
         private int[] mValueList = null;
         public int[] ValueList
         { 
@@ -37,12 +39,13 @@ namespace FanCtrl
         public int LastChangedValue { get; set; }
         public int LastChangedTemp { get; set; }
 
-        public FanData(string id, FanValueUnit unit, bool isStep, int hysteresis)
+        public FanData(string id, FanValueUnit unit, bool isStep, int hysteresis, int auto)
         {
             ID = id;
             IsStep = isStep;
             Hysteresis = hysteresis;
             Unit = unit;
+            Auto = auto;
             mValueList = new int[this.getMaxFanValue()];
             for (int i = 0; i < this.getMaxFanValue(); i++)
             {
@@ -52,7 +55,7 @@ namespace FanCtrl
 
         public FanData clone()
         {
-            var fanData = new FanData(ID, Unit, IsStep, Hysteresis);
+            var fanData = new FanData(ID, Unit, IsStep, Hysteresis, Auto);
             for (int i = 0; i < this.getMaxFanValue(); i++)
             {
                 fanData.ValueList[i] = mValueList[i];

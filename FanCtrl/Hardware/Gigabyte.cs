@@ -332,6 +332,7 @@ namespace FanCtrl
                         string id = string.Format("{0}/{1}/{2}", mIDPrefixControl, name, i);
                         var control = new GigabyteFanControl(id, name, i, value);
                         control.onSetGigabyteControlHandler += onSetGigabyteControl;
+                        control.onSetGigabyteControlAutoHandler += onSetGigabyteControlAuto;
                         device.addDevice(control);
                     }
                 }
@@ -356,6 +357,7 @@ namespace FanCtrl
                     string id = string.Format("{0}/{1}/{2}", mIDPrefixControl, name, i);
                     var control = new GigabyteAmdGpuFanControl(id, name, i, info.MinPercent, info.MaxPercent);
                     control.onSetGigabyteAmdControlHandler += onSetGigabyteAmdControl;
+                    control.onSetGigabyteAmdControlAutoHandler += onSetGigabyteAmdControlAuto;
                     device.addDevice(control);
                 }
 
@@ -378,6 +380,7 @@ namespace FanCtrl
                     string id = string.Format("{0}/{1}/{2}", mIDPrefixControl, name, i);
                     var control = new GigabyteNvidiaGpuFanControl(id, name, i, minPercent, maxPercent);
                     control.onSetGigabyteNvidiaControlHandler += onSetGigabyteNvidiaControl;
+                    control.onSetGigabyteNvidiaControlAutoHandler += onSetGigabyteNvidiaControlAuto;
                     device.addDevice(control);
                 }
             }                
@@ -472,6 +475,17 @@ namespace FanCtrl
             this.unlockBus();
         }
 
+        private void onSetGigabyteControlAuto(int index)
+        {
+            this.lockBus();
+            try
+            {
+                mGigabyteSmartGuardianFanControlModule.SetFanSpeedControlMode(index, FanSpeedControlModes.Auto);
+            }
+            catch { }
+            this.unlockBus();
+        }
+
         private void onSetGigabyteAmdControl(int index, int value)
         {
             this.lockBus();
@@ -483,12 +497,34 @@ namespace FanCtrl
             this.unlockBus();
         }
 
+        private void onSetGigabyteAmdControlAuto(int index)
+        {
+            this.lockBus();
+            try
+            {
+                mGigabyteAmdRadeonGraphicsModuleList[index].SetFanSpeedToDefault();
+            }
+            catch { }
+            this.unlockBus();
+        }
+
         private void onSetGigabyteNvidiaControl(int index, int value)
         {
             this.lockBus();
             try
             {
                 mGigabyteNvidiaGeforceGraphicsModuleList[index].SetFanSpeed(value);
+            }
+            catch { }
+            this.unlockBus();
+        }
+
+        private void onSetGigabyteNvidiaControlAuto(int index)
+        {
+            this.lockBus();
+            try
+            {
+                mGigabyteNvidiaGeforceGraphicsModuleList[index].SetFanSpeedToDefault();
             }
             catch { }
             this.unlockBus();

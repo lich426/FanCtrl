@@ -16,12 +16,15 @@ namespace FanCtrl
 
         public int LastValue { get; set; }
 
+        public bool IsSetSpeed { get; set; }
+
         public BaseControl(LIBRARY_TYPE type)
         {
             Type = type;
             Value = 0;
             NextValue = 0;
             LastValue = 0;
+            IsSetSpeed = false;
         }
 
         public virtual int getMinSpeed()
@@ -37,6 +40,11 @@ namespace FanCtrl
         public virtual int setSpeed(int value)
         {
             return 0;
+        }
+
+        public virtual void setAuto()
+        {
+            
         }
     }
 }

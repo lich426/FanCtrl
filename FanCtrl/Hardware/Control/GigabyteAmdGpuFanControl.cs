@@ -11,6 +11,9 @@ namespace FanCtrl
         public delegate void OnSetGigabyteAmdControlHandler(int index, int value);
         public event OnSetGigabyteAmdControlHandler onSetGigabyteAmdControlHandler;
 
+        public delegate void OnSetGigabyteAmdAutoControlHandler(int index);
+        public event OnSetGigabyteAmdAutoControlHandler onSetGigabyteAmdControlAutoHandler;
+
         private int mIndex = -1;
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
@@ -58,9 +61,19 @@ namespace FanCtrl
             }
 
             onSetGigabyteAmdControlHandler(mIndex, Value);
+            IsSetSpeed = true;
 
             LastValue = Value;
             return Value;
+        }
+
+        public override void setAuto()
+        {
+            if (IsSetSpeed == false)
+                return;
+
+            onSetGigabyteAmdControlAutoHandler(mIndex);
+            IsSetSpeed = false;
         }
     }
 }

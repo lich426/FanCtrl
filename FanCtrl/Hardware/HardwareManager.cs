@@ -188,7 +188,8 @@ namespace FanCtrl
                         var id = string.Format("NvAPIWrapper/{0}/{1}/Temp", hardwareName, i);
                         var name = "GPU Core";
                         var temp = new NvAPITemp(id, name, i);
-                        temp.onGetNvAPITemperatureHandler += onGetNvAPITemperature;
+                        temp.LockBus += lockBus;
+                        temp.UnlockBus += unlockBus;
 
                         var tempDevice = new HardwareDevice(hardwareName);
                         tempDevice.addDevice(temp);
@@ -206,21 +207,23 @@ namespace FanCtrl
                             var value = e.Current;
                             int coolerID = value.CoolerId;
                             int speed = value.CurrentLevel;
-                            int minSpeed = 0;// value.DefaultMinimumLevel;
-                            int maxSpeed = 100;// value.DefaultMaximumLevel;
+                            int minSpeed = value.DefaultMinimumLevel;
+                            int maxSpeed = value.DefaultMaximumLevel;
 
                             // fan
                             id = string.Format("NvAPIWrapper/{0}/{1}/Fan/{2}", hardwareName, i, coolerID);
                             name = "GPU Fan #" + num;
                             var fan = new NvAPIFanSpeed(id, name, i, coolerID);
-                            fan.onGetNvAPIFanSpeedHandler += onGetNvAPIFanSpeed;
+                            fan.LockBus += lockBus;
+                            fan.UnlockBus += unlockBus;
                             fanDevice.addDevice(fan);
 
                             // control
                             id = string.Format("NvAPIWrapper/{0}/{1}/Control/{2}", hardwareName, i, coolerID);
                             name = "GPU Fan #" + num;
                             var control = new NvAPIFanControl(id, name, i, coolerID, speed, minSpeed, maxSpeed);
-                            control.onSetNvAPIControlHandler += onSetNvApiControl;
+                            control.LockBus += lockBus;
+                            control.UnlockBus += unlockBus;
                             controlDevice.addDevice(control);
                             num++;
                         }
@@ -262,10 +265,11 @@ namespace FanCtrl
                             {
                                 var id = string.Format("DIMM/0/{0}", i);
                                 var temp = new DimmTemp(id, "DIMM #" + num++, data);
-                                temp.onSetDimmTemperature += onSetDimmTemperature;
+                                temp.LockBus += lockSMBus;
+                                temp.UnlockBus += unlockSMBus;
                                 device.addDevice(temp);
                             }
-                            Thread.Sleep(10);
+                            Util.sleep(10);
                         }
 
                         if (device.DeviceList.Count > 0)
@@ -566,6 +570,21 @@ namespace FanCtrl
                 catch { }
             }
 
+            if (OptionManager.getInstance().IsHWInfo == true)
+            {
+                try
+                {
+                    HWInfoManager.getInstance().start();
+
+                    var tempList = TempList[(int)LIBRARY_TYPE.HWiNFO];
+                    HWInfoManager.getInstance().createTemp(ref tempList);
+
+                    var fanList = FanList[(int)LIBRARY_TYPE.HWiNFO];
+                    HWInfoManager.getInstance().createFan(ref fanList);
+                }
+                catch { }
+            }
+
             for (int i = 0; i < TempList.Count; i++)
             {
                 var deviceList = TempList[i];
@@ -632,6 +651,13 @@ namespace FanCtrl
                 mUpdateTimer = null;
             }
 
+            // restore fan control
+            for (int i = 0; i < ControlBaseList.Count; i++)
+            {
+                var control = ControlBaseList[i];
+                control.setAuto();
+            }
+
             if (mGigabyte != null)
             {
                 mGigabyte.stop();
@@ -679,6 +705,17 @@ namespace FanCtrl
                 catch { }
             }
             RGBnFCList.Clear();
+
+            if (OptionManager.getInstance().IsNvAPIWrapper == true)
+            {
+                try
+                {
+                    NVIDIA.Unload();
+                }
+                catch { }
+            }                
+
+            HWInfoManager.getInstance().stop();
 
             mChangeControlList.Clear();
             mChangeValueList.Clear();
@@ -916,7 +953,8 @@ namespace FanCtrl
                         string prefix = "[Clock] ";
                         string name = "GPU Graphics";
                         var osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -924,7 +962,8 @@ namespace FanCtrl
                         prefix = "[Clock] ";
                         name = "GPU Memory";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -932,7 +971,8 @@ namespace FanCtrl
                         prefix = "[Clock] ";
                         name = "GPU Processor";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -940,7 +980,8 @@ namespace FanCtrl
                         prefix = "[Clock] ";
                         name = "GPU Video Decoding";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -948,7 +989,8 @@ namespace FanCtrl
                         prefix = "[Load] ";
                         name = "GPU Core";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -956,7 +998,8 @@ namespace FanCtrl
                         prefix = "[Load] ";
                         name = "GPU Frame Buffer";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -964,7 +1007,8 @@ namespace FanCtrl
                         prefix = "[Load] ";
                         name = "GPU Video Engine";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -972,7 +1016,8 @@ namespace FanCtrl
                         prefix = "[Load] ";
                         name = "GPU Bus Interface";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -980,7 +1025,8 @@ namespace FanCtrl
                         prefix = "[Load] ";
                         name = "GPU Memory";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.Percent, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -988,7 +1034,8 @@ namespace FanCtrl
                         prefix = "[Data] ";
                         name = "GPU Memory Free";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.KB, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -996,7 +1043,8 @@ namespace FanCtrl
                         prefix = "[Data] ";
                         name = "GPU Memory Used";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.KB, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
 
@@ -1004,7 +1052,8 @@ namespace FanCtrl
                         prefix = "[Data] ";
                         name = "GPU Memory Total";
                         osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.KB, i, subIndex++);
-                        osdSensor.onNvAPIOSDSensorUpdate += onNvAPIOSDSensorUpdate;
+                        osdSensor.LockBus += lockBus;
+                        osdSensor.UnlockBus += unlockBus;
                         OSDSensorList.Add(osdSensor);
                         OSDSensorMap.Add(id, osdSensor);
                     }
@@ -1012,167 +1061,11 @@ namespace FanCtrl
                 catch { }
                 this.unlockBus();
             }
-        }
 
-        private void onSetDimmTemperature(object sender, byte address)
-        {
-            var sensor = (DimmTemp)sender;
-
-            if (this.lockSMBus(10) == false)
-                return;
-
-            var wordArray = SMBusController.i2cWordData(0, address, 10);
-            if(wordArray == null)
+            if (OptionManager.getInstance().IsHWInfo == true)
             {
-                this.unlockSMBus();
-                return;
+                HWInfoManager.getInstance().createOSDSensor(OSDSensorList, OSDSensorMap);
             }
-            this.unlockSMBus();
-
-            if (wordArray != null && wordArray.Length == 10)
-            {
-                var temp = BitConverter.GetBytes(wordArray[5]);
-                temp[1] = (byte)(temp[1] & 0x0F);
-
-                ushort count = BitConverter.ToUInt16(temp, 0);
-                double value = Math.Round(count * 0.0625f);
-                if(value > 0)
-                {
-                    sensor.Value = (int)value;
-                }
-            }
-            Thread.Sleep(10);
-            return;
-        }
-
-        private int onGetNvAPITemperature(int index)
-        {
-            this.lockBus();
-            int temp = 0;
-            try
-            {                
-                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                if (index >= gpuArray.Length)
-                {
-                    this.unlockBus();
-                    return temp;
-                }
-
-                var e = gpuArray[index].ThermalInformation.ThermalSensors.GetEnumerator();
-                while (e.MoveNext())
-                {
-                    var value = e.Current;
-                    temp = value.CurrentTemperature;
-                    break;
-                }
-            }
-            catch { }
-            this.unlockBus();
-            return temp;
-        }
-
-        private int onGetNvAPIFanSpeed(int index, int coolerID)
-        {
-            this.lockBus();
-            int speed = 0;
-            try
-            {
-                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                if (index >= gpuArray.Length)
-                {
-                    this.unlockBus();
-                    return speed;
-                }
-
-                var e = gpuArray[index].CoolerInformation.Coolers.GetEnumerator();
-                while (e.MoveNext())
-                {
-                    var value = e.Current;
-                    if (value.CoolerId == coolerID)
-                    {
-                        speed = value.CurrentFanSpeedInRPM;
-                        break;
-                    }
-                }
-            }
-            catch { }
-            this.unlockBus();
-            return speed;
-        }
-
-        private void onSetNvApiControl(int index, int coolerID, int value)
-        {
-            this.lockBus();
-            try
-            {
-                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                if (index >= gpuArray.Length)
-                {
-                    this.unlockBus();
-                    return;
-                }
-                var info = gpuArray[index].CoolerInformation;
-                info.SetCoolerSettings(coolerID, value);
-            }
-            catch { }
-            this.unlockBus();
-        }
-
-        private double onNvAPIOSDSensorUpdate(int index, int subIndex)
-        {
-            this.lockBus();
-            double value = 0;
-            try
-            {
-                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
-                var gpu = gpuArray[index];
-
-                switch (subIndex)
-                {
-                    case 0:
-                        value = (double)gpu.CurrentClockFrequencies.GraphicsClock.Frequency;
-                        break;
-                    case 1:
-                        value = (double)gpu.CurrentClockFrequencies.MemoryClock.Frequency;
-                        break;
-                    case 2:
-                        value = (double)gpu.CurrentClockFrequencies.ProcessorClock.Frequency;
-                        break;
-                    case 3:
-                        value = (double)gpu.CurrentClockFrequencies.VideoDecodingClock.Frequency;
-                        break;
-                    case 4:
-                        value = (double)gpu.UsageInformation.GPU.Percentage;
-                        break;
-                    case 5:
-                        value = (double)gpu.UsageInformation.FrameBuffer.Percentage;
-                        break;
-                    case 6:
-                        value = (double)gpu.UsageInformation.VideoEngine.Percentage;
-                        break;
-                    case 7:
-                        value = (double)gpu.UsageInformation.BusInterface.Percentage;
-                        break;
-                    case 8:
-                        value = (double)(((double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB) / (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB * 100.0);
-                        break;
-                    case 9:
-                        value = (double)gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB;
-                        break;
-                    case 10:
-                        value = (double)(gpu.MemoryInformation.PhysicalFrameBufferSizeInkB - gpu.MemoryInformation.CurrentAvailableDedicatedVideoMemoryInkB);
-                        break;
-                    case 11:
-                        value = (double)gpu.MemoryInformation.PhysicalFrameBufferSizeInkB;
-                        break;
-                    default:
-                        value = 0;
-                        break;
-                }
-            }
-            catch { }
-            this.unlockBus();
-            return value;
         }
 
         private void onUpdateTimer(object sender, EventArgs e)
@@ -1279,7 +1172,9 @@ namespace FanCtrl
                 }
 
                 // Control
-                var controlDictionary = new Dictionary<string, BaseControl>();
+                var manualControlDictionary = new Dictionary<string, BaseControl>();
+                var autoControlDictionary = new Dictionary<string, BaseControl>();
+
                 var controlManager = ControlManager.getInstance();
                 if (controlManager.IsEnable == true && isExistChange == false)
                 {
@@ -1309,26 +1204,53 @@ namespace FanCtrl
                                 continue;
 
                             var controlDevice = controlBaseMap[fanID];
-                            int percent = fanData.getValue(temperature);
 
-                            if (controlDictionary.ContainsKey(fanID) == false)
+                            // check auto mode
+                            bool isAuto = (fanData.Auto > 0 && fanData.Auto > temperature);
+
+                            // auto mode
+                            if (isAuto == true)
                             {
-                                controlDictionary.Add(fanID, controlDevice);
-                                controlDevice.NextValue = percent;
+                                autoControlDictionary.Add(fanID, controlDevice);
+                                continue;
                             }
+
+                            // manual mode
                             else
                             {
-                                controlDevice.NextValue = (controlDevice.NextValue >= percent) ? controlDevice.NextValue : percent;
+                                // remove auto mode control
+                                autoControlDictionary.Remove(fanID);
+
+                                int percent = fanData.getValue(temperature);
+                                if (manualControlDictionary.ContainsKey(fanID) == false)
+                                {
+                                    manualControlDictionary.Add(fanID, controlDevice);
+                                    controlDevice.NextValue = percent;
+                                }
+                                else
+                                {
+                                    controlDevice.NextValue = (controlDevice.NextValue >= percent) ? controlDevice.NextValue : percent;
+                                }
                             }
                         }
                     }
 
-                    foreach (var keyPair in controlDictionary)
+                    foreach (var keyPair in manualControlDictionary)
                     {
                         var control = keyPair.Value;
+
+                        Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
+
                         if (control.Value == control.NextValue)
                             continue;
                         control.setSpeed(control.NextValue);
+                    }
+
+                    foreach (var keyPair in autoControlDictionary)
+                    {
+                        var control = keyPair.Value;
+                        Console.WriteLine("auto mode : name({0})", control.Name);
+                        control.setAuto();
                     }
                 }
             }

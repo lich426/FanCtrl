@@ -23,6 +23,7 @@ namespace FanCtrl
         Power,
         FPS,
         Blank,
+        HWiNFO,
         Unknown,
     }
 

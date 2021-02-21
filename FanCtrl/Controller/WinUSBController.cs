@@ -132,7 +132,7 @@ namespace FanCtrl
             {
                 if (Monitor.TryEnter(mLock) == false)
                 {
-                    Thread.Sleep(100);
+                    Util.sleep(ref mThreadState, 100);
                     continue;
                 }
                 try
@@ -140,7 +140,7 @@ namespace FanCtrl
                     if(mSendDataArrayList.Count == 0)
                     {
                         Monitor.Exit(mLock);
-                        Thread.Sleep(100);
+                        Util.sleep(ref mThreadState, 100);
                         continue;
                     }
 
@@ -149,7 +149,7 @@ namespace FanCtrl
                     {
                         Console.WriteLine(String.Format("WinUSBController.threadFunc() : Failed beginTransaction({0})", ret));
                         Monitor.Exit(mLock);
-                        Thread.Sleep(100);
+                        Util.sleep(ref mThreadState, 100);
                         continue;
                     }
 
@@ -170,7 +170,7 @@ namespace FanCtrl
                     {
                         Console.WriteLine(String.Format("WinUSBController.threadFunc() : Failed endTransactionRead({0})", ret));
                         Monitor.Exit(mLock);
-                        Thread.Sleep(100);
+                        Util.sleep(ref mThreadState, 100);
                         continue;
                     }
 
@@ -178,7 +178,7 @@ namespace FanCtrl
                 }
                 catch { }
                 Monitor.Exit(mLock);
-                Thread.Sleep(100);
+                Util.sleep(ref mThreadState, 100);
             }
         }
 

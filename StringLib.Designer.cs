@@ -88,6 +88,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Auto :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Auto {
+            get {
+                return ResourceManager.GetString("Auto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Auto Fan Control과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Auto_Fan_Control {
@@ -547,7 +556,7 @@ namespace FanCtrl {
         }
         
         /// <summary>
-        ///   Target temperautre sensor과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Target temperature sensor과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Target_Temp {
             get {

@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.3.3.0</ApplicationVersion>
+    <ApplicationVersion>1.3.4.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -184,7 +184,6 @@
     <Compile Include="FanCtrl\Hardware\Control\GigabyteNvidiaGpuFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\OHMControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\LHMControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\HardwareGpuControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\NvAPIFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenPumpControl.cs" />
@@ -193,10 +192,16 @@
     <Compile Include="FanCtrl\Hardware\HardwareDevice.cs" />
     <Compile Include="FanCtrl\Hardware\Gigabyte.cs" />
     <Compile Include="FanCtrl\Hardware\HardwareManager.cs" />
+    <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoManager.cs" />
+    <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoCategory.cs" />
+    <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoDevice.cs" />
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
+    <Compile Include="FanCtrl\Hardware\OSD\HWInfoOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\OHMOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\LHMOSDSensor.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\HWInfoFanSpeed.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\HWInfoTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\OHMFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\LHMFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\OHMTemp.cs" />
@@ -229,6 +234,7 @@
     <Compile Include="FanCtrl\Hardware\OSD\OSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\RGBnFCFanSpeed.cs" />
     <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
+    <Compile Include="FanCtrl\Util\PointObj.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />
     <Compile Include="LightingForm.cs">
       <SubType>Form</SubType>

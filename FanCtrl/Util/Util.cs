@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FanCtrl
@@ -108,6 +109,49 @@ namespace FanCtrl
         public static int getCelsius(int fahrenheit)
         {
             return (int)Math.Round(((double)fahrenheit - 32) * 5 / 9);
+        }
+
+        public static void sleep(int ms)
+        {
+            try
+            {
+                Thread.Sleep(ms);
+            }
+            catch { }
+        }
+
+        public static void sleep(ref bool isEnd, int ms)
+        {
+            try
+            {
+                if (ms <= 0)
+                    return;
+
+                if (ms < 10)
+                {
+                    Thread.Sleep(ms);
+                    return;
+                }
+
+                while (isEnd == true)
+                {
+                    ms = ms - 10;
+                    if (ms == 0)
+                    {
+                        break;
+                    }
+                    else if (ms < 10)
+                    {
+                        Thread.Sleep(ms);
+                        break;
+                    }
+                    else
+                    {
+                        Thread.Sleep(10);
+                    }
+                }
+            }
+            catch { }
         }
     }
 }

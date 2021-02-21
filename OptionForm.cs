@@ -110,6 +110,8 @@ namespace FanCtrl
             mRGBnFCCheckBox.Checked = OptionManager.getInstance().IsRGBnFC;
             mRGBnFCButton.Enabled = (HardwareManager.getInstance().RGBnFCList.Count > 0);
 
+            mHWInfoCheckBox.Checked = OptionManager.getInstance().IsHWInfo;
+
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
@@ -182,7 +184,8 @@ namespace FanCtrl
                 (optionManager.IsDimm != mDimmCheckBox.Checked) ||
                 (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
                 (optionManager.IsCLC != mCLCCheckBox.Checked) ||
-                (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked))
+                (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked) ||
+                (optionManager.IsHWInfo != mHWInfoCheckBox.Checked))
             {
                 var result = MessageBox.Show(StringLib.OptionChange, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result == DialogResult.Cancel)
@@ -220,6 +223,8 @@ namespace FanCtrl
             optionManager.IsCLC = mCLCCheckBox.Checked;
 
             optionManager.IsRGBnFC = mRGBnFCCheckBox.Checked;
+
+            optionManager.IsHWInfo = mHWInfoCheckBox.Checked;
 
             optionManager.IsFahrenheit = mFahrenheitCheckBox.Checked;
             optionManager.IsAnimation = mAnimationCheckBox.Checked;
@@ -369,6 +374,6 @@ namespace FanCtrl
                 var point = mRGBnFCButton.PointToClient(Control.MousePosition);
                 menu.Show(mRGBnFCButton, point);
             }
-        }        
+        }
     }
 }

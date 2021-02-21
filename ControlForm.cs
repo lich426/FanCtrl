@@ -29,8 +29,11 @@ namespace FanCtrl
         private PointPairList mPointList = null;
         private LineItem mLineItem = null;
 
-        private PointPairList mNowPoint = null;
-        private LineItem mNowPointLineItem = null;
+        //private PointPairList mNowPoint = null;
+        //private LineItem mNowPointLineItem = null;
+        private PointObj mNowPoint = null;
+
+        private PolyObj mAutoPolyObj = null;
 
         private MODE_TYPE mModeType = MODE_TYPE.NORMAL;
         private List<ControlData>[] mControlDataList = new List<ControlData>[4];
@@ -83,6 +86,9 @@ namespace FanCtrl
 
                 mGraph.Width = mGraph.Width + widthGap;
                 mGraph.Height = mGraph.Height + heightGap;
+
+                mAutoLabel.Left = mAutoLabel.Left + widthGap;
+                mAutoNumericUpDown.Left = mAutoNumericUpDown.Left + widthGap;
 
                 mPresetLabel.Left = mPresetLabel.Left + widthGap;
                 mPresetLoadButton.Left = mPresetLoadButton.Left + widthGap;
@@ -155,6 +161,7 @@ namespace FanCtrl
             mUnitLabel.Text = StringLib.Unit;
             mHysLabel.Text = StringLib.Hysteresis;
             mStepCheckBox.Text = StringLib.Step;
+            mAutoLabel.Text = StringLib.Auto;
             mOKButton.Text = StringLib.OK;
             mApplyButton.Text = StringLib.Apply;
         }
@@ -189,6 +196,8 @@ namespace FanCtrl
             mUnitComboBox.SelectedIndexChanged += onUnitComboBoxIndexChanged;
 
             mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
+
+            mAutoNumericUpDown.ValueChanged += onAutoNumericUpDownValueChanged;
 
             var tempBaseList = HardwareManager.getInstance().TempBaseList;
             var controlBaseList = HardwareManager.getInstance().ControlBaseList;
@@ -253,13 +262,6 @@ namespace FanCtrl
 
             mGraph.GraphPane.CurveList.Clear();
 
-            mNowPoint = new PointPairList();
-            mNowPoint.Add(0, 0);
-            mNowPointLineItem = mGraph.GraphPane.AddCurve("Now", mNowPoint, Color.Red, SymbolType.Circle);
-            mNowPointLineItem.Line.Width = 1.0f;
-            mNowPointLineItem.Symbol.Size = 10.0f;
-            mNowPointLineItem.Symbol.Fill = new Fill(Color.Red);
-
             // line
             mPointList = new PointPairList();
             for (int i = 0; i < FanData.MAX_FAN_VALUE_SIZE_5; i++)
@@ -271,12 +273,32 @@ namespace FanCtrl
             mLineItem.Symbol.Size = 10.0f;
             mLineItem.Symbol.Fill = new Fill(Color.White);
 
+            mAutoPolyObj = new ZedGraph.PolyObj
+            {
+                Points = new[]
+                {
+                    new ZedGraph.PointD(0, 0),
+                    new ZedGraph.PointD(0, 100),
+                    new ZedGraph.PointD(0, 0),
+                },
+                Fill = new ZedGraph.Fill(Color.White),
+                ZOrder = ZedGraph.ZOrder.B_BehindLegend,
+            };
+            mGraph.GraphPane.GraphObjList.Add(mAutoPolyObj);
+
+            mNowPoint = new PointObj(50, 50, 10.0, 10.0, ZedGraph.SymbolType.Circle, Color.Red);
+            mNowPoint.Fill = new ZedGraph.Fill(Color.Red);
+            mNowPoint.ZOrder = ZedGraph.ZOrder.A_InFront;
+            mGraph.GraphPane.GraphObjList.Add(mNowPoint);
+
             mPresetLabel.Visible = false;
             mPresetLoadButton.Visible = false;
             mPresetSaveButton.Visible = false;
             mUnitLabel.Visible = false;
             mUnitComboBox.Visible = false;
             mGraph.Visible = false;
+            mAutoLabel.Visible = false;
+            mAutoNumericUpDown.Visible = false;
             mStepCheckBox.Visible = false;
             mHysLabel.Visible = false;
             mHysNumericUpDown.Visible = false;
@@ -313,6 +335,17 @@ namespace FanCtrl
             {
                 mPointList.Add(mSelectedFanData.getDivideValue() * i, mSelectedFanData.ValueList[i]);
             }
+
+            int value = mSelectedFanData.Auto;
+            mAutoPolyObj.Points = new[]
+                {
+                    new ZedGraph.PointD(0, 0),
+                    new ZedGraph.PointD(value, 0),
+                    new ZedGraph.PointD(value, 100),
+                    new ZedGraph.PointD(0, 100),
+                    new ZedGraph.PointD(0, 0),
+                };
+
             mGraph.Refresh();
         }
 
@@ -348,6 +381,8 @@ namespace FanCtrl
             mUnitLabel.Visible = false;
             mUnitComboBox.Visible = false;
             mGraph.Visible = false;
+            mAutoLabel.Visible = false;
+            mAutoNumericUpDown.Visible = false;
             mStepCheckBox.Visible = false;
             mHysLabel.Visible = false;
             mHysNumericUpDown.Visible = false;
@@ -507,8 +542,9 @@ namespace FanCtrl
             if (tempDevice == null || controlDevice == null)
                 return;
             
-            mNowPoint[0].X = (double)tempDevice.Value;
-            mNowPoint[0].Y = (double)controlDevice.LastValue;            
+            mNowPoint.Location.X = (double)tempDevice.Value;
+            mNowPoint.Location.Y = (double)controlDevice.Value;
+            
             mGraph.Refresh();
         }
 
@@ -587,6 +623,8 @@ namespace FanCtrl
                 mUnitLabel.Visible = false;
                 mUnitComboBox.Visible = false;
                 mGraph.Visible = false;
+                mAutoLabel.Visible = false;
+                mAutoNumericUpDown.Visible = false;
                 mStepCheckBox.Visible = false;
                 mHysLabel.Visible = false;
                 mHysNumericUpDown.Visible = false;
@@ -600,6 +638,8 @@ namespace FanCtrl
             mUnitLabel.Visible = true;
             mUnitComboBox.Visible = true;
             mGraph.Visible = true;
+            mAutoLabel.Visible = true;
+            mAutoNumericUpDown.Visible = true;
             mStepCheckBox.Visible = true;
             mHysLabel.Visible = true;
             mHysNumericUpDown.Visible = true;
@@ -618,6 +658,7 @@ namespace FanCtrl
             mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
             mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
             mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
+            mAutoNumericUpDown.Value = mSelectedFanData.Auto;
 
             this.onUpdateTimer();
         }
@@ -640,6 +681,25 @@ namespace FanCtrl
 
             if (mSelectedFanData != null)
                 mSelectedFanData.Hysteresis = Decimal.ToInt32(mHysNumericUpDown.Value);
+        }
+
+        private void onAutoNumericUpDownValueChanged(object sender, EventArgs e)
+        {
+            int value = Decimal.ToInt32(mAutoNumericUpDown.Value);
+
+            mAutoPolyObj.Points = new[]
+                {
+                    new ZedGraph.PointD(0, 0),
+                    new ZedGraph.PointD(value, 0),
+                    new ZedGraph.PointD(value, 100),
+                    new ZedGraph.PointD(0, 100),
+                    new ZedGraph.PointD(0, 0),
+                };
+
+            if (mSelectedFanData != null)
+                mSelectedFanData.Auto = value;
+
+            mGraph.Refresh();
         }
 
         private void onAddButtonClick(object sender, EventArgs e)
@@ -672,7 +732,7 @@ namespace FanCtrl
             var fanData = this.getFanData(tempIndex, controlDevice.ID);
             if(fanData == null)
             {
-                fanData = new FanData(controlDevice.ID, FanValueUnit.Size_5, true, 0);
+                fanData = new FanData(controlDevice.ID, FanValueUnit.Size_5, true, 0, 0);
                 controlData.FanDataList.Add(fanData);
 
                 mListViewBaseControlList.Add(controlDevice);
@@ -731,8 +791,9 @@ namespace FanCtrl
                     var rootObject = JObject.Parse(jsonString);
                     bool isStep = rootObject.Value<bool>("step");
                     int hysteresis = rootObject.Value<int>("hysteresis");
-                    var unit = (FanValueUnit)rootObject.Value<int>("unit");
-                    
+                    int auto = rootObject.Value<int>("auto");
+
+                    var unit = (FanValueUnit)rootObject.Value<int>("unit");                    
                     var valueList = rootObject.Value<JArray>("value");
                     if (unit == FanValueUnit.Size_1)
                     {
@@ -756,6 +817,7 @@ namespace FanCtrl
 
                     mSelectedFanData.IsStep = isStep;
                     mSelectedFanData.Hysteresis = hysteresis;
+                    mSelectedFanData.Auto = auto;
                     mSelectedFanData.setChangeUnitAndFanValue(unit);
                     for (int i = 0; i < valueList.Count; i++)
                     {
@@ -804,6 +866,7 @@ namespace FanCtrl
                 rootObject["step"] = mSelectedFanData.IsStep;
                 rootObject["hysteresis"] = mSelectedFanData.Hysteresis;
                 rootObject["unit"] = (int)mSelectedFanData.Unit;
+                rootObject["auto"] = mSelectedFanData.Auto;
 
                 var valueList = new JArray();
                 for (int i = 0; i < mSelectedFanData.getMaxFanValue(); i++)
@@ -848,6 +911,8 @@ namespace FanCtrl
         {
             this.onApplyButtonClick(sender, e);
             this.Close();
-        }        
+        }
+
+        
     }
 }

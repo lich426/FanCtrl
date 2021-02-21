@@ -55,11 +55,14 @@
             this.mUnitComboBox = new System.Windows.Forms.ComboBox();
             this.mPresetLoadButton = new System.Windows.Forms.Button();
             this.mPresetSaveButton = new System.Windows.Forms.Button();
+            this.mAutoNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.mAutoLabel = new System.Windows.Forms.Label();
             this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).BeginInit();
             this.mModeGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mAutoNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // mEnableCheckBox
@@ -162,7 +165,7 @@
             // mPresetLabel
             // 
             this.mPresetLabel.AutoSize = true;
-            this.mPresetLabel.Location = new System.Drawing.Point(226, 1);
+            this.mPresetLabel.Location = new System.Drawing.Point(123, 1);
             this.mPresetLabel.Name = "mPresetLabel";
             this.mPresetLabel.Size = new System.Drawing.Size(49, 12);
             this.mPresetLabel.TabIndex = 5;
@@ -172,7 +175,7 @@
             // mUnitLabel
             // 
             this.mUnitLabel.AutoSize = true;
-            this.mUnitLabel.Location = new System.Drawing.Point(407, 1);
+            this.mUnitLabel.Location = new System.Drawing.Point(304, 1);
             this.mUnitLabel.Name = "mUnitLabel";
             this.mUnitLabel.Size = new System.Drawing.Size(34, 12);
             this.mUnitLabel.TabIndex = 4;
@@ -182,7 +185,7 @@
             // mHysLabel
             // 
             this.mHysLabel.AutoSize = true;
-            this.mHysLabel.Location = new System.Drawing.Point(499, 1);
+            this.mHysLabel.Location = new System.Drawing.Point(397, 1);
             this.mHysLabel.Name = "mHysLabel";
             this.mHysLabel.Size = new System.Drawing.Size(73, 12);
             this.mHysLabel.TabIndex = 4;
@@ -192,7 +195,7 @@
             // mStepCheckBox
             // 
             this.mStepCheckBox.AutoSize = true;
-            this.mStepCheckBox.Location = new System.Drawing.Point(627, 1);
+            this.mStepCheckBox.Location = new System.Drawing.Point(530, 0);
             this.mStepCheckBox.Name = "mStepCheckBox";
             this.mStepCheckBox.Size = new System.Drawing.Size(49, 16);
             this.mStepCheckBox.TabIndex = 4;
@@ -237,10 +240,11 @@
             // 
             // mHysNumericUpDown
             // 
-            this.mHysNumericUpDown.Location = new System.Drawing.Point(801, 59);
+            this.mHysNumericUpDown.Location = new System.Drawing.Point(699, 59);
             this.mHysNumericUpDown.Name = "mHysNumericUpDown";
             this.mHysNumericUpDown.Size = new System.Drawing.Size(38, 21);
             this.mHysNumericUpDown.TabIndex = 4;
+            this.mHysNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // mModeGroupBox
             // 
@@ -303,14 +307,14 @@
             // 
             this.mUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.mUnitComboBox.FormattingEnabled = true;
-            this.mUnitComboBox.Location = new System.Drawing.Point(671, 58);
+            this.mUnitComboBox.Location = new System.Drawing.Point(568, 58);
             this.mUnitComboBox.Name = "mUnitComboBox";
             this.mUnitComboBox.Size = new System.Drawing.Size(44, 20);
             this.mUnitComboBox.TabIndex = 4;
             // 
             // mPresetLoadButton
             // 
-            this.mPresetLoadButton.Location = new System.Drawing.Point(506, 56);
+            this.mPresetLoadButton.Location = new System.Drawing.Point(403, 56);
             this.mPresetLoadButton.Name = "mPresetLoadButton";
             this.mPresetLoadButton.Size = new System.Drawing.Size(57, 23);
             this.mPresetLoadButton.TabIndex = 6;
@@ -320,7 +324,7 @@
             // 
             // mPresetSaveButton
             // 
-            this.mPresetSaveButton.Location = new System.Drawing.Point(565, 56);
+            this.mPresetSaveButton.Location = new System.Drawing.Point(462, 56);
             this.mPresetSaveButton.Name = "mPresetSaveButton";
             this.mPresetSaveButton.Size = new System.Drawing.Size(57, 23);
             this.mPresetSaveButton.TabIndex = 7;
@@ -328,10 +332,31 @@
             this.mPresetSaveButton.UseVisualStyleBackColor = true;
             this.mPresetSaveButton.Click += new System.EventHandler(this.onPresetSaveButtonClick);
             // 
+            // mAutoNumericUpDown
+            // 
+            this.mAutoNumericUpDown.AutoSize = true;
+            this.mAutoNumericUpDown.Location = new System.Drawing.Point(864, 59);
+            this.mAutoNumericUpDown.Name = "mAutoNumericUpDown";
+            this.mAutoNumericUpDown.Size = new System.Drawing.Size(41, 21);
+            this.mAutoNumericUpDown.TabIndex = 7;
+            this.mAutoNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // mAutoLabel
+            // 
+            this.mAutoLabel.AutoSize = true;
+            this.mAutoLabel.Location = new System.Drawing.Point(823, 62);
+            this.mAutoLabel.Name = "mAutoLabel";
+            this.mAutoLabel.Size = new System.Drawing.Size(38, 12);
+            this.mAutoLabel.TabIndex = 6;
+            this.mAutoLabel.Text = "Auto :";
+            this.mAutoLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1155, 630);
+            this.Controls.Add(this.mAutoLabel);
+            this.Controls.Add(this.mAutoNumericUpDown);
             this.Controls.Add(this.mPresetSaveButton);
             this.Controls.Add(this.mPresetLoadButton);
             this.Controls.Add(this.mUnitComboBox);
@@ -356,6 +381,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.mHysNumericUpDown)).EndInit();
             this.mModeGroupBox.ResumeLayout(false);
             this.mModeGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mAutoNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -388,5 +414,7 @@
         private System.Windows.Forms.Label mPresetLabel;
         private System.Windows.Forms.Button mPresetLoadButton;
         private System.Windows.Forms.Button mPresetSaveButton;
+        private System.Windows.Forms.NumericUpDown mAutoNumericUpDown;
+        private System.Windows.Forms.Label mAutoLabel;
     }
 }

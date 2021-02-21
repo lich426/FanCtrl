@@ -166,7 +166,7 @@ namespace FanCtrl
                     }
                     catch (TimeoutException)
                     {
-                        Thread.Sleep(100);
+                        Util.sleep(ref mIsStart, 100);
                     }
                     catch 
                     {

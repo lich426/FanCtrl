@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NvAPIWrapper.GPU;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,13 @@ namespace FanCtrl
 {
     public class NvAPIFanControl : BaseControl
     {
-        public delegate void OnSetNvAPIControlHandler(int index, int coolerID, int value);
-        public event OnSetNvAPIControlHandler onSetNvAPIControlHandler;
+        public delegate void LockBusHandler();
+        public event LockBusHandler LockBus;
+        public event LockBusHandler UnlockBus;
 
         private int mIndex = 0;
         private int mCoolerID = 0;
+        
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
@@ -26,11 +29,28 @@ namespace FanCtrl
             LastValue = value;
             mMinSpeed = minSpeed;
             mMaxSpeed = maxSpeed;
+            IsSetSpeed = true;
         }
 
         public override void update()
         {
-
+            LockBus();
+            try
+            {
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                var e = gpuArray[mIndex].CoolerInformation.Coolers.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    var cur = e.Current;
+                    if (cur.CoolerId == mCoolerID)
+                    {
+                        LastValue = Value = cur.CurrentLevel;
+                        break;
+                    }
+                }
+            }
+            catch { }
+            UnlockBus();
         }
 
         public override int getMinSpeed()
@@ -58,10 +78,38 @@ namespace FanCtrl
                 Value = value;
             }
 
-            onSetNvAPIControlHandler(mIndex, mCoolerID, Value);
+            LockBus();
+            try
+            {
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                var info = gpuArray[mIndex].CoolerInformation;
+                info.SetCoolerSettings(mCoolerID, Value);
+                IsSetSpeed = true;
+            }
+            catch { }
+            UnlockBus();
 
             LastValue = Value;
             return Value;
+        }
+
+        public override void setAuto()
+        {
+            if (IsSetSpeed == false)
+                return;
+
+            LockBus();
+            try
+            {
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                var info = gpuArray[mIndex].CoolerInformation;
+
+                info.RestoreCoolerSettingsToDefault(mCoolerID);
+                //info.SetCoolerSettings(CoolerID, NvAPIWrapper.Native.GPU.CoolerPolicy.None);
+                IsSetSpeed = false;
+            }
+            catch { }
+            UnlockBus();
         }
     }
 }

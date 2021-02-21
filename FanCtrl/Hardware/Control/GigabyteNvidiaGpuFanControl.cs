@@ -11,6 +11,9 @@ namespace FanCtrl
         public delegate void OnSetGigabyteNvidiaControlHandler(int index, int value);
         public event OnSetGigabyteNvidiaControlHandler onSetGigabyteNvidiaControlHandler;
 
+        public delegate void OnSetGigabyteNvidiaControlAutoHandler(int index);
+        public event OnSetGigabyteNvidiaControlAutoHandler onSetGigabyteNvidiaControlAutoHandler;
+
         private int mIndex = -1;
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
@@ -58,9 +61,19 @@ namespace FanCtrl
             }
 
             onSetGigabyteNvidiaControlHandler(mIndex, Value);
+            IsSetSpeed = true;
 
             LastValue = Value;
             return Value;
+        }
+
+        public override void setAuto()
+        {
+            if (IsSetSpeed == false)
+                return;
+
+            onSetGigabyteNvidiaControlAutoHandler(mIndex);
+            IsSetSpeed = false;
         }
     }
 }

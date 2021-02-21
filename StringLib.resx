@@ -126,6 +126,9 @@
   <data name="Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
+  <data name="Auto" xml:space="preserve">
+    <value>Auto :</value>
+  </data>
   <data name="Auto_Fan_Control" xml:space="preserve">
     <value>Auto Fan Control</value>
   </data>
@@ -280,7 +283,7 @@
     <value>Step</value>
   </data>
   <data name="Target_Temp" xml:space="preserve">
-    <value>Target temperautre sensor</value>
+    <value>Target temperature sensor</value>
   </data>
   <data name="Temperature" xml:space="preserve">
     <value>Temperature</value>

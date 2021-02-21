@@ -56,10 +56,23 @@ namespace FanCtrl
             if (mSensor != null && mSensor.Control != null)
             {
                 mSensor.Control.SetSoftware(value);
+                IsSetSpeed = true;
             }
             Value = value;
             LastValue = value;
             return value;
+        }
+
+        public override void setAuto()
+        {
+            if (IsSetSpeed == false)
+                return;
+
+            if (mSensor != null && mSensor.Control != null)
+            {
+                mSensor.Control.SetDefault();
+                IsSetSpeed = false;
+            }
         }
     }
 }

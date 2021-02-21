@@ -1,4 +1,4 @@
-﻿using Gigabyte.Engine.EnvironmentControl.CoolingDevice.Fan;
+﻿using NvAPIWrapper.GPU;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ namespace FanCtrl
 {
     public class NvAPIFanSpeed : BaseSensor
     {
-        public delegate int OnGetNvAPIFanSpeedHandler(int index, int coolerID);
-
-        public event OnGetNvAPIFanSpeedHandler onGetNvAPIFanSpeedHandler;
+        public delegate void LockBusHandler();
+        public event LockBusHandler LockBus;
+        public event LockBusHandler UnlockBus;
 
         private int mIndex = 0;
         private int mCooerID = 0;
@@ -31,7 +31,23 @@ namespace FanCtrl
 
         public override void update()
         {
-            Value = onGetNvAPIFanSpeedHandler(mIndex, mCooerID);
+            LockBus();
+            try
+            {
+                var gpuArray = PhysicalGPU.GetPhysicalGPUs();
+                var e = gpuArray[mIndex].CoolerInformation.Coolers.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    var value = e.Current;
+                    if (value.CoolerId == mCooerID)
+                    {
+                        Value = value.CurrentFanSpeedInRPM;
+                        break;
+                    }
+                }
+            }
+            catch { }
+            UnlockBus();
         }
         
     }

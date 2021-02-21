@@ -17,6 +17,7 @@ namespace FanCtrl
         NZXT_Kraken,
         EVGA_CLC,
         RGBnFC,
+        HWiNFO,
         OSD,
 
         MAX,
@@ -33,6 +34,7 @@ namespace FanCtrl
             "NZXT Kraken",
             "EVGA CLC",
             "NZXT RGB&FanController",
+            "HWiNFO",
             "On screen display",
         };
     }

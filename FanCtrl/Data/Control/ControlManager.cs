@@ -295,8 +295,9 @@ namespace FanCtrl
                     bool isStep = (fanObject.ContainsKey("step") == true) ? fanObject.Value<bool>("step") : true;
                     int hysteresis = (fanObject.ContainsKey("hysteresis") == true) ? fanObject.Value<int>("hysteresis") : 0;
                     int unit = (fanObject.ContainsKey("unit") == true) ? fanObject.Value<int>("unit") : 1;
+                    int auto = (fanObject.ContainsKey("auto") == true) ? fanObject.Value<int>("auto") : 0;
 
-                    var fanData = new FanData(fanID, (FanValueUnit)unit, isStep, hysteresis);
+                    var fanData = new FanData(fanID, (FanValueUnit)unit, isStep, hysteresis, auto);
 
                     // Percent value
                     var valueList = fanObject.Value<JArray>("value");
@@ -369,6 +370,7 @@ namespace FanCtrl
                     fanObject["step"] = fanData.IsStep;
                     fanObject["hysteresis"] = fanData.Hysteresis;
                     fanObject["unit"] = (int)fanData.Unit;
+                    fanObject["auto"] = fanData.Auto;
 
                     var valueList = new JArray();
                     for (int k = 0; k < fanData.getMaxFanValue(); k++)

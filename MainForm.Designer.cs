@@ -57,6 +57,7 @@
             this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
             this.mOSDButton = new System.Windows.Forms.Button();
             this.mLoadingPanel = new System.Windows.Forms.Panel();
+            this.mReloadButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
@@ -125,7 +126,7 @@
             this.mFanControlButton.Location = new System.Drawing.Point(752, 71);
             this.mFanControlButton.Name = "mFanControlButton";
             this.mFanControlButton.Size = new System.Drawing.Size(122, 38);
-            this.mFanControlButton.TabIndex = 5;
+            this.mFanControlButton.TabIndex = 1;
             this.mFanControlButton.Text = "Auto Fan Control";
             this.mFanControlButton.UseVisualStyleBackColor = true;
             this.mFanControlButton.Click += new System.EventHandler(this.onFanControlButtonClick);
@@ -139,7 +140,7 @@
             this.mOptionButton.Location = new System.Drawing.Point(624, 71);
             this.mOptionButton.Name = "mOptionButton";
             this.mOptionButton.Size = new System.Drawing.Size(122, 38);
-            this.mOptionButton.TabIndex = 6;
+            this.mOptionButton.TabIndex = 2;
             this.mOptionButton.Text = "Option";
             this.mOptionButton.UseVisualStyleBackColor = true;
             this.mOptionButton.Click += new System.EventHandler(this.onOptionButtonClick);
@@ -272,7 +273,7 @@
             this.mOSDButton.Location = new System.Drawing.Point(496, 71);
             this.mOSDButton.Name = "mOSDButton";
             this.mOSDButton.Size = new System.Drawing.Size(122, 38);
-            this.mOSDButton.TabIndex = 13;
+            this.mOSDButton.TabIndex = 3;
             this.mOSDButton.Text = "OSD (RTSS)";
             this.mOSDButton.UseVisualStyleBackColor = true;
             this.mOSDButton.Click += new System.EventHandler(this.onOSDButtonClick);
@@ -284,6 +285,16 @@
             this.mLoadingPanel.Name = "mLoadingPanel";
             this.mLoadingPanel.Size = new System.Drawing.Size(874, 111);
             this.mLoadingPanel.TabIndex = 0;
+            // 
+            // mReloadButton
+            // 
+            this.mReloadButton.Location = new System.Drawing.Point(367, 71);
+            this.mReloadButton.Name = "mReloadButton";
+            this.mReloadButton.Size = new System.Drawing.Size(122, 38);
+            this.mReloadButton.TabIndex = 13;
+            this.mReloadButton.Text = "Reload";
+            this.mReloadButton.UseVisualStyleBackColor = true;
+            this.mReloadButton.Click += new System.EventHandler(this.onReloadButtonClick);
             // 
             // label1
             // 
@@ -297,8 +308,9 @@
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(883, 116);
+            this.ClientSize = new System.Drawing.Size(883, 118);
             this.Controls.Add(this.mLoadingPanel);
+            this.Controls.Add(this.mReloadButton);
             this.Controls.Add(this.mOSDButton);
             this.Controls.Add(this.mOptionButton);
             this.Controls.Add(this.mDonatePictureBox);
@@ -355,6 +367,7 @@
         private System.Windows.Forms.Panel mTempPanel;
         private System.Windows.Forms.Panel mFanPanel;
         private System.Windows.Forms.Panel mControlPanel;
+        private System.Windows.Forms.Button mReloadButton;
     }
 }
 

@@ -200,7 +200,7 @@ namespace FanCtrl
                     {
                         // restart
                         HardwareManager.getInstance().stop();
-                        Thread.Sleep(100);
+                        Util.sleep(100);
                         checkCount--;
                         continue;
                     }
@@ -295,6 +295,7 @@ namespace FanCtrl
             mOSDButton.Top = buttonPoint;
             mOptionButton.Top = buttonPoint;
             mFanControlButton.Top = buttonPoint;
+            mReloadButton.Top = buttonPoint;
 
             mIsUserResize = false;
             this.Height = mNowHeight;
@@ -426,6 +427,7 @@ namespace FanCtrl
             mTrayIcon.Visible = false;
 
             mIsExit = true;
+
             Application.ExitThread();
             Application.Exit();
         }
@@ -955,6 +957,13 @@ namespace FanCtrl
                     HardwareManager.getInstance().stop();
                     ControlManager.getInstance().reset();
                     OSDManager.getInstance().reset();
+
+                    if (OptionManager.getInstance().IsHWInfo == false)
+                    {
+                        HWInfoManager.getInstance().reset();
+                        HWInfoManager.getInstance().write();
+                    }
+
                     this.reload();
                 }));
             }
@@ -970,6 +979,8 @@ namespace FanCtrl
                     ControlManager.getInstance().write();
                     OSDManager.getInstance().reset();
                     OSDManager.getInstance().write();
+                    HWInfoManager.getInstance().reset();
+                    HWInfoManager.getInstance().write();
 
                     this.reload();
                 }));
@@ -1005,6 +1016,21 @@ namespace FanCtrl
                 mEnableOSDToolStripMenuItem.Checked = OSDManager.getInstance().IsEnable;
             };
             form.ShowDialog();
+        }
+
+        private void onReloadButtonClick(object sender, EventArgs e)
+        {
+            HardwareManager.getInstance().stop();
+            ControlManager.getInstance().reset();
+            OSDManager.getInstance().reset();
+
+            if (OptionManager.getInstance().IsHWInfo == false)
+            {
+                HWInfoManager.getInstance().reset();
+                HWInfoManager.getInstance().write();
+            }
+
+            this.reload();
         }
 
         private const int WM_POWERBROADCAST = 0x218;

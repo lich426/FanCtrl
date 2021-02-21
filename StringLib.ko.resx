@@ -126,6 +126,9 @@
   <data name="Apply" xml:space="preserve">
     <value>적용</value>
   </data>
+  <data name="Auto" xml:space="preserve">
+    <value>오토 :</value>
+  </data>
   <data name="Auto_Fan_Control" xml:space="preserve">
     <value>팬 제어 설정</value>
   </data>

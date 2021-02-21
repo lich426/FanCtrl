@@ -11,6 +11,9 @@ namespace FanCtrl
         public delegate void OnSetGigabyteControlHandler(int index, int value);
         public event OnSetGigabyteControlHandler onSetGigabyteControlHandler;
 
+        public delegate void OnSetGigabyteControlAutoHandler(int index);
+        public event OnSetGigabyteControlAutoHandler onSetGigabyteControlAutoHandler;
+
         private int mIndex = -1;
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
@@ -57,9 +60,19 @@ namespace FanCtrl
             }
 
             onSetGigabyteControlHandler(mIndex, Value);
+            IsSetSpeed = true;
 
             LastValue = Value;
             return Value;
+        }
+
+        public override void setAuto()
+        {
+            if (IsSetSpeed == false)
+                return;
+
+            onSetGigabyteControlAutoHandler(mIndex);
+            IsSetSpeed = false;
         }
     }
 }

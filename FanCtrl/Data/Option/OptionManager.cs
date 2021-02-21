@@ -62,6 +62,9 @@ namespace FanCtrl
         // NZXT Fan&Contoller
         public bool IsRGBnFC { get; set; }
 
+        // HWiNFO
+        public bool IsHWInfo { get; set; }
+
         // Other options
         public bool IsAnimation { get; set; }
 
@@ -107,21 +110,22 @@ namespace FanCtrl
             IsLHMCpu = true;
             IsLHMMotherboard = true;
             IsLHMGpu = false;
-            IsLHMContolled = true;
+            IsLHMContolled = false;
             IsLHMStorage = false;
 
             IsOHM = false;
             IsOHMCpu = true;
             IsOHMMotherboard = true;
-            IsOHMGpu = true;
-            IsOHMContolled = true;
-            IsOHMStorage = true;
+            IsOHMGpu = false;
+            IsOHMContolled = false;
+            IsOHMStorage = false;
 
             IsNvAPIWrapper = true;
             IsDimm = true;
             IsKraken = true;
             IsCLC = true;
             IsRGBnFC = true;
+            IsHWInfo = false;
 
             IsAnimation = true;
             IsFahrenheit = false;
@@ -160,7 +164,8 @@ namespace FanCtrl
                 IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : true;
                 IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : true;
                 IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : true;
-                
+                IsHWInfo = (rootObject.ContainsKey("IsHWInfo") == true) ? rootObject.Value<bool>("IsHWInfo") : false;
+
                 IsAnimation = (rootObject.ContainsKey("IsAnimation") == true) ? rootObject.Value<bool>("IsAnimation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("IsFahrenheit") == true) ? rootObject.Value<bool>("IsFahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("IsMinimized") == true) ? rootObject.Value<bool>("IsMinimized") : false;
@@ -204,6 +209,7 @@ namespace FanCtrl
                 rootObject["IsKraken"] = IsKraken;
                 rootObject["IsCLC"] = IsCLC;
                 rootObject["IsRGBnFC"] = IsRGBnFC;
+                rootObject["IsHWInfo"] = IsHWInfo;
 
                 rootObject["IsAnimation"] = IsAnimation;
                 rootObject["IsFahrenheit"] = IsFahrenheit;

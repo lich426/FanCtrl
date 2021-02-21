@@ -38,6 +38,8 @@
             this.mOKButton = new System.Windows.Forms.Button();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mLibraryGroupBox = new System.Windows.Forms.GroupBox();
+            this.mHWInfoCheckBox = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -108,29 +110,29 @@
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 686);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 722);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
-            this.mMinimizeCheckBox.TabIndex = 26;
+            this.mMinimizeCheckBox.TabIndex = 28;
             this.mMinimizeCheckBox.Text = "Start minimized";
             this.mMinimizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 711);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 747);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
-            this.mStartupCheckBox.TabIndex = 27;
+            this.mStartupCheckBox.TabIndex = 29;
             this.mStartupCheckBox.Text = "Start with Windows";
             this.mStartupCheckBox.UseVisualStyleBackColor = true;
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(84, 762);
+            this.mOKButton.Location = new System.Drawing.Point(84, 798);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(116, 38);
-            this.mOKButton.TabIndex = 30;
+            this.mOKButton.TabIndex = 32;
             this.mOKButton.Text = "OK";
             this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
@@ -141,6 +143,8 @@
             // 
             // mLibraryGroupBox
             // 
+            this.mLibraryGroupBox.Controls.Add(this.mHWInfoCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.label9);
             this.mLibraryGroupBox.Controls.Add(this.label8);
             this.mLibraryGroupBox.Controls.Add(this.label7);
             this.mLibraryGroupBox.Controls.Add(this.label6);
@@ -173,10 +177,28 @@
             this.mLibraryGroupBox.Controls.Add(this.mKrakenCheckBox);
             this.mLibraryGroupBox.Location = new System.Drawing.Point(12, 77);
             this.mLibraryGroupBox.Name = "mLibraryGroupBox";
-            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 553);
+            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 589);
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
+            // 
+            // mHWInfoCheckBox
+            // 
+            this.mHWInfoCheckBox.AutoSize = true;
+            this.mHWInfoCheckBox.Location = new System.Drawing.Point(6, 560);
+            this.mHWInfoCheckBox.Name = "mHWInfoCheckBox";
+            this.mHWInfoCheckBox.Size = new System.Drawing.Size(70, 16);
+            this.mHWInfoCheckBox.TabIndex = 24;
+            this.mHWInfoCheckBox.Text = "HWiNFO";
+            this.mHWInfoCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label9.Location = new System.Drawing.Point(2, 548);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(180, 2);
+            this.label9.TabIndex = 32;
             // 
             // label8
             // 
@@ -466,27 +488,27 @@
             // mAnimationCheckBox
             // 
             this.mAnimationCheckBox.AutoSize = true;
-            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 636);
+            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 672);
             this.mAnimationCheckBox.Name = "mAnimationCheckBox";
             this.mAnimationCheckBox.Size = new System.Drawing.Size(137, 16);
-            this.mAnimationCheckBox.TabIndex = 24;
+            this.mAnimationCheckBox.TabIndex = 26;
             this.mAnimationCheckBox.Text = "Tray Icon animation";
             this.mAnimationCheckBox.UseVisualStyleBackColor = true;
             // 
             // mFahrenheitCheckBox
             // 
             this.mFahrenheitCheckBox.AutoSize = true;
-            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 661);
+            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 697);
             this.mFahrenheitCheckBox.Name = "mFahrenheitCheckBox";
             this.mFahrenheitCheckBox.Size = new System.Drawing.Size(108, 16);
-            this.mFahrenheitCheckBox.TabIndex = 25;
+            this.mFahrenheitCheckBox.TabIndex = 27;
             this.mFahrenheitCheckBox.Text = "Fahrenheit (°F)";
             this.mFahrenheitCheckBox.UseVisualStyleBackColor = true;
             // 
             // mStartupDelayLabel
             // 
             this.mStartupDelayLabel.AutoSize = true;
-            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 735);
+            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 771);
             this.mStartupDelayLabel.Name = "mStartupDelayLabel";
             this.mStartupDelayLabel.Size = new System.Drawing.Size(80, 12);
             this.mStartupDelayLabel.TabIndex = 15;
@@ -494,19 +516,19 @@
             // 
             // mStartupDelayTextBox
             // 
-            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 730);
+            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 766);
             this.mStartupDelayTextBox.MaxLength = 2;
             this.mStartupDelayTextBox.Name = "mStartupDelayTextBox";
             this.mStartupDelayTextBox.Size = new System.Drawing.Size(73, 21);
-            this.mStartupDelayTextBox.TabIndex = 28;
+            this.mStartupDelayTextBox.TabIndex = 30;
             this.mStartupDelayTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // mResetButton
             // 
-            this.mResetButton.Location = new System.Drawing.Point(12, 762);
+            this.mResetButton.Location = new System.Drawing.Point(12, 798);
             this.mResetButton.Name = "mResetButton";
             this.mResetButton.Size = new System.Drawing.Size(66, 38);
-            this.mResetButton.TabIndex = 29;
+            this.mResetButton.TabIndex = 31;
             this.mResetButton.Text = "Reset";
             this.mResetButton.UseVisualStyleBackColor = true;
             this.mResetButton.Click += new System.EventHandler(this.onResetButtonClick);
@@ -515,7 +537,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(209, 809);
+            this.ClientSize = new System.Drawing.Size(209, 842);
             this.Controls.Add(this.mResetButton);
             this.Controls.Add(this.mStartupDelayTextBox);
             this.Controls.Add(this.mStartupDelayLabel);
@@ -587,5 +609,7 @@
         private System.Windows.Forms.CheckBox mOHMCheckBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button mResetButton;
+        private System.Windows.Forms.CheckBox mHWInfoCheckBox;
+        private System.Windows.Forms.Label label9;
     }
 }
