@@ -9,6 +9,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using NvAPIWrapper.Native.GPU;
 
 namespace FanCtrl
 {
@@ -185,7 +186,7 @@ namespace FanCtrl
                         var hardwareName = gpu.FullName;
 
                         // temperature
-                        var id = string.Format("NvAPIWrapper/{0}/{1}/Temp", hardwareName, i);
+                        var id = string.Format("NvAPIWrapper/{0}/{1}/Temp", hardwareName, gpu.GPUId);
                         var name = "GPU Core";
                         var temp = new NvAPITemp(id, name, i);
                         temp.LockBus += lockBus;
@@ -209,9 +210,10 @@ namespace FanCtrl
                             int speed = value.CurrentLevel;
                             int minSpeed = value.DefaultMinimumLevel;
                             int maxSpeed = value.DefaultMaximumLevel;
+                            CoolerPolicy policy = value.DefaultPolicy;
 
                             // fan
-                            id = string.Format("NvAPIWrapper/{0}/{1}/Fan/{2}", hardwareName, i, coolerID);
+                            id = string.Format("NvAPIWrapper/{0}/{1}/Fan/{2}", hardwareName, gpu.GPUId, coolerID);
                             name = "GPU Fan #" + num;
                             var fan = new NvAPIFanSpeed(id, name, i, coolerID);
                             fan.LockBus += lockBus;
@@ -219,9 +221,9 @@ namespace FanCtrl
                             fanDevice.addDevice(fan);
 
                             // control
-                            id = string.Format("NvAPIWrapper/{0}/{1}/Control/{2}", hardwareName, i, coolerID);
+                            id = string.Format("NvAPIWrapper/{0}/{1}/Control/{2}", hardwareName, gpu.GPUId, coolerID);
                             name = "GPU Fan #" + num;
-                            var control = new NvAPIFanControl(id, name, i, coolerID, speed, minSpeed, maxSpeed);
+                            var control = new NvAPIFanControl(id, name, i, coolerID, speed, minSpeed, maxSpeed, policy);
                             control.LockBus += lockBus;
                             control.UnlockBus += unlockBus;
                             controlDevice.addDevice(control);
@@ -949,7 +951,7 @@ namespace FanCtrl
                     {
                         int subIndex = 0;
 
-                        string id = string.Format("{0}/{1}/{2}", idPrefix, i, subIndex);
+                        string id = string.Format("{0}/{1}/{2}", idPrefix, gpuArray[i].GPUId, subIndex);
                         string prefix = "[Clock] ";
                         string name = "GPU Graphics";
                         var osdSensor = new NvAPIOSDSensor(id, prefix, name, OSDUnitType.kHz, i, subIndex++);
@@ -1178,9 +1180,6 @@ namespace FanCtrl
                 var controlManager = ControlManager.getInstance();
                 if (controlManager.IsEnable == true && isExistChange == false)
                 {
-                    var tempBaseMap = HardwareManager.getInstance().TempBaseMap;
-                    var controlBaseMap = HardwareManager.getInstance().ControlBaseMap;
-
                     var controlDataList = controlManager.getControlDataList(controlManager.ModeType);
                     for (int i = 0; i < controlDataList.Count; i++)
                     {
@@ -1189,10 +1188,10 @@ namespace FanCtrl
                             break;
 
                         string tempID = controlData.ID;
-                        if (tempBaseMap.ContainsKey(tempID) == false)
+                        if (TempBaseMap.ContainsKey(tempID) == false)
                             continue;
 
-                        var tempDevice = tempBaseMap[tempID];
+                        var tempDevice = TempBaseMap[tempID];
                         int temperature = tempDevice.Value;
 
                         for (int j = 0; j < controlData.FanDataList.Count; j++)
@@ -1200,19 +1199,18 @@ namespace FanCtrl
                             var fanData = controlData.FanDataList[j];
 
                             string fanID = fanData.ID;
-                            if (controlBaseMap.ContainsKey(fanID) == false)
+                            if (ControlBaseMap.ContainsKey(fanID) == false)
                                 continue;
 
-                            var controlDevice = controlBaseMap[fanID];
+                            var controlDevice = ControlBaseMap[fanID];
 
-                            // check auto mode
-                            bool isAuto = (fanData.Auto > 0 && fanData.Auto > temperature);
+                            bool isAuto = false;
+                            int percent = fanData.getValue(temperature, ref isAuto);
 
                             // auto mode
                             if (isAuto == true)
                             {
                                 autoControlDictionary.Add(fanID, controlDevice);
-                                continue;
                             }
 
                             // manual mode
@@ -1221,7 +1219,6 @@ namespace FanCtrl
                                 // remove auto mode control
                                 autoControlDictionary.Remove(fanID);
 
-                                int percent = fanData.getValue(temperature);
                                 if (manualControlDictionary.ContainsKey(fanID) == false)
                                 {
                                     manualControlDictionary.Add(fanID, controlDevice);
@@ -1238,6 +1235,9 @@ namespace FanCtrl
                     foreach (var keyPair in manualControlDictionary)
                     {
                         var control = keyPair.Value;
+
+                        // remove auto mode control
+                        autoControlDictionary.Remove(control.ID);
 
                         Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
 

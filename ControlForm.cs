@@ -329,6 +329,22 @@ namespace FanCtrl
                 mLineItem.Symbol.Size = 10.0f;
             }
 
+            if (mUnitComboBox.SelectedIndex == 0)
+            {
+                mAutoNumericUpDown.Increment = 1;
+                mAutoNumericUpDown.Value = mSelectedFanData.Auto;
+            }
+            else if (mUnitComboBox.SelectedIndex == 1)
+            {
+                mAutoNumericUpDown.Increment = 5;
+                mAutoNumericUpDown.Value = mSelectedFanData.Auto / 5 * 5;
+            }
+            else
+            {
+                mAutoNumericUpDown.Increment = 10;
+                mAutoNumericUpDown.Value = mSelectedFanData.Auto / 10 * 10;
+            }
+
             //mGraph.GraphPane.CurveList.Clear();
             mPointList.Clear();
             for (int i = 0; i < mSelectedFanData.getMaxFanValue(); i++)
@@ -658,7 +674,22 @@ namespace FanCtrl
             mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
             mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
             mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
-            mAutoNumericUpDown.Value = mSelectedFanData.Auto;
+
+            if (mUnitComboBox.SelectedIndex == 0)
+            {
+                mAutoNumericUpDown.Increment = 1;
+                mAutoNumericUpDown.Value = mSelectedFanData.Auto;
+            }
+            else if (mUnitComboBox.SelectedIndex == 1)
+            {
+                mAutoNumericUpDown.Increment = 5;
+                mAutoNumericUpDown.Value = mSelectedFanData.Auto / 5 * 5;
+            }
+            else
+            {
+                mAutoNumericUpDown.Increment = 10;
+                mAutoNumericUpDown.Value = mSelectedFanData.Auto / 10 * 10;
+            }
 
             this.onUpdateTimer();
         }
@@ -697,7 +728,9 @@ namespace FanCtrl
                 };
 
             if (mSelectedFanData != null)
+            {
                 mSelectedFanData.Auto = value;
+            }
 
             mGraph.Refresh();
         }
@@ -912,7 +945,5 @@ namespace FanCtrl
             this.onApplyButtonClick(sender, e);
             this.Close();
         }
-
-        
     }
 }

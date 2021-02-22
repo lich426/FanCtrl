@@ -294,8 +294,20 @@ namespace FanCtrl
 
                     bool isStep = (fanObject.ContainsKey("step") == true) ? fanObject.Value<bool>("step") : true;
                     int hysteresis = (fanObject.ContainsKey("hysteresis") == true) ? fanObject.Value<int>("hysteresis") : 0;
+                    if (hysteresis <= 0) hysteresis = 0;
+                    else if(hysteresis > 20)  hysteresis = 20;
+
                     int unit = (fanObject.ContainsKey("unit") == true) ? fanObject.Value<int>("unit") : 1;
+                    if (unit <= 0) unit = 0;
+                    else if (unit >= 2) unit = 2;
+
                     int auto = (fanObject.ContainsKey("auto") == true) ? fanObject.Value<int>("auto") : 0;
+                    if (auto <= 0) auto = 0;
+                    else if (auto >= 100) auto = 100;
+
+                    if (unit == 0) { }
+                    else if (unit == 1) auto = auto / 5 * 5;
+                    else auto = auto / 10 * 10;
 
                     var fanData = new FanData(fanID, (FanValueUnit)unit, isStep, hysteresis, auto);
 

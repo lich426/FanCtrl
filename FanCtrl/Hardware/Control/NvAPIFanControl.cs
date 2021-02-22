@@ -1,4 +1,5 @@
 ﻿using NvAPIWrapper.GPU;
+using NvAPIWrapper.Native.GPU;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,9 @@ namespace FanCtrl
         private int mMinSpeed = 0;
         private int mMaxSpeed = 100;
 
-        public NvAPIFanControl(string id, string name, int index, int coolerID, int value, int minSpeed, int maxSpeed) : base(LIBRARY_TYPE.NvAPIWrapper)
+        private CoolerPolicy mDefaultCoolerPolicy = CoolerPolicy.None;
+
+        public NvAPIFanControl(string id, string name, int index, int coolerID, int value, int minSpeed, int maxSpeed, CoolerPolicy defaultCoolerPolicy) : base(LIBRARY_TYPE.NvAPIWrapper)
         {
             ID = id;
             Name = name;
@@ -30,6 +33,8 @@ namespace FanCtrl
             mMinSpeed = minSpeed;
             mMaxSpeed = maxSpeed;
             IsSetSpeed = true;
+            mDefaultCoolerPolicy = defaultCoolerPolicy;
+            Console.WriteLine("NvAPIFanControl.NvAPIFanControl() : defaultCoolerPolicy({0})", (int)defaultCoolerPolicy);
         }
 
         public override void update()
@@ -85,6 +90,7 @@ namespace FanCtrl
                 var info = gpuArray[mIndex].CoolerInformation;
                 info.SetCoolerSettings(mCoolerID, Value);
                 IsSetSpeed = true;
+                Console.WriteLine("NvAPIFanControl.setSpeed() : {0}, {1}", mCoolerID, Value);
             }
             catch { }
             UnlockBus();
@@ -104,9 +110,11 @@ namespace FanCtrl
                 var gpuArray = PhysicalGPU.GetPhysicalGPUs();
                 var info = gpuArray[mIndex].CoolerInformation;
 
-                info.RestoreCoolerSettingsToDefault(mCoolerID);
-                //info.SetCoolerSettings(CoolerID, NvAPIWrapper.Native.GPU.CoolerPolicy.None);
+                //info.RestoreCoolerSettingsToDefault(mCoolerID);
+                info.SetCoolerSettings(mCoolerID, mDefaultCoolerPolicy);
+                //info.SetCoolerSettings(mCoolerID, NvAPIWrapper.Native.GPU.CoolerPolicy.None);
                 IsSetSpeed = false;
+                Console.WriteLine("NvAPIFanControl.setAuto() : {0}", mCoolerID);
             }
             catch { }
             UnlockBus();

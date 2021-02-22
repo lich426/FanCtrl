@@ -242,6 +242,7 @@
             // 
             this.mHysNumericUpDown.Location = new System.Drawing.Point(699, 59);
             this.mHysNumericUpDown.Name = "mHysNumericUpDown";
+            this.mHysNumericUpDown.ReadOnly = true;
             this.mHysNumericUpDown.Size = new System.Drawing.Size(38, 21);
             this.mHysNumericUpDown.TabIndex = 4;
             this.mHysNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -335,8 +336,14 @@
             // mAutoNumericUpDown
             // 
             this.mAutoNumericUpDown.AutoSize = true;
+            this.mAutoNumericUpDown.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.mAutoNumericUpDown.Location = new System.Drawing.Point(864, 59);
             this.mAutoNumericUpDown.Name = "mAutoNumericUpDown";
+            this.mAutoNumericUpDown.ReadOnly = true;
             this.mAutoNumericUpDown.Size = new System.Drawing.Size(41, 21);
             this.mAutoNumericUpDown.TabIndex = 7;
             this.mAutoNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
