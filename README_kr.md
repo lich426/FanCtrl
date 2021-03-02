@@ -16,9 +16,9 @@ FanCtrl은 Desktop PC에서 팬을 제어하는 프로그램입니다.<br>
 
 ## 메인화면
 ![main_kr](https://user-images.githubusercontent.com/26077884/109587942-44aec480-7b4b-11eb-99d9-c8b9c8709101.png)<br>
-온도, 팬 속도, 팬 제어를 볼 수 있습니다.<br>
-팬 제어의 퍼센트를 변경해서 간단히 pwm 제어를 할 수 있습니다.(저장은 되지 않음)<br>
-각 항목의 이름을 변경 할 수 있습니다.<br>
+- 온도, 팬 속도, 팬 제어를 볼 수 있습니다.<br>
+- 팬 제어의 퍼센트를 변경해서 간단히 pwm 제어를 할 수 있습니다.(저장은 되지 않음)<br>
+- 각 항목의 이름을 변경 할 수 있습니다.<br>
 
 ## 옵션
 ![option_kr](https://user-images.githubusercontent.com/26077884/109588086-85a6d900-7b4b-11eb-89cc-97b5f7f0d8aa.png)<br>
@@ -73,7 +73,7 @@ Logo : Fading<br>
 Ring : Pulse<br>
 
 ## 사용한 라이브러리들
-Sensor and Fan Control : [LibreHardwareMonitorLib][0] or [OpenHardwareMonitorLib][1]<br>
+Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
 Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
 NZXT Kraken USB Communication : [HIDSharp][4]<br>
