@@ -251,34 +251,30 @@ namespace FanCtrl
             if (OptionManager.getInstance().IsDimm == true)
             {
                 this.lockSMBus(0);
-                if (SMBusController.open(false) == true)
+                if (SMBusController.open() == true)
                 {
-                    int busCount = SMBusController.getCount();
-                    if (busCount > 0)
+                    int num = 1;
+                    var device = new HardwareDevice("DIMM");
+
+                    // 0x18 ~ 0x20
+                    for (byte addr = 0x18; addr <= 0x20; addr++)
                     {
-                        int num = 1;
-                        var device = new HardwareDevice("DIMM");
-
-                        // 0x18 ~ 0x20
-                        for (int i = 24; i <= 32; i++)
+                        byte data = SMBusController.smbusDetect(addr);
+                        if (data == addr)
                         {
-                            byte data = SMBusController.i2cDetectWithAddress(0, (byte)i);
-                            if (data == (byte)i)
-                            {
-                                var id = string.Format("DIMM/0/{0}", i);
-                                var temp = new DimmTemp(id, "DIMM #" + num++, data);
-                                temp.LockBus += lockSMBus;
-                                temp.UnlockBus += unlockSMBus;
-                                device.addDevice(temp);
-                            }
-                            Util.sleep(10);
+                            var id = string.Format("DIMM/0/{0}", addr);
+                            var temp = new DimmTemp(id, "DIMM #" + num++, addr);
+                            temp.LockBus += lockSMBus;
+                            temp.UnlockBus += unlockSMBus;
+                            device.addDevice(temp);
                         }
+                        Util.sleep(10);
+                    }
 
-                        if (device.DeviceList.Count > 0)
-                        {
-                            var tempList = TempList[(int)LIBRARY_TYPE.DIMM];
-                            tempList.Add(device);
-                        }
+                    if (device.DeviceList.Count > 0)
+                    {
+                        var tempList = TempList[(int)LIBRARY_TYPE.DIMM];
+                        tempList.Add(device);
                     }
                 }
                 this.unlockSMBus();

@@ -35,19 +35,15 @@ namespace FanCtrl
             if (LockBus(10) == false)
                 return;
 
-            var wordArray = SMBusController.i2cWordData(0, mAddress, 10);
-            if (wordArray == null)
-            {
-                UnlockBus();
-                return;
-            }
+            ushort data = SMBusController.smbusWordData(mAddress, 5);
             UnlockBus();
 
-            if (wordArray != null && wordArray.Length == 10)
+            if (data > 0)
             {
-                var temp = BitConverter.GetBytes(wordArray[5]);
-                temp[1] = (byte)(temp[1] & 0x0F);
+                var temp = BitConverter.GetBytes(data);
+                Array.Reverse(temp);
 
+                temp[1] = (byte)(temp[1] & 0x0F);
                 ushort count = BitConverter.ToUInt16(temp, 0);
                 double value = Math.Round(count * 0.0625f);
                 if (value > 0)

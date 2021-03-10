@@ -75,6 +75,8 @@
             this.mStartupDelayLabel = new System.Windows.Forms.Label();
             this.mStartupDelayTextBox = new System.Windows.Forms.TextBox();
             this.mResetButton = new System.Windows.Forms.Button();
+            this.mLHMMemoryCheckBox = new System.Windows.Forms.CheckBox();
+            this.mOHMMemoryCheckBox = new System.Windows.Forms.CheckBox();
             this.mIntervalGroupBox.SuspendLayout();
             this.mLibraryGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -110,7 +112,7 @@
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 722);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 768);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
             this.mMinimizeCheckBox.TabIndex = 28;
@@ -120,7 +122,7 @@
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 747);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 793);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
             this.mStartupCheckBox.TabIndex = 29;
@@ -129,7 +131,7 @@
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(84, 798);
+            this.mOKButton.Location = new System.Drawing.Point(84, 844);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(116, 38);
             this.mOKButton.TabIndex = 32;
@@ -143,6 +145,8 @@
             // 
             // mLibraryGroupBox
             // 
+            this.mLibraryGroupBox.Controls.Add(this.mOHMMemoryCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.mLHMMemoryCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mHWInfoCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.label9);
             this.mLibraryGroupBox.Controls.Add(this.label8);
@@ -177,7 +181,7 @@
             this.mLibraryGroupBox.Controls.Add(this.mKrakenCheckBox);
             this.mLibraryGroupBox.Location = new System.Drawing.Point(12, 77);
             this.mLibraryGroupBox.Name = "mLibraryGroupBox";
-            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 589);
+            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 634);
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
@@ -185,7 +189,7 @@
             // mHWInfoCheckBox
             // 
             this.mHWInfoCheckBox.AutoSize = true;
-            this.mHWInfoCheckBox.Location = new System.Drawing.Point(6, 560);
+            this.mHWInfoCheckBox.Location = new System.Drawing.Point(6, 606);
             this.mHWInfoCheckBox.Name = "mHWInfoCheckBox";
             this.mHWInfoCheckBox.Size = new System.Drawing.Size(70, 16);
             this.mHWInfoCheckBox.TabIndex = 24;
@@ -195,7 +199,7 @@
             // label9
             // 
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label9.Location = new System.Drawing.Point(2, 548);
+            this.label9.Location = new System.Drawing.Point(2, 594);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(180, 2);
             this.label9.TabIndex = 32;
@@ -203,7 +207,7 @@
             // label8
             // 
             this.label8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label8.Location = new System.Drawing.Point(4, 505);
+            this.label8.Location = new System.Drawing.Point(4, 551);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(180, 2);
             this.label8.TabIndex = 31;
@@ -211,7 +215,7 @@
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label7.Location = new System.Drawing.Point(4, 467);
+            this.label7.Location = new System.Drawing.Point(4, 513);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(180, 2);
             this.label7.TabIndex = 30;
@@ -219,7 +223,7 @@
             // label6
             // 
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(4, 431);
+            this.label6.Location = new System.Drawing.Point(4, 477);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(180, 2);
             this.label6.TabIndex = 29;
@@ -227,7 +231,7 @@
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label3.Location = new System.Drawing.Point(4, 397);
+            this.label3.Location = new System.Drawing.Point(4, 443);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(180, 2);
             this.label3.TabIndex = 28;
@@ -235,7 +239,7 @@
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label5.Location = new System.Drawing.Point(5, 365);
+            this.label5.Location = new System.Drawing.Point(5, 411);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(180, 2);
             this.label5.TabIndex = 27;
@@ -243,7 +247,7 @@
             // mOHMStorageCheckBox
             // 
             this.mOHMStorageCheckBox.AutoSize = true;
-            this.mOHMStorageCheckBox.Location = new System.Drawing.Point(17, 344);
+            this.mOHMStorageCheckBox.Location = new System.Drawing.Point(17, 367);
             this.mOHMStorageCheckBox.Name = "mOHMStorageCheckBox";
             this.mOHMStorageCheckBox.Size = new System.Drawing.Size(67, 16);
             this.mOHMStorageCheckBox.TabIndex = 15;
@@ -253,7 +257,7 @@
             // mOHMControllerCheckBox
             // 
             this.mOHMControllerCheckBox.AutoSize = true;
-            this.mOHMControllerCheckBox.Location = new System.Drawing.Point(17, 322);
+            this.mOHMControllerCheckBox.Location = new System.Drawing.Point(17, 345);
             this.mOHMControllerCheckBox.Name = "mOHMControllerCheckBox";
             this.mOHMControllerCheckBox.Size = new System.Drawing.Size(78, 16);
             this.mOHMControllerCheckBox.TabIndex = 14;
@@ -263,7 +267,7 @@
             // mOHMGPUCheckBox
             // 
             this.mOHMGPUCheckBox.AutoSize = true;
-            this.mOHMGPUCheckBox.Location = new System.Drawing.Point(17, 300);
+            this.mOHMGPUCheckBox.Location = new System.Drawing.Point(17, 323);
             this.mOHMGPUCheckBox.Name = "mOHMGPUCheckBox";
             this.mOHMGPUCheckBox.Size = new System.Drawing.Size(49, 16);
             this.mOHMGPUCheckBox.TabIndex = 13;
@@ -273,7 +277,7 @@
             // mOHMMBCheckBox
             // 
             this.mOHMMBCheckBox.AutoSize = true;
-            this.mOHMMBCheckBox.Location = new System.Drawing.Point(17, 278);
+            this.mOHMMBCheckBox.Location = new System.Drawing.Point(17, 301);
             this.mOHMMBCheckBox.Name = "mOHMMBCheckBox";
             this.mOHMMBCheckBox.Size = new System.Drawing.Size(95, 16);
             this.mOHMMBCheckBox.TabIndex = 12;
@@ -283,7 +287,7 @@
             // mOHMCPUCheckBox
             // 
             this.mOHMCPUCheckBox.AutoSize = true;
-            this.mOHMCPUCheckBox.Location = new System.Drawing.Point(17, 256);
+            this.mOHMCPUCheckBox.Location = new System.Drawing.Point(17, 279);
             this.mOHMCPUCheckBox.Name = "mOHMCPUCheckBox";
             this.mOHMCPUCheckBox.Size = new System.Drawing.Size(49, 16);
             this.mOHMCPUCheckBox.TabIndex = 11;
@@ -293,7 +297,7 @@
             // mOHMCheckBox
             // 
             this.mOHMCheckBox.AutoSize = true;
-            this.mOHMCheckBox.Location = new System.Drawing.Point(6, 234);
+            this.mOHMCheckBox.Location = new System.Drawing.Point(6, 257);
             this.mOHMCheckBox.Name = "mOHMCheckBox";
             this.mOHMCheckBox.Size = new System.Drawing.Size(150, 16);
             this.mOHMCheckBox.TabIndex = 10;
@@ -303,7 +307,7 @@
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label4.Location = new System.Drawing.Point(5, 226);
+            this.label4.Location = new System.Drawing.Point(5, 249);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(180, 2);
             this.label4.TabIndex = 20;
@@ -400,7 +404,7 @@
             // 
             // mRGBnFCButton
             // 
-            this.mRGBnFCButton.Location = new System.Drawing.Point(114, 516);
+            this.mRGBnFCButton.Location = new System.Drawing.Point(114, 562);
             this.mRGBnFCButton.Name = "mRGBnFCButton";
             this.mRGBnFCButton.Size = new System.Drawing.Size(64, 23);
             this.mRGBnFCButton.TabIndex = 23;
@@ -410,7 +414,7 @@
             // 
             // mRGBnFCCheckBox
             // 
-            this.mRGBnFCCheckBox.Location = new System.Drawing.Point(6, 513);
+            this.mRGBnFCCheckBox.Location = new System.Drawing.Point(6, 559);
             this.mRGBnFCCheckBox.Name = "mRGBnFCCheckBox";
             this.mRGBnFCCheckBox.Size = new System.Drawing.Size(104, 30);
             this.mRGBnFCCheckBox.TabIndex = 22;
@@ -420,7 +424,7 @@
             // mDimmCheckBox
             // 
             this.mDimmCheckBox.AutoSize = true;
-            this.mDimmCheckBox.Location = new System.Drawing.Point(6, 409);
+            this.mDimmCheckBox.Location = new System.Drawing.Point(6, 455);
             this.mDimmCheckBox.Name = "mDimmCheckBox";
             this.mDimmCheckBox.Size = new System.Drawing.Size(100, 16);
             this.mDimmCheckBox.TabIndex = 17;
@@ -429,7 +433,7 @@
             // 
             // mCLCButton
             // 
-            this.mCLCButton.Location = new System.Drawing.Point(114, 476);
+            this.mCLCButton.Location = new System.Drawing.Point(114, 522);
             this.mCLCButton.Name = "mCLCButton";
             this.mCLCButton.Size = new System.Drawing.Size(64, 23);
             this.mCLCButton.TabIndex = 21;
@@ -439,7 +443,7 @@
             // 
             // mKrakenButton
             // 
-            this.mKrakenButton.Location = new System.Drawing.Point(114, 438);
+            this.mKrakenButton.Location = new System.Drawing.Point(114, 484);
             this.mKrakenButton.Name = "mKrakenButton";
             this.mKrakenButton.Size = new System.Drawing.Size(64, 23);
             this.mKrakenButton.TabIndex = 19;
@@ -450,7 +454,7 @@
             // mCLCCheckBox
             // 
             this.mCLCCheckBox.AutoSize = true;
-            this.mCLCCheckBox.Location = new System.Drawing.Point(6, 480);
+            this.mCLCCheckBox.Location = new System.Drawing.Point(6, 526);
             this.mCLCCheckBox.Name = "mCLCCheckBox";
             this.mCLCCheckBox.Size = new System.Drawing.Size(86, 16);
             this.mCLCCheckBox.TabIndex = 20;
@@ -468,7 +472,7 @@
             // mNvApiCheckBox
             // 
             this.mNvApiCheckBox.AutoSize = true;
-            this.mNvApiCheckBox.Location = new System.Drawing.Point(6, 374);
+            this.mNvApiCheckBox.Location = new System.Drawing.Point(6, 420);
             this.mNvApiCheckBox.Name = "mNvApiCheckBox";
             this.mNvApiCheckBox.Size = new System.Drawing.Size(104, 16);
             this.mNvApiCheckBox.TabIndex = 16;
@@ -478,7 +482,7 @@
             // mKrakenCheckBox
             // 
             this.mKrakenCheckBox.AutoSize = true;
-            this.mKrakenCheckBox.Location = new System.Drawing.Point(6, 443);
+            this.mKrakenCheckBox.Location = new System.Drawing.Point(6, 489);
             this.mKrakenCheckBox.Name = "mKrakenCheckBox";
             this.mKrakenCheckBox.Size = new System.Drawing.Size(100, 16);
             this.mKrakenCheckBox.TabIndex = 18;
@@ -488,7 +492,7 @@
             // mAnimationCheckBox
             // 
             this.mAnimationCheckBox.AutoSize = true;
-            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 672);
+            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 718);
             this.mAnimationCheckBox.Name = "mAnimationCheckBox";
             this.mAnimationCheckBox.Size = new System.Drawing.Size(137, 16);
             this.mAnimationCheckBox.TabIndex = 26;
@@ -498,7 +502,7 @@
             // mFahrenheitCheckBox
             // 
             this.mFahrenheitCheckBox.AutoSize = true;
-            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 697);
+            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 743);
             this.mFahrenheitCheckBox.Name = "mFahrenheitCheckBox";
             this.mFahrenheitCheckBox.Size = new System.Drawing.Size(108, 16);
             this.mFahrenheitCheckBox.TabIndex = 27;
@@ -508,7 +512,7 @@
             // mStartupDelayLabel
             // 
             this.mStartupDelayLabel.AutoSize = true;
-            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 771);
+            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 817);
             this.mStartupDelayLabel.Name = "mStartupDelayLabel";
             this.mStartupDelayLabel.Size = new System.Drawing.Size(80, 12);
             this.mStartupDelayLabel.TabIndex = 15;
@@ -516,7 +520,7 @@
             // 
             // mStartupDelayTextBox
             // 
-            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 766);
+            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 812);
             this.mStartupDelayTextBox.MaxLength = 2;
             this.mStartupDelayTextBox.Name = "mStartupDelayTextBox";
             this.mStartupDelayTextBox.Size = new System.Drawing.Size(73, 21);
@@ -525,7 +529,7 @@
             // 
             // mResetButton
             // 
-            this.mResetButton.Location = new System.Drawing.Point(12, 798);
+            this.mResetButton.Location = new System.Drawing.Point(12, 844);
             this.mResetButton.Name = "mResetButton";
             this.mResetButton.Size = new System.Drawing.Size(66, 38);
             this.mResetButton.TabIndex = 31;
@@ -533,11 +537,31 @@
             this.mResetButton.UseVisualStyleBackColor = true;
             this.mResetButton.Click += new System.EventHandler(this.onResetButtonClick);
             // 
+            // mLHMMemoryCheckBox
+            // 
+            this.mLHMMemoryCheckBox.AutoSize = true;
+            this.mLHMMemoryCheckBox.Location = new System.Drawing.Point(17, 228);
+            this.mLHMMemoryCheckBox.Name = "mLHMMemoryCheckBox";
+            this.mLHMMemoryCheckBox.Size = new System.Drawing.Size(71, 16);
+            this.mLHMMemoryCheckBox.TabIndex = 33;
+            this.mLHMMemoryCheckBox.Text = "Memory";
+            this.mLHMMemoryCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mOHMMemoryCheckBox
+            // 
+            this.mOHMMemoryCheckBox.AutoSize = true;
+            this.mOHMMemoryCheckBox.Location = new System.Drawing.Point(17, 389);
+            this.mOHMMemoryCheckBox.Name = "mOHMMemoryCheckBox";
+            this.mOHMMemoryCheckBox.Size = new System.Drawing.Size(71, 16);
+            this.mOHMMemoryCheckBox.TabIndex = 34;
+            this.mOHMMemoryCheckBox.Text = "Memory";
+            this.mOHMMemoryCheckBox.UseVisualStyleBackColor = true;
+            // 
             // OptionForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(209, 842);
+            this.ClientSize = new System.Drawing.Size(209, 889);
             this.Controls.Add(this.mResetButton);
             this.Controls.Add(this.mStartupDelayTextBox);
             this.Controls.Add(this.mStartupDelayLabel);
@@ -611,5 +635,7 @@
         private System.Windows.Forms.Button mResetButton;
         private System.Windows.Forms.CheckBox mHWInfoCheckBox;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox mOHMMemoryCheckBox;
+        private System.Windows.Forms.CheckBox mLHMMemoryCheckBox;
     }
 }

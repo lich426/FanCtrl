@@ -30,7 +30,7 @@ namespace FanCtrl
             mComputer.FanControllerEnabled = OptionManager.getInstance().IsOHMContolled;
             mComputer.GPUEnabled = OptionManager.getInstance().IsOHMGpu;
             mComputer.HDDEnabled = OptionManager.getInstance().IsOHMStorage;
-            mComputer.RAMEnabled = true;
+            mComputer.RAMEnabled = OptionManager.getInstance().IsOHMMemory;
 
             mComputer.Open();
             mComputer.Accept(this);

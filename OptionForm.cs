@@ -58,6 +58,7 @@ namespace FanCtrl
                 mLHMGPUCheckBox.Enabled = mLHMCheckBox.Checked;
                 mLHMControllerCheckBox.Enabled = mLHMCheckBox.Checked;
                 mLHMStorageCheckBox.Enabled = mLHMCheckBox.Checked;
+                mLHMMemoryCheckBox.Enabled = mLHMCheckBox.Checked;
             };
             mLHMCheckBox.Checked = OptionManager.getInstance().IsLHM;
             mLHMCPUCheckBox.Checked = OptionManager.getInstance().IsLHMCpu;
@@ -65,6 +66,7 @@ namespace FanCtrl
             mLHMGPUCheckBox.Checked = OptionManager.getInstance().IsLHMGpu;
             mLHMControllerCheckBox.Checked = OptionManager.getInstance().IsLHMContolled;
             mLHMStorageCheckBox.Checked = OptionManager.getInstance().IsLHMStorage;
+            mLHMMemoryCheckBox.Checked = OptionManager.getInstance().IsLHMMemory;
             if (mLHMCheckBox.Checked == false)
             {
                 mLHMCPUCheckBox.Enabled = false;
@@ -72,6 +74,7 @@ namespace FanCtrl
                 mLHMGPUCheckBox.Enabled = false;
                 mLHMControllerCheckBox.Enabled = false;
                 mLHMStorageCheckBox.Enabled = false;
+                mLHMMemoryCheckBox.Enabled = false;
             }
 
             mOHMCheckBox.CheckedChanged += (object sender, EventArgs e) =>
@@ -81,6 +84,7 @@ namespace FanCtrl
                 mOHMGPUCheckBox.Enabled = mOHMCheckBox.Checked;
                 mOHMControllerCheckBox.Enabled = mOHMCheckBox.Checked;
                 mOHMStorageCheckBox.Enabled = mOHMCheckBox.Checked;
+                mOHMMemoryCheckBox.Enabled = mOHMCheckBox.Checked;
             };
             mOHMCheckBox.Checked = OptionManager.getInstance().IsOHM;
             mOHMCPUCheckBox.Checked = OptionManager.getInstance().IsOHMCpu;
@@ -88,6 +92,7 @@ namespace FanCtrl
             mOHMGPUCheckBox.Checked = OptionManager.getInstance().IsOHMGpu;
             mOHMControllerCheckBox.Checked = OptionManager.getInstance().IsOHMContolled;
             mOHMStorageCheckBox.Checked = OptionManager.getInstance().IsOHMStorage;
+            mOHMMemoryCheckBox.Checked = OptionManager.getInstance().IsOHMMemory;
             if (mOHMCheckBox.Checked == false)
             {
                 mOHMCPUCheckBox.Enabled = false;
@@ -95,6 +100,7 @@ namespace FanCtrl
                 mOHMGPUCheckBox.Enabled = false;
                 mOHMControllerCheckBox.Enabled = false;
                 mOHMStorageCheckBox.Enabled = false;
+                mOHMMemoryCheckBox.Enabled = false;
             }
 
             mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
@@ -172,6 +178,7 @@ namespace FanCtrl
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMGpu != mLHMGPUCheckBox.Checked) ||
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMContolled != mLHMControllerCheckBox.Checked) ||
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMStorage != mLHMStorageCheckBox.Checked) ||
+                (mLHMCheckBox.Checked == true && optionManager.IsLHMMemory != mLHMMemoryCheckBox.Checked) ||
 
                 (optionManager.IsOHM != mOHMCheckBox.Checked) ||
                 (mOHMCheckBox.Checked == true && optionManager.IsOHMCpu != mOHMCPUCheckBox.Checked) ||
@@ -179,6 +186,7 @@ namespace FanCtrl
                 (mOHMCheckBox.Checked == true && optionManager.IsOHMGpu != mOHMGPUCheckBox.Checked) ||
                 (mOHMCheckBox.Checked == true && optionManager.IsOHMContolled != mOHMControllerCheckBox.Checked) ||
                 (mOHMCheckBox.Checked == true && optionManager.IsOHMStorage != mOHMStorageCheckBox.Checked) ||
+                (mOHMCheckBox.Checked == true && optionManager.IsOHMMemory != mOHMMemoryCheckBox.Checked) ||
 
                 (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
                 (optionManager.IsDimm != mDimmCheckBox.Checked) ||
@@ -206,6 +214,7 @@ namespace FanCtrl
             optionManager.IsLHMGpu = mLHMGPUCheckBox.Checked;
             optionManager.IsLHMContolled = mLHMControllerCheckBox.Checked;
             optionManager.IsLHMStorage = mLHMStorageCheckBox.Checked;
+            optionManager.IsLHMMemory = mLHMMemoryCheckBox.Checked;
 
             optionManager.IsOHM = mOHMCheckBox.Checked;
             optionManager.IsOHMCpu = mOHMCPUCheckBox.Checked;
@@ -213,6 +222,7 @@ namespace FanCtrl
             optionManager.IsOHMGpu = mOHMGPUCheckBox.Checked;
             optionManager.IsOHMContolled = mOHMControllerCheckBox.Checked;
             optionManager.IsOHMStorage = mOHMStorageCheckBox.Checked;
+            optionManager.IsOHMMemory = mOHMMemoryCheckBox.Checked;
 
             optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
 

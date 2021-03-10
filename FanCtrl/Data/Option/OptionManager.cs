@@ -38,6 +38,7 @@ namespace FanCtrl
         public bool IsLHMGpu { get; set; }
         public bool IsLHMContolled { get; set; }
         public bool IsLHMStorage { get; set; }
+        public bool IsLHMMemory { get; set; }
 
         // OpenHardwareMonitor
         public bool IsOHM { get; set; }
@@ -46,6 +47,7 @@ namespace FanCtrl
         public bool IsOHMGpu { get; set; }
         public bool IsOHMContolled { get; set; }
         public bool IsOHMStorage { get; set; }
+        public bool IsOHMMemory { get; set; }
 
         // NvApiWrapper
         public bool IsNvAPIWrapper { get; set; }
@@ -110,8 +112,9 @@ namespace FanCtrl
             IsLHMCpu = true;
             IsLHMMotherboard = true;
             IsLHMGpu = false;
-            IsLHMContolled = false;
-            IsLHMStorage = false;
+            IsLHMContolled = true;
+            IsLHMStorage = true;
+            IsLHMMemory = true;
 
             IsOHM = false;
             IsOHMCpu = true;
@@ -119,6 +122,7 @@ namespace FanCtrl
             IsOHMGpu = false;
             IsOHMContolled = false;
             IsOHMStorage = false;
+            IsOHMMemory = false;
 
             IsNvAPIWrapper = true;
             IsDimm = true;
@@ -148,19 +152,21 @@ namespace FanCtrl
                 IsLHM = (rootObject.ContainsKey("IsLHM") == true) ? rootObject.Value<bool>("IsLHM") : true;
                 IsLHMCpu = (rootObject.ContainsKey("IsLHMCpu") == true) ? rootObject.Value<bool>("IsLHMCpu") : true;
                 IsLHMMotherboard = (rootObject.ContainsKey("IsLHMMotherboard") == true) ? rootObject.Value<bool>("IsLHMMotherboard") : true;
-                IsLHMGpu = (rootObject.ContainsKey("IsLHMGpu") == true) ? rootObject.Value<bool>("IsLHMGpu") : true;
+                IsLHMGpu = (rootObject.ContainsKey("IsLHMGpu") == true) ? rootObject.Value<bool>("IsLHMGpu") : false;
                 IsLHMContolled = (rootObject.ContainsKey("IsLHMContolled") == true) ? rootObject.Value<bool>("IsLHMContolled") : true;
                 IsLHMStorage = (rootObject.ContainsKey("IsLHMStorage") == true) ? rootObject.Value<bool>("IsLHMStorage") : true;
+                IsLHMMemory = (rootObject.ContainsKey("IsLHMMemory") == true) ? rootObject.Value<bool>("IsLHMMemory") : true;
 
                 IsOHM = (rootObject.ContainsKey("IsOHM") == true) ? rootObject.Value<bool>("IsOHM") : false;
                 IsOHMCpu = (rootObject.ContainsKey("IsOHMCpu") == true) ? rootObject.Value<bool>("IsOHMCpu") : true;
                 IsOHMMotherboard = (rootObject.ContainsKey("IsOHMMotherboard") == true) ? rootObject.Value<bool>("IsOHMMotherboard") : true;
-                IsOHMGpu = (rootObject.ContainsKey("IsOHMGpu") == true) ? rootObject.Value<bool>("IsOHMGpu") : true;
-                IsOHMContolled = (rootObject.ContainsKey("IsOHMContolled") == true) ? rootObject.Value<bool>("IsOHMContolled") : true;
-                IsOHMStorage = (rootObject.ContainsKey("IsOHMStorage") == true) ? rootObject.Value<bool>("IsOHMStorage") : true;
+                IsOHMGpu = (rootObject.ContainsKey("IsOHMGpu") == true) ? rootObject.Value<bool>("IsOHMGpu") : false;
+                IsOHMContolled = (rootObject.ContainsKey("IsOHMContolled") == true) ? rootObject.Value<bool>("IsOHMContolled") : false;
+                IsOHMStorage = (rootObject.ContainsKey("IsOHMStorage") == true) ? rootObject.Value<bool>("IsOHMStorage") : false;
+                IsOHMMemory = (rootObject.ContainsKey("IsOHMMemory") == true) ? rootObject.Value<bool>("IsOHMMemory") : false;
 
                 IsNvAPIWrapper = (rootObject.ContainsKey("IsNvAPIWrapper") == true) ? rootObject.Value<bool>("IsNvAPIWrapper") : true;
-                IsDimm = (rootObject.ContainsKey("IsDimm") == true) ? rootObject.Value<bool>("IsDimm") : true;
+                IsDimm = (rootObject.ContainsKey("IsDimm") == true) ? rootObject.Value<bool>("IsDimm") : false;
                 IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : true;
                 IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : true;
                 IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : true;
@@ -196,6 +202,7 @@ namespace FanCtrl
                 rootObject["IsLHMGpu"] = IsLHMGpu;
                 rootObject["IsLHMContolled"] = IsLHMContolled;
                 rootObject["IsLHMStorage"] = IsLHMStorage;
+                rootObject["IsLHMMemory"] = IsLHMMemory;
 
                 rootObject["IsOHM"] = IsOHM;
                 rootObject["IsOHMCpu"] = IsOHMCpu;
@@ -203,6 +210,7 @@ namespace FanCtrl
                 rootObject["IsOHMGpu"] = IsOHMGpu;
                 rootObject["IsOHMContolled"] = IsOHMContolled;
                 rootObject["IsOHMStorage"] = IsOHMStorage;
+                rootObject["IsOHMMemory"] = IsOHMMemory;
 
                 rootObject["IsNvAPIWrapper"] = IsNvAPIWrapper;
                 rootObject["IsDimm"] = IsDimm;                

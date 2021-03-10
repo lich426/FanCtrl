@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.3.5.0</ApplicationVersion>
+    <ApplicationVersion>1.3.6.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -165,9 +165,15 @@
       <DependentUpon>ControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FanCtrl\Controller\HidUSBController.cs" />
+    <Compile Include="FanCtrl\Controller\Kernel\AdvApi32.cs" />
+    <Compile Include="FanCtrl\Controller\Kernel\Kernel32.cs" />
+    <Compile Include="FanCtrl\Controller\Kernel\KernelDriver.cs" />
+    <Compile Include="FanCtrl\Controller\Kernel\Ring0.cs" />
     <Compile Include="FanCtrl\Controller\OSDController.cs" />
     <Compile Include="FanCtrl\Controller\SiUSBController.cs" />
     <Compile Include="FanCtrl\Controller\SiUSBXp.cs" />
+    <Compile Include="FanCtrl\Controller\SMbusAmd.cs" />
+    <Compile Include="FanCtrl\Controller\SMBUsIntel.cs" />
     <Compile Include="FanCtrl\Controller\WinUSBController.cs" />
     <Compile Include="FanCtrl\Data\Control\ControlManager.cs" />
     <Compile Include="FanCtrl\Data\Control\FanData.cs" />
@@ -315,6 +321,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\WinRing0x64.sys" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
