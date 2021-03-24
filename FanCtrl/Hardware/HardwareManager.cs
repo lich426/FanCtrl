@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using NvAPIWrapper;
-using NvAPIWrapper.GPU;
 using System.Text;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using NvAPIWrapper;
+using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native.GPU;
 
 namespace FanCtrl

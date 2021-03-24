@@ -13,7 +13,14 @@ namespace FanCtrl
 		public static bool update(string osdString)
         {
 			bool bResult = false;
-			var fanCtrlArray = Encoding.Default.GetBytes(RTSS_STRING_FANCTRL);
+			var tempArray = Encoding.Default.GetBytes(RTSS_STRING_FANCTRL);
+			var fanCtrlArray = new byte[tempArray.Length + 1];
+			Array.Copy(tempArray, fanCtrlArray, tempArray.Length);
+
+			tempArray = Encoding.Default.GetBytes(osdString);
+			var osdArray = new byte[tempArray.Length + 1];
+			Array.Copy(tempArray, osdArray, tempArray.Length);
+
 			try
             {
                 using (var mapFile = MemoryMappedFile.OpenExisting(RTSS_STRING_SHARE_MEMORY, MemoryMappedFileRights.FullControl))
@@ -73,7 +80,6 @@ namespace FanCtrl
 													if (pMem->dwVersion >= 0x0002000e)													
 													{
 														int maxLength = 4096;
-														var osdArray = Encoding.Default.GetBytes(osdString);
 														for (int i = 0; i < osdArray.Length; i++)
                                                         {
 															if (i >= maxLength)
@@ -85,7 +91,6 @@ namespace FanCtrl
 													else
 													{
 														int maxLength = 4096;
-														var osdArray = Encoding.Default.GetBytes(osdString);
 														for (int i = 0; i < osdArray.Length; i++)
 														{
 															if (i >= maxLength)
@@ -97,7 +102,6 @@ namespace FanCtrl
 												else
 												{
 													int maxLength = 256;
-													var osdArray = Encoding.Default.GetBytes(osdString);
 													for (int i = 0; i < osdArray.Length; i++)
 													{
 														if (i >= maxLength)
@@ -128,7 +132,9 @@ namespace FanCtrl
 
         public static void release()
         {
-			var fanCtrlArray = Encoding.Default.GetBytes(RTSS_STRING_FANCTRL);
+			var tempArray = Encoding.Default.GetBytes(RTSS_STRING_FANCTRL);
+			var fanCtrlArray = new byte[tempArray.Length + 1];
+			Array.Copy(tempArray, fanCtrlArray, tempArray.Length);
 			try
 			{
 				using (var mapFile = MemoryMappedFile.OpenExisting(RTSS_STRING_SHARE_MEMORY, MemoryMappedFileRights.FullControl))
