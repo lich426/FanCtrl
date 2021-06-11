@@ -16,7 +16,21 @@ namespace FanCtrl
 
             Ring0.WriteSmbus(SMBAUXCTL, Ring0.ReadSmbus(SMBAUXCTL) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B));
 
-            return (res < 0) ? (byte)0x00 : addr;
+            if (res >= 0)
+            {
+                ushort data = getWord(addr, 0x06);
+                var temp = BitConverter.GetBytes(data);
+                Array.Reverse(temp);
+
+                ushort manufacturerID = BitConverter.ToUInt16(temp, 0);
+
+                for (int i = 0; i < SMBusController.sManufacturerID.Length; i++)
+                {
+                    if (manufacturerID == SMBusController.sManufacturerID[i])
+                        return addr;
+                }
+            }
+            return 0x00;
         }
 
         public static ushort getWord(byte addr, byte command)

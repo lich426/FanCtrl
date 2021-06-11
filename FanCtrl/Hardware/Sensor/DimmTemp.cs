@@ -35,7 +35,7 @@ namespace FanCtrl
             if (LockBus(10) == false)
                 return;
 
-            ushort data = SMBusController.smbusWordData(mAddress, 5);
+            ushort data = SMBusController.smbusWordData(mAddress, 0x05);
             UnlockBus();
 
             if (data > 0)
@@ -43,11 +43,15 @@ namespace FanCtrl
                 var temp = BitConverter.GetBytes(data);
                 Array.Reverse(temp);
 
-                temp[1] = (byte)(temp[1] & 0x0F);
-                ushort count = BitConverter.ToUInt16(temp, 0);
-                double value = Math.Round(count * 0.0625f);
-                if (value > 0)
+                double value = 0.0f;
+                byte upper = (byte)(temp[1] & 0x1F);
+                byte lower = temp[0];
+                                
+                if ((upper & 0x10) == 0x10) { }    // negative
+                else
                 {
+                    upper = (byte)(upper & 0x0F);
+                    value = (double)((double)upper * 16 + (double)lower / 16);
                     Value = (int)value;
                 }
             }

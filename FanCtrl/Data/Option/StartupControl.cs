@@ -154,6 +154,7 @@ namespace FanCtrl
             taskDefinition.Settings.StartWhenAvailable = true;
             taskDefinition.Settings.DisallowStartIfOnBatteries = false;
             taskDefinition.Settings.StopIfGoingOnBatteries = false;
+            taskDefinition.Settings.ExecutionTimeLimit = TimeSpan.Zero;
 
             taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
             taskDefinition.Principal.LogonType = TaskLogonType.InteractiveToken;

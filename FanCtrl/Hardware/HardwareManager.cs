@@ -256,8 +256,8 @@ namespace FanCtrl
                     int num = 1;
                     var device = new HardwareDevice("DIMM");
 
-                    // 0x18 ~ 0x20
-                    for (byte addr = 0x18; addr <= 0x20; addr++)
+                    // 0x18 ~ 0x1F
+                    for (byte addr = 0x18; addr < 0x20; addr++)
                     {
                         byte data = SMBusController.smbusDetect(addr);
                         if (data == addr)

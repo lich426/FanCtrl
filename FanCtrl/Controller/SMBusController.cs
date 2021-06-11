@@ -13,6 +13,16 @@ namespace FanCtrl
 {
     class SMBusController
     {
+        public static ushort[] sManufacturerID = {
+            0x1B09,     // On Semiconductor
+            0x0054,     // MicroChip
+            0x104A,     // ST
+            0x00B3,     // RENESAS
+            0x1131,     // NXP
+            0x1C85,     // ABLIC
+
+        };
+
         enum CPU_TYPE
         {
             AMD,
