@@ -68,7 +68,7 @@
             // mEnableCheckBox
             // 
             this.mEnableCheckBox.AutoSize = true;
-            this.mEnableCheckBox.Location = new System.Drawing.Point(19, 29);
+            this.mEnableCheckBox.Location = new System.Drawing.Point(19, 27);
             this.mEnableCheckBox.Name = "mEnableCheckBox";
             this.mEnableCheckBox.Size = new System.Drawing.Size(185, 16);
             this.mEnableCheckBox.TabIndex = 0;

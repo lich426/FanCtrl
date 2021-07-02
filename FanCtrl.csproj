@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.3.9.0</ApplicationVersion>
+    <ApplicationVersion>1.4.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -178,6 +178,8 @@
     <Compile Include="FanCtrl\Data\Control\ControlManager.cs" />
     <Compile Include="FanCtrl\Data\Control\FanData.cs" />
     <Compile Include="FanCtrl\Data\Control\ControlData.cs" />
+    <Compile Include="FanCtrl\Data\Hotkey\HotkeyData.cs" />
+    <Compile Include="FanCtrl\Data\Hotkey\HotkeyManager.cs" />
     <Compile Include="FanCtrl\Data\OSD\OSDGroup.cs" />
     <Compile Include="FanCtrl\Data\OSD\OSDItem.cs" />
     <Compile Include="FanCtrl\Data\OSD\OSDManager.cs" />
@@ -242,6 +244,12 @@
     <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
     <Compile Include="FanCtrl\Util\PointObj.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />
+    <Compile Include="HotkeyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HotkeyForm.Designer.cs">
+      <DependentUpon>HotkeyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LightingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +288,9 @@
     </Compile>
     <EmbeddedResource Include="ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HotkeyForm.resx">
+      <DependentUpon>HotkeyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LightingForm.resx">
       <DependentUpon>LightingForm.cs</DependentUpon>

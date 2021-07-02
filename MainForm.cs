@@ -50,8 +50,12 @@ namespace FanCtrl
             InitializeComponent();
             this.localizeComponent();
 
-            this.MinimumSize = new Size(this.Width, mOriginHeight);
-            this.MaximumSize = new Size(this.Width, Int32.MaxValue);
+            HotkeyManager.getInstance().read();
+
+            this.startHook();
+
+            this.MinimumSize = new Size(899, mOriginHeight);
+            this.MaximumSize = new Size(899, Int32.MaxValue);
 
             this.FormClosing += onClosing;
 
@@ -102,6 +106,7 @@ namespace FanCtrl
             mTempGroupBox.Text = StringLib.Temperature;
             mFanGroupBox.Text = StringLib.Fan_speed;
             mControlGroupBox.Text = StringLib.Fan_control;
+
             mOptionButton.Text = StringLib.Option;
             mFanControlButton.Text = StringLib.Auto_Fan_Control;
             mMadeLabel1.Text = StringLib.Made1;
@@ -292,12 +297,14 @@ namespace FanCtrl
             mMadeLabel2.Top = madeLabelPoint2;
             mDonatePictureBox.Top = donatePictureBoxPoint;
 
+            mReloadButton.Top = buttonPoint;
+            mHotKeyButton.Top = buttonPoint;
             mOSDButton.Top = buttonPoint;
             mOptionButton.Top = buttonPoint;
             mFanControlButton.Top = buttonPoint;
-            mReloadButton.Top = buttonPoint;
 
             mIsUserResize = false;
+            this.Width = this.MaximumSize.Width;
             this.Height = mNowHeight;
         }
 
@@ -427,6 +434,8 @@ namespace FanCtrl
             mTrayIcon.Visible = false;
 
             mIsExit = true;
+
+            this.stopHook();
 
             Application.ExitThread();
             Application.Exit();
@@ -914,7 +923,12 @@ namespace FanCtrl
                     mControlForm.onUpdateTimer();
             }));
         }
-        
+
+        private void onHotKeyButtonClick(object sender, EventArgs e)
+        {
+            var form = new HotkeyForm(this);
+            form.ShowDialog();
+        }
 
         private void onOptionButtonClick(object sender, EventArgs e)
         {
@@ -1066,5 +1080,177 @@ namespace FanCtrl
             }
             base.WndProc(ref msg);
         }
+
+        private const int WH_KEYBOARD_LL = 13;
+        private const int WM_KEYDOWN = 0x100;
+        private const int WM_SYSKEYDOWN = 0x104;
+        private const int WM_KEYUP = 0x101;
+        private const int WM_SYSKEYUP = 0x105;
+        public delegate int OnHookHandler(int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowsHookEx(int hookID, OnHookHandler handler, IntPtr hInstance, uint threadId);
+
+        [DllImport("user32.dll")]
+        private static extern int UnhookWindowsHookEx(int hookID);
+
+        [DllImport("user32.dll")]
+        private static extern int CallNextHookEx(int hookID, int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr LoadLibrary(string lpFileName);
+
+        private static int sHookInstance = 0;
+        private static OnHookHandler sOnHookHandler = onHookHandler;
+        private static bool sIsSetHook = false;
+        private static OnHookHandler sOnSetHookHandler = null;
+        private static MainForm sMainForm = null;
+
+        private static bool sIsCtrl = false;
+        private static bool sIsAlt = false;
+        private static bool sIsLShift = false;
+        private static bool sIsRShift = false;
+
+        private void startHook()
+        {
+            try
+            {
+                sMainForm = this;
+                var hInstance = LoadLibrary("User32");
+                sHookInstance = SetWindowsHookEx(WH_KEYBOARD_LL, sOnHookHandler, hInstance, 0);
+            }
+            catch
+            {
+                sHookInstance = 0;
+            }
+        }
+
+        private void stopHook()
+        {
+            try
+            {
+                sMainForm = null;
+                if (sHookInstance != 0)
+                    UnhookWindowsHookEx(sHookInstance);
+            }
+            catch { }
+            sHookInstance = 0;
+        }
+
+        public void setHookHandler(OnHookHandler onHookHandler)
+        {
+            sIsSetHook = true;
+            sOnSetHookHandler = onHookHandler;
+        }
+
+        public void unHookHandler()
+        {
+            sIsSetHook = false;
+            sOnSetHookHandler = null;
+        }
+
+        private static int onHookHandler(int code, IntPtr wParam, IntPtr lParam)
+        {
+            try
+            {
+                if (sMainForm != null && sMainForm.Enabled == false)
+                    return CallNextHookEx(sHookInstance, code, wParam, lParam);
+
+                if (sIsSetHook == true && sOnSetHookHandler != null)
+                {
+                    if (sOnSetHookHandler(code, wParam, lParam) == 1)
+                        return 1;
+                }
+                else
+                {
+                    if (code >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
+                    {
+                        int vkCode = Marshal.ReadInt32(lParam);
+                        switch (vkCode)
+                        {
+                            case (int)Keys.LControlKey: sIsCtrl = true; break;
+                            case (int)Keys.LShiftKey: sIsLShift = true; break;
+                            case (int)Keys.RShiftKey: sIsRShift = true; break;
+                            case (int)Keys.LMenu: sIsAlt = true; break;
+                            default:
+                                {
+                                    var keyManager = HotkeyManager.getInstance();
+                                    if (keyManager.mEnableFanControlData.mIsCtrl == sIsCtrl &&
+                                        keyManager.mEnableFanControlData.mIsAlt == sIsAlt &&
+                                        keyManager.mEnableFanControlData.mIsLShift == sIsLShift &&
+                                        keyManager.mEnableFanControlData.mIsRShift == sIsRShift &&
+                                        keyManager.mEnableFanControlData.mKey == vkCode)
+                                    {
+                                        sMainForm.onTrayMenuEnableClick(null, null);
+                                    }
+
+                                    if (keyManager.mModeNormalData.mIsCtrl == sIsCtrl &&
+                                        keyManager.mModeNormalData.mIsAlt == sIsAlt &&
+                                        keyManager.mModeNormalData.mIsLShift == sIsLShift &&
+                                        keyManager.mModeNormalData.mIsRShift == sIsRShift &&
+                                        keyManager.mModeNormalData.mKey == vkCode)
+                                    {
+                                        sMainForm.onTrayMenuNormalClick(null, null);
+                                    }
+
+                                    if (keyManager.mModeSilenceData.mIsCtrl == sIsCtrl &&
+                                        keyManager.mModeSilenceData.mIsAlt == sIsAlt &&
+                                        keyManager.mModeSilenceData.mIsLShift == sIsLShift &&
+                                        keyManager.mModeSilenceData.mIsRShift == sIsRShift &&
+                                        keyManager.mModeSilenceData.mKey == vkCode)
+                                    {
+                                        sMainForm.onTrayMenuSilenceClick(null, null);
+                                    }
+
+                                    if (keyManager.mModePerformanceData.mIsCtrl == sIsCtrl &&
+                                        keyManager.mModePerformanceData.mIsAlt == sIsAlt &&
+                                        keyManager.mModePerformanceData.mIsLShift == sIsLShift &&
+                                        keyManager.mModePerformanceData.mIsRShift == sIsRShift &&
+                                        keyManager.mModePerformanceData.mKey == vkCode)
+                                    {
+                                        sMainForm.onTrayMenuPerformanceClick(null, null);
+                                    }
+
+                                    if (keyManager.mModeGameData.mIsCtrl == sIsCtrl &&
+                                        keyManager.mModeGameData.mIsAlt == sIsAlt &&
+                                        keyManager.mModeGameData.mIsLShift == sIsLShift &&
+                                        keyManager.mModeGameData.mIsRShift == sIsRShift &&
+                                        keyManager.mModeGameData.mKey == vkCode)
+                                    {
+                                        sMainForm.onTrayMenuGameClick(null, null);
+                                    }
+
+                                    if (keyManager.mEnableOSDData.mIsCtrl == sIsCtrl &&
+                                        keyManager.mEnableOSDData.mIsAlt == sIsAlt &&
+                                        keyManager.mEnableOSDData.mIsLShift == sIsLShift &&
+                                        keyManager.mEnableOSDData.mIsRShift == sIsRShift &&
+                                        keyManager.mEnableOSDData.mKey == vkCode)
+                                    {
+                                        sMainForm.onTrayManuEnableOSDClick(null, null);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+
+                    else if (code >= 0 && (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
+                    {
+                        int vkCode = Marshal.ReadInt32(lParam);
+                        switch (vkCode)
+                        {
+                            case (int)Keys.LControlKey: sIsCtrl = false; break;
+                            case (int)Keys.LShiftKey: sIsLShift = false; break;
+                            case (int)Keys.RShiftKey: sIsRShift = false; break;
+                            case (int)Keys.LMenu: sIsAlt = false; break;
+                            default: break;
+                        }
+                    }
+                }
+            }
+            catch { }
+            return CallNextHookEx(sHookInstance, code, wParam, lParam);
+        }
+
+        
     }
 }

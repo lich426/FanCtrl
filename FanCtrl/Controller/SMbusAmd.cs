@@ -12,17 +12,10 @@ namespace FanCtrl
             Ring0.WriteSmbus(SMB_HSTCNT, 0);
             if (transaction() == true)
             {
-                ushort data = getWord(addr, 0x06);
-                var temp = BitConverter.GetBytes(data);
-                Array.Reverse(temp);
-
-                ushort manufacturerID = BitConverter.ToUInt16(temp, 0);
-
-                for (int i = 0; i < SMBusController.sManufacturerID.Length; i++)
-                {
-                    if (manufacturerID == SMBusController.sManufacturerID[i])
-                        return addr;
-                }
+                ushort manufacturerID = getWord(addr, 0x06);
+                ushort deviceID = getWord(addr, 0x07);
+                if (manufacturerID > 0 && deviceID > 0)
+                    return addr;
             }
             return 0x00;
         }
