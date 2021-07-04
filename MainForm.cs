@@ -1179,7 +1179,8 @@ namespace FanCtrl
                                         keyManager.mEnableFanControlData.mIsAlt == sIsAlt &&
                                         keyManager.mEnableFanControlData.mIsLShift == sIsLShift &&
                                         keyManager.mEnableFanControlData.mIsRShift == sIsRShift &&
-                                        keyManager.mEnableFanControlData.mKey == vkCode)
+                                        keyManager.mEnableFanControlData.mKey == vkCode &&
+                                        keyManager.mEnableFanControlData.mKey > 0)
                                     {
                                         sMainForm.onTrayMenuEnableClick(null, null);
                                     }
@@ -1188,7 +1189,8 @@ namespace FanCtrl
                                         keyManager.mModeNormalData.mIsAlt == sIsAlt &&
                                         keyManager.mModeNormalData.mIsLShift == sIsLShift &&
                                         keyManager.mModeNormalData.mIsRShift == sIsRShift &&
-                                        keyManager.mModeNormalData.mKey == vkCode)
+                                        keyManager.mModeNormalData.mKey == vkCode &&
+                                        keyManager.mModeNormalData.mKey > 0)
                                     {
                                         sMainForm.onTrayMenuNormalClick(null, null);
                                     }
@@ -1197,7 +1199,8 @@ namespace FanCtrl
                                         keyManager.mModeSilenceData.mIsAlt == sIsAlt &&
                                         keyManager.mModeSilenceData.mIsLShift == sIsLShift &&
                                         keyManager.mModeSilenceData.mIsRShift == sIsRShift &&
-                                        keyManager.mModeSilenceData.mKey == vkCode)
+                                        keyManager.mModeSilenceData.mKey == vkCode &&
+                                        keyManager.mModeSilenceData.mKey > 0)
                                     {
                                         sMainForm.onTrayMenuSilenceClick(null, null);
                                     }
@@ -1206,7 +1209,8 @@ namespace FanCtrl
                                         keyManager.mModePerformanceData.mIsAlt == sIsAlt &&
                                         keyManager.mModePerformanceData.mIsLShift == sIsLShift &&
                                         keyManager.mModePerformanceData.mIsRShift == sIsRShift &&
-                                        keyManager.mModePerformanceData.mKey == vkCode)
+                                        keyManager.mModePerformanceData.mKey == vkCode &&
+                                        keyManager.mModePerformanceData.mKey > 0)
                                     {
                                         sMainForm.onTrayMenuPerformanceClick(null, null);
                                     }
@@ -1215,7 +1219,8 @@ namespace FanCtrl
                                         keyManager.mModeGameData.mIsAlt == sIsAlt &&
                                         keyManager.mModeGameData.mIsLShift == sIsLShift &&
                                         keyManager.mModeGameData.mIsRShift == sIsRShift &&
-                                        keyManager.mModeGameData.mKey == vkCode)
+                                        keyManager.mModeGameData.mKey == vkCode &&
+                                        keyManager.mModeGameData.mKey > 0)
                                     {
                                         sMainForm.onTrayMenuGameClick(null, null);
                                     }
@@ -1224,7 +1229,8 @@ namespace FanCtrl
                                         keyManager.mEnableOSDData.mIsAlt == sIsAlt &&
                                         keyManager.mEnableOSDData.mIsLShift == sIsLShift &&
                                         keyManager.mEnableOSDData.mIsRShift == sIsRShift &&
-                                        keyManager.mEnableOSDData.mKey == vkCode)
+                                        keyManager.mEnableOSDData.mKey == vkCode &&
+                                        keyManager.mEnableOSDData.mKey > 0)
                                     {
                                         sMainForm.onTrayManuEnableOSDClick(null, null);
                                     }
