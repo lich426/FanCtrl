@@ -52,7 +52,7 @@ namespace FanCtrl
                 {
                     upper = (byte)(upper & 0x0F);
                     value = (double)((double)upper * 16 + (double)lower / 16);
-                    Value = (int)value;
+                    Value = (int)Math.Round(value);
                 }
             }
             Util.sleep(10);

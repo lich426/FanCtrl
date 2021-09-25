@@ -35,8 +35,6 @@ namespace FanCtrl
         private int mFanIconIndex = 0;
         private System.Windows.Forms.Timer mFanIconTimer = null;
 
-        private Thread mStartThread = null;
-
         private bool mIsFirstShow = false;
         private bool mIsVisible = true;
 
@@ -185,48 +183,42 @@ namespace FanCtrl
             mFanIconIndex = 0;
 
             mNowHeight = mOriginHeight;
+
             this.resizeForm();
 
-            mStartThread = new Thread(new ThreadStart(() =>
+            int checkCount = (mIsFirstLoad == true) ? 3 : 0;
+            mIsFirstLoad = false;
+            while (true)
             {
-                int checkCount = (mIsFirstLoad == true) ? 3 : 0;
-                mIsFirstLoad = false;
-                while (true)
-                {
-                    // start hardware manager
-                    HardwareManager.getInstance().start();
+                // start hardware manager
+                HardwareManager.getInstance().start();
 
-                    // set hardware name
-                    bool isDifferent = false;
-                    if (HardwareManager.getInstance().read(ref isDifferent) == false)
-                        break;
-
-                    if (isDifferent == true && checkCount > 0)
-                    {
-                        // restart
-                        HardwareManager.getInstance().stop();
-                        Util.sleep(100);
-                        checkCount--;
-                        continue;
-                    }
+                // set hardware name
+                bool isDifferent = false;
+                if (HardwareManager.getInstance().read(ref isDifferent) == false)
                     break;
-                }
 
-                // set hardware name to file
-                HardwareManager.getInstance().write();
-
-                // read auto fan curve
-                ControlManager.getInstance().read();
-
-                // read osd data
-                OSDManager.getInstance().read();
-
-                this.BeginInvoke(new Action(delegate ()
+                if (isDifferent == true && checkCount > 0)
                 {
-                    this.onMainLoad();
-                }));
-            }));
-            mStartThread.Start();
+                    // restart
+                    HardwareManager.getInstance().stop();
+                    Util.sleep(50);
+                    checkCount--;
+                    continue;
+                }
+                break;
+            }
+
+            // set hardware name to file
+            HardwareManager.getInstance().write();
+
+            // read auto fan curve
+            ControlManager.getInstance().read();
+
+            // read osd data
+            OSDManager.getInstance().read();
+
+            this.onMainLoad();
         }
 
         private void onMainLoad()
