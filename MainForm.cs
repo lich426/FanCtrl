@@ -25,7 +25,7 @@ namespace FanCtrl
         private List<TextBox> mTempNameTextBoxList = new List<TextBox>();
         private List<Label> mFanLabelList = new List<Label>();
         private List<TextBox> mFanNameTextBoxList = new List<TextBox>();
-        private List<TextBox> mControlTextBoxList = new List<TextBox>();
+        private List<NumericUpDown> mControlNumericUpDownList = new List<NumericUpDown>();
         private List<Label> mControlLabelList = new List<Label>();
         private List<TextBox> mControlNameTextBoxList = new List<TextBox>();
 
@@ -131,6 +131,9 @@ namespace FanCtrl
 
             this.Resize += (s2, e2) =>
             {
+                if (this.WindowState == FormWindowState.Minimized)
+                    return;
+
                 if (mIsUserResize == false)
                 {
                     mIsUserResize = true;
@@ -168,7 +171,7 @@ namespace FanCtrl
             mTempNameTextBoxList.Clear();
             mFanLabelList.Clear();
             mFanNameTextBoxList.Clear();
-            mControlTextBoxList.Clear();
+            mControlNumericUpDownList.Clear();
             mControlLabelList.Clear();
             mControlNameTextBoxList.Clear();
 
@@ -186,39 +189,45 @@ namespace FanCtrl
 
             this.resizeForm();
 
-            int checkCount = (mIsFirstLoad == true) ? 3 : 0;
-            mIsFirstLoad = false;
-            while (true)
-            {
-                // start hardware manager
-                HardwareManager.getInstance().start();
-
-                // set hardware name
-                bool isDifferent = false;
-                if (HardwareManager.getInstance().read(ref isDifferent) == false)
-                    break;
-
-                if (isDifferent == true && checkCount > 0)
+            var task = new Task(delegate {
+                int checkCount = (mIsFirstLoad == true) ? 3 : 0;
+                mIsFirstLoad = false;
+                while (true)
                 {
-                    // restart
-                    HardwareManager.getInstance().stop();
-                    Util.sleep(50);
-                    checkCount--;
-                    continue;
+                    // start hardware manager
+                    HardwareManager.getInstance().start();
+
+                    // set hardware name
+                    bool isDifferent = false;
+                    if (HardwareManager.getInstance().read(ref isDifferent) == false)
+                        break;
+
+                    if (isDifferent == true && checkCount > 0)
+                    {
+                        // restart
+                        HardwareManager.getInstance().stop();
+                        Util.sleep(50);
+                        checkCount--;
+                        continue;
+                    }
+                    break;
                 }
-                break;
-            }
 
-            // set hardware name to file
-            HardwareManager.getInstance().write();
+                // set hardware name to file
+                HardwareManager.getInstance().write();
 
-            // read auto fan curve
-            ControlManager.getInstance().read();
+                // read auto fan curve
+                ControlManager.getInstance().read();
 
-            // read osd data
-            OSDManager.getInstance().read();
+                // read osd data
+                OSDManager.getInstance().read();
 
-            this.onMainLoad();
+                this.BeginInvoke(new Action(delegate ()
+                {
+                    this.onMainLoad();
+                }));                
+            });
+            task.Start();
         }
 
         private void onMainLoad()
@@ -442,6 +451,19 @@ namespace FanCtrl
             int fanHeight = mFanPanel.Height;
             int controlHeight = mControlPanel.Height;
 
+            int fontPointY = 0;
+            float fontSize = 9.0f;
+            FontFamily fontFamily = null;
+            try
+            {
+                fontFamily = new FontFamily("Gulim");
+                fontPointY = -5;
+            }
+            catch
+            {
+                fontFamily = FontFamily.GenericSansSerif;
+            }
+
             // temperature
             int pointY = 15;
             for (int i = 0; i < hardwareManager.TempList.Count(); i++)
@@ -455,7 +477,7 @@ namespace FanCtrl
                 libLabel.Text = Define.cLibraryTypeString[i];
                 libLabel.AutoSize = true;
                 libLabel.ForeColor = Color.Red;
-                libLabel.Font = new Font(libLabel.Font, FontStyle.Bold);
+                libLabel.Font = new Font(fontFamily, fontSize, FontStyle.Bold);
                 mTempPanel.Controls.Add(libLabel);
 
                 var libLabel2 = new Label();
@@ -478,6 +500,7 @@ namespace FanCtrl
                     hardwareLabel.Height = 20;
                     hardwareLabel.Text = hardwareDevice.Name;
                     hardwareLabel.ForeColor = Color.Blue;
+                    hardwareLabel.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                     mTempPanel.Controls.Add(hardwareLabel);
 
                     var hardwareLabel2 = new Label();
@@ -495,16 +518,17 @@ namespace FanCtrl
                         var device = hardwareDevice.DeviceList[k];
 
                         var label = new Label();
-                        label.Location = new System.Drawing.Point(3, pointY);
-                        label.Size = new System.Drawing.Size(40, 23);
+                        label.Location = new System.Drawing.Point(0, pointY);
+                        label.Size = new System.Drawing.Size(45, 23);
                         label.Text = "";
                         label.AutoSize = false;
                         label.TextAlign = ContentAlignment.TopRight;
+                        label.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                         mTempPanel.Controls.Add(label);
                         mTempLabelList.Add(label);
 
                         var textBox = new TextBox();
-                        textBox.Location = new System.Drawing.Point(label.Right + 5, label.Top - 5);
+                        textBox.Location = new System.Drawing.Point(label.Right + 2, label.Top + fontPointY);
                         textBox.Size = new System.Drawing.Size(mTempPanel.Width - 70, 23);
                         textBox.Multiline = false;
                         textBox.MaxLength = 40;
@@ -553,7 +577,7 @@ namespace FanCtrl
                 libLabel.Text = Define.cLibraryTypeString[i];
                 libLabel.AutoSize = true;
                 libLabel.ForeColor = Color.Red;
-                libLabel.Font = new Font(libLabel.Font, FontStyle.Bold);
+                libLabel.Font = new Font(fontFamily, fontSize, FontStyle.Bold);
                 mFanPanel.Controls.Add(libLabel);
 
                 var libLabel2 = new Label();
@@ -576,6 +600,7 @@ namespace FanCtrl
                     hardwareLabel.Height = 20;
                     hardwareLabel.Text = hardwareDevice.Name;
                     hardwareLabel.ForeColor = Color.Blue;
+                    hardwareLabel.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                     mFanPanel.Controls.Add(hardwareLabel);
 
                     var hardwareLabel2 = new Label();
@@ -593,16 +618,17 @@ namespace FanCtrl
                         var device = hardwareDevice.DeviceList[k];
 
                         var label = new Label();
-                        label.Location = new System.Drawing.Point(3, pointY);
-                        label.Size = new System.Drawing.Size(60, 23);
+                        label.Location = new System.Drawing.Point(0, pointY);
+                        label.Size = new System.Drawing.Size(67, 23);
                         label.Text = "";
                         label.AutoSize = false;
                         label.TextAlign = ContentAlignment.TopRight;
+                        label.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                         mFanPanel.Controls.Add(label);
                         mFanLabelList.Add(label);
 
                         var textBox = new TextBox();
-                        textBox.Location = new System.Drawing.Point(label.Right + 5, label.Top - 5);
+                        textBox.Location = new System.Drawing.Point(label.Right + 2, label.Top + fontPointY);
                         textBox.Size = new System.Drawing.Size(mFanPanel.Width - 90, 23);
                         textBox.Multiline = false;
                         textBox.MaxLength = 40;
@@ -660,7 +686,7 @@ namespace FanCtrl
                 libLabel.Text = Define.cLibraryTypeString[i];
                 libLabel.AutoSize = true;
                 libLabel.ForeColor = Color.Red;
-                libLabel.Font = new Font(libLabel.Font, FontStyle.Bold);
+                libLabel.Font = new Font(fontFamily, fontSize, FontStyle.Bold);
                 mControlPanel.Controls.Add(libLabel);
 
                 var libLabel2 = new Label();
@@ -683,6 +709,7 @@ namespace FanCtrl
                     hardwareLabel.Height = 20;
                     hardwareLabel.Text = hardwareDevice.Name;
                     hardwareLabel.ForeColor = Color.Blue;
+                    hardwareLabel.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                     mControlPanel.Controls.Add(hardwareLabel);
 
                     var hardwareLabel2 = new Label();
@@ -699,42 +726,59 @@ namespace FanCtrl
                     {
                         var device = (BaseControl)hardwareDevice.DeviceList[k];
 
-                        var textBox = new TextBox();
-                        textBox.Location = new System.Drawing.Point(10, pointY - 5);
-                        textBox.Size = new System.Drawing.Size(40, 23);
-                        textBox.Multiline = false;
-                        textBox.MaxLength = 3;
-                        textBox.Text = "" + device.Value;
-                        textBox.KeyPress += (object sender, KeyPressEventArgs e) =>
+                        var number = new NumericUpDown();
+                        number.Location = new System.Drawing.Point(10, pointY + fontPointY);
+                        number.Size = new System.Drawing.Size(40, 23);
+                        number.Maximum = 100;
+                        number.Minimum = 0;
+                        number.Value = 0;
+                        number.Increment = 1;
+
+                        int z = mControlNumericUpDownList.Count;
+                        number.ValueChanged += (object sender, EventArgs e) =>
                         {
-                            if (e.KeyChar == (char)Keys.Enter)
+                            var tempNumber = (NumericUpDown)sender;
+                            var controlBaseList = hardwareManager.ControlBaseList;
+                            var controlDevice = controlBaseList[z];
+                            int originValue = controlDevice.Value;
+
+                            int nowValue = Decimal.ToInt32(tempNumber.Value);
+                            int minSpeed = controlBaseList[z].getMinSpeed();
+                            int maxSpeed = controlBaseList[z].getMaxSpeed();
+
+                            if (nowValue >= minSpeed && nowValue <= maxSpeed)
                             {
-                                this.onControlTextBoxLeaves(sender, EventArgs.Empty);
+                                int changeValue = hardwareManager.addChangeValue(nowValue, controlDevice);
+                                if (changeValue != originValue)
+                                {
+                                    tempNumber.Value = changeValue;
+                                }
+                                Console.WriteLine("numericIndex : " + z);
                             }
-                            else if (char.IsDigit(e.KeyChar) == false)
+                            else
                             {
-                                e.Handled = true;
+                                tempNumber.Value = originValue;
+                                mToolTip.Show(minSpeed + " ≤  value ≤ " + maxSpeed, tempNumber, 2000);
                             }
                         };
-                        textBox.Leave += onControlTextBoxLeaves;
 
-                        mControlPanel.Controls.Add(textBox);
-                        mControlTextBoxList.Add(textBox);
+                        mControlPanel.Controls.Add(number);
+                        mControlNumericUpDownList.Add(number);
 
                         int minValue = device.getMinSpeed();
                         int maxValue = device.getMaxSpeed();
-                        var tooltipString = minValue + " ≤  value ≤ " + maxValue;
-                        mToolTip.SetToolTip(textBox, tooltipString);
+                        mToolTip.SetToolTip(number, minValue + " ≤  value ≤ " + maxValue);
 
                         var label = new Label();
-                        label.Location = new System.Drawing.Point(textBox.Right + 2, pointY);
+                        label.Location = new System.Drawing.Point(number.Right + 1, pointY);
                         label.Size = new System.Drawing.Size(15, 23);
                         label.Text = "%";
+                        label.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                         mControlPanel.Controls.Add(label);
                         mControlLabelList.Add(label);
 
                         var textBox2 = new TextBox();
-                        textBox2.Location = new System.Drawing.Point(label.Right + 5, label.Top - 5);
+                        textBox2.Location = new System.Drawing.Point(label.Right + 7, label.Top + fontPointY);
                         textBox2.Size = new System.Drawing.Size(mControlPanel.Width - 95, 23);
                         textBox2.Multiline = false;
                         textBox2.MaxLength = 40;
@@ -786,46 +830,6 @@ namespace FanCtrl
             mNowHeight = mNowHeight + heightGap;
 
             this.resizeForm();
-        }
-
-        private void onControlTextBoxLeaves(object sender, EventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            var hardwareManager = HardwareManager.getInstance();
-            var controlBaseList = hardwareManager.ControlBaseList;
-
-            try
-            {
-                int value = int.Parse(textBox.Text);
-                for (int i = 0; i < mControlTextBoxList.Count; i++)
-                {
-                    if (mControlTextBoxList[i].Equals(sender) == true)
-                    {
-                        var controlDevice = controlBaseList[i];
-                        int originValue = controlDevice.Value;
-
-                        int minValue = controlBaseList[i].getMinSpeed();
-                        int maxValue = controlBaseList[i].getMaxSpeed();
-
-                        if (value >= minValue && value <= maxValue)
-                        {
-                            int changeValue = hardwareManager.addChangeValue(value, controlDevice);
-                            if (changeValue != originValue)
-                            {
-                                textBox.Text = changeValue.ToString();
-                            }
-                        }
-                        else
-                        {
-                            textBox.Text = originValue.ToString();
-                            var tooltipString = minValue + " ≤  value ≤ " + maxValue;
-                            mToolTip.Show(tooltipString, textBox, 2000);
-                        }
-                        break;
-                    }
-                }
-            }
-            catch { }
         }
 
         private void onNameTextBoxLeaves(TextBox textBox, NAME_TYPE nameType, ref List<TextBox> nameTextBoxList)
@@ -905,9 +909,9 @@ namespace FanCtrl
                 for (int i = 0; i < hardwareManager.ControlBaseList.Count; i++)
                 {
                     var device = hardwareManager.ControlBaseList[i];
-                    if (mControlTextBoxList[i].Focused == false)
+                    if (mControlNumericUpDownList[i].Focused == false)
                     {
-                        mControlTextBoxList[i].Text = device.Value.ToString();
+                        mControlNumericUpDownList[i].Value = device.Value;
                     }
                 }
 
