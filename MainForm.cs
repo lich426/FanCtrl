@@ -1015,7 +1015,17 @@ namespace FanCtrl
         private void onDonatePictureBoxClick(object sender, MouseEventArgs e)
         {
             Console.WriteLine("MainForm.onDonatePictureBoxClick()");
-            System.Diagnostics.Process.Start("https://www.buymeacoffee.com/lich");
+
+            string localString = StringLib.Localize;
+            if (localString.CompareTo("ko") == 0)
+            {
+                var form = new DonateForm();
+                form.ShowDialog();
+            }
+            else
+            {
+                System.Diagnostics.Process.Start("https://www.buymeacoffee.com/lich");
+            }
         }
 
         private void onOSDButtonClick(object sender, EventArgs e)

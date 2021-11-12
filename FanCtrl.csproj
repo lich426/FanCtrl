@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.4.4.0</ApplicationVersion>
+    <ApplicationVersion>1.4.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -131,7 +131,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NvAPIWrapper">
+    <Reference Include="NvAPIWrapper, Version=0.8.1.100, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\NvAPIWrapper.dll</HintPath>
     </Reference>
     <Reference Include="OpenHardwareMonitorLib, Version=0.9.2.3, Culture=neutral, processorArchitecture=MSIL">
@@ -163,6 +164,12 @@
     </Compile>
     <Compile Include="ControlForm.Designer.cs">
       <DependentUpon>ControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DonateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DonateForm.Designer.cs">
+      <DependentUpon>DonateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FanCtrl\Controller\HidUSBController.cs" />
     <Compile Include="FanCtrl\Controller\Kernel\AdvApi32.cs" />
@@ -288,6 +295,9 @@
     </Compile>
     <EmbeddedResource Include="ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DonateForm.resx">
+      <DependentUpon>DonateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HotkeyForm.resx">
       <DependentUpon>HotkeyForm.cs</DependentUpon>

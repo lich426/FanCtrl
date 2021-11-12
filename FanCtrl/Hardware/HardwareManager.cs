@@ -188,12 +188,35 @@ namespace FanCtrl
                         // temperature
                         var id = string.Format("NvAPIWrapper/{0}/{1}/Temp", hardwareName, gpu.GPUId);
                         var name = "GPU Core";
-                        var temp = new NvAPITemp(id, name, i);
+                        var temp = new NvAPITemp(id, name, i, NvAPITemp.TEMPERATURE_TYPE.CORE);
                         temp.LockBus += lockBus;
                         temp.UnlockBus += unlockBus;
 
                         var tempDevice = new HardwareDevice(hardwareName);
                         tempDevice.addDevice(temp);
+
+                        if (gpu.ThermalInformation.HasAnyThermalSensor == true)
+                        {
+                            if (gpu.ThermalInformation.HotSpotTemperature != 0)
+                            {
+                                id = string.Format("NvAPIWrapper/{0}/{1}/HotSpotTemp", hardwareName, gpu.GPUId);
+                                name = "GPU Hot Spot";
+                                temp = new NvAPITemp(id, name, i, NvAPITemp.TEMPERATURE_TYPE.HOTSPOT);
+                                temp.LockBus += lockBus;
+                                temp.UnlockBus += unlockBus;
+                                tempDevice.addDevice(temp);
+                            }
+
+                            if (gpu.ThermalInformation.MemoryJunctionTemperature != 0)
+                            {
+                                id = string.Format("NvAPIWrapper/{0}/{1}/MemoryJunctionTemp", hardwareName, gpu.GPUId);
+                                name = "GPU Memory Junction";
+                                temp = new NvAPITemp(id, name, i, NvAPITemp.TEMPERATURE_TYPE.MEMORY);
+                                temp.LockBus += lockBus;
+                                temp.UnlockBus += unlockBus;
+                                tempDevice.addDevice(temp);
+                            }
+                        }
 
                         var tempList = TempList[(int)LIBRARY_TYPE.NvAPIWrapper];
                         tempList.Add(tempDevice);

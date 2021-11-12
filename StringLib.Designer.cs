@@ -169,6 +169,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Donate (Kakao Pay)과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Donate {
+            get {
+                return ResourceManager.GetString("Donate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Enable automatic fan control과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Enable_automatic_fan_control {
@@ -345,6 +354,15 @@ namespace FanCtrl {
         internal static string Load {
             get {
                 return ResourceManager.GetString("Load", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   US과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Localize {
+            get {
+                return ResourceManager.GetString("Localize", resourceCulture);
             }
         }
         

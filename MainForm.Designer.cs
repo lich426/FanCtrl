@@ -54,18 +54,18 @@
             this.mExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mMadeLabel1 = new System.Windows.Forms.Label();
             this.mMadeLabel2 = new System.Windows.Forms.Label();
-            this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
             this.mOSDButton = new System.Windows.Forms.Button();
             this.mLoadingPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.mReloadButton = new System.Windows.Forms.Button();
             this.mHotKeyButton = new System.Windows.Forms.Button();
+            this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
             this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mControlGroupBox.SuspendLayout();
             this.mTrayMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
             this.mLoadingPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // mTempGroupBox
@@ -258,17 +258,6 @@
             this.mMadeLabel2.TabIndex = 8;
             this.mMadeLabel2.Text = "(lich426@gmail.com)";
             // 
-            // mDonatePictureBox
-            // 
-            this.mDonatePictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.BackgroundImage")));
-            this.mDonatePictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.mDonatePictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.InitialImage")));
-            this.mDonatePictureBox.Location = new System.Drawing.Point(146, 81);
-            this.mDonatePictureBox.Name = "mDonatePictureBox";
-            this.mDonatePictureBox.Size = new System.Drawing.Size(92, 26);
-            this.mDonatePictureBox.TabIndex = 12;
-            this.mDonatePictureBox.TabStop = false;
-            // 
             // mOSDButton
             // 
             this.mOSDButton.Location = new System.Drawing.Point(553, 71);
@@ -316,6 +305,17 @@
             this.mHotKeyButton.UseVisualStyleBackColor = true;
             this.mHotKeyButton.Click += new System.EventHandler(this.onHotKeyButtonClick);
             // 
+            // mDonatePictureBox
+            // 
+            this.mDonatePictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.BackgroundImage")));
+            this.mDonatePictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.mDonatePictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.InitialImage")));
+            this.mDonatePictureBox.Location = new System.Drawing.Point(146, 81);
+            this.mDonatePictureBox.Name = "mDonatePictureBox";
+            this.mDonatePictureBox.Size = new System.Drawing.Size(92, 26);
+            this.mDonatePictureBox.TabIndex = 12;
+            this.mDonatePictureBox.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -341,9 +341,9 @@
             this.mFanGroupBox.ResumeLayout(false);
             this.mControlGroupBox.ResumeLayout(false);
             this.mTrayMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).EndInit();
             this.mLoadingPanel.ResumeLayout(false);
             this.mLoadingPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mDonatePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -370,7 +370,6 @@
         private System.Windows.Forms.ToolStripMenuItem mGameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Label mMadeLabel2;
-        private System.Windows.Forms.PictureBox mDonatePictureBox;
         private System.Windows.Forms.Button mOSDButton;
         private System.Windows.Forms.ToolStripMenuItem mEnableOSDToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -381,6 +380,7 @@
         private System.Windows.Forms.Panel mControlPanel;
         private System.Windows.Forms.Button mReloadButton;
         private System.Windows.Forms.Button mHotKeyButton;
+        private System.Windows.Forms.PictureBox mDonatePictureBox;
     }
 }
 

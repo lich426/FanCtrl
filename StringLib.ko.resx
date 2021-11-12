@@ -153,6 +153,9 @@
   <data name="Delay_Time" xml:space="preserve">
     <value>지연시간(초) :</value>
   </data>
+  <data name="Donate" xml:space="preserve">
+    <value>후원하기(카카오페이)</value>
+  </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
     <value>자동 팬 제어 활성화</value>
   </data>
@@ -212,6 +215,9 @@
   </data>
   <data name="Load" xml:space="preserve">
     <value>로드</value>
+  </data>
+  <data name="Localize" xml:space="preserve">
+    <value>ko</value>
   </data>
   <data name="Made1" xml:space="preserve">
     <value>Made by 똥고집</value>

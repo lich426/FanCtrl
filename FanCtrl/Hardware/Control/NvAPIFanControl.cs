@@ -32,7 +32,7 @@ namespace FanCtrl
             LastValue = value;
             mMinSpeed = minSpeed;
             mMaxSpeed = maxSpeed;
-            IsSetSpeed = true;
+            IsSetSpeed = false;
             mDefaultCoolerPolicy = defaultCoolerPolicy;
             Console.WriteLine("NvAPIFanControl.NvAPIFanControl() : defaultCoolerPolicy({0})", (int)defaultCoolerPolicy);
         }
@@ -110,8 +110,8 @@ namespace FanCtrl
                 var gpuArray = PhysicalGPU.GetPhysicalGPUs();
                 var info = gpuArray[mIndex].CoolerInformation;
 
-                //info.RestoreCoolerSettingsToDefault(mCoolerID);
-                info.SetCoolerSettings(mCoolerID, mDefaultCoolerPolicy);
+                info.RestoreCoolerSettingsToDefault(mCoolerID);
+                //info.SetCoolerSettings(mCoolerID, mDefaultCoolerPolicy);
                 //info.SetCoolerSettings(mCoolerID, NvAPIWrapper.Native.GPU.CoolerPolicy.None);
                 IsSetSpeed = false;
                 Console.WriteLine("NvAPIFanControl.setAuto() : {0}", mCoolerID);
