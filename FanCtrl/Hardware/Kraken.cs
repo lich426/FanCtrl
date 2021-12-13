@@ -20,17 +20,18 @@ namespace FanCtrl
         private int mLastFanRPM = 0;
         private int mLastPumpRPM = 0;
 
-        private int mPumpSpeed = 50;
-        private int mFanPercent = 25;
+        private int mPumpSpeed = 0;
+        private int mFanPercent = 0;
 
         private int mLastPumpSpeed = 0;
         private int mLastFanPercent = 0;
 
         private long mLastSendTime = 0;      
 
-        public Kraken() : base(USBDeviceType.Kraken)
+        public Kraken(int defPumpDuty, int defFanDuty) : base(USBDeviceType.Kraken)
         {
-            
+            mPumpSpeed = defPumpDuty;
+            mFanPercent = defFanDuty;
         }
 
         public int getMinFanSpeed()
@@ -50,7 +51,11 @@ namespace FanCtrl
             {
                 return 20;
             }
-
+            // Z3
+            else if (mUSBController.ProductID == USBProductID.KrakenZ3)
+            {
+                return 50;
+            }
             // X2
             return 50;
         }
@@ -72,9 +77,6 @@ namespace FanCtrl
             {
                 mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + string.Format("Kraken{0}.json", index + 1);
             }
-
-            mPumpSpeed = 50;
-            mFanPercent = 25;
             mLastPumpSpeed = 0;
             mLastFanPercent = 0;
 
@@ -135,6 +137,25 @@ namespace FanCtrl
                         }
                     }                    
                 }
+                // Z3
+                else if(mUSBController.ProductID == USBProductID.KrakenZ3)
+                {
+                    if (recvDataSize >= 64)
+                    {
+                        var temp = (int)Math.Round(recvArray[15] + (recvArray[16] * 0.1));
+                        var pump = (int)(recvArray[18] << 8 | recvArray[17]);
+                        var pumbDuty = (int)recvArray[19];
+                        var fan = (int)(recvArray[24] << 8 | recvArray[23]);
+                        var fanDuty = (int)recvArray[25];
+
+                        if (temp > 0 && temp < 100 && pump > 0 && pump < 10000 && fan > 0 && fan < 10000)
+                        {
+                            mLastLiquidTemp = temp;
+                            mLastPumpRPM = pump;
+                            mLastFanRPM = fan;
+                        }
+                    }
+                }
                 // X2
                 else
                 {
@@ -180,6 +201,24 @@ namespace FanCtrl
                     }
                     mUSBController.send(commandList.ToArray());
                 }
+                // Z3
+                else if (mUSBController.ProductID == USBProductID.KrakenZ3)
+                {
+                    // 펌프 속도 변경
+                    if (mPumpSpeed != mLastPumpSpeed)
+                    {
+                        mLastPumpSpeed = mPumpSpeed;
+                        mUSBController.send(getCommends(0x01, mPumpSpeed));
+                    }                   
+                    // 팬 속도 변경
+                    if (mFanPercent != mLastFanPercent)
+                    {
+                        mLastFanPercent = mFanPercent;
+                        mUSBController.send(getCommends(0x02, mFanPercent));
+                    }
+                    // 상태정보 가져오기
+                    mUSBController.send(new byte[] { 0x74, 0x01 });
+                }
 
                 // X2
                 else
@@ -213,6 +252,19 @@ namespace FanCtrl
             Monitor.Exit(mLock);
         }
 
+        private byte[] getCommends(byte cid, int numCmd)
+        {
+            var cmd = Convert.ToByte(numCmd);
+            var commandList = new byte[] {    0x72, cid, 0x00, 0x00,
+                cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,
+                cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,
+                cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,
+                cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  cmd,  0x64,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            };
+            return commandList;
+        }
         protected override bool readFile()
         {
             try

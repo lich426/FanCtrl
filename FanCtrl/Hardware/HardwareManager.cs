@@ -4,6 +4,7 @@ using System.Threading;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
@@ -309,6 +310,9 @@ namespace FanCtrl
                 try
                 {
                     uint num = 1;
+                    var defPumpDuty = 100;
+                    var defFanDuty = 50;
+                    var controlManager = ControlManager.getInstance();
 
                     // X2
                     var tempDevice = new HardwareDevice("NZXT Kraken X2");
@@ -317,7 +321,7 @@ namespace FanCtrl
                     uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX2);
                     for (uint i = 0; i < devCount; i++)
                     {
-                        var kraken = new Kraken();
+                        var kraken = new Kraken(defPumpDuty, defFanDuty);
                         if (kraken.start(i, USBProductID.KrakenX2) == true)
                         {
                             KrakenList.Add(kraken);
@@ -337,12 +341,12 @@ namespace FanCtrl
                             id = string.Format("NZXT/KrakenX2/{0}/Control/Fan", i);
                             var fanControl = new KrakenFanControl(id, kraken, num);
                             controlDevice.addDevice(fanControl);
-                            this.addChangeValue(30, fanControl, false);
+                            this.addChangeValue(defFanDuty, fanControl, false);
 
                             id = string.Format("NZXT/KrakenX2/{0}/Control/Pump", i);
                             var pumpControl = new KrakenPumpControl(id, kraken, num);
                             controlDevice.addDevice(pumpControl);
-                            this.addChangeValue(50, pumpControl, false);
+                            this.addChangeValue(defPumpDuty, pumpControl, false);
 
                             num++;
                         }
@@ -373,7 +377,7 @@ namespace FanCtrl
                     devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX3);
                     for (uint i = 0; i < devCount; i++)
                     {
-                        var kraken = new Kraken();
+                        var kraken = new Kraken(defPumpDuty, defFanDuty);
                         if (kraken.start(i, USBProductID.KrakenX3) == true)
                         {
                             KrakenList.Add(kraken);
@@ -389,7 +393,80 @@ namespace FanCtrl
                             id = string.Format("NZXT/KrakenX3/{0}/Control/Pump", i);
                             var pumpControl = new KrakenPumpControl(id, kraken, num);
                             controlDevice.addDevice(pumpControl);
-                            this.addChangeValue(50, pumpControl, false);
+                            this.addChangeValue(defPumpDuty, pumpControl, false);
+
+                            num++;
+                        }
+                    }
+
+                    if (tempDevice.DeviceList.Count > 0)
+                    {
+                        var tempList = TempList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        tempList.Add(tempDevice);
+                    }
+
+                    if (fanDevice.DeviceList.Count > 0)
+                    {
+                        var fanList = FanList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        fanList.Add(fanDevice);
+                    }
+
+                    if (controlDevice.DeviceList.Count > 0)
+                    {
+                        var controlList = ControlList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                        controlList.Add(controlDevice);
+                    }
+
+                    // Z3
+                    tempDevice = new HardwareDevice("NZXT Kraken Z3");
+                    fanDevice = new HardwareDevice("NZXT Kraken Z3");
+                    controlDevice = new HardwareDevice("NZXT Kraken Z3");
+                    devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenZ3);
+                    for (uint i = 0; i < devCount; i++)
+                    {
+                        // 해당 모드에 기록되어있는 팬속도와 펌프속도의 최소값을 기본값으로 설정한다.
+                        var ctrDataList = controlManager.getControlDataList(controlManager.ModeType);
+                        foreach (var ctrData in ctrDataList)
+                        {
+                            foreach (var fanData in ctrData.FanDataList)
+                            {
+                                if (fanData.ID == string.Format("NZXT/KrakenZ3/{0}/Control/Fan", i))
+                                {
+                                    defFanDuty = fanData.ValueList.Min();
+                                }
+                                else if (fanData.ID == string.Format("NZXT/KrakenZ3/{0}/Control/Pump", i))
+                                {
+                                    defPumpDuty = fanData.ValueList.Min();
+                                }
+                            }
+                        }
+
+                        var kraken = new Kraken(defPumpDuty, defFanDuty);
+                        if (kraken.start(i, USBProductID.KrakenZ3) == true)
+                        {
+                            KrakenList.Add(kraken);                            
+
+                            var id = string.Format("NZXT/KrakenZ3/{0}/Temp", i);
+                            var temp = new KrakenLiquidTemp(id, kraken, num);
+                            tempDevice.addDevice(temp);
+
+                            id = string.Format("NZXT/KrakenZ3/{0}/Fan", i);
+                            var fan = new KrakenFanSpeed(id, kraken, num);
+                            fanDevice.addDevice(fan);
+
+                            id = string.Format("NZXT/KrakenZ3/{0}/Pump", i);
+                            var pump = new KrakenPumpSpeed(id, kraken, num);
+                            fanDevice.addDevice(pump);
+
+                            id = string.Format("NZXT/KrakenZ3/{0}/Control/Fan", i);
+                            var fanControl = new KrakenFanControl(id, kraken, num);
+                            controlDevice.addDevice(fanControl);
+                            this.addChangeValue(defFanDuty, fanControl, false);
+
+                            id = string.Format("NZXT/KrakenZ3/{0}/Control/Pump", i);
+                            var pumpControl = new KrakenPumpControl(id, kraken, num);
+                            controlDevice.addDevice(pumpControl);
+                            this.addChangeValue(defPumpDuty, pumpControl, false);
 
                             num++;
                         }

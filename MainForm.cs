@@ -192,6 +192,10 @@ namespace FanCtrl
             var task = new Task(delegate {
                 int checkCount = (mIsFirstLoad == true) ? 3 : 0;
                 mIsFirstLoad = false;
+
+                // read auto fan curve
+                ControlManager.getInstance().read();
+
                 while (true)
                 {
                     // start hardware manager
@@ -214,10 +218,7 @@ namespace FanCtrl
                 }
 
                 // set hardware name to file
-                HardwareManager.getInstance().write();
-
-                // read auto fan curve
-                ControlManager.getInstance().read();
+                HardwareManager.getInstance().write();                
 
                 // read osd data
                 OSDManager.getInstance().read();

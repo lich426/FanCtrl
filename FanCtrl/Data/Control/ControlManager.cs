@@ -267,10 +267,12 @@ namespace FanCtrl
                 string id = controlObject.Value<string>("id");
 
                 // check temperature sensor
+                /*
                 if (tempBaseMap.ContainsKey(id) == false)
                 {
                     continue;
                 }
+                */
 
                 var controlData = new ControlData(id);
 
@@ -287,10 +289,12 @@ namespace FanCtrl
                     string fanID = fanObject.Value<string>("id");
 
                     // check control sensor
+                    /*
                     if (controlBaseMap.ContainsKey(fanID) == false)
                     {
                         continue;
                     }
+                    */
 
                     bool isStep = (fanObject.ContainsKey("step") == true) ? fanObject.Value<bool>("step") : true;
                     int hysteresis = (fanObject.ContainsKey("hysteresis") == true) ? fanObject.Value<int>("hysteresis") : 0;
