@@ -45,6 +45,8 @@ namespace FanCtrl
 
         // NZXT Kraken
         public List<Kraken> KrakenList { get; } = new List<Kraken>();
+        public List<KrakenLCD> KrakenLCDList { get; } = new List<KrakenLCD>();
+
 
         // EVGA CLC
         public List<CLC> CLCList { get; } = new List<CLC>();
@@ -304,6 +306,22 @@ namespace FanCtrl
                 this.unlockSMBus();
             }
 
+            if (OptionManager.getInstance().IsKrakenLCD == true)
+            {
+                // Z3 LCD
+                uint devCount = LibUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenZ3);
+                for (uint i = 0; i < devCount; i++)
+                {
+                    var krakenLCD = new KrakenLCD();
+                    if (krakenLCD.start(i, USBProductID.KrakenZ3) == true)
+                    {
+                        KrakenLCDList.Add(krakenLCD);
+
+                        krakenLCD.send();
+                    }
+                }
+            }
+
             // NZXT Kraken
             if (OptionManager.getInstance().IsKraken == true)
             {                
@@ -415,7 +433,7 @@ namespace FanCtrl
                     {
                         var controlList = ControlList[(int)LIBRARY_TYPE.NZXT_Kraken];
                         controlList.Add(controlDevice);
-                    }
+                    }                                     
 
                     // Z3
                     tempDevice = new HardwareDevice("NZXT Kraken Z3");
@@ -1335,7 +1353,7 @@ namespace FanCtrl
                         // remove auto mode control
                         autoControlDictionary.Remove(control.ID);
 
-                        Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
+                        // Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
 
                         if (control.Value == control.NextValue)
                             continue;
@@ -1345,7 +1363,7 @@ namespace FanCtrl
                     foreach (var keyPair in autoControlDictionary)
                     {
                         var control = keyPair.Value;
-                        Console.WriteLine("auto mode : name({0})", control.Name);
+                        // Console.WriteLine("auto mode : name({0})", control.Name);
                         control.setAuto();
                     }
                 }

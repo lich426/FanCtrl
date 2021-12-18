@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class LightingForm : Form
+    public partial class LCDForm : Form
     {
         private USBDevice mUSBDevice = null;
 
@@ -18,12 +18,14 @@ namespace FanCtrl
 
         private List<TextBox> mHexTextBoxList = new List<TextBox>();
         private List<Button> mRemoveButtonList = new List<Button>();
+        private bool mIsApply;
 
-        public LightingForm(USBDevice device, int num)
+        public LCDForm(USBDevice device, int num)
         {
+            mIsApply = false;
             mUSBDevice = device;
             InitializeComponent();
-            this.localizeComponent(num);            
+            this.localizeComponent(num);
 
             var customList = mUSBDevice.getCustomDataList();
             if (customList.Count == 0)
@@ -32,29 +34,21 @@ namespace FanCtrl
             }
             else
             {
-                for(int i = 0; i < customList.Count; i++)
+                for (int i = 0; i < customList.Count; i++)
                 {
                     this.onAddButtonClick(null, EventArgs.Empty);
                     mHexTextBoxList[i].Text = customList[i];
                 }
             }
         }
-        
+
         private void localizeComponent(int num)
         {
             if (mUSBDevice.DeviceType == USBDeviceType.Kraken)
             {
-                this.Text = StringLib.Kraken_Lighting + string.Format(" ({0})", num);
+                this.Text = StringLib.Kraken_LCD + string.Format(" ({0})", num);
             }
-            else if (mUSBDevice.DeviceType == USBDeviceType.CLC)
-            {
-                this.Text = StringLib.CLC_Lighting + string.Format(" ({0})", num);
-            }
-            else if (mUSBDevice.DeviceType == USBDeviceType.RGBnFC)
-            {
-                this.Text = StringLib.RGBnFC_Lighting + string.Format(" ({0})", num);
-            }
-
+            
             mAddButton.Text = StringLib.Add;
             mApplyButton.Text = StringLib.Apply;
             mOKButton.Text = StringLib.OK;
@@ -62,7 +56,7 @@ namespace FanCtrl
 
         private void onTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Control || e.Shift || e.Alt || e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete) {}
+            if (e.Control || e.Shift || e.Alt || e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete) { }
             else if (Util.isHex((char)e.KeyCode) == false)
             {
                 mIsCancel = true;
@@ -71,7 +65,12 @@ namespace FanCtrl
 
         private void onTextBoxKeyPress(object sender, KeyPressEventArgs e)
         {
-            if(mIsCancel == true)
+            if (mIsApply == true)
+            {
+                mIsApply = false;
+            }
+
+            if (mIsCancel == true)
             {
                 e.Handled = true;
                 mIsCancel = false;
@@ -79,7 +78,7 @@ namespace FanCtrl
         }
 
         private void onAddButtonClick(object sender, EventArgs e)
-        {
+        {            
             var textBox = new TextBox();
             textBox.Parent = mHexDataGroupBox;
             textBox.Name = "mHexTextBox" + mHexTextBoxList.Count;
@@ -116,25 +115,27 @@ namespace FanCtrl
 
             mHexTextBoxList.Add(textBox);
             mRemoveButtonList.Add(removeButton);
+            mIsApply = false;
         }
 
         private void onRemoveButtonClick(object sender, EventArgs e)
-        {
+        {            
             if (mRemoveButtonList.Count == 1)
             {
-                if(mHexTextBoxList.Count > 0)
+                if (mHexTextBoxList.Count > 0)
                 {
                     mHexTextBoxList[0].Text = "";
-                }                
+                }
+                mIsApply = false;
                 return;
             }
 
-            for(int i = 0; i < mRemoveButtonList.Count; i++)
+            for (int i = 0; i < mRemoveButtonList.Count; i++)
             {
-                if(sender == mRemoveButtonList[i])
+                if (sender == mRemoveButtonList[i])
                 {
                     int minusHeight = 30;
-                    for(int j = i + 1; j < mRemoveButtonList.Count; j++)
+                    for (int j = i + 1; j < mRemoveButtonList.Count; j++)
                     {
                         mHexTextBoxList[j].Top = mHexTextBoxList[j].Top - minusHeight;
                         mRemoveButtonList[j].Top = mRemoveButtonList[j].Top - minusHeight;
@@ -154,27 +155,33 @@ namespace FanCtrl
                     break;
                 }
             }
+            mIsApply = false;
         }
 
         private void onApplyButtonClick(object sender, EventArgs e)
         {
-            var hexStringList = new List<string>();
-            for(int i = 0; i < mHexTextBoxList.Count; i++)
+            if (mIsApply == false)
             {
-                if (mHexTextBoxList[i].Text.Length == 0)
-                    continue;
-
-                var text = mHexTextBoxList[i].Text;
-                text = text.Replace(" ", "");
-                if (text.Length % 2 != 0)
+                var hexStringList = new List<string>();
+                for (int i = 0; i < mHexTextBoxList.Count; i++)
                 {
-                    text = text + "0";
-                }
-                hexStringList.Add(text);
-            }
+                    if (mHexTextBoxList[i].Text.Length == 0)
+                        continue;
 
-            mUSBDevice.setCustomDataList(hexStringList);
-            mUSBDevice.writeFile();            
+                    var text = mHexTextBoxList[i].Text;
+                    text = text.Replace(" ", "");
+                    if (text.Length % 2 != 0)
+                    {
+                        text = text + "0";
+                    }
+                    hexStringList.Add(text);
+                }
+
+                mUSBDevice.setCustomDataList(hexStringList);
+                mUSBDevice.writeFile();
+                mUSBDevice.send();
+                mIsApply = true;
+            }
         }
 
         private void onOKButtonClick(object sender, EventArgs e)
@@ -184,3 +191,4 @@ namespace FanCtrl
         }
     }
 }
+

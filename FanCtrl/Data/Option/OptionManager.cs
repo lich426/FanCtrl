@@ -55,6 +55,9 @@ namespace FanCtrl
         // Dimm
         public bool IsDimm { get; set; }
 
+        // NZXT Kraken Z3
+        public bool IsKrakenLCD { get; set; }
+
         // NZXT Kraken X2, X3
         public bool IsKraken { get; set; }
 
@@ -126,6 +129,7 @@ namespace FanCtrl
 
             IsNvAPIWrapper = true;
             IsDimm = true;
+            IsKrakenLCD = true;
             IsKraken = true;
             IsCLC = true;
             IsRGBnFC = true;
@@ -167,6 +171,7 @@ namespace FanCtrl
 
                 IsNvAPIWrapper = (rootObject.ContainsKey("IsNvAPIWrapper") == true) ? rootObject.Value<bool>("IsNvAPIWrapper") : true;
                 IsDimm = (rootObject.ContainsKey("IsDimm") == true) ? rootObject.Value<bool>("IsDimm") : false;
+                IsKrakenLCD = (rootObject.ContainsKey("IsKrakenLCD") == true) ? rootObject.Value<bool>("IsKrakenLCD") : true;
                 IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : true;
                 IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : true;
                 IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : true;
@@ -213,7 +218,8 @@ namespace FanCtrl
                 rootObject["IsOHMMemory"] = IsOHMMemory;
 
                 rootObject["IsNvAPIWrapper"] = IsNvAPIWrapper;
-                rootObject["IsDimm"] = IsDimm;                
+                rootObject["IsDimm"] = IsDimm;
+                rootObject["IsKrakenLCD"] = IsKrakenLCD;
                 rootObject["IsKraken"] = IsKraken;
                 rootObject["IsCLC"] = IsCLC;
                 rootObject["IsRGBnFC"] = IsRGBnFC;

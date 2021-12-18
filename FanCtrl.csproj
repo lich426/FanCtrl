@@ -123,6 +123,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
+    <Reference Include="LibUsbDotNet.LibUsbDotNet, Version=2.2.0.0, Culture=neutral, PublicKeyToken=c677239abe1e02a9, processorArchitecture=MSIL">
+      <HintPath>packages\LibUsbDotNet.2.2.29\lib\net45\LibUsbDotNet.LibUsbDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.15.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Microsoft.Win32.TaskScheduler.dll</HintPath>
@@ -176,6 +179,7 @@
     <Compile Include="FanCtrl\Controller\Kernel\Kernel32.cs" />
     <Compile Include="FanCtrl\Controller\Kernel\KernelDriver.cs" />
     <Compile Include="FanCtrl\Controller\Kernel\Ring0.cs" />
+    <Compile Include="FanCtrl\Controller\LibUSBController.cs" />
     <Compile Include="FanCtrl\Controller\OSDController.cs" />
     <Compile Include="FanCtrl\Controller\SiUSBController.cs" />
     <Compile Include="FanCtrl\Controller\SiUSBXp.cs" />
@@ -211,6 +215,7 @@
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoCategory.cs" />
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoDevice.cs" />
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
+    <Compile Include="FanCtrl\Hardware\KrakenLCD.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\HWInfoOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\OHMOSDSensor.cs" />
@@ -257,6 +262,12 @@
     <Compile Include="HotkeyForm.Designer.cs">
       <DependentUpon>HotkeyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LCDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LCDForm.Designer.cs">
+      <DependentUpon>LCDForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LightingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -302,6 +313,9 @@
     <EmbeddedResource Include="HotkeyForm.resx">
       <DependentUpon>HotkeyForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LCDForm.resx">
+      <DependentUpon>LCDForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LightingForm.resx">
       <DependentUpon>LightingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -332,6 +346,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -361,6 +376,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\%24this.Icon.ico" />
     <None Include="Resources\8.ico" />
     <None Include="Resources\7.ico" />
     <None Include="Resources\6.ico" />

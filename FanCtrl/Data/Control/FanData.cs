@@ -191,7 +191,7 @@ namespace FanCtrl
                     LastChangedTemp = 0;
                     LastChangedValue = 0;
                     LastChangedTempForAuto = 0;
-                    Console.WriteLine("FanData.getValue() : {0}, {1}", LastChangedTemp, LastChangedValue);
+                    // Console.WriteLine("FanData.getValue() : {0}, {1}", LastChangedTemp, LastChangedValue);
                     return 0;
                 }
 
@@ -202,7 +202,7 @@ namespace FanCtrl
                     if (LastChangedTempForAuto > 0 && LastChangedTempForAuto - temperature <= Hysteresis)
                     {
                         isAuto = false;
-                        Console.WriteLine("FanData.getValue() : 1({0}, {1}, {2})", LastChangedTempForAuto, LastChangedTemp, LastChangedValue);
+                        // Console.WriteLine("FanData.getValue() : 1({0}, {1}, {2})", LastChangedTempForAuto, LastChangedTemp, LastChangedValue);
                         return LastChangedValue;
                     }
                 }
@@ -210,7 +210,7 @@ namespace FanCtrl
                 LastChangedTemp = 0;
                 LastChangedValue = 0;
                 LastChangedTempForAuto = 0;
-                Console.WriteLine("FanData.getValue() : 2({0}, {1}, {2})", LastChangedTempForAuto, LastChangedTemp, LastChangedValue);
+                // Console.WriteLine("FanData.getValue() : 2({0}, {1}, {2})", LastChangedTempForAuto, LastChangedTemp, LastChangedValue);
                 return 0;
             }
 
@@ -241,7 +241,7 @@ namespace FanCtrl
                     LastChangedTemp = minIndex * (int)this.getDivideValue();
                     LastChangedTempForAuto = nextIndex * (int)this.getDivideValue();
                 }
-                Console.WriteLine("FanData.getValue() : 4({0}, {1}, {2})", LastChangedTempForAuto, LastChangedTemp, LastChangedValue);
+                // Console.WriteLine("FanData.getValue() : 4({0}, {1}, {2})", LastChangedTempForAuto, LastChangedTemp, LastChangedValue);
                 return LastChangedValue;
             }
 

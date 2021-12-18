@@ -204,11 +204,17 @@
   <data name="Items" xml:space="preserve">
     <value>아이템</value>
   </data>
+	<data name="Kraken_LCD" xml:space="preserve">
+    <value>Kraken LCD 설정</value>
+  </data>
   <data name="Kraken_Lighting" xml:space="preserve">
     <value>Kraken 조명 설정</value>
   </data>
   <data name="Library" xml:space="preserve">
     <value>라이브러리</value>
+  </data>
+	<data name="LCD" xml:space="preserve">
+    <value>LCD</value>
   </data>
   <data name="Lighting" xml:space="preserve">
     <value>조명</value>

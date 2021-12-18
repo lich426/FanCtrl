@@ -41,6 +41,10 @@ namespace FanCtrl
 
         }
 
+        public virtual void send()
+        {            
+        }
+
         public void setCustomDataList(List<string> hexStringList)
         {
             Monitor.Enter(mLock);

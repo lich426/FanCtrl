@@ -107,8 +107,11 @@ namespace FanCtrl
 
             mDimmCheckBox.Checked = OptionManager.getInstance().IsDimm;
             
-            mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
-            mKrakenButton.Enabled = (HardwareManager.getInstance().KrakenList.Count > 0);
+            mKrakenLCDCheckBox.Checked = OptionManager.getInstance().IsKrakenLCD;
+            mKrakenLCDButton.Enabled = (HardwareManager.getInstance().KrakenLCDList.Count > 0);
+
+            mKrakenLightCheckBox.Checked = OptionManager.getInstance().IsKraken;
+            mKrakenLightButton.Enabled = (HardwareManager.getInstance().KrakenList.Count > 0);
 
             mCLCCheckBox.Checked = OptionManager.getInstance().IsCLC;            
             mCLCButton.Enabled = (HardwareManager.getInstance().CLCList.Count > 0);
@@ -130,7 +133,8 @@ namespace FanCtrl
         {
             this.Text = StringLib.Option;
             mIntervalGroupBox.Text = StringLib.Interval;
-            mKrakenButton.Text = StringLib.Lighting;
+            mKrakenLCDButton.Text = StringLib.LCD;
+            mKrakenLightButton.Text = StringLib.Lighting;
             mCLCButton.Text = StringLib.Lighting;
             mRGBnFCButton.Text = StringLib.Lighting;
             mAnimationCheckBox.Text = StringLib.Tray_Icon_animation;
@@ -190,7 +194,8 @@ namespace FanCtrl
 
                 (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
                 (optionManager.IsDimm != mDimmCheckBox.Checked) ||
-                (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
+                (optionManager.IsKrakenLCD != mKrakenLCDCheckBox.Checked) ||
+                (optionManager.IsKraken != mKrakenLightCheckBox.Checked) ||
                 (optionManager.IsCLC != mCLCCheckBox.Checked) ||
                 (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked) ||
                 (optionManager.IsHWInfo != mHWInfoCheckBox.Checked))
@@ -228,7 +233,8 @@ namespace FanCtrl
 
             optionManager.IsDimm = mDimmCheckBox.Checked;
             
-            optionManager.IsKraken = mKrakenCheckBox.Checked;
+            optionManager.IsKrakenLCD = mKrakenLCDCheckBox.Checked;
+            optionManager.IsKraken = mKrakenLightCheckBox.Checked;
 
             optionManager.IsCLC = mCLCCheckBox.Checked;
 
@@ -305,7 +311,34 @@ namespace FanCtrl
             }         
         }
 
-        private void onKrakenButtonClick(object sender, EventArgs e)
+        private void onKrakenZButtonClick(object sender, EventArgs e)
+        {
+            var deviceList = HardwareManager.getInstance().KrakenLCDList;
+            if (deviceList.Count == 1)
+            {
+                var form = new LCDForm(deviceList[0], 1);
+                form.ShowDialog();
+            }
+            else
+            {
+                var menu = new ContextMenu();
+                for (int i = 0; i < deviceList.Count; i++)
+                {
+                    int index = i;
+                    var item = new MenuItem(string.Format("{0}", i + 1), (sender2, e2) =>
+                    {
+                        var form = new LCDForm(deviceList[index], index + 1);
+                        form.ShowDialog();
+                    });
+                    menu.MenuItems.Add(item);
+                }
+
+                var point = mKrakenLCDButton.PointToClient(Control.MousePosition);
+                menu.Show(mKrakenLCDButton, point);
+            }
+        }
+
+        private void onKrakenXButtonClick(object sender, EventArgs e)
         {
             var deviceList = HardwareManager.getInstance().KrakenList;
             if (deviceList.Count == 1)
@@ -327,8 +360,8 @@ namespace FanCtrl
                     menu.MenuItems.Add(item);
                 }
 
-                var point = mKrakenButton.PointToClient(Control.MousePosition);
-                menu.Show(mKrakenButton, point);
+                var point = mKrakenLightButton.PointToClient(Control.MousePosition);
+                menu.Show(mKrakenLightButton, point);
             }
         }
 

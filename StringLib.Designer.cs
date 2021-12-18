@@ -320,7 +320,18 @@ namespace FanCtrl {
                 return ResourceManager.GetString("Items", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Kraken LCD과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Kraken_LCD
+        {
+            get
+            {
+                return ResourceManager.GetString("Kraken_LCD", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Kraken Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
@@ -338,7 +349,18 @@ namespace FanCtrl {
                 return ResourceManager.GetString("Library", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   LCD(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string LCD
+        {
+            get
+            {
+                return ResourceManager.GetString("LCD", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
