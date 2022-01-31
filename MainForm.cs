@@ -1024,7 +1024,7 @@ namespace FanCtrl
             }
             else
             {
-                System.Diagnostics.Process.Start("https://www.buymeacoffee.com/lich");
+                System.Diagnostics.Process.Start("https://www.paypal.com/paypalme/lich426");
             }
         }
 
