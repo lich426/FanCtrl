@@ -91,7 +91,7 @@ Graph : [ZedGraph][8]<br>
  - Not all types of hardware are supported.<br>
 
 ## Donate
-<a href="https://www.buymeacoffee.com/lich" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a><br><br>
+<a href="https://paypal.me/lich426" target="_blank"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/pp-acceptance-large.png"/></a></td></tr></table><!-- PayPal Logo --></a><br><br>
  Bitcoin(BTC) : 3MqZ7rbA7xPM6Enx3Cs6vWjxaqcowCKk7i<br>
  Ethereum(ETH) : 0x8e3fa34a332255f9ec13e5d576aab728ba02f9cc<br>
 
