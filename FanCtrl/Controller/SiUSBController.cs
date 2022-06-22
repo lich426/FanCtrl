@@ -111,8 +111,7 @@ namespace FanCtrl
             }
             catch (Exception e)
             {
-                Console.WriteLine("SiUSBController.start() : Failed catch({0})", e.Message);
-                
+                Console.WriteLine("SiUSBController.start() : Failed catch({0})", e.Message);                
             }
             Monitor.Exit(mLock);
             this.stop();
@@ -172,9 +171,7 @@ namespace FanCtrl
                         if (ret2 <= 0)
                         {
                             Console.WriteLine(String.Format("SiUSBController.threadFunc() : Failed recv({0})", ret2));
-                            Monitor.Exit(mLock);
-                            Util.sleep(ref mThreadState, 100);
-                            continue;
+                            break;
                         }
 
                         this.onReport(recvArray, ret2);
