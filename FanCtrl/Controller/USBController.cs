@@ -31,6 +31,9 @@ namespace FanCtrl
         // KrakenX3 series
         KrakenX3 = 0x2007,
 
+        // KrakenX3 series
+        KrakenX3_NEW = 0x2014,
+
         // EVGA CLC
         CLC = 0xb200,
 

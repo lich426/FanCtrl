@@ -367,50 +367,55 @@ namespace FanCtrl
                     }
 
                     // X3
-                    tempDevice = new HardwareDevice("NZXT Kraken X3");
-                    fanDevice = new HardwareDevice("NZXT Kraken X3");
-                    controlDevice = new HardwareDevice("NZXT Kraken X3");
-                    devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.KrakenX3);
-                    for (uint i = 0; i < devCount; i++)
+                    for (int n = 0; n < 2; n++)
                     {
-                        var kraken = new Kraken();
-                        if (kraken.start(i, USBProductID.KrakenX3) == true)
+                        var productID = (n == 0) ? USBProductID.KrakenX3 : USBProductID.KrakenX3_NEW;
+
+                        tempDevice = new HardwareDevice("NZXT Kraken X3");
+                        fanDevice = new HardwareDevice("NZXT Kraken X3");
+                        controlDevice = new HardwareDevice("NZXT Kraken X3");
+                        devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, productID);
+                        for (uint i = 0; i < devCount; i++)
                         {
-                            KrakenList.Add(kraken);
+                            var kraken = new Kraken();
+                            if (kraken.start(i, productID) == true)
+                            {
+                                KrakenList.Add(kraken);
 
-                            var id = string.Format("NZXT/KrakenX3/{0}/Temp", i);
-                            var temp = new KrakenLiquidTemp(id, kraken, num);
-                            tempDevice.addDevice(temp);
+                                var id = string.Format("NZXT/KrakenX3/{0}/Temp", i);
+                                var temp = new KrakenLiquidTemp(id, kraken, num);
+                                tempDevice.addDevice(temp);
 
-                            id = string.Format("NZXT/KrakenX3/{0}/Pump", i);
-                            var pump = new KrakenPumpSpeed(id, kraken, num);
-                            fanDevice.addDevice(pump);
+                                id = string.Format("NZXT/KrakenX3/{0}/Pump", i);
+                                var pump = new KrakenPumpSpeed(id, kraken, num);
+                                fanDevice.addDevice(pump);
 
-                            id = string.Format("NZXT/KrakenX3/{0}/Control/Pump", i);
-                            var pumpControl = new KrakenPumpControl(id, kraken, num);
-                            controlDevice.addDevice(pumpControl);
-                            this.addChangeValue(50, pumpControl, false);
+                                id = string.Format("NZXT/KrakenX3/{0}/Control/Pump", i);
+                                var pumpControl = new KrakenPumpControl(id, kraken, num);
+                                controlDevice.addDevice(pumpControl);
+                                this.addChangeValue(50, pumpControl, false);
 
-                            num++;
+                                num++;
+                            }
                         }
-                    }
 
-                    if (tempDevice.DeviceList.Count > 0)
-                    {
-                        var tempList = TempList[(int)LIBRARY_TYPE.NZXT_Kraken];
-                        tempList.Add(tempDevice);
-                    }
+                        if (tempDevice.DeviceList.Count > 0)
+                        {
+                            var tempList = TempList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                            tempList.Add(tempDevice);
+                        }
 
-                    if (fanDevice.DeviceList.Count > 0)
-                    {
-                        var fanList = FanList[(int)LIBRARY_TYPE.NZXT_Kraken];
-                        fanList.Add(fanDevice);
-                    }
+                        if (fanDevice.DeviceList.Count > 0)
+                        {
+                            var fanList = FanList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                            fanList.Add(fanDevice);
+                        }
 
-                    if (controlDevice.DeviceList.Count > 0)
-                    {
-                        var controlList = ControlList[(int)LIBRARY_TYPE.NZXT_Kraken];
-                        controlList.Add(controlDevice);
+                        if (controlDevice.DeviceList.Count > 0)
+                        {
+                            var controlList = ControlList[(int)LIBRARY_TYPE.NZXT_Kraken];
+                            controlList.Add(controlDevice);
+                        }
                     }
                 }
                 catch { }

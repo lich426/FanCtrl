@@ -46,7 +46,8 @@ namespace FanCtrl
         public int getMinPumpSpeed()
         {
             // X3
-            if (mUSBController.ProductID == USBProductID.KrakenX3)
+            if (mUSBController.ProductID == USBProductID.KrakenX3 ||
+                mUSBController.ProductID == USBProductID.KrakenX3_NEW)
             {
                 return 20;
             }
@@ -121,7 +122,8 @@ namespace FanCtrl
             try
             {
                 // X3
-                if (mUSBController.ProductID == USBProductID.KrakenX3)
+                if (mUSBController.ProductID == USBProductID.KrakenX3 ||
+                    mUSBController.ProductID == USBProductID.KrakenX3_NEW)
                 {
                     if(recvDataSize >= 18)
                     {
@@ -165,7 +167,8 @@ namespace FanCtrl
             try
             {
                 // X3
-                if (mUSBController.ProductID == USBProductID.KrakenX3)
+                if (mUSBController.ProductID == USBProductID.KrakenX3 ||
+                    mUSBController.ProductID == USBProductID.KrakenX3_NEW)
                 {
                     mLastPumpSpeed = mPumpSpeed;
 
