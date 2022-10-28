@@ -118,6 +118,8 @@ namespace FanCtrl
 
             mHWInfoCheckBox.Checked = OptionManager.getInstance().IsHWInfo;
 
+            mLiquidctlCheckBox.Checked = OptionManager.getInstance().IsLiquidctl;
+
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
@@ -193,7 +195,8 @@ namespace FanCtrl
                 (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
                 (optionManager.IsCLC != mCLCCheckBox.Checked) ||
                 (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked) ||
-                (optionManager.IsHWInfo != mHWInfoCheckBox.Checked))
+                (optionManager.IsHWInfo != mHWInfoCheckBox.Checked) ||
+                (optionManager.IsLiquidctl != mLiquidctlCheckBox.Checked))
             {
                 var result = MessageBox.Show(StringLib.OptionChange, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result == DialogResult.Cancel)
@@ -235,6 +238,8 @@ namespace FanCtrl
             optionManager.IsRGBnFC = mRGBnFCCheckBox.Checked;
 
             optionManager.IsHWInfo = mHWInfoCheckBox.Checked;
+
+            optionManager.IsLiquidctl = mLiquidctlCheckBox.Checked;
 
             optionManager.IsFahrenheit = mFahrenheitCheckBox.Checked;
             optionManager.IsAnimation = mAnimationCheckBox.Checked;

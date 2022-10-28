@@ -611,6 +611,27 @@ namespace FanCtrl
                 catch { }
             }
 
+            if (OptionManager.getInstance().IsLiquidctl == true)
+            {
+                LiquidctlManager.getInstance().start();
+
+                var tempList = TempList[(int)LIBRARY_TYPE.Liquidctl];
+                LiquidctlManager.getInstance().createTemp(ref tempList);
+
+                var fanList = FanList[(int)LIBRARY_TYPE.Liquidctl];
+                LiquidctlManager.getInstance().createFan(ref fanList);
+
+                var controlList = ControlList[(int)LIBRARY_TYPE.Liquidctl];
+                LiquidctlManager.getInstance().createControl(ref controlList);
+
+                int count = LiquidctlManager.getInstance().getLiquidctlControlCount();
+                for (int i = 0; i < count; i++)
+                {
+                    var control = LiquidctlManager.getInstance().getLiquidctlControl(i);
+                    this.addChangeValue(control.Value, control, false);
+                }
+            }
+
             for (int i = 0; i < TempList.Count; i++)
             {
                 var deviceList = TempList[i];
@@ -742,6 +763,7 @@ namespace FanCtrl
             }                
 
             HWInfoManager.getInstance().stop();
+            LiquidctlManager.getInstance().stop();
 
             mChangeControlList.Clear();
             mChangeValueList.Clear();

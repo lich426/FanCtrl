@@ -67,6 +67,9 @@ namespace FanCtrl
         // HWiNFO
         public bool IsHWInfo { get; set; }
 
+        // liquidctl
+        public bool IsLiquidctl { get; set; }
+
         // Other options
         public bool IsAnimation { get; set; }
 
@@ -130,6 +133,7 @@ namespace FanCtrl
             IsCLC = true;
             IsRGBnFC = true;
             IsHWInfo = false;
+            IsLiquidctl = false;
 
             IsAnimation = true;
             IsFahrenheit = false;
@@ -171,6 +175,7 @@ namespace FanCtrl
                 IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : true;
                 IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : true;
                 IsHWInfo = (rootObject.ContainsKey("IsHWInfo") == true) ? rootObject.Value<bool>("IsHWInfo") : false;
+                IsLiquidctl = (rootObject.ContainsKey("IsLiquidctl") == true) ? rootObject.Value<bool>("IsLiquidctl") : false;
 
                 IsAnimation = (rootObject.ContainsKey("IsAnimation") == true) ? rootObject.Value<bool>("IsAnimation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("IsFahrenheit") == true) ? rootObject.Value<bool>("IsFahrenheit") : false;
@@ -218,6 +223,7 @@ namespace FanCtrl
                 rootObject["IsCLC"] = IsCLC;
                 rootObject["IsRGBnFC"] = IsRGBnFC;
                 rootObject["IsHWInfo"] = IsHWInfo;
+                rootObject["IsLiquidctl"] = IsLiquidctl;
 
                 rootObject["IsAnimation"] = IsAnimation;
                 rootObject["IsFahrenheit"] = IsFahrenheit;

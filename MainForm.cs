@@ -105,6 +105,7 @@ namespace FanCtrl
             mFanGroupBox.Text = StringLib.Fan_speed;
             mControlGroupBox.Text = StringLib.Fan_control;
 
+            mLiquidctlButton.Text = StringLib.liquidctl_Setting;
             mOptionButton.Text = StringLib.Option;
             mFanControlButton.Text = StringLib.Auto_Fan_Control;
             mMadeLabel1.Text = StringLib.Made1;
@@ -174,6 +175,9 @@ namespace FanCtrl
             mControlNumericUpDownList.Clear();
             mControlLabelList.Clear();
             mControlNameTextBoxList.Clear();
+
+            mLiquidctlButton.Enabled = OptionManager.getInstance().IsLiquidctl;
+            mLiquidctlButton.Visible = OptionManager.getInstance().IsLiquidctl;
 
             if (mFanIconTimer != null)
             {
@@ -298,6 +302,7 @@ namespace FanCtrl
             mMadeLabel2.Top = madeLabelPoint2;
             mDonatePictureBox.Top = donatePictureBoxPoint;
 
+            mLiquidctlButton.Top = buttonPoint;
             mReloadButton.Top = buttonPoint;
             mHotKeyButton.Top = buttonPoint;
             mOSDButton.Top = buttonPoint;
@@ -1053,6 +1058,15 @@ namespace FanCtrl
             this.reload();
         }
 
+        private void onLiquidctlButtonClick(object sender, EventArgs e)
+        {
+            var form = new LiquidctlForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                this.onReloadButtonClick(null, EventArgs.Empty);
+            }
+        }
+
         private const int WM_POWERBROADCAST = 0x218;
         private const int PBT_APMQUERYSUSPEND = 0x0;
         private const int PBT_APMRESUMESUSPEND = 0x7;
@@ -1262,7 +1276,6 @@ namespace FanCtrl
             catch { }
             return CallNextHookEx(sHookInstance, code, wParam, lParam);
         }
-
         
     }
 }

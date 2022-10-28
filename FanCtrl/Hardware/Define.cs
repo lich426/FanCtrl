@@ -18,6 +18,7 @@ namespace FanCtrl
         EVGA_CLC,
         RGBnFC,
         HWiNFO,
+        Liquidctl,
         OSD,
 
         MAX,
@@ -35,6 +36,7 @@ namespace FanCtrl
             "EVGA CLC",
             "NZXT RGB&FanController",
             "HWiNFO",
+            "liquidctl",
             "On screen display",
         };
     }

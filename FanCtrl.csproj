@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.5.0.0</ApplicationVersion>
+    <ApplicationVersion>1.5.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -210,12 +210,18 @@
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoManager.cs" />
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoCategory.cs" />
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoDevice.cs" />
+    <Compile Include="FanCtrl\Hardware\liquidctl\LiquidctlData.cs" />
+    <Compile Include="FanCtrl\Hardware\liquidctl\LiquidctlStatusData.cs" />
+    <Compile Include="FanCtrl\Hardware\liquidctl\LiquidctlManager.cs" />
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\HWInfoOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\OHMOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\LHMOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\HWInfoFanSpeed.cs" />
+    <Compile Include="FanCtrl\Hardware\Control\LiquidctlControl.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\LiquidctlSpeed.cs" />
+    <Compile Include="FanCtrl\Hardware\Sensor\LiquidctlTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\HWInfoTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\OHMFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\LHMFanSpeed.cs" />
@@ -263,6 +269,24 @@
     <Compile Include="LightingForm.Designer.cs">
       <DependentUpon>LightingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LiquidctlCommandForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LiquidctlCommandForm.Designer.cs">
+      <DependentUpon>LiquidctlCommandForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiquidctlFanControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LiquidctlFanControlForm.Designer.cs">
+      <DependentUpon>LiquidctlFanControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LiquidctlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LiquidctlForm.Designer.cs">
+      <DependentUpon>LiquidctlForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,6 +328,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LightingForm.resx">
       <DependentUpon>LightingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LiquidctlCommandForm.resx">
+      <DependentUpon>LiquidctlCommandForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LiquidctlFanControlForm.resx">
+      <DependentUpon>LiquidctlFanControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LiquidctlForm.resx">
+      <DependentUpon>LiquidctlForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -375,7 +408,11 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)dll\*.dll" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(SolutionDir)dll\*.dll" "$(TargetDir)"
+mkdir "$(TargetDir)\plugin"
+copy /Y "$(SolutionDir)plugin\*.exe" "$(TargetDir)plugin"
+mkdir "$(TargetDir)\preset"
+copy /Y "$(SolutionDir)preset\*.preset" "$(TargetDir)preset"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>del "$(TargetDir)*.dll"</PreBuildEvent>

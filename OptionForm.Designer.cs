@@ -38,6 +38,10 @@
             this.mOKButton = new System.Windows.Forms.Button();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mLibraryGroupBox = new System.Windows.Forms.GroupBox();
+            this.mLiquidctlCheckBox = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.mOHMMemoryCheckBox = new System.Windows.Forms.CheckBox();
+            this.mLHMMemoryCheckBox = new System.Windows.Forms.CheckBox();
             this.mHWInfoCheckBox = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -75,8 +79,6 @@
             this.mStartupDelayLabel = new System.Windows.Forms.Label();
             this.mStartupDelayTextBox = new System.Windows.Forms.TextBox();
             this.mResetButton = new System.Windows.Forms.Button();
-            this.mLHMMemoryCheckBox = new System.Windows.Forms.CheckBox();
-            this.mOHMMemoryCheckBox = new System.Windows.Forms.CheckBox();
             this.mIntervalGroupBox.SuspendLayout();
             this.mLibraryGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -112,7 +114,7 @@
             // mMinimizeCheckBox
             // 
             this.mMinimizeCheckBox.AutoSize = true;
-            this.mMinimizeCheckBox.Location = new System.Drawing.Point(19, 768);
+            this.mMinimizeCheckBox.Location = new System.Drawing.Point(18, 808);
             this.mMinimizeCheckBox.Name = "mMinimizeCheckBox";
             this.mMinimizeCheckBox.Size = new System.Drawing.Size(112, 16);
             this.mMinimizeCheckBox.TabIndex = 28;
@@ -122,7 +124,7 @@
             // mStartupCheckBox
             // 
             this.mStartupCheckBox.AutoSize = true;
-            this.mStartupCheckBox.Location = new System.Drawing.Point(19, 793);
+            this.mStartupCheckBox.Location = new System.Drawing.Point(18, 833);
             this.mStartupCheckBox.Name = "mStartupCheckBox";
             this.mStartupCheckBox.Size = new System.Drawing.Size(131, 16);
             this.mStartupCheckBox.TabIndex = 29;
@@ -131,7 +133,7 @@
             // 
             // mOKButton
             // 
-            this.mOKButton.Location = new System.Drawing.Point(84, 844);
+            this.mOKButton.Location = new System.Drawing.Point(83, 884);
             this.mOKButton.Name = "mOKButton";
             this.mOKButton.Size = new System.Drawing.Size(116, 38);
             this.mOKButton.TabIndex = 32;
@@ -145,6 +147,8 @@
             // 
             // mLibraryGroupBox
             // 
+            this.mLibraryGroupBox.Controls.Add(this.mLiquidctlCheckBox);
+            this.mLibraryGroupBox.Controls.Add(this.label10);
             this.mLibraryGroupBox.Controls.Add(this.mOHMMemoryCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mLHMMemoryCheckBox);
             this.mLibraryGroupBox.Controls.Add(this.mHWInfoCheckBox);
@@ -181,10 +185,48 @@
             this.mLibraryGroupBox.Controls.Add(this.mKrakenCheckBox);
             this.mLibraryGroupBox.Location = new System.Drawing.Point(12, 77);
             this.mLibraryGroupBox.Name = "mLibraryGroupBox";
-            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 634);
+            this.mLibraryGroupBox.Size = new System.Drawing.Size(188, 675);
             this.mLibraryGroupBox.TabIndex = 5;
             this.mLibraryGroupBox.TabStop = false;
             this.mLibraryGroupBox.Text = "Library";
+            // 
+            // mLiquidctlCheckBox
+            // 
+            this.mLiquidctlCheckBox.AutoSize = true;
+            this.mLiquidctlCheckBox.Location = new System.Drawing.Point(6, 645);
+            this.mLiquidctlCheckBox.Name = "mLiquidctlCheckBox";
+            this.mLiquidctlCheckBox.Size = new System.Drawing.Size(67, 16);
+            this.mLiquidctlCheckBox.TabIndex = 36;
+            this.mLiquidctlCheckBox.Text = "liquidctl";
+            this.mLiquidctlCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label10.Location = new System.Drawing.Point(2, 631);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(180, 2);
+            this.label10.TabIndex = 35;
+            // 
+            // mOHMMemoryCheckBox
+            // 
+            this.mOHMMemoryCheckBox.AutoSize = true;
+            this.mOHMMemoryCheckBox.Location = new System.Drawing.Point(17, 389);
+            this.mOHMMemoryCheckBox.Name = "mOHMMemoryCheckBox";
+            this.mOHMMemoryCheckBox.Size = new System.Drawing.Size(71, 16);
+            this.mOHMMemoryCheckBox.TabIndex = 34;
+            this.mOHMMemoryCheckBox.Text = "Memory";
+            this.mOHMMemoryCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // mLHMMemoryCheckBox
+            // 
+            this.mLHMMemoryCheckBox.AutoSize = true;
+            this.mLHMMemoryCheckBox.Location = new System.Drawing.Point(17, 228);
+            this.mLHMMemoryCheckBox.Name = "mLHMMemoryCheckBox";
+            this.mLHMMemoryCheckBox.Size = new System.Drawing.Size(71, 16);
+            this.mLHMMemoryCheckBox.TabIndex = 33;
+            this.mLHMMemoryCheckBox.Text = "Memory";
+            this.mLHMMemoryCheckBox.UseVisualStyleBackColor = true;
             // 
             // mHWInfoCheckBox
             // 
@@ -492,7 +534,7 @@
             // mAnimationCheckBox
             // 
             this.mAnimationCheckBox.AutoSize = true;
-            this.mAnimationCheckBox.Location = new System.Drawing.Point(19, 718);
+            this.mAnimationCheckBox.Location = new System.Drawing.Point(18, 758);
             this.mAnimationCheckBox.Name = "mAnimationCheckBox";
             this.mAnimationCheckBox.Size = new System.Drawing.Size(137, 16);
             this.mAnimationCheckBox.TabIndex = 26;
@@ -502,7 +544,7 @@
             // mFahrenheitCheckBox
             // 
             this.mFahrenheitCheckBox.AutoSize = true;
-            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(19, 743);
+            this.mFahrenheitCheckBox.Location = new System.Drawing.Point(18, 783);
             this.mFahrenheitCheckBox.Name = "mFahrenheitCheckBox";
             this.mFahrenheitCheckBox.Size = new System.Drawing.Size(108, 16);
             this.mFahrenheitCheckBox.TabIndex = 27;
@@ -512,7 +554,7 @@
             // mStartupDelayLabel
             // 
             this.mStartupDelayLabel.AutoSize = true;
-            this.mStartupDelayLabel.Location = new System.Drawing.Point(36, 817);
+            this.mStartupDelayLabel.Location = new System.Drawing.Point(35, 857);
             this.mStartupDelayLabel.Name = "mStartupDelayLabel";
             this.mStartupDelayLabel.Size = new System.Drawing.Size(80, 12);
             this.mStartupDelayLabel.TabIndex = 15;
@@ -520,7 +562,7 @@
             // 
             // mStartupDelayTextBox
             // 
-            this.mStartupDelayTextBox.Location = new System.Drawing.Point(123, 812);
+            this.mStartupDelayTextBox.Location = new System.Drawing.Point(122, 852);
             this.mStartupDelayTextBox.MaxLength = 2;
             this.mStartupDelayTextBox.Name = "mStartupDelayTextBox";
             this.mStartupDelayTextBox.Size = new System.Drawing.Size(73, 21);
@@ -529,7 +571,7 @@
             // 
             // mResetButton
             // 
-            this.mResetButton.Location = new System.Drawing.Point(12, 844);
+            this.mResetButton.Location = new System.Drawing.Point(11, 884);
             this.mResetButton.Name = "mResetButton";
             this.mResetButton.Size = new System.Drawing.Size(66, 38);
             this.mResetButton.TabIndex = 31;
@@ -537,31 +579,11 @@
             this.mResetButton.UseVisualStyleBackColor = true;
             this.mResetButton.Click += new System.EventHandler(this.onResetButtonClick);
             // 
-            // mLHMMemoryCheckBox
-            // 
-            this.mLHMMemoryCheckBox.AutoSize = true;
-            this.mLHMMemoryCheckBox.Location = new System.Drawing.Point(17, 228);
-            this.mLHMMemoryCheckBox.Name = "mLHMMemoryCheckBox";
-            this.mLHMMemoryCheckBox.Size = new System.Drawing.Size(71, 16);
-            this.mLHMMemoryCheckBox.TabIndex = 33;
-            this.mLHMMemoryCheckBox.Text = "Memory";
-            this.mLHMMemoryCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // mOHMMemoryCheckBox
-            // 
-            this.mOHMMemoryCheckBox.AutoSize = true;
-            this.mOHMMemoryCheckBox.Location = new System.Drawing.Point(17, 389);
-            this.mOHMMemoryCheckBox.Name = "mOHMMemoryCheckBox";
-            this.mOHMMemoryCheckBox.Size = new System.Drawing.Size(71, 16);
-            this.mOHMMemoryCheckBox.TabIndex = 34;
-            this.mOHMMemoryCheckBox.Text = "Memory";
-            this.mOHMMemoryCheckBox.UseVisualStyleBackColor = true;
-            // 
             // OptionForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(209, 889);
+            this.ClientSize = new System.Drawing.Size(209, 933);
             this.Controls.Add(this.mResetButton);
             this.Controls.Add(this.mStartupDelayTextBox);
             this.Controls.Add(this.mStartupDelayLabel);
@@ -637,5 +659,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox mOHMMemoryCheckBox;
         private System.Windows.Forms.CheckBox mLHMMemoryCheckBox;
+        private System.Windows.Forms.CheckBox mLiquidctlCheckBox;
+        private System.Windows.Forms.Label label10;
     }
 }

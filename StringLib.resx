@@ -144,6 +144,9 @@
   <data name="Color" xml:space="preserve">
     <value>Color</value>
   </data>
+  <data name="Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
   <data name="Control" xml:space="preserve">
     <value>Control</value>
   </data>
@@ -213,11 +216,17 @@
   <data name="Lighting" xml:space="preserve">
     <value>Lighting</value>
   </data>
+  <data name="liquidctl_Setting" xml:space="preserve">
+    <value>liquidctl Setting</value>
+  </data>
   <data name="Load" xml:space="preserve">
     <value>Load</value>
   </data>
   <data name="Localize" xml:space="preserve">
     <value>US</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
   </data>
   <data name="Made1" xml:space="preserve">
     <value>Made by Lich</value>
@@ -236,6 +245,9 @@
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
   </data>
   <data name="Option" xml:space="preserve">
     <value>Option</value>
@@ -266,6 +278,9 @@
   </data>
   <data name="Sensor" xml:space="preserve">
     <value>Sensor</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Setting</value>
   </data>
   <data name="Set_color" xml:space="preserve">
     <value>Set color</value>

@@ -60,6 +60,7 @@
             this.mReloadButton = new System.Windows.Forms.Button();
             this.mHotKeyButton = new System.Windows.Forms.Button();
             this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
+            this.mLiquidctlButton = new System.Windows.Forms.Button();
             this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mControlGroupBox.SuspendLayout();
@@ -124,10 +125,10 @@
             // 
             // mFanControlButton
             // 
-            this.mFanControlButton.Location = new System.Drawing.Point(771, 71);
+            this.mFanControlButton.Location = new System.Drawing.Point(779, 71);
             this.mFanControlButton.Name = "mFanControlButton";
-            this.mFanControlButton.Size = new System.Drawing.Size(103, 38);
-            this.mFanControlButton.TabIndex = 1;
+            this.mFanControlButton.Size = new System.Drawing.Size(95, 38);
+            this.mFanControlButton.TabIndex = 8;
             this.mFanControlButton.Text = "Auto Fan Control";
             this.mFanControlButton.UseVisualStyleBackColor = true;
             this.mFanControlButton.Click += new System.EventHandler(this.onFanControlButtonClick);
@@ -138,10 +139,10 @@
             // 
             // mOptionButton
             // 
-            this.mOptionButton.Location = new System.Drawing.Point(662, 71);
+            this.mOptionButton.Location = new System.Drawing.Point(678, 71);
             this.mOptionButton.Name = "mOptionButton";
-            this.mOptionButton.Size = new System.Drawing.Size(103, 38);
-            this.mOptionButton.TabIndex = 2;
+            this.mOptionButton.Size = new System.Drawing.Size(95, 38);
+            this.mOptionButton.TabIndex = 7;
             this.mOptionButton.Text = "Option";
             this.mOptionButton.UseVisualStyleBackColor = true;
             this.mOptionButton.Click += new System.EventHandler(this.onOptionButtonClick);
@@ -260,10 +261,10 @@
             // 
             // mOSDButton
             // 
-            this.mOSDButton.Location = new System.Drawing.Point(553, 71);
+            this.mOSDButton.Location = new System.Drawing.Point(577, 71);
             this.mOSDButton.Name = "mOSDButton";
-            this.mOSDButton.Size = new System.Drawing.Size(103, 38);
-            this.mOSDButton.TabIndex = 3;
+            this.mOSDButton.Size = new System.Drawing.Size(95, 38);
+            this.mOSDButton.TabIndex = 6;
             this.mOSDButton.Text = "OSD (RTSS)";
             this.mOSDButton.UseVisualStyleBackColor = true;
             this.mOSDButton.Click += new System.EventHandler(this.onOSDButtonClick);
@@ -287,20 +288,20 @@
             // 
             // mReloadButton
             // 
-            this.mReloadButton.Location = new System.Drawing.Point(335, 71);
+            this.mReloadButton.Location = new System.Drawing.Point(375, 71);
             this.mReloadButton.Name = "mReloadButton";
-            this.mReloadButton.Size = new System.Drawing.Size(103, 38);
-            this.mReloadButton.TabIndex = 5;
+            this.mReloadButton.Size = new System.Drawing.Size(95, 38);
+            this.mReloadButton.TabIndex = 4;
             this.mReloadButton.Text = "Reload";
             this.mReloadButton.UseVisualStyleBackColor = true;
             this.mReloadButton.Click += new System.EventHandler(this.onReloadButtonClick);
             // 
             // mHotKeyButton
             // 
-            this.mHotKeyButton.Location = new System.Drawing.Point(444, 71);
+            this.mHotKeyButton.Location = new System.Drawing.Point(476, 71);
             this.mHotKeyButton.Name = "mHotKeyButton";
-            this.mHotKeyButton.Size = new System.Drawing.Size(103, 38);
-            this.mHotKeyButton.TabIndex = 4;
+            this.mHotKeyButton.Size = new System.Drawing.Size(95, 38);
+            this.mHotKeyButton.TabIndex = 5;
             this.mHotKeyButton.Text = "Hotkey";
             this.mHotKeyButton.UseVisualStyleBackColor = true;
             this.mHotKeyButton.Click += new System.EventHandler(this.onHotKeyButtonClick);
@@ -310,17 +311,28 @@
             this.mDonatePictureBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.BackgroundImage")));
             this.mDonatePictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.mDonatePictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("mDonatePictureBox.InitialImage")));
-            this.mDonatePictureBox.Location = new System.Drawing.Point(146, 81);
+            this.mDonatePictureBox.Location = new System.Drawing.Point(146, 78);
             this.mDonatePictureBox.Name = "mDonatePictureBox";
             this.mDonatePictureBox.Size = new System.Drawing.Size(92, 26);
             this.mDonatePictureBox.TabIndex = 12;
             this.mDonatePictureBox.TabStop = false;
             // 
+            // mLiquidctlButton
+            // 
+            this.mLiquidctlButton.Location = new System.Drawing.Point(274, 71);
+            this.mLiquidctlButton.Name = "mLiquidctlButton";
+            this.mLiquidctlButton.Size = new System.Drawing.Size(95, 38);
+            this.mLiquidctlButton.TabIndex = 3;
+            this.mLiquidctlButton.Text = "liquidctl Setting";
+            this.mLiquidctlButton.UseVisualStyleBackColor = true;
+            this.mLiquidctlButton.Click += new System.EventHandler(this.onLiquidctlButtonClick);
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(883, 126);
+            this.ClientSize = new System.Drawing.Size(883, 127);
             this.Controls.Add(this.mLoadingPanel);
+            this.Controls.Add(this.mLiquidctlButton);
             this.Controls.Add(this.mReloadButton);
             this.Controls.Add(this.mOSDButton);
             this.Controls.Add(this.mOptionButton);
@@ -381,6 +393,7 @@
         private System.Windows.Forms.Button mReloadButton;
         private System.Windows.Forms.Button mHotKeyButton;
         private System.Windows.Forms.PictureBox mDonatePictureBox;
+        private System.Windows.Forms.Button mLiquidctlButton;
     }
 }
 
