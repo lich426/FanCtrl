@@ -9,10 +9,11 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 
 ## Support
 - Motherboard<br>
-- NZXT Kraken x2 and x3 is support (z3 series is not supported)<br>
+- NZXT Kraken is support<br>
 - EVGA CLC is support<br>
 - NZXT RGB & Fan Controller is support<br>
 - DIMM thermal sensor is support<br>
+- liquidctl is support<br>
 
 ## Main
 ![main](https://user-images.githubusercontent.com/26077884/109589538-cef82800-7b4d-11eb-8904-3e083d65e5f7.png)<br>
@@ -21,16 +22,17 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - You can rename each item.<br>
 
 ## Option
-![option](https://user-images.githubusercontent.com/26077884/109589707-12eb2d00-7b4e-11eb-9f84-b7883ac7fb13.png)<br>
+![option](https://user-images.githubusercontent.com/26077884/198688108-9c65c8b0-bafe-4560-9305-2360e1dc28c0.png)<br>
 - Gigabyte: [AppCenter][2] (Gigabyte Utility) is installed to communicate with AppCenter for temperature, fan speed, and fan control.<br>
 - LibreHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
 - OpenHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
 - NvAPIWrapper : Allows you to add the NVIDIA graphics card control library.<br>
 - DIMM sensor : Support DIMM temperature sensor <br>
-- NZXT Kraken : NZXT Kraken X2, X3 support (Z3 series not supported) <br>
+- NZXT Kraken : NZXT Kraken support<br>
 - EVGA CLC : EVGA CLC support<br>
 - NZXT RGB & Fan Controller : NZXT RGB & Fan controller support<br>
 - HWiNFO : Communicated with [HWiNFO][17] to get sensor temperature and fan rpm ([Link][18]) <br>
+- liquidctl : [liquidctl][19] support
 - Tray icon animation : tray icon animation starts when checked for automatic fan control activation.<br>
 - Fahrenheit : set the temperature to Fahrenheit.<br>
 - Start minimized : starts with minimal when the program runs.<br>
@@ -71,7 +73,10 @@ Ring : Spectrum wave<br>
 ![lighting2](https://user-images.githubusercontent.com/26077884/109592769-2947b780-7b53-11eb-868a-d17813774b12.png)<br>
 Logo : Fading<br>
 Ring : Pulse<br>
-<br>
+
+## liquidctl
+How to use : [Link][20]
+
 ## Using external Libraries
 Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
 Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
@@ -80,6 +85,7 @@ NZXT Kraken USB Communication : [HIDSharp][4]<br>
 EVGA CLC USB Communication : [SiUSBXp][5] or [libusb-1.0][6]<br>
 Json : [Newtonsoft Json][7]<br>
 Graph : [ZedGraph][8]<br>
+liquidctl plugin : [liquidctl][19]<br>
 
 ## License
 [GNU General Public License v3.0][9]
@@ -113,3 +119,5 @@ Graph : [ZedGraph][8]<br>
 [16]: https://www.guru3d.com/files-details/rtss-rivatuner-statistics-server-download.html
 [17]: https://www.hwinfo.com
 [18]: https://github.com/lich426/FanCtrl/releases/tag/v1.3.5
+[19]: https://github.com/liquidctl/liquidctl
+[20]: https://github.com/lich426/FanCtrl/releases/tag/v1.5.1
