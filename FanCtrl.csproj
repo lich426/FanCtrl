@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.5.1.0</ApplicationVersion>
+    <ApplicationVersion>1.5.2.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -255,6 +255,9 @@
     <Compile Include="FanCtrl\Hardware\OSD\OSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\RGBnFCFanSpeed.cs" />
     <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
+    <Compile Include="FanCtrl\Util\NumericUpDownEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FanCtrl\Util\PointObj.cs" />
     <Compile Include="FanCtrl\Util\Util.cs" />
     <Compile Include="HotkeyForm.cs">

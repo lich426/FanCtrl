@@ -25,7 +25,7 @@ namespace FanCtrl
         private List<TextBox> mTempNameTextBoxList = new List<TextBox>();
         private List<Label> mFanLabelList = new List<Label>();
         private List<TextBox> mFanNameTextBoxList = new List<TextBox>();
-        private List<NumericUpDown> mControlNumericUpDownList = new List<NumericUpDown>();
+        private List<NumericUpDownEx> mControlNumericUpDownList = new List<NumericUpDownEx>();
         private List<Label> mControlLabelList = new List<Label>();
         private List<TextBox> mControlNameTextBoxList = new List<TextBox>();
 
@@ -731,7 +731,7 @@ namespace FanCtrl
                     {
                         var device = (BaseControl)hardwareDevice.DeviceList[k];
 
-                        var number = new NumericUpDown();
+                        var number = new NumericUpDownEx();
                         number.Location = new System.Drawing.Point(10, pointY + fontPointY);
                         number.Size = new System.Drawing.Size(40, 23);
                         number.Maximum = 100;
@@ -740,9 +740,10 @@ namespace FanCtrl
                         number.Increment = 1;
 
                         int z = mControlNumericUpDownList.Count;
-                        number.ValueChanged += (object sender, EventArgs e) =>
+                        number.ValueChangedInput += (object sender, EventArgs e) =>
                         {
-                            var tempNumber = (NumericUpDown)sender;
+                            Console.WriteLine("ValueChangedInput : {0}", e.ToString());
+                            var tempNumber = (NumericUpDownEx)sender;
                             var controlBaseList = hardwareManager.ControlBaseList;
                             var controlDevice = controlBaseList[z];
                             int originValue = controlDevice.Value;
@@ -756,13 +757,13 @@ namespace FanCtrl
                                 int changeValue = hardwareManager.addChangeValue(nowValue, controlDevice);
                                 if (changeValue != originValue)
                                 {
-                                    tempNumber.Value = changeValue;
+                                    tempNumber.ExValue = changeValue;
                                 }
                                 Console.WriteLine("numericIndex : " + z);
                             }
                             else
                             {
-                                tempNumber.Value = originValue;
+                                tempNumber.ExValue = originValue;
                                 mToolTip.Show(minSpeed + " ≤  value ≤ " + maxSpeed, tempNumber, 2000);
                             }
                         };
@@ -916,7 +917,7 @@ namespace FanCtrl
                     var device = hardwareManager.ControlBaseList[i];
                     if (mControlNumericUpDownList[i].Focused == false)
                     {
-                        mControlNumericUpDownList[i].Value = device.Value;
+                        mControlNumericUpDownList[i].ExValue = device.Value;
                     }
                 }
 
