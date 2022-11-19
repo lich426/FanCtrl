@@ -23,9 +23,7 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 
 ## Option
 ![option](https://user-images.githubusercontent.com/26077884/198688108-9c65c8b0-bafe-4560-9305-2360e1dc28c0.png)<br>
-- Gigabyte: [AppCenter][2] (Gigabyte Utility) is installed to communicate with AppCenter for temperature, fan speed, and fan control.<br>
 - LibreHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
-- OpenHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
 - NvAPIWrapper : Allows you to add the NVIDIA graphics card control library.<br>
 - DIMM sensor : Support DIMM temperature sensor <br>
 - NZXT Kraken : NZXT Kraken support<br>
@@ -78,8 +76,7 @@ Ring : Pulse<br>
 How to use : [Link][20]
 
 ## Using external Libraries
-Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
-Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
+Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
 NZXT Kraken USB Communication : [HIDSharp][4]<br>
 EVGA CLC USB Communication : [SiUSBXp][5] or [libusb-1.0][6]<br>
