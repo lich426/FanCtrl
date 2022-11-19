@@ -3,7 +3,7 @@
 FanCtrl is a software that allows you to automatically control the fan speed on your PC.<br>
 
 ## Requires
-- .NET framework 4.6 or higher.<br>
+- .NET framework 4.7.2 or higher.<br>
 - [Visual redistributable 2019(x64)][15]<br>
 - The OSD feature must have the [Rivatuner Statistics Server][16] installed and running.<br>
 
