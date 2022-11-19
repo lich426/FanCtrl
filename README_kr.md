@@ -23,9 +23,7 @@ FanCtrl은 Desktop PC에서 팬을 제어하는 프로그램입니다.<br>
 
 ## 옵션
 ![option_kr](https://user-images.githubusercontent.com/26077884/198688108-9c65c8b0-bafe-4560-9305-2360e1dc28c0.png)<br>
-- Gigabyte : [AppCenter][2](기가바이트 유틸리티)가 설치되어 있으면, AppCenter와 통신 해 온도, 팬 속도, 팬 제어가 가능합니다.<br>
 - LibreHardwareMonitor : 라이브러리를 사용할 것인지 선택 가능하고, 제어에 필요한 디바이스를 선택 할 수 있습니다.<br>
-- OpenHardwareMonitor : 라이브러리를 사용할 것인지 선택 가능하고, 제어에 필요한 디바이스를 선택 할 수 있습니다.<br>
 - NvAPIWrapper : NVIDIA 그래픽카드 제어 라이브러리인 NvAPIWrapper를 추가할 수 있습니다.<br>
 - DIMM sensor : DIMM 온도 센서를 지원합니다.(지스킬 램등)<br>
 - NZXT Kraken : NZXT Kraken X2, X3 지원 (Z3 시리즈 미지원)<br>
@@ -78,8 +76,7 @@ Ring : Pulse<br>
 사용법 : [링크참조][20]
 
 ## 사용한 라이브러리들
-Sensor and Fan Control : [LibreHardwareMonitorLib][0], [OpenHardwareMonitorLib][1]<br>
-Gigabyte board Sensor and Fan Control : [AppCenter][2]<br>
+Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
 NZXT Kraken USB Communication : [HIDSharp][4]<br>
 EVGA CLC USB Communication : [SiUSBXp][5] or [libusb-1.0][6]<br>
