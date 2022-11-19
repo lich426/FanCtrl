@@ -22,7 +22,7 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - You can rename each item.<br>
 
 ## Option
-![option](https://user-images.githubusercontent.com/26077884/198688108-9c65c8b0-bafe-4560-9305-2360e1dc28c0.png)<br>
+![1](https://user-images.githubusercontent.com/26077884/202845128-ad1b606d-42ab-404c-af1f-9137907e3040.png)<br>
 - LibreHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
 - NvAPIWrapper : Allows you to add the NVIDIA graphics card control library.<br>
 - DIMM sensor : Support DIMM temperature sensor <br>
@@ -30,7 +30,8 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - EVGA CLC : EVGA CLC support<br>
 - NZXT RGB & Fan Controller : NZXT RGB & Fan controller support<br>
 - HWiNFO : Communicated with [HWiNFO][17] to get sensor temperature and fan rpm ([Link][18]) <br>
-- liquidctl : [liquidctl][19] support
+- liquidctl : [liquidctl][19] support<br>
+- Language : English, Korean, Japanese<br>
 - Tray icon animation : tray icon animation starts when checked for automatic fan control activation.<br>
 - Fahrenheit : set the temperature to Fahrenheit.<br>
 - Start minimized : starts with minimal when the program runs.<br>
