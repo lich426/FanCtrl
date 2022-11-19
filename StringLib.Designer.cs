@@ -205,6 +205,15 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   English과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Error과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Error {
@@ -331,11 +340,38 @@ namespace FanCtrl {
         }
         
         /// <summary>
+        ///   Japanese과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Japanese {
+            get {
+                return ResourceManager.GetString("Japanese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Korean과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Korean {
+            get {
+                return ResourceManager.GetString("Korean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Kraken Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Kraken_Lighting {
             get {
                 return ResourceManager.GetString("Kraken_Lighting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Language :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
             }
         }
         

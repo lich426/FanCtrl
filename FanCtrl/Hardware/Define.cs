@@ -9,9 +9,7 @@ namespace FanCtrl
 {
     public enum LIBRARY_TYPE
     {
-        Gigabyte,
         LHM,
-        OHM,
         NvAPIWrapper,
         DIMM,
         NZXT_Kraken,
@@ -27,9 +25,7 @@ namespace FanCtrl
     public class Define
     {
         public static string[] cLibraryTypeString = {
-            "Gigabyte",
             "LibreHardwareMonitor",
-            "OpenHardwareMonitor",
             "NvAPIWrapper",
             "DIMM",
             "NZXT Kraken",

@@ -7,6 +7,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace FanCtrl
 {
@@ -26,11 +27,6 @@ namespace FanCtrl
         
         public int Interval { get; set; }
 
-        // Gigabyte
-        public bool IsGigabyte { get; set; }
-        public bool IsGigabyteMotherboard { get; set; }
-        public bool IsGigabyteGpu { get; set; }
-
         // LibreHardwareMonitor
         public bool IsLHM { get; set; }
         public bool IsLHMCpu { get; set; }
@@ -39,15 +35,6 @@ namespace FanCtrl
         public bool IsLHMContolled { get; set; }
         public bool IsLHMStorage { get; set; }
         public bool IsLHMMemory { get; set; }
-
-        // OpenHardwareMonitor
-        public bool IsOHM { get; set; }
-        public bool IsOHMCpu { get; set; }
-        public bool IsOHMMotherboard { get; set; }
-        public bool IsOHMGpu { get; set; }
-        public bool IsOHMContolled { get; set; }
-        public bool IsOHMStorage { get; set; }
-        public bool IsOHMMemory { get; set; }
 
         // NvApiWrapper
         public bool IsNvAPIWrapper { get; set; }
@@ -71,6 +58,8 @@ namespace FanCtrl
         public bool IsLiquidctl { get; set; }
 
         // Other options
+        public int Language { get; set; }
+
         public bool IsAnimation { get; set; }
 
         public bool IsFahrenheit { get; set; }
@@ -107,34 +96,23 @@ namespace FanCtrl
         {
             Interval = 1000;
 
-            IsGigabyte = false;
-            IsGigabyteMotherboard = true;
-            IsGigabyteGpu = true;
-
             IsLHM = true;
             IsLHMCpu = true;
             IsLHMMotherboard = true;
-            IsLHMGpu = false;
+            IsLHMGpu = true;
             IsLHMContolled = true;
             IsLHMStorage = true;
             IsLHMMemory = true;
 
-            IsOHM = false;
-            IsOHMCpu = true;
-            IsOHMMotherboard = true;
-            IsOHMGpu = false;
-            IsOHMContolled = false;
-            IsOHMStorage = false;
-            IsOHMMemory = false;
-
-            IsNvAPIWrapper = true;
-            IsDimm = true;
-            IsKraken = true;
-            IsCLC = true;
-            IsRGBnFC = true;
+            IsNvAPIWrapper = false;
+            IsDimm = false;
+            IsKraken = false;
+            IsCLC = false;
+            IsRGBnFC = false;
             IsHWInfo = false;
             IsLiquidctl = false;
 
+            Language = getSystemLocale();
             IsAnimation = true;
             IsFahrenheit = false;
             IsMinimized = false;
@@ -149,34 +127,23 @@ namespace FanCtrl
 
                 Interval = (rootObject.ContainsKey("Interval") == true) ? rootObject.Value<int>("Interval") : 1000;
 
-                IsGigabyte = (rootObject.ContainsKey("IsGigabyte") == true) ? rootObject.Value<bool>("IsGigabyte") : false;
-                IsGigabyteMotherboard = (rootObject.ContainsKey("IsGigabyteMotherboard") == true) ? rootObject.Value<bool>("IsGigabyteMotherboard") : true;
-                IsGigabyteGpu = (rootObject.ContainsKey("IsGigabyteGpu") == true) ? rootObject.Value<bool>("IsGigabyteGpu") : true;
-
                 IsLHM = (rootObject.ContainsKey("IsLHM") == true) ? rootObject.Value<bool>("IsLHM") : true;
                 IsLHMCpu = (rootObject.ContainsKey("IsLHMCpu") == true) ? rootObject.Value<bool>("IsLHMCpu") : true;
                 IsLHMMotherboard = (rootObject.ContainsKey("IsLHMMotherboard") == true) ? rootObject.Value<bool>("IsLHMMotherboard") : true;
-                IsLHMGpu = (rootObject.ContainsKey("IsLHMGpu") == true) ? rootObject.Value<bool>("IsLHMGpu") : false;
+                IsLHMGpu = (rootObject.ContainsKey("IsLHMGpu") == true) ? rootObject.Value<bool>("IsLHMGpu") : true;
                 IsLHMContolled = (rootObject.ContainsKey("IsLHMContolled") == true) ? rootObject.Value<bool>("IsLHMContolled") : true;
                 IsLHMStorage = (rootObject.ContainsKey("IsLHMStorage") == true) ? rootObject.Value<bool>("IsLHMStorage") : true;
                 IsLHMMemory = (rootObject.ContainsKey("IsLHMMemory") == true) ? rootObject.Value<bool>("IsLHMMemory") : true;
 
-                IsOHM = (rootObject.ContainsKey("IsOHM") == true) ? rootObject.Value<bool>("IsOHM") : false;
-                IsOHMCpu = (rootObject.ContainsKey("IsOHMCpu") == true) ? rootObject.Value<bool>("IsOHMCpu") : true;
-                IsOHMMotherboard = (rootObject.ContainsKey("IsOHMMotherboard") == true) ? rootObject.Value<bool>("IsOHMMotherboard") : true;
-                IsOHMGpu = (rootObject.ContainsKey("IsOHMGpu") == true) ? rootObject.Value<bool>("IsOHMGpu") : false;
-                IsOHMContolled = (rootObject.ContainsKey("IsOHMContolled") == true) ? rootObject.Value<bool>("IsOHMContolled") : false;
-                IsOHMStorage = (rootObject.ContainsKey("IsOHMStorage") == true) ? rootObject.Value<bool>("IsOHMStorage") : false;
-                IsOHMMemory = (rootObject.ContainsKey("IsOHMMemory") == true) ? rootObject.Value<bool>("IsOHMMemory") : false;
-
-                IsNvAPIWrapper = (rootObject.ContainsKey("IsNvAPIWrapper") == true) ? rootObject.Value<bool>("IsNvAPIWrapper") : true;
+                IsNvAPIWrapper = (rootObject.ContainsKey("IsNvAPIWrapper") == true) ? rootObject.Value<bool>("IsNvAPIWrapper") : false;
                 IsDimm = (rootObject.ContainsKey("IsDimm") == true) ? rootObject.Value<bool>("IsDimm") : false;
-                IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : true;
-                IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : true;
-                IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : true;
+                IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : false;
+                IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : false;
+                IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : false;
                 IsHWInfo = (rootObject.ContainsKey("IsHWInfo") == true) ? rootObject.Value<bool>("IsHWInfo") : false;
                 IsLiquidctl = (rootObject.ContainsKey("IsLiquidctl") == true) ? rootObject.Value<bool>("IsLiquidctl") : false;
 
+                Language = (rootObject.ContainsKey("Language") == true) ? rootObject.Value<int>("Language") : this.getSystemLocale();
                 IsAnimation = (rootObject.ContainsKey("IsAnimation") == true) ? rootObject.Value<bool>("IsAnimation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("IsFahrenheit") == true) ? rootObject.Value<bool>("IsFahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("IsMinimized") == true) ? rootObject.Value<bool>("IsMinimized") : false;
@@ -197,10 +164,6 @@ namespace FanCtrl
                 var rootObject = new JObject();
                 rootObject["Interval"] = Interval;
                 
-                rootObject["IsGigabyte"] = IsGigabyte;
-                rootObject["IsGigabyteMotherboard"] = IsGigabyteMotherboard;
-                rootObject["IsGigabyteGpu"] = IsGigabyteGpu;
-
                 rootObject["IsLHM"] = IsLHM;
                 rootObject["IsLHMCpu"] = IsLHMCpu;
                 rootObject["IsLHMMotherboard"] = IsLHMMotherboard;
@@ -208,14 +171,6 @@ namespace FanCtrl
                 rootObject["IsLHMContolled"] = IsLHMContolled;
                 rootObject["IsLHMStorage"] = IsLHMStorage;
                 rootObject["IsLHMMemory"] = IsLHMMemory;
-
-                rootObject["IsOHM"] = IsOHM;
-                rootObject["IsOHMCpu"] = IsOHMCpu;
-                rootObject["IsOHMMotherboard"] = IsOHMMotherboard;
-                rootObject["IsOHMGpu"] = IsOHMGpu;
-                rootObject["IsOHMContolled"] = IsOHMContolled;
-                rootObject["IsOHMStorage"] = IsOHMStorage;
-                rootObject["IsOHMMemory"] = IsOHMMemory;
 
                 rootObject["IsNvAPIWrapper"] = IsNvAPIWrapper;
                 rootObject["IsDimm"] = IsDimm;                
@@ -225,6 +180,7 @@ namespace FanCtrl
                 rootObject["IsHWInfo"] = IsHWInfo;
                 rootObject["IsLiquidctl"] = IsLiquidctl;
 
+                rootObject["Language"] = Language;
                 rootObject["IsAnimation"] = IsAnimation;
                 rootObject["IsFahrenheit"] = IsFahrenheit;
                 rootObject["IsMinimized"] = IsMinimized;
@@ -236,5 +192,21 @@ namespace FanCtrl
             catch {}
         }
 
+        public int getSystemLocale()
+        {
+            var name = Thread.CurrentThread.CurrentCulture.Name;
+            if (name.CompareTo("ko-KR") == 0)
+            {
+                return 1;
+            }
+            else if (name.CompareTo("ja-JP") == 0)
+            {
+                return 2;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }

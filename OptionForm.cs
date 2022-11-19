@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -37,20 +39,6 @@ namespace FanCtrl
             mIntervalTextBox.KeyPress += onTextBoxKeyPress;
             mIntervalTextBox.Leave += onTextBoxLeaves;
 
-            mGigabyteCheckBox.CheckedChanged += (object sender, EventArgs e) =>
-            {
-                mGigabyteCPUCheckBox.Enabled = mGigabyteCheckBox.Checked;
-                mGigabyteGPUCheckBox.Enabled = mGigabyteCheckBox.Checked;
-            };
-            mGigabyteCheckBox.Checked = OptionManager.getInstance().IsGigabyte;
-            mGigabyteCPUCheckBox.Checked = OptionManager.getInstance().IsGigabyteMotherboard;
-            mGigabyteGPUCheckBox.Checked = OptionManager.getInstance().IsGigabyteGpu;
-            if (mGigabyteCheckBox.Checked == false)
-            {
-                mGigabyteCPUCheckBox.Enabled = false;
-                mGigabyteGPUCheckBox.Enabled = false;
-            }
-
             mLHMCheckBox.CheckedChanged += (object sender, EventArgs e) =>
             {
                 mLHMCPUCheckBox.Enabled = mLHMCheckBox.Checked;
@@ -77,32 +65,6 @@ namespace FanCtrl
                 mLHMMemoryCheckBox.Enabled = false;
             }
 
-            mOHMCheckBox.CheckedChanged += (object sender, EventArgs e) =>
-            {
-                mOHMCPUCheckBox.Enabled = mOHMCheckBox.Checked;
-                mOHMMBCheckBox.Enabled = mOHMCheckBox.Checked;
-                mOHMGPUCheckBox.Enabled = mOHMCheckBox.Checked;
-                mOHMControllerCheckBox.Enabled = mOHMCheckBox.Checked;
-                mOHMStorageCheckBox.Enabled = mOHMCheckBox.Checked;
-                mOHMMemoryCheckBox.Enabled = mOHMCheckBox.Checked;
-            };
-            mOHMCheckBox.Checked = OptionManager.getInstance().IsOHM;
-            mOHMCPUCheckBox.Checked = OptionManager.getInstance().IsOHMCpu;
-            mOHMMBCheckBox.Checked = OptionManager.getInstance().IsOHMMotherboard;
-            mOHMGPUCheckBox.Checked = OptionManager.getInstance().IsOHMGpu;
-            mOHMControllerCheckBox.Checked = OptionManager.getInstance().IsOHMContolled;
-            mOHMStorageCheckBox.Checked = OptionManager.getInstance().IsOHMStorage;
-            mOHMMemoryCheckBox.Checked = OptionManager.getInstance().IsOHMMemory;
-            if (mOHMCheckBox.Checked == false)
-            {
-                mOHMCPUCheckBox.Enabled = false;
-                mOHMMBCheckBox.Enabled = false;
-                mOHMGPUCheckBox.Enabled = false;
-                mOHMControllerCheckBox.Enabled = false;
-                mOHMStorageCheckBox.Enabled = false;
-                mOHMMemoryCheckBox.Enabled = false;
-            }
-
             mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
 
             mDimmCheckBox.Checked = OptionManager.getInstance().IsDimm;
@@ -120,6 +82,11 @@ namespace FanCtrl
 
             mLiquidctlCheckBox.Checked = OptionManager.getInstance().IsLiquidctl;
 
+            mLanguageComboBox.Items.Add(StringLib.English);
+            mLanguageComboBox.Items.Add(StringLib.Korean);
+            mLanguageComboBox.Items.Add(StringLib.Japanese);
+            mLanguageComboBox.SelectedIndex = OptionManager.getInstance().Language;
+
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
@@ -136,6 +103,7 @@ namespace FanCtrl
             mCLCButton.Text = StringLib.Lighting;
             mRGBnFCButton.Text = StringLib.Lighting;
             mAnimationCheckBox.Text = StringLib.Tray_Icon_animation;
+            mLanguageLabel.Text = StringLib.Language;
             mFahrenheitCheckBox.Text = StringLib.Fahrenheit;
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
             mStartupCheckBox.Text = StringLib.Start_with_Windows;
@@ -170,11 +138,7 @@ namespace FanCtrl
             var optionManager = OptionManager.getInstance();
             bool isRestart = false;
 
-            if ((optionManager.IsGigabyte != mGigabyteCheckBox.Checked) ||
-                (mGigabyteCheckBox.Checked == true && optionManager.IsGigabyteMotherboard != mGigabyteCPUCheckBox.Checked) ||
-                (mGigabyteCheckBox.Checked == true && optionManager.IsGigabyteGpu != mGigabyteGPUCheckBox.Checked) ||
-
-                (optionManager.IsLHM != mLHMCheckBox.Checked) ||
+            if ((optionManager.IsLHM != mLHMCheckBox.Checked) ||
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMCpu != mLHMCPUCheckBox.Checked) ||
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMMotherboard != mLHMMBCheckBox.Checked) ||
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMGpu != mLHMGPUCheckBox.Checked) ||
@@ -182,21 +146,14 @@ namespace FanCtrl
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMStorage != mLHMStorageCheckBox.Checked) ||
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMMemory != mLHMMemoryCheckBox.Checked) ||
 
-                (optionManager.IsOHM != mOHMCheckBox.Checked) ||
-                (mOHMCheckBox.Checked == true && optionManager.IsOHMCpu != mOHMCPUCheckBox.Checked) ||
-                (mOHMCheckBox.Checked == true && optionManager.IsOHMMotherboard != mOHMMBCheckBox.Checked) ||
-                (mOHMCheckBox.Checked == true && optionManager.IsOHMGpu != mOHMGPUCheckBox.Checked) ||
-                (mOHMCheckBox.Checked == true && optionManager.IsOHMContolled != mOHMControllerCheckBox.Checked) ||
-                (mOHMCheckBox.Checked == true && optionManager.IsOHMStorage != mOHMStorageCheckBox.Checked) ||
-                (mOHMCheckBox.Checked == true && optionManager.IsOHMMemory != mOHMMemoryCheckBox.Checked) ||
-
                 (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
                 (optionManager.IsDimm != mDimmCheckBox.Checked) ||
                 (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
                 (optionManager.IsCLC != mCLCCheckBox.Checked) ||
                 (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked) ||
                 (optionManager.IsHWInfo != mHWInfoCheckBox.Checked) ||
-                (optionManager.IsLiquidctl != mLiquidctlCheckBox.Checked))
+                (optionManager.IsLiquidctl != mLiquidctlCheckBox.Checked) ||
+                (optionManager.Language != mLanguageComboBox.SelectedIndex))
             {
                 var result = MessageBox.Show(StringLib.OptionChange, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result == DialogResult.Cancel)
@@ -207,10 +164,6 @@ namespace FanCtrl
 
             optionManager.Interval = interval;
 
-            optionManager.IsGigabyte = mGigabyteCheckBox.Checked;
-            optionManager.IsGigabyteMotherboard = mGigabyteCPUCheckBox.Checked;
-            optionManager.IsGigabyteGpu = mGigabyteGPUCheckBox.Checked;
-
             optionManager.IsLHM = mLHMCheckBox.Checked;
             optionManager.IsLHMCpu = mLHMCPUCheckBox.Checked;
             optionManager.IsLHMMotherboard = mLHMMBCheckBox.Checked;
@@ -218,14 +171,6 @@ namespace FanCtrl
             optionManager.IsLHMContolled = mLHMControllerCheckBox.Checked;
             optionManager.IsLHMStorage = mLHMStorageCheckBox.Checked;
             optionManager.IsLHMMemory = mLHMMemoryCheckBox.Checked;
-
-            optionManager.IsOHM = mOHMCheckBox.Checked;
-            optionManager.IsOHMCpu = mOHMCPUCheckBox.Checked;
-            optionManager.IsOHMMotherboard = mOHMMBCheckBox.Checked;
-            optionManager.IsOHMGpu = mOHMGPUCheckBox.Checked;
-            optionManager.IsOHMContolled = mOHMControllerCheckBox.Checked;
-            optionManager.IsOHMStorage = mOHMStorageCheckBox.Checked;
-            optionManager.IsOHMMemory = mOHMMemoryCheckBox.Checked;
 
             optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
 
@@ -241,6 +186,7 @@ namespace FanCtrl
 
             optionManager.IsLiquidctl = mLiquidctlCheckBox.Checked;
 
+            optionManager.Language = mLanguageComboBox.SelectedIndex;
             optionManager.IsFahrenheit = mFahrenheitCheckBox.Checked;
             optionManager.IsAnimation = mAnimationCheckBox.Checked;
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
@@ -255,7 +201,11 @@ namespace FanCtrl
             else
             {
                 this.DialogResult = DialogResult.OK;
-            }            
+            }
+
+            // Language
+            Util.setLanguage(optionManager.Language);
+
             this.Close();
         }
 
@@ -269,7 +219,7 @@ namespace FanCtrl
             OptionManager.getInstance().write();
             this.DialogResult = DialogResult.No;
             this.Close();
-        }
+        }        
 
         private void onTextBoxKeyPress(object sender, KeyPressEventArgs e)
         {

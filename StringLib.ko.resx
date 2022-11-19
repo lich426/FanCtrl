@@ -165,6 +165,9 @@
   <data name="Enable_OSD" xml:space="preserve">
     <value>OSD 활성화</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>영어</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>에러</value>
   </data>
@@ -207,8 +210,17 @@
   <data name="Items" xml:space="preserve">
     <value>아이템</value>
   </data>
+  <data name="Japanese" xml:space="preserve">
+    <value>일본어</value>
+  </data>
+  <data name="Korean" xml:space="preserve">
+    <value>한국어</value>
+  </data>
   <data name="Kraken_Lighting" xml:space="preserve">
     <value>Kraken 조명 설정</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>언어 :</value>
   </data>
   <data name="Library" xml:space="preserve">
     <value>라이브러리</value>

@@ -33,14 +33,8 @@ namespace FanCtrl
         private Mutex mSMBusMutex = null;
         private Mutex mPCIMutex = null;
 
-        // Gigabyte
-        private Gigabyte mGigabyte = null;
-
         // LibreHardwareMonitor
         private LHM mLHM = null;
-
-        // OpenHardwareMonitor
-        private OHM mOHM = null;
 
         // NZXT Kraken
         public List<Kraken> KrakenList { get; } = new List<Kraken>();
@@ -111,30 +105,6 @@ namespace FanCtrl
                 ControlList.Add(new List<HardwareDevice>());
             }
 
-            // Gigabyte
-            if (OptionManager.getInstance().IsGigabyte == true)
-            {
-                mGigabyte = new Gigabyte();
-                mGigabyte.LockBus += lockBus;
-                mGigabyte.UnlockBus += unlockBus;
-
-                if (mGigabyte.start() == false)
-                {
-                    mGigabyte = null;
-                }
-                else
-                {
-                    var tempList = TempList[(int)LIBRARY_TYPE.Gigabyte];
-                    mGigabyte.createTemp(ref tempList);
-
-                    var fanList = FanList[(int)LIBRARY_TYPE.Gigabyte];
-                    mGigabyte.createFan(ref fanList);
-
-                    var controlList = ControlList[(int)LIBRARY_TYPE.Gigabyte];
-                    mGigabyte.createControl(ref controlList);
-                }
-            }
-            
             // LHM
             if (OptionManager.getInstance().IsLHM == true)
             {
@@ -149,22 +119,6 @@ namespace FanCtrl
 
                 var controlList = ControlList[(int)LIBRARY_TYPE.LHM];
                 mLHM.createControl(ref controlList);
-            }
-
-            // OHM
-            if (OptionManager.getInstance().IsOHM == true)
-            {
-                mOHM = new OHM();
-                mOHM.start();
-
-                var tempList = TempList[(int)LIBRARY_TYPE.OHM];
-                mOHM.createTemp(ref tempList);
-
-                var fanList = FanList[(int)LIBRARY_TYPE.OHM];
-                mOHM.createFan(ref fanList);
-
-                var controlList = ControlList[(int)LIBRARY_TYPE.OHM];
-                mOHM.createControl(ref controlList);
             }
 
             // NvAPIWrapper
@@ -705,22 +659,10 @@ namespace FanCtrl
                 control.setAuto();
             }
 
-            if (mGigabyte != null)
-            {
-                mGigabyte.stop();
-                mGigabyte = null;
-            }
-
             if (mLHM != null)
             {
                 mLHM.stop();
                 mLHM = null;
-            }
-
-            if (mOHM != null)
-            {
-                mOHM.stop();
-                mOHM = null;
             }
 
             for (int i = 0; i < KrakenList.Count; i++)
@@ -979,12 +921,6 @@ namespace FanCtrl
                 mLHM.createOSDSensor(OSDSensorList, OSDSensorMap);
             }
 
-            // OHM
-            if (OptionManager.getInstance().IsOHM == true && mOHM != null)
-            {
-                mOHM.createOSDSensor(OSDSensorList, OSDSensorMap);
-            }
-
             // NvAPIWrapper
             if (OptionManager.getInstance().IsNvAPIWrapper == true)
             {
@@ -1139,27 +1075,9 @@ namespace FanCtrl
 
             try
             {
-                if (mGigabyte != null)
-                {
-                    mGigabyte.update();
-                }
-            }
-            catch { }
-
-            try
-            {
                 if (mLHM != null)
                 {
                     mLHM.update();
-                }
-            }
-            catch { }
-
-            try
-            {
-                if (mOHM != null)
-                {
-                    mOHM.update();
                 }
             }
             catch { }

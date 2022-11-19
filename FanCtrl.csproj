@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>FanCtrl</RootNamespace>
     <AssemblyName>FanCtrl</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.5.2.0</ApplicationVersion>
+    <ApplicationVersion>1.5.3.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -194,10 +194,6 @@
     <Compile Include="FanCtrl\Hardware\Control\BaseControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\CLCFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\CLCPumpControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\GigabyteAmdGpuFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\GigabyteFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\GigabyteNvidiaGpuFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\OHMControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\LHMControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\NvAPIFanControl.cs" />
     <Compile Include="FanCtrl\Hardware\Control\KrakenFanControl.cs" />
@@ -205,7 +201,6 @@
     <Compile Include="FanCtrl\Hardware\Control\RGBnFCControl.cs" />
     <Compile Include="FanCtrl\Hardware\BaseDevice.cs" />
     <Compile Include="FanCtrl\Hardware\HardwareDevice.cs" />
-    <Compile Include="FanCtrl\Hardware\Gigabyte.cs" />
     <Compile Include="FanCtrl\Hardware\HardwareManager.cs" />
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoManager.cs" />
     <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoCategory.cs" />
@@ -216,32 +211,22 @@
     <Compile Include="FanCtrl\Hardware\Kraken.cs" />
     <Compile Include="FanCtrl\Hardware\LHM.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\HWInfoOSDSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\OSD\OHMOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\LHMOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\HWInfoFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Control\LiquidctlControl.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\LiquidctlSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\LiquidctlTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\HWInfoTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\OHMFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\LHMFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\OHMTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\LHMTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Define.cs" />
     <Compile Include="FanCtrl\Hardware\OSD\NvAPIOSDSensor.cs" />
     <Compile Include="FanCtrl\Hardware\USBDevice.cs" />
-    <Compile Include="FanCtrl\Hardware\OHM.cs" />
     <Compile Include="FanCtrl\Hardware\RGBnFC.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCLiquidTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\CLCPumpSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\DimmTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\GigabyteAmdGpuFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\GigabyteAmdGpuTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\GigabyteFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\GigabyteNvidiaGpuFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\GigabyteNvidiaGpuTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\GigabyteTemp.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\NvAPIFanSpeed.cs" />
     <Compile Include="FanCtrl\Hardware\Sensor\NvAPITemp.cs" />
     <Compile Include="FanCtrl\Data\Option\OptionManager.cs" />
@@ -315,6 +300,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringLib.resx</DependentUpon>
     </Compile>
+    <Compile Include="StringLib.ja.Designer.cs">
+      <DependentUpon>StringLib.ja.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="StringLib.ko.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -360,6 +350,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="StringLib.ja.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringLib.ja.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="StringLib.ko.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.ko.Designer.cs</LastGenOutput>

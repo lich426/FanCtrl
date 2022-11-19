@@ -45,6 +45,12 @@ namespace FanCtrl
 
         public MainForm()
         {
+            if (OptionManager.getInstance().read() == false)
+            {
+                OptionManager.getInstance().write();
+            }
+            Util.setLanguage(OptionManager.getInstance().Language);
+
             InitializeComponent();
             this.localizeComponent();
 
@@ -72,11 +78,6 @@ namespace FanCtrl
             mDonatePictureBox.MouseClick += onDonatePictureBoxClick;
 
             HardwareManager.getInstance().onUpdateCallback += onUpdate;
-
-            if (OptionManager.getInstance().read() == false)
-            {
-                OptionManager.getInstance().write();
-            }
 
             if (OptionManager.getInstance().Interval < 100)
             {
@@ -970,6 +971,7 @@ namespace FanCtrl
             {
                 this.BeginInvoke(new Action(delegate ()
                 {
+                    this.localizeComponent();
                     HardwareManager.getInstance().stop();
                     ControlManager.getInstance().reset();
                     OSDManager.getInstance().reset();

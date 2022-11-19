@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -152,6 +153,25 @@ namespace FanCtrl
                 }
             }
             catch { }
+        }
+
+        public static void setLanguage(int language)
+        {
+            // Language
+            switch (language)
+            {
+                case 1:
+                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ko-KR");
+                    break;
+
+                case 2:
+                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                    break;
+
+                default:
+                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+                    break;
+            }
         }
     }
 }
