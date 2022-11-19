@@ -3,7 +3,7 @@
 FanCtrl은 Desktop PC에서 팬을 제어하는 프로그램입니다.<br>
 
 ## 요구사항
-- .NET 프레임워크 4.6 이상에서 동작합니다.<br>
+- .NET 프레임워크 4.7.2 에서 동작합니다.<br>
 - [Visual C++ 재배포 패키지 2019(x64)][15]가 설치되어 있어야 합니다.<br>
 - OSD 기능은 [Rivatuner Statistics Server][16]가 설치되고 실행되어 있어야 합니다.<br>
 
