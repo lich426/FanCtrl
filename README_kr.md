@@ -76,6 +76,9 @@ Ring : Pulse<br>
 ## liquidctl
 사용법 : [링크참조][20]
 
+## 플러그인
+사용법 : [링크참조][21]
+
 ## 사용한 라이브러리들
 Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
@@ -117,3 +120,4 @@ liquidctl plugin : [liquidctl][19]
 [18]: https://github.com/lich426/FanCtrl/releases/tag/v1.3.5
 [19]: https://github.com/liquidctl/liquidctl
 [20]: https://github.com/lich426/FanCtrl/releases/tag/v1.5.1
+[21]: https://github.com/lich426/FanCtrl/blob/master/Plugin.md
