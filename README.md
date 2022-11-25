@@ -22,7 +22,7 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - You can rename each item.<br>
 
 ## Option
-![1](https://user-images.githubusercontent.com/26077884/202845128-ad1b606d-42ab-404c-af1f-9137907e3040.png)<br>
+![option](https://user-images.githubusercontent.com/26077884/203925307-8f2e9655-db3e-4821-967b-718bc861de10.png)<br>
 - LibreHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
 - NvAPIWrapper : Allows you to add the NVIDIA graphics card control library.<br>
 - DIMM sensor : Support DIMM temperature sensor <br>
@@ -76,6 +76,9 @@ Ring : Pulse<br>
 ## liquidctl
 How to use : [Link][20]
 
+## Plugins
+How to use : [Link][21]
+
 ## Using external Libraries
 Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
@@ -119,3 +122,4 @@ liquidctl plugin : [liquidctl][19]<br>
 [18]: https://github.com/lich426/FanCtrl/releases/tag/v1.3.5
 [19]: https://github.com/liquidctl/liquidctl
 [20]: https://github.com/lich426/FanCtrl/releases/tag/v1.5.1
+[21]: https://github.com/lich426/FanCtrl/blob/master/Plugin.md
