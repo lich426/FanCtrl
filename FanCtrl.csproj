@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.5.3.0</ApplicationVersion>
+    <ApplicationVersion>1.5.4.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -61,7 +61,7 @@
     <StartupObject>FanCtrl.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -90,31 +90,6 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gigabyte">
-      <HintPath>dll\Gigabyte.dll</HintPath>
-    </Reference>
-    <Reference Include="Gigabyte.Engine, Version=8.0.8.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\Gigabyte.Engine.dll</HintPath>
-    </Reference>
-    <Reference Include="Gigabyte.Engine.EnvironmentControl, Version=8.0.8.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\Gigabyte.Engine.EnvironmentControl.dll</HintPath>
-    </Reference>
-    <Reference Include="Gigabyte.Engine.GraphicsCard">
-      <HintPath>dll\Gigabyte.Engine.GraphicsCard.dll</HintPath>
-    </Reference>
-    <Reference Include="Gigabyte.EnvironmentControl.Common, Version=8.0.6.12, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\Gigabyte.EnvironmentControl.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Gigabyte.GraphicsCard">
-      <HintPath>dll\Gigabyte.GraphicsCard.dll</HintPath>
-    </Reference>
-    <Reference Include="Gigabyte.GraphicsCard.Common, Version=8.0.0.20, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\Gigabyte.GraphicsCard.Common.dll</HintPath>
-    </Reference>
     <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\HidSharp.dll</HintPath>
@@ -134,10 +109,6 @@
     <Reference Include="NvAPIWrapper, Version=0.8.1.100, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\NvAPIWrapper.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenHardwareMonitorLib, Version=0.9.2.3, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\OpenHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -159,186 +130,217 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlForm.cs">
+    <Compile Include="Resources\StringLib.fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringLib.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="src\UI\ControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ControlForm.Designer.cs">
+    <Compile Include="src\UI\ControlForm.Designer.cs">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DonateForm.cs">
+    <Compile Include="src\UI\DonateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DonateForm.Designer.cs">
+    <Compile Include="src\UI\DonateForm.Designer.cs">
       <DependentUpon>DonateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FanCtrl\Controller\HidUSBController.cs" />
-    <Compile Include="FanCtrl\Controller\Kernel\AdvApi32.cs" />
-    <Compile Include="FanCtrl\Controller\Kernel\Kernel32.cs" />
-    <Compile Include="FanCtrl\Controller\Kernel\KernelDriver.cs" />
-    <Compile Include="FanCtrl\Controller\Kernel\Ring0.cs" />
-    <Compile Include="FanCtrl\Controller\OSDController.cs" />
-    <Compile Include="FanCtrl\Controller\SiUSBController.cs" />
-    <Compile Include="FanCtrl\Controller\SiUSBXp.cs" />
-    <Compile Include="FanCtrl\Controller\SMbusAmd.cs" />
-    <Compile Include="FanCtrl\Controller\SMBusIntel.cs" />
-    <Compile Include="FanCtrl\Controller\WinUSBController.cs" />
-    <Compile Include="FanCtrl\Data\Control\ControlManager.cs" />
-    <Compile Include="FanCtrl\Data\Control\FanData.cs" />
-    <Compile Include="FanCtrl\Data\Control\ControlData.cs" />
-    <Compile Include="FanCtrl\Data\Hotkey\HotkeyData.cs" />
-    <Compile Include="FanCtrl\Data\Hotkey\HotkeyManager.cs" />
-    <Compile Include="FanCtrl\Data\OSD\OSDGroup.cs" />
-    <Compile Include="FanCtrl\Data\OSD\OSDItem.cs" />
-    <Compile Include="FanCtrl\Data\OSD\OSDManager.cs" />
-    <Compile Include="FanCtrl\Hardware\CLC.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\BaseControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\CLCFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\CLCPumpControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\LHMControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\NvAPIFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\KrakenFanControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\KrakenPumpControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\RGBnFCControl.cs" />
-    <Compile Include="FanCtrl\Hardware\BaseDevice.cs" />
-    <Compile Include="FanCtrl\Hardware\HardwareDevice.cs" />
-    <Compile Include="FanCtrl\Hardware\HardwareManager.cs" />
-    <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoManager.cs" />
-    <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoCategory.cs" />
-    <Compile Include="FanCtrl\Hardware\HWInfo\HWInfoDevice.cs" />
-    <Compile Include="FanCtrl\Hardware\liquidctl\LiquidctlData.cs" />
-    <Compile Include="FanCtrl\Hardware\liquidctl\LiquidctlStatusData.cs" />
-    <Compile Include="FanCtrl\Hardware\liquidctl\LiquidctlManager.cs" />
-    <Compile Include="FanCtrl\Hardware\Kraken.cs" />
-    <Compile Include="FanCtrl\Hardware\LHM.cs" />
-    <Compile Include="FanCtrl\Hardware\OSD\HWInfoOSDSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\OSD\LHMOSDSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\HWInfoFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Control\LiquidctlControl.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\LiquidctlSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\LiquidctlTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\HWInfoTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\LHMFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\LHMTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Define.cs" />
-    <Compile Include="FanCtrl\Hardware\OSD\NvAPIOSDSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\USBDevice.cs" />
-    <Compile Include="FanCtrl\Hardware\RGBnFC.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\CLCFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\CLCLiquidTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\CLCPumpSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\DimmTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\NvAPIFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\NvAPITemp.cs" />
-    <Compile Include="FanCtrl\Data\Option\OptionManager.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\BaseSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\KrakenFanSpeed.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\KrakenLiquidTemp.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\KrakenPumpSpeed.cs" />
-    <Compile Include="FanCtrl\Data\Option\StartupControl.cs" />
-    <Compile Include="FanCtrl\Controller\SMBusController.cs" />
-    <Compile Include="FanCtrl\Controller\USBController.cs" />
-    <Compile Include="FanCtrl\Hardware\OSD\OSDSensor.cs" />
-    <Compile Include="FanCtrl\Hardware\Sensor\RGBnFCFanSpeed.cs" />
-    <Compile Include="FanCtrl\Util\MessageBoxEx.cs" />
-    <Compile Include="FanCtrl\Util\NumericUpDownEx.cs">
+    <Compile Include="src\libs\Controller\HidUSBController.cs" />
+    <Compile Include="src\libs\Controller\Kernel\AdvApi32.cs" />
+    <Compile Include="src\libs\Controller\Kernel\Kernel32.cs" />
+    <Compile Include="src\libs\Controller\Kernel\KernelDriver.cs" />
+    <Compile Include="src\libs\Controller\Kernel\Ring0.cs" />
+    <Compile Include="src\libs\Controller\OSDController.cs" />
+    <Compile Include="src\libs\Controller\ClientConnectorController.cs" />
+    <Compile Include="src\libs\Controller\SiUSBController.cs" />
+    <Compile Include="src\libs\Controller\SiUSBXp.cs" />
+    <Compile Include="src\libs\Controller\SMbusAmd.cs" />
+    <Compile Include="src\libs\Controller\SMBusIntel.cs" />
+    <Compile Include="src\libs\Controller\ServerController.cs" />
+    <Compile Include="src\libs\Controller\WinUSBController.cs" />
+    <Compile Include="src\libs\Data\Control\ControlManager.cs" />
+    <Compile Include="src\libs\Data\Control\FanData.cs" />
+    <Compile Include="src\libs\Data\Control\ControlData.cs" />
+    <Compile Include="src\libs\Data\Hotkey\HotkeyData.cs" />
+    <Compile Include="src\libs\Data\Hotkey\HotkeyManager.cs" />
+    <Compile Include="src\libs\Data\OSD\OSDGroup.cs" />
+    <Compile Include="src\libs\Data\OSD\OSDItem.cs" />
+    <Compile Include="src\libs\Data\OSD\OSDManager.cs" />
+    <Compile Include="src\libs\Hardware\CLC.cs" />
+    <Compile Include="src\libs\Hardware\Control\BaseControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\CLCFanControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\CLCPumpControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\PluginControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\LHMControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\NvAPIFanControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\KrakenFanControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\KrakenPumpControl.cs" />
+    <Compile Include="src\libs\Hardware\Control\RGBnFCControl.cs" />
+    <Compile Include="src\libs\Hardware\BaseDevice.cs" />
+    <Compile Include="src\libs\Hardware\HardwareDevice.cs" />
+    <Compile Include="src\libs\Hardware\HardwareManager.cs" />
+    <Compile Include="src\libs\Hardware\HWInfo\HWInfoManager.cs" />
+    <Compile Include="src\libs\Hardware\HWInfo\HWInfoCategory.cs" />
+    <Compile Include="src\libs\Hardware\HWInfo\HWInfoDevice.cs" />
+    <Compile Include="src\libs\Hardware\liquidctl\LiquidctlData.cs" />
+    <Compile Include="src\libs\Hardware\liquidctl\LiquidctlStatusData.cs" />
+    <Compile Include="src\libs\Hardware\liquidctl\LiquidctlManager.cs" />
+    <Compile Include="src\libs\Hardware\Kraken.cs" />
+    <Compile Include="src\libs\Hardware\LHM.cs" />
+    <Compile Include="src\libs\Hardware\OSD\HWInfoOSDSensor.cs" />
+    <Compile Include="src\libs\Hardware\OSD\LHMOSDSensor.cs" />
+    <Compile Include="src\libs\Hardware\Plugin\PluginPacket.cs" />
+    <Compile Include="src\libs\Hardware\Plugin\PluginDevice.cs" />
+    <Compile Include="src\libs\Hardware\Plugin\PluginManager.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\HWInfoFanSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Control\LiquidctlControl.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\PluginFanSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\PluginTemp.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\LiquidctlSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\LiquidctlTemp.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\HWInfoTemp.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\LHMFanSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\LHMTemp.cs" />
+    <Compile Include="src\libs\Hardware\Define.cs" />
+    <Compile Include="src\libs\Hardware\OSD\NvAPIOSDSensor.cs" />
+    <Compile Include="src\libs\Hardware\USBDevice.cs" />
+    <Compile Include="src\libs\Hardware\RGBnFC.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\CLCFanSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\CLCLiquidTemp.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\CLCPumpSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\DimmTemp.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\NvAPIFanSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\NvAPITemp.cs" />
+    <Compile Include="src\libs\Data\Option\OptionManager.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\BaseSensor.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\KrakenFanSpeed.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\KrakenLiquidTemp.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\KrakenPumpSpeed.cs" />
+    <Compile Include="src\libs\Data\Option\StartupControl.cs" />
+    <Compile Include="src\libs\Controller\SMBusController.cs" />
+    <Compile Include="src\libs\Controller\USBController.cs" />
+    <Compile Include="src\libs\Hardware\OSD\OSDSensor.cs" />
+    <Compile Include="src\libs\Hardware\Sensor\RGBnFCFanSpeed.cs" />
+    <Compile Include="src\libs\Util\MessageBoxEx.cs" />
+    <Compile Include="src\libs\Util\NumericUpDownEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FanCtrl\Util\PointObj.cs" />
-    <Compile Include="FanCtrl\Util\Util.cs" />
-    <Compile Include="HotkeyForm.cs">
+    <Compile Include="src\libs\Util\PointObj.cs" />
+    <Compile Include="src\libs\Util\Util.cs" />
+    <Compile Include="src\UI\HotkeyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HotkeyForm.Designer.cs">
+    <Compile Include="src\UI\HotkeyForm.Designer.cs">
       <DependentUpon>HotkeyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LightingForm.cs">
+    <Compile Include="src\UI\LightingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LightingForm.Designer.cs">
+    <Compile Include="src\UI\LightingForm.Designer.cs">
       <DependentUpon>LightingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LiquidctlCommandForm.cs">
+    <Compile Include="src\UI\LiquidctlCommandForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LiquidctlCommandForm.Designer.cs">
+    <Compile Include="src\UI\LiquidctlCommandForm.Designer.cs">
       <DependentUpon>LiquidctlCommandForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LiquidctlFanControlForm.cs">
+    <Compile Include="src\UI\LiquidctlFanControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LiquidctlFanControlForm.Designer.cs">
+    <Compile Include="src\UI\LiquidctlFanControlForm.Designer.cs">
       <DependentUpon>LiquidctlFanControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LiquidctlForm.cs">
+    <Compile Include="src\UI\LiquidctlForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LiquidctlForm.Designer.cs">
+    <Compile Include="src\UI\LiquidctlForm.Designer.cs">
       <DependentUpon>LiquidctlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="src\UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="src\UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OptionForm.cs">
+    <Compile Include="src\UI\OptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OptionForm.Designer.cs">
+    <Compile Include="src\UI\OptionForm.Designer.cs">
       <DependentUpon>OptionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OSDForm.cs">
+    <Compile Include="src\UI\OSDForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OSDForm.Designer.cs">
+    <Compile Include="src\UI\OSDForm.Designer.cs">
       <DependentUpon>OSDForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="src\UI\PluginAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\UI\PluginAddForm.Designer.cs">
+      <DependentUpon>PluginAddForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\UI\PluginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\UI\PluginForm.Designer.cs">
+      <DependentUpon>PluginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringLib.Designer.cs">
+    <Compile Include="Resources\StringLib.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringLib.resx</DependentUpon>
     </Compile>
-    <Compile Include="StringLib.ja.Designer.cs">
+    <Compile Include="Resources\StringLib.ja.Designer.cs">
       <DependentUpon>StringLib.ja.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="StringLib.ko.Designer.cs">
+    <Compile Include="Resources\StringLib.ko.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringLib.ko.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ControlForm.resx">
+    <EmbeddedResource Include="src\UI\ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DonateForm.resx">
+    <EmbeddedResource Include="src\UI\DonateForm.resx">
       <DependentUpon>DonateForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HotkeyForm.resx">
+    <EmbeddedResource Include="src\UI\HotkeyForm.resx">
       <DependentUpon>HotkeyForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LightingForm.resx">
+    <EmbeddedResource Include="src\UI\LightingForm.resx">
       <DependentUpon>LightingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LiquidctlCommandForm.resx">
+    <EmbeddedResource Include="src\UI\LiquidctlCommandForm.resx">
       <DependentUpon>LiquidctlCommandForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LiquidctlFanControlForm.resx">
+    <EmbeddedResource Include="src\UI\LiquidctlFanControlForm.resx">
       <DependentUpon>LiquidctlFanControlForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LiquidctlForm.resx">
+    <EmbeddedResource Include="src\UI\LiquidctlForm.resx">
       <DependentUpon>LiquidctlForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="src\UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OptionForm.resx">
+    <EmbeddedResource Include="src\UI\OptionForm.resx">
       <DependentUpon>OptionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OSDForm.resx">
+    <EmbeddedResource Include="src\UI\OSDForm.resx">
       <DependentUpon>OSDForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\UI\PluginAddForm.resx">
+      <DependentUpon>PluginAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\UI\PluginForm.resx">
+      <DependentUpon>PluginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -350,16 +352,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="StringLib.ja.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Include="Resources\StringLib.fr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringLib.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StringLib.ja.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.ja.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="StringLib.ko.resx">
+    <EmbeddedResource Include="Resources\StringLib.ko.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.ko.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="StringLib.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Include="Resources\StringLib.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Properties\app.manifest" />
@@ -390,7 +396,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
+    <Content Include="Resources\icon.ico" />
     <None Include="Resources\8.ico" />
     <None Include="Resources\7.ico" />
     <None Include="Resources\6.ico" />
@@ -405,13 +411,28 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)dll\*.dll" "$(TargetDir)"
+    <PostBuildEvent>copy /Y "$(SolutionDir)dll\*.*" "$(TargetDir)"
 mkdir "$(TargetDir)\plugin"
-copy /Y "$(SolutionDir)plugin\*.exe" "$(TargetDir)plugin"
+copy /Y "$(SolutionDir)plugin\*.*" "$(TargetDir)plugin"
 mkdir "$(TargetDir)\preset"
-copy /Y "$(SolutionDir)preset\*.preset" "$(TargetDir)preset"</PostBuildEvent>
+copy /Y "$(SolutionDir)preset\*.*" "$(TargetDir)preset"
+mkdir "$(TargetDir)locale"
+mkdir "$(TargetDir)locale\fr"
+mkdir "$(TargetDir)locale\ja"
+mkdir "$(TargetDir)locale\ko"
+copy /Y "$(TargetDir)fr\*.*" "$(TargetDir)locale\fr"
+copy /Y "$(TargetDir)ja\*.*" "$(TargetDir)locale\ja"
+copy /Y "$(TargetDir)ko\*.*" "$(TargetDir)locale\ko"
+rmdir /S /Q "$(TargetDir)fr"
+rmdir /S /Q "$(TargetDir)ja"
+rmdir /S /Q "$(TargetDir)ko"
+del $(TargetName).pdb</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>del "$(TargetDir)*.dll"</PreBuildEvent>
+    <PreBuildEvent>del /S /Q "$(TargetDir)*.dll"
+del /S /Q "$(TargetDir)*.exe"
+del /S /Q "$(TargetDir)locale"
+del /S /Q "$(TargetDir)plugin"
+del /S /Q "$(TargetDir)preset"</PreBuildEvent>
   </PropertyGroup>
 </Project>
