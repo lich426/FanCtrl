@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.5.4.0</ApplicationVersion>
+    <ApplicationVersion>1.5.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -423,6 +423,7 @@ mkdir "$(TargetDir)locale\ko"
 copy /Y "$(TargetDir)fr\*.*" "$(TargetDir)locale\fr"
 copy /Y "$(TargetDir)ja\*.*" "$(TargetDir)locale\ja"
 copy /Y "$(TargetDir)ko\*.*" "$(TargetDir)locale\ko"
+timeout 1 &gt; NUL
 rmdir /S /Q "$(TargetDir)fr"
 rmdir /S /Q "$(TargetDir)ja"
 rmdir /S /Q "$(TargetDir)ko"

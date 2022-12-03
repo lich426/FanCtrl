@@ -1227,22 +1227,19 @@ namespace FanCtrl
                         Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
 
                         if (control.Value == control.NextValue)
+                        {
+                            control.checkTimer();
                             continue;
+                        }
 
-                        if (control.Timeout > 0)
-                        {
-                            control.setSpeedWithTimer(control.NextValue, control.Timeout);
-                        }
-                        else
-                        {
-                            control.setSpeed(control.NextValue);
-                        }
+                        control.setSpeedWithTimer(control.NextValue);
                     }
 
                     foreach (var keyPair in mAutoControlDictionary)
                     {
                         var control = keyPair.Value;
                         Console.WriteLine("auto mode : name({0})", control.Name);
+                        control.stopTimer();
                         control.setAuto();
                     }
                 }

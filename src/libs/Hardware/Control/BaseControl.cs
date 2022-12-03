@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LibreHardwareMonitor.Hardware;
+using Newtonsoft.Json.Linq;
 
 namespace FanCtrl
 {
@@ -20,8 +21,8 @@ namespace FanCtrl
         // timer timeout (ms)
         public int Timeout { get; set; }
 
-        private System.Timers.Timer mTimer;
         private object mTimerLock = new object();
+        private System.Timers.Timer mTimer;
         private int mTimerValue;
 
         public BaseControl(LIBRARY_TYPE type)
@@ -58,45 +59,66 @@ namespace FanCtrl
             
         }
 
-        public void setSpeedWithTimer(int value, int time)
+        public void setSpeedWithTimer(int value)
         {
+            Monitor.Enter(mTimerLock);
+            int time = Timeout;
+            Timeout = 0;
+
             if (time <= 0)
             {
                 mTimerValue = value;
+                mTimer?.Stop();
                 this.setSpeed(value);
+                Monitor.Exit(mTimerLock);
                 return;
             }
 
             if (Value == value)
             {
-                Monitor.Enter(mTimerLock);
-                mTimerValue = value;
-                Timeout = 0;
                 mTimer?.Stop();
-                Monitor.Exit(mTimerLock);
+                mTimerValue = value;
+                Console.WriteLine("BaseControl.setSpeedWithTimer() : equal value({0})", value);
             }
             else if (mTimerValue != value)
             {
                 Console.WriteLine("BaseControl.setSpeedWithTimer() : value({0}), mTimerValue({1})", value, mTimerValue);
-                mTimerValue = value;
-                Timeout = 0;
-
-                Monitor.Enter(mTimerLock);
-                mTimer?.Stop();
-                Monitor.Exit(mTimerLock);
                 
+                mTimer?.Stop();
+                mTimerValue = value;
+
                 mTimer = new System.Timers.Timer();
                 mTimer.Interval = time;
+                var timer = mTimer;
                 mTimer.Elapsed += (sender, e) =>
                 {
                     Monitor.Enter(mTimerLock);
+                    if (timer.Enabled == false)
+                    {
+                        Monitor.Exit(mTimerLock);
+                        return;
+                    }
+
                     Console.WriteLine("BaseControl.setSpeedWithTimer() : setSpeed()");
                     this.setSpeed(value);
-                    mTimer?.Stop();
+                    timer.Stop();
                     Monitor.Exit(mTimerLock);
                 };
                 mTimer.Start();
             }
+            Monitor.Exit(mTimerLock);
+        }
+
+        public void checkTimer()
+        {
+            Monitor.Enter(mTimerLock);
+            if (Value == NextValue && Value != mTimerValue)
+            {
+                mTimerValue = Value;
+                mTimer?.Stop();                
+                Console.WriteLine("BaseControl.checkTimer() : stop timer");
+            }
+            Monitor.Exit(mTimerLock);
         }
 
         public void stopTimer()

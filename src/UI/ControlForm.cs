@@ -873,11 +873,12 @@ namespace FanCtrl
 
                     // check data
                     var rootObject = JObject.Parse(jsonString);
-                    bool isStep = rootObject.Value<bool>("step");
-                    int hysteresis = rootObject.Value<int>("hysteresis");
-                    int auto = rootObject.Value<int>("auto");
+                    bool isStep = (rootObject.ContainsKey("step") == true) ? rootObject.Value<bool>("step") : true;
+                    int hysteresis = (rootObject.ContainsKey("hysteresis") == true) ? rootObject.Value<int>("hysteresis") : 0;
+                    int auto = (rootObject.ContainsKey("auto") == true) ? rootObject.Value<int>("auto") : 0;
+                    int delay = (rootObject.ContainsKey("delay") == true) ? rootObject.Value<int>("delay") : 0;
 
-                    var unit = (FanValueUnit)rootObject.Value<int>("unit");                    
+                    var unit = (rootObject.ContainsKey("unit") == true) ? (FanValueUnit)rootObject.Value<int>("unit") : FanValueUnit.Size_5;
                     var valueList = rootObject.Value<JArray>("value");
                     if (unit == FanValueUnit.Size_1)
                     {
@@ -902,6 +903,7 @@ namespace FanCtrl
                     mSelectedFanData.IsStep = isStep;
                     mSelectedFanData.Hysteresis = hysteresis;
                     mSelectedFanData.Auto = auto;
+                    mSelectedFanData.DelayTime = delay;
                     mSelectedFanData.setChangeUnitAndFanValue(unit);
                     for (int i = 0; i < valueList.Count; i++)
                     {
@@ -917,6 +919,7 @@ namespace FanCtrl
                     mLineItem.Line.StepType = (mStepCheckBox.Checked == true) ? StepType.ForwardStep : StepType.NonStep;
                     mHysNumericUpDown.Enabled = mStepCheckBox.Checked;
                     mHysNumericUpDown.Value = mSelectedFanData.Hysteresis;
+                    mDelayNumericUpDown.Value = mSelectedFanData.DelayTime;
 
                     this.onUpdateTimer();
                 }
@@ -951,6 +954,7 @@ namespace FanCtrl
                 rootObject["hysteresis"] = mSelectedFanData.Hysteresis;
                 rootObject["unit"] = (int)mSelectedFanData.Unit;
                 rootObject["auto"] = mSelectedFanData.Auto;
+                rootObject["delay"] = mSelectedFanData.DelayTime;
 
                 var valueList = new JArray();
                 for (int i = 0; i < mSelectedFanData.getMaxFanValue(); i++)

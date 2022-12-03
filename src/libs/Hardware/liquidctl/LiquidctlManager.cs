@@ -11,6 +11,7 @@ using HidSharp;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace FanCtrl
 {
@@ -57,6 +58,8 @@ namespace FanCtrl
 
             try
             {
+                this.initialize();
+
                 var jsonString = getStatus();
                 var rootArray = JArray.Parse(jsonString);
                 for (int i = 0; i < rootArray.Count; i++)
@@ -198,6 +201,28 @@ namespace FanCtrl
             }
 
             Monitor.Exit(mLock);
+        }
+
+        private void initialize()
+        {
+            try
+            {
+                var p = new Process();
+                p.StartInfo.FileName = LiquidctlPath;
+                p.StartInfo.Arguments = "initialize all";
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                if (p.Start() == true)
+                {
+                    var jsonString = p.StandardOutput.ReadToEnd();
+                    p.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         private string getStatus()
