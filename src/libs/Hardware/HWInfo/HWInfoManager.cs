@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HidSharp.Reports;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,6 +33,9 @@ namespace FanCtrl
         private List<HWInfoCategory> mHWInfoCategoryList = new List<HWInfoCategory>();
 
         private bool mIsFirstRecv = false;
+
+        private bool mIsVersionMore734 = false;
+
         private HWInfoManager() { }
         private static HWInfoManager sManager = new HWInfoManager();
         public static HWInfoManager getInstance() { return sManager; }
@@ -220,6 +224,35 @@ namespace FanCtrl
 
             if (recvList[0] == 0x50 && recvList[1] == 0x52 && recvList[2] == 0x57 && recvList[3] == 0x48 && recvList[4] == 0x01)
             {
+                try
+                {
+                    var tempList2 = new List<byte>();
+                    for (int i = 40; i < recvLength; i++)
+                    {
+                        if (recvList[i] == 0x00)
+                            break;
+                        tempList2.Add(recvList[i]);
+                    }
+
+                    // ex) HWiNFO64 v7.40-5000
+                    string hwinfoVersion = Encoding.Default.GetString(tempList2.ToArray());
+                    var splitArray = hwinfoVersion.Split(' ');
+                    if (splitArray.Length == 2)
+                    {
+                        var splitArray2 = splitArray[1].Split('-');
+                        if (splitArray2.Length == 2)
+                        {
+                            var versionString = splitArray2[0].Replace("v", "");
+                            double version = double.Parse(versionString);
+                            if (version >= 7.34)
+                            {
+                                mIsVersionMore734 = true;
+                            }
+                        }
+                    }
+                    
+                }
+                catch { }
                 return true;
             }
             return false;
@@ -363,6 +396,12 @@ namespace FanCtrl
                         // category name (repeat)
                         index = index + 128;
 
+                        // pass packet
+                        if (mIsVersionMore734 == true)
+                        {
+                            index = index + 128;
+                        }                        
+
                         Monitor.Enter(mLock);
                         string categoryID = string.Format("{0}/{1}/{2}/{3}", mIDPrefix, id1, id2, name);
                         HWInfoCategory category = null;
@@ -441,6 +480,12 @@ namespace FanCtrl
                         datas = new byte[] { recvList[index], recvList[index + 1], recvList[index + 2], recvList[index + 3], recvList[index + 4], recvList[index + 5], recvList[index + 6], recvList[index + 7] };
                         double average = BitConverter.ToDouble(datas, 0);
                         index = index + 8;
+
+                        // pass packet
+                        if (mIsVersionMore734 == true)
+                        {
+                            index = index + 144;
+                        }                        
 
                         try
                         {
