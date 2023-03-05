@@ -135,11 +135,9 @@ namespace FanCtrl
             {
                 ThemeProvider.Theme = new LightTheme();
             }
-            var preference = Convert.ToInt32(type == THEME_TYPE.DARK);
-            DwmSetWindowAttribute(this.Handle,
-                                  DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                                  ref preference, sizeof(uint));
             BackColor = ThemeProvider.Theme.Colors.GreyBackground;
+
+            Theme.setTheme(this.Handle, (type == THEME_TYPE.DARK));
         }
 
         protected override void OnLoad(EventArgs e)
@@ -456,10 +454,7 @@ namespace FanCtrl
             }
 
             var type = OptionManager.getInstance().getNowTheme();
-            var preference = Convert.ToInt32(type == THEME_TYPE.DARK);
-            DwmSetWindowAttribute(this.Handle,
-                                  DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                                  ref preference, sizeof(uint));
+            Theme.setTheme(this.Handle, (type == THEME_TYPE.DARK));
         }
 
         private void onTrayMenuExit(object sender, EventArgs e)
