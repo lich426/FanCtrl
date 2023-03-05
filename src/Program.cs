@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DarkUI.Config;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -26,6 +27,16 @@ namespace FanCtrl
 
             if (Program.createMutex() == false)
                 return;
+
+            var type = OptionManager.getInstance().getNowTheme();
+            if (type == THEME_TYPE.DARK)
+            {
+                ThemeProvider.Theme = new DarkTheme();
+            }
+            else
+            {
+                ThemeProvider.Theme = new LightTheme();
+            }
 
             Application.Run(new MainForm());
 

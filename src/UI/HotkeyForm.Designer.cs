@@ -1,4 +1,6 @@
 ﻿
+using DarkUI.Controls;
+
 namespace FanCtrl
 {
     partial class HotkeyForm
@@ -30,20 +32,20 @@ namespace FanCtrl
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HotkeyForm));
-            this.mFanControlGroupBox = new System.Windows.Forms.GroupBox();
-            this.mModeGameTextBox = new System.Windows.Forms.TextBox();
-            this.mModeGameLabel = new System.Windows.Forms.Label();
-            this.mModePerformanceTextBox = new System.Windows.Forms.TextBox();
-            this.mModePerformanceLabel = new System.Windows.Forms.Label();
-            this.mModeSilenceTextBox = new System.Windows.Forms.TextBox();
-            this.mModeSilenceLabel = new System.Windows.Forms.Label();
-            this.mModeNormalTextBox = new System.Windows.Forms.TextBox();
-            this.mModeNormalLabel = new System.Windows.Forms.Label();
-            this.mEnableFanControlTextBox = new System.Windows.Forms.TextBox();
-            this.mEnableFanControlLabel = new System.Windows.Forms.Label();
-            this.mOSDGroupBox = new System.Windows.Forms.GroupBox();
-            this.mEnableOSDTextBox = new System.Windows.Forms.TextBox();
-            this.mEnableOSDLabel = new System.Windows.Forms.Label();
+            this.mFanControlGroupBox = new DarkGroupBox();
+            this.mModeGameTextBox = new DarkTextBox();
+            this.mModeGameLabel = new DarkTitle();
+            this.mModePerformanceTextBox = new DarkTextBox();
+            this.mModePerformanceLabel = new DarkTitle();
+            this.mModeSilenceTextBox = new DarkTextBox();
+            this.mModeSilenceLabel = new DarkTitle();
+            this.mModeNormalTextBox = new DarkTextBox();
+            this.mModeNormalLabel = new DarkTitle();
+            this.mEnableFanControlTextBox = new DarkTextBox();
+            this.mEnableFanControlLabel = new DarkTitle();
+            this.mOSDGroupBox = new DarkGroupBox();
+            this.mEnableOSDTextBox = new DarkTextBox();
+            this.mEnableOSDLabel = new DarkTitle();
             this.mFanControlGroupBox.SuspendLayout();
             this.mOSDGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -210,19 +212,19 @@ namespace FanCtrl
 
         #endregion
 
-        private System.Windows.Forms.GroupBox mFanControlGroupBox;
-        private System.Windows.Forms.Label mEnableFanControlLabel;
-        private System.Windows.Forms.TextBox mModeNormalTextBox;
-        private System.Windows.Forms.Label mModeNormalLabel;
-        private System.Windows.Forms.TextBox mEnableFanControlTextBox;
-        private System.Windows.Forms.TextBox mModeGameTextBox;
-        private System.Windows.Forms.Label mModeGameLabel;
-        private System.Windows.Forms.TextBox mModePerformanceTextBox;
-        private System.Windows.Forms.Label mModePerformanceLabel;
-        private System.Windows.Forms.TextBox mModeSilenceTextBox;
-        private System.Windows.Forms.Label mModeSilenceLabel;
-        private System.Windows.Forms.GroupBox mOSDGroupBox;
-        private System.Windows.Forms.TextBox mEnableOSDTextBox;
-        private System.Windows.Forms.Label mEnableOSDLabel;
+        private DarkGroupBox mFanControlGroupBox;
+        private DarkTitle mEnableFanControlLabel;
+        private DarkTextBox mModeNormalTextBox;
+        private DarkTitle mModeNormalLabel;
+        private DarkTextBox mEnableFanControlTextBox;
+        private DarkTextBox mModeGameTextBox;
+        private DarkTitle mModeGameLabel;
+        private DarkTextBox mModePerformanceTextBox;
+        private DarkTitle mModePerformanceLabel;
+        private DarkTextBox mModeSilenceTextBox;
+        private DarkTitle mModeSilenceLabel;
+        private DarkGroupBox mOSDGroupBox;
+        private DarkTextBox mEnableOSDTextBox;
+        private DarkTitle mEnableOSDLabel;
     }
 }

@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using System.Threading;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace FanCtrl
 {
@@ -23,6 +25,10 @@ namespace FanCtrl
         private OptionManager()
         {
             this.reset();
+            if (read() == false)
+            {
+                write();
+            }
         }
         
         public int Interval { get; set; }
@@ -62,6 +68,8 @@ namespace FanCtrl
 
         // Other options
         public int Language { get; set; }
+
+        public THEME_TYPE Theme { get; set; }
 
         public bool IsAnimation { get; set; }
 
@@ -117,6 +125,7 @@ namespace FanCtrl
             IsPlugin = false;
 
             Language = getSystemLocale();
+            Theme = 0;
             IsAnimation = true;
             IsFahrenheit = false;
             IsMinimized = false;
@@ -149,6 +158,7 @@ namespace FanCtrl
                 IsPlugin = (rootObject.ContainsKey("IsPlugin") == true) ? rootObject.Value<bool>("IsPlugin") : false;
 
                 Language = (rootObject.ContainsKey("Language") == true) ? rootObject.Value<int>("Language") : this.getSystemLocale();
+                Theme = (rootObject.ContainsKey("Theme") == true) ? (THEME_TYPE)rootObject.Value<int>("Theme") : THEME_TYPE.SYSTEM;
                 IsAnimation = (rootObject.ContainsKey("IsAnimation") == true) ? rootObject.Value<bool>("IsAnimation") : true;
                 IsFahrenheit = (rootObject.ContainsKey("IsFahrenheit") == true) ? rootObject.Value<bool>("IsFahrenheit") : false;
                 IsMinimized = (rootObject.ContainsKey("IsMinimized") == true) ? rootObject.Value<bool>("IsMinimized") : false;
@@ -187,6 +197,7 @@ namespace FanCtrl
                 rootObject["IsPlugin"] = IsPlugin;
 
                 rootObject["Language"] = Language;
+                rootObject["Theme"] = (int)Theme;
                 rootObject["IsAnimation"] = IsAnimation;
                 rootObject["IsFahrenheit"] = IsFahrenheit;
                 rootObject["IsMinimized"] = IsMinimized;
@@ -217,6 +228,22 @@ namespace FanCtrl
             {
                 return 0;
             }
+        }
+
+        public THEME_TYPE getNowTheme()
+        {
+            if (this.Theme == THEME_TYPE.SYSTEM)
+            {
+                var key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
+                var registryValueObject = key?.GetValue("AppsUseLightTheme");
+                if (registryValueObject == null)
+                {
+                    return THEME_TYPE.LIGHT;
+                }
+                var registryValue = (int)registryValueObject;
+                return (registryValue > 0) ? THEME_TYPE.LIGHT : THEME_TYPE.DARK;
+            }
+            return this.Theme;
         }
     }
 }

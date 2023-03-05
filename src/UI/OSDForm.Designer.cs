@@ -1,4 +1,7 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+using System.Windows.Forms;
+
+namespace FanCtrl
 {
     partial class OSDForm
     {
@@ -29,29 +32,29 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OSDForm));
-            this.mEnableCheckBox = new System.Windows.Forms.CheckBox();
-            this.mGroupGroupBox = new System.Windows.Forms.GroupBox();
-            this.mGroupEditTextBox = new System.Windows.Forms.TextBox();
-            this.mGroupRemoveButton = new System.Windows.Forms.Button();
-            this.mGroupColorButton = new System.Windows.Forms.Button();
-            this.mGroupAddButton = new System.Windows.Forms.Button();
-            this.mGroupDownButton = new System.Windows.Forms.Button();
-            this.mGroupUpButton = new System.Windows.Forms.Button();
-            this.mGroupListView = new System.Windows.Forms.ListView();
-            this.mGroupAddTextBox = new System.Windows.Forms.TextBox();
-            this.mItemGroupBox = new System.Windows.Forms.GroupBox();
-            this.mDigitLabel = new System.Windows.Forms.Label();
-            this.mItemComboBox = new System.Windows.Forms.ComboBox();
-            this.mItemRemoveButton = new System.Windows.Forms.Button();
-            this.mItemColorButton = new System.Windows.Forms.Button();
-            this.mItemAddButton = new System.Windows.Forms.Button();
-            this.mItemDownButton = new System.Windows.Forms.Button();
-            this.mItemUpButton = new System.Windows.Forms.Button();
-            this.mItemListView = new System.Windows.Forms.ListView();
-            this.mApplyButton = new System.Windows.Forms.Button();
-            this.mOKButton = new System.Windows.Forms.Button();
-            this.mSystemTimeCheckBox = new System.Windows.Forms.CheckBox();
-            this.mDigitNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.mEnableCheckBox = new DarkCheckBox();
+            this.mGroupGroupBox = new DarkGroupBox();
+            this.mGroupEditTextBox = new DarkTextBox();
+            this.mGroupRemoveButton = new DarkButton();
+            this.mGroupColorButton = new DarkButton();
+            this.mGroupAddButton = new DarkButton();
+            this.mGroupDownButton = new DarkButton();
+            this.mGroupUpButton = new DarkButton();
+            this.mGroupListView = new ThemeListView();
+            this.mGroupAddTextBox = new DarkTextBox();
+            this.mItemGroupBox = new DarkGroupBox();
+            this.mDigitLabel = new DarkLabel();
+            this.mItemComboBox = new DarkComboBox();
+            this.mItemRemoveButton = new DarkButton();
+            this.mItemColorButton = new DarkButton();
+            this.mItemAddButton = new DarkButton();
+            this.mItemDownButton = new DarkButton();
+            this.mItemUpButton = new DarkButton();
+            this.mItemListView = new ThemeListView();
+            this.mApplyButton = new DarkButton();
+            this.mOKButton = new DarkButton();
+            this.mSystemTimeCheckBox = new DarkCheckBox();
+            this.mDigitNumericUpDown = new DarkNumericUpDown();
             this.mGroupGroupBox.SuspendLayout();
             this.mItemGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mDigitNumericUpDown)).BeginInit();
@@ -65,7 +68,6 @@
             this.mEnableCheckBox.Size = new System.Drawing.Size(221, 16);
             this.mEnableCheckBox.TabIndex = 0;
             this.mEnableCheckBox.Text = "Enable On-Screen Display (RTSS)";
-            this.mEnableCheckBox.UseVisualStyleBackColor = true;
             // 
             // mGroupGroupBox
             // 
@@ -98,7 +100,6 @@
             this.mGroupRemoveButton.Size = new System.Drawing.Size(61, 29);
             this.mGroupRemoveButton.TabIndex = 6;
             this.mGroupRemoveButton.Text = "Remove";
-            this.mGroupRemoveButton.UseVisualStyleBackColor = true;
             this.mGroupRemoveButton.Click += new System.EventHandler(this.onGroupRemoveButtonClick);
             // 
             // mGroupColorButton
@@ -108,7 +109,6 @@
             this.mGroupColorButton.Size = new System.Drawing.Size(61, 29);
             this.mGroupColorButton.TabIndex = 5;
             this.mGroupColorButton.Text = "Color";
-            this.mGroupColorButton.UseVisualStyleBackColor = true;
             this.mGroupColorButton.Click += new System.EventHandler(this.onGroupColorButtonClick);
             // 
             // mGroupAddButton
@@ -118,7 +118,6 @@
             this.mGroupAddButton.Size = new System.Drawing.Size(61, 29);
             this.mGroupAddButton.TabIndex = 1;
             this.mGroupAddButton.Text = "Add";
-            this.mGroupAddButton.UseVisualStyleBackColor = true;
             this.mGroupAddButton.Click += new System.EventHandler(this.onGroupAddButtonClick);
             // 
             // mGroupDownButton
@@ -128,7 +127,6 @@
             this.mGroupDownButton.Size = new System.Drawing.Size(61, 29);
             this.mGroupDownButton.TabIndex = 4;
             this.mGroupDownButton.Text = "▼";
-            this.mGroupDownButton.UseVisualStyleBackColor = true;
             this.mGroupDownButton.Click += new System.EventHandler(this.onGroupDownButtonClick);
             // 
             // mGroupUpButton
@@ -138,7 +136,6 @@
             this.mGroupUpButton.Size = new System.Drawing.Size(61, 29);
             this.mGroupUpButton.TabIndex = 3;
             this.mGroupUpButton.Text = "▲";
-            this.mGroupUpButton.UseVisualStyleBackColor = true;
             this.mGroupUpButton.Click += new System.EventHandler(this.onGroupUpButtonClick);
             // 
             // mGroupListView
@@ -189,7 +186,7 @@
             // 
             // mItemComboBox
             // 
-            this.mItemComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mItemComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             this.mItemComboBox.FormattingEnabled = true;
             this.mItemComboBox.Location = new System.Drawing.Point(6, 28);
             this.mItemComboBox.Name = "mItemComboBox";
@@ -203,7 +200,6 @@
             this.mItemRemoveButton.Size = new System.Drawing.Size(61, 29);
             this.mItemRemoveButton.TabIndex = 6;
             this.mItemRemoveButton.Text = "Remove";
-            this.mItemRemoveButton.UseVisualStyleBackColor = true;
             this.mItemRemoveButton.Click += new System.EventHandler(this.onItemRemoveButtonClick);
             // 
             // mItemColorButton
@@ -213,7 +209,6 @@
             this.mItemColorButton.Size = new System.Drawing.Size(61, 29);
             this.mItemColorButton.TabIndex = 5;
             this.mItemColorButton.Text = "Color";
-            this.mItemColorButton.UseVisualStyleBackColor = true;
             this.mItemColorButton.Click += new System.EventHandler(this.onItemColorButtonClick);
             // 
             // mItemAddButton
@@ -223,7 +218,6 @@
             this.mItemAddButton.Size = new System.Drawing.Size(61, 29);
             this.mItemAddButton.TabIndex = 1;
             this.mItemAddButton.Text = "Add";
-            this.mItemAddButton.UseVisualStyleBackColor = true;
             this.mItemAddButton.Click += new System.EventHandler(this.onItemAddButtonClick);
             // 
             // mItemDownButton
@@ -233,7 +227,6 @@
             this.mItemDownButton.Size = new System.Drawing.Size(61, 29);
             this.mItemDownButton.TabIndex = 4;
             this.mItemDownButton.Text = "▼";
-            this.mItemDownButton.UseVisualStyleBackColor = true;
             this.mItemDownButton.Click += new System.EventHandler(this.onItemDownButtonClick);
             // 
             // mItemUpButton
@@ -243,7 +236,6 @@
             this.mItemUpButton.Size = new System.Drawing.Size(61, 29);
             this.mItemUpButton.TabIndex = 3;
             this.mItemUpButton.Text = "▲";
-            this.mItemUpButton.UseVisualStyleBackColor = true;
             this.mItemUpButton.Click += new System.EventHandler(this.onItemUpButtonClick);
             // 
             // mItemListView
@@ -265,7 +257,6 @@
             this.mApplyButton.Size = new System.Drawing.Size(111, 35);
             this.mApplyButton.TabIndex = 8;
             this.mApplyButton.Text = "Apply";
-            this.mApplyButton.UseVisualStyleBackColor = true;
             this.mApplyButton.Click += new System.EventHandler(this.onApplyButtonClick);
             // 
             // mOKButton
@@ -275,7 +266,6 @@
             this.mOKButton.Size = new System.Drawing.Size(111, 35);
             this.mOKButton.TabIndex = 9;
             this.mOKButton.Text = "OK";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // mSystemTimeCheckBox
@@ -286,7 +276,6 @@
             this.mSystemTimeCheckBox.Size = new System.Drawing.Size(130, 16);
             this.mSystemTimeCheckBox.TabIndex = 0;
             this.mSystemTimeCheckBox.Text = "Show system time";
-            this.mSystemTimeCheckBox.UseVisualStyleBackColor = true;
             // 
             // mDigitNumericUpDown
             // 
@@ -327,28 +316,28 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox mEnableCheckBox;
-        private System.Windows.Forms.GroupBox mGroupGroupBox;
-        private System.Windows.Forms.ListView mGroupListView;
-        private System.Windows.Forms.Button mGroupAddButton;
-        private System.Windows.Forms.TextBox mGroupAddTextBox;
-        private System.Windows.Forms.Button mGroupRemoveButton;
-        private System.Windows.Forms.Button mGroupColorButton;
-        private System.Windows.Forms.Button mGroupDownButton;
-        private System.Windows.Forms.Button mGroupUpButton;
-        private System.Windows.Forms.GroupBox mItemGroupBox;
-        private System.Windows.Forms.ComboBox mItemComboBox;
-        private System.Windows.Forms.Button mItemRemoveButton;
-        private System.Windows.Forms.Button mItemColorButton;
-        private System.Windows.Forms.Button mItemAddButton;
-        private System.Windows.Forms.Button mItemDownButton;
-        private System.Windows.Forms.Button mItemUpButton;
-        private System.Windows.Forms.ListView mItemListView;
-        private System.Windows.Forms.Button mApplyButton;
-        private System.Windows.Forms.Button mOKButton;
-        private System.Windows.Forms.TextBox mGroupEditTextBox;
-        private System.Windows.Forms.CheckBox mSystemTimeCheckBox;
-        private System.Windows.Forms.NumericUpDown mDigitNumericUpDown;
-        private System.Windows.Forms.Label mDigitLabel;
+        private DarkCheckBox mEnableCheckBox;
+        private DarkGroupBox mGroupGroupBox;
+        private ThemeListView mGroupListView;
+        private DarkButton mGroupAddButton;
+        private DarkTextBox mGroupAddTextBox;
+        private DarkButton mGroupRemoveButton;
+        private DarkButton mGroupColorButton;
+        private DarkButton mGroupDownButton;
+        private DarkButton mGroupUpButton;
+        private DarkGroupBox mItemGroupBox;
+        private DarkComboBox mItemComboBox;
+        private DarkButton mItemRemoveButton;
+        private DarkButton mItemColorButton;
+        private DarkButton mItemAddButton;
+        private DarkButton mItemDownButton;
+        private DarkButton mItemUpButton;
+        private ThemeListView mItemListView;
+        private DarkButton mApplyButton;
+        private DarkButton mOKButton;
+        private DarkTextBox mGroupEditTextBox;
+        private DarkCheckBox mSystemTimeCheckBox;
+        private DarkNumericUpDown mDigitNumericUpDown;
+        private DarkLabel mDigitLabel;
     }
 }

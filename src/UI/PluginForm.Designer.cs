@@ -1,4 +1,6 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+
+namespace FanCtrl
 {
     partial class PluginForm
     {
@@ -29,25 +31,25 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginForm));
-            this.mServerButton = new System.Windows.Forms.Button();
-            this.mServerGroupBox = new System.Windows.Forms.GroupBox();
-            this.mPortNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.mPortLabel = new System.Windows.Forms.Label();
-            this.mTempGroupBox = new System.Windows.Forms.GroupBox();
-            this.mTempAddButton = new System.Windows.Forms.Button();
-            this.mTempRemoveButton = new System.Windows.Forms.Button();
-            this.mTempListView = new System.Windows.Forms.ListView();
-            this.mFanSpeedGroupBox = new System.Windows.Forms.GroupBox();
-            this.mFanSpeedAddButton = new System.Windows.Forms.Button();
-            this.mFanSpeedListView = new System.Windows.Forms.ListView();
-            this.mFanSpeedRemoveButton = new System.Windows.Forms.Button();
-            this.mFanControlGroupBox = new System.Windows.Forms.GroupBox();
-            this.mFanControlAddButton = new System.Windows.Forms.Button();
-            this.mFanControlListView = new System.Windows.Forms.ListView();
-            this.mFanControlRemoveButton = new System.Windows.Forms.Button();
-            this.mOKButton = new System.Windows.Forms.Button();
-            this.mClientGroupBox = new System.Windows.Forms.GroupBox();
-            this.mClientListView = new System.Windows.Forms.ListView();
+            this.mServerButton = new DarkButton();
+            this.mServerGroupBox = new DarkGroupBox();
+            this.mPortNumericUpDown = new DarkNumericUpDown();
+            this.mPortLabel = new DarkLabel();
+            this.mTempGroupBox = new DarkGroupBox();
+            this.mTempAddButton = new DarkButton();
+            this.mTempRemoveButton = new DarkButton();
+            this.mTempListView = new ThemeListView();
+            this.mFanSpeedGroupBox = new DarkGroupBox();
+            this.mFanSpeedAddButton = new DarkButton();
+            this.mFanSpeedListView = new ThemeListView();
+            this.mFanSpeedRemoveButton = new DarkButton();
+            this.mFanControlGroupBox = new DarkGroupBox();
+            this.mFanControlAddButton = new DarkButton();
+            this.mFanControlListView = new ThemeListView();
+            this.mFanControlRemoveButton = new DarkButton();
+            this.mOKButton = new DarkButton();
+            this.mClientGroupBox = new DarkGroupBox();
+            this.mClientListView = new ThemeListView();
             this.mServerGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mPortNumericUpDown)).BeginInit();
             this.mTempGroupBox.SuspendLayout();
@@ -63,7 +65,6 @@
             this.mServerButton.Size = new System.Drawing.Size(194, 51);
             this.mServerButton.TabIndex = 2;
             this.mServerButton.Text = "Start";
-            this.mServerButton.UseVisualStyleBackColor = true;
             this.mServerButton.Click += new System.EventHandler(this.onServerButtonClick);
             // 
             // mServerGroupBox
@@ -124,7 +125,6 @@
             this.mTempAddButton.Size = new System.Drawing.Size(107, 38);
             this.mTempAddButton.TabIndex = 4;
             this.mTempAddButton.Text = "Add";
-            this.mTempAddButton.UseVisualStyleBackColor = true;
             this.mTempAddButton.Click += new System.EventHandler(this.onTempAddButtonClick);
             // 
             // mTempRemoveButton
@@ -134,7 +134,6 @@
             this.mTempRemoveButton.Size = new System.Drawing.Size(107, 38);
             this.mTempRemoveButton.TabIndex = 3;
             this.mTempRemoveButton.Text = "Remove";
-            this.mTempRemoveButton.UseVisualStyleBackColor = true;
             this.mTempRemoveButton.Click += new System.EventHandler(this.onTempRemoveButtonClick);
             // 
             // mTempListView
@@ -169,7 +168,6 @@
             this.mFanSpeedAddButton.Size = new System.Drawing.Size(107, 38);
             this.mFanSpeedAddButton.TabIndex = 6;
             this.mFanSpeedAddButton.Text = "Add";
-            this.mFanSpeedAddButton.UseVisualStyleBackColor = true;
             this.mFanSpeedAddButton.Click += new System.EventHandler(this.onFanSpeedAddButtonClick);
             // 
             // mFanSpeedListView
@@ -192,7 +190,6 @@
             this.mFanSpeedRemoveButton.Size = new System.Drawing.Size(107, 38);
             this.mFanSpeedRemoveButton.TabIndex = 5;
             this.mFanSpeedRemoveButton.Text = "Remove";
-            this.mFanSpeedRemoveButton.UseVisualStyleBackColor = true;
             this.mFanSpeedRemoveButton.Click += new System.EventHandler(this.onFanSpeedRemoveButtonClick);
             // 
             // mFanControlGroupBox
@@ -214,7 +211,6 @@
             this.mFanControlAddButton.Size = new System.Drawing.Size(107, 38);
             this.mFanControlAddButton.TabIndex = 8;
             this.mFanControlAddButton.Text = "Add";
-            this.mFanControlAddButton.UseVisualStyleBackColor = true;
             this.mFanControlAddButton.Click += new System.EventHandler(this.onFanControlAddButtonClick);
             // 
             // mFanControlListView
@@ -237,7 +233,6 @@
             this.mFanControlRemoveButton.Size = new System.Drawing.Size(107, 38);
             this.mFanControlRemoveButton.TabIndex = 7;
             this.mFanControlRemoveButton.Text = "Remove";
-            this.mFanControlRemoveButton.UseVisualStyleBackColor = true;
             this.mFanControlRemoveButton.Click += new System.EventHandler(this.onFanControlRemoveButtonClick);
             // 
             // mOKButton
@@ -247,7 +242,6 @@
             this.mOKButton.Size = new System.Drawing.Size(233, 51);
             this.mOKButton.TabIndex = 9;
             this.mOKButton.Text = "OK";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // mClientGroupBox
@@ -303,24 +297,24 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button mServerButton;
-        private System.Windows.Forms.GroupBox mServerGroupBox;
-        private System.Windows.Forms.NumericUpDown mPortNumericUpDown;
-        private System.Windows.Forms.Label mPortLabel;
-        private System.Windows.Forms.GroupBox mTempGroupBox;
-        private System.Windows.Forms.Button mTempAddButton;
-        private System.Windows.Forms.Button mTempRemoveButton;
-        private System.Windows.Forms.ListView mTempListView;
-        private System.Windows.Forms.GroupBox mFanSpeedGroupBox;
-        private System.Windows.Forms.Button mFanSpeedAddButton;
-        private System.Windows.Forms.Button mFanSpeedRemoveButton;
-        private System.Windows.Forms.ListView mFanSpeedListView;
-        private System.Windows.Forms.GroupBox mFanControlGroupBox;
-        private System.Windows.Forms.Button mFanControlAddButton;
-        private System.Windows.Forms.Button mFanControlRemoveButton;
-        private System.Windows.Forms.ListView mFanControlListView;
-        private System.Windows.Forms.Button mOKButton;
-        private System.Windows.Forms.GroupBox mClientGroupBox;
-        private System.Windows.Forms.ListView mClientListView;
+        private DarkButton mServerButton;
+        private DarkGroupBox mServerGroupBox;
+        private DarkNumericUpDown mPortNumericUpDown;
+        private DarkLabel mPortLabel;
+        private DarkGroupBox mTempGroupBox;
+        private DarkButton mTempAddButton;
+        private DarkButton mTempRemoveButton;
+        private ThemeListView mTempListView;
+        private DarkGroupBox mFanSpeedGroupBox;
+        private DarkButton mFanSpeedAddButton;
+        private DarkButton mFanSpeedRemoveButton;
+        private ThemeListView mFanSpeedListView;
+        private DarkGroupBox mFanControlGroupBox;
+        private DarkButton mFanControlAddButton;
+        private DarkButton mFanControlRemoveButton;
+        private ThemeListView mFanControlListView;
+        private DarkButton mOKButton;
+        private DarkGroupBox mClientGroupBox;
+        private ThemeListView mClientListView;
     }
 }

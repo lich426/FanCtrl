@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class PluginAddForm : Form
+    public partial class PluginAddForm : ThemeForm
     {
         public string KeyString { get; set; }
 

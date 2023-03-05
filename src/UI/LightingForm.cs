@@ -1,4 +1,5 @@
-﻿using FanCtrl.Resources;
+﻿using DarkUI.Controls;
+using FanCtrl.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class LightingForm : Form
+    public partial class LightingForm : ThemeForm
     {
         private USBDevice mUSBDevice = null;
 
@@ -81,7 +82,7 @@ namespace FanCtrl
 
         private void onAddButtonClick(object sender, EventArgs e)
         {
-            var textBox = new TextBox();
+            var textBox = new DarkTextBox();
             textBox.Parent = mHexDataGroupBox;
             textBox.Name = "mHexTextBox" + mHexTextBoxList.Count;
             textBox.Size = new System.Drawing.Size(310, 21);
@@ -89,7 +90,7 @@ namespace FanCtrl
             textBox.KeyDown += onTextBoxKeyDown;
             textBox.KeyPress += onTextBoxKeyPress;
 
-            var removeButton = new Button();
+            var removeButton = new DarkButton();
             removeButton.Parent = mHexDataGroupBox;
             removeButton.Name = "mRemoveButton" + mRemoveButtonList.Count;
             removeButton.Text = StringLib.Remove;

@@ -1,4 +1,6 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+
+namespace FanCtrl
 {
     partial class PluginAddForm
     {
@@ -29,11 +31,11 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginAddForm));
-            this.mKeyTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.mOKButton = new System.Windows.Forms.Button();
-            this.mNameTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.mKeyTextBox = new DarkTextBox();
+            this.label1 = new DarkLabel();
+            this.mOKButton = new DarkButton();
+            this.mNameTextBox = new DarkTextBox();
+            this.label2 = new DarkLabel();
             this.SuspendLayout();
             // 
             // mKeyTextBox
@@ -59,7 +61,6 @@
             this.mOKButton.Size = new System.Drawing.Size(201, 44);
             this.mOKButton.TabIndex = 1;
             this.mOKButton.Text = "OK";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // mNameTextBox
@@ -101,10 +102,10 @@
         }
 
         #endregion
-        private System.Windows.Forms.TextBox mKeyTextBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button mOKButton;
-        private System.Windows.Forms.TextBox mNameTextBox;
-        private System.Windows.Forms.Label label2;
+        private DarkTextBox mKeyTextBox;
+        private DarkLabel label1;
+        private DarkButton mOKButton;
+        private DarkTextBox mNameTextBox;
+        private DarkLabel label2;
     }
 }

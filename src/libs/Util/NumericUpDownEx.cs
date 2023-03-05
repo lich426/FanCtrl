@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DarkUI.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    class NumericUpDownEx : NumericUpDown
+    class NumericUpDownEx : DarkNumericUpDown
     {
         public event EventHandler ValueChangedInput;
         private bool mIsSetValue = false;

@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class LiquidctlForm : Form
+    public partial class LiquidctlForm : ThemeForm
     {
         private List<LiquidctlControl> mLiquidctlControlList = new List<LiquidctlControl>();
         private List<string> mLiquidctlCommandList = new List<string>();

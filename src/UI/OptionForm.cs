@@ -1,4 +1,5 @@
-﻿using FanCtrl.Resources;
+﻿using DarkUI.Forms;
+using FanCtrl.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class OptionForm : Form
+    public partial class OptionForm : ThemeForm
     {
         public OptionForm()
         {
@@ -91,6 +92,11 @@ namespace FanCtrl
             mLanguageComboBox.Items.Add(StringLib.French);
             mLanguageComboBox.SelectedIndex = OptionManager.getInstance().Language;
 
+            mThemeComboBox.Items.Add(StringLib.Theme_System);
+            mThemeComboBox.Items.Add(StringLib.Theme_Light);
+            mThemeComboBox.Items.Add(StringLib.Theme_Dark);
+            mThemeComboBox.SelectedIndex = (int)OptionManager.getInstance().Theme;
+
             mFahrenheitCheckBox.Checked = OptionManager.getInstance().IsFahrenheit;
             mAnimationCheckBox.Checked = OptionManager.getInstance().IsAnimation;
             mMinimizeCheckBox.Checked = OptionManager.getInstance().IsMinimized;
@@ -109,6 +115,7 @@ namespace FanCtrl
             mPluginCheckBox.Text = StringLib.Plugin;
             mAnimationCheckBox.Text = StringLib.Tray_Icon_animation;
             mLanguageLabel.Text = StringLib.Language;
+            mThemeLabel.Text = StringLib.Theme;
             mFahrenheitCheckBox.Text = StringLib.Fahrenheit;
             mMinimizeCheckBox.Text = StringLib.Start_minimized;
             mStartupCheckBox.Text = StringLib.Start_with_Windows;
@@ -159,9 +166,10 @@ namespace FanCtrl
                 (optionManager.IsHWInfo != mHWInfoCheckBox.Checked) ||
                 (optionManager.IsLiquidctl != mLiquidctlCheckBox.Checked) ||
                 (optionManager.IsPlugin != mPluginCheckBox.Checked) ||
-                (optionManager.Language != mLanguageComboBox.SelectedIndex))
+                (optionManager.Language != mLanguageComboBox.SelectedIndex) ||
+                ((int)optionManager.Theme != mThemeComboBox.SelectedIndex))
             {
-                var result = MessageBox.Show(StringLib.OptionChange, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                var result = DarkMessageBox.ShowInformation(StringLib.OptionChange, StringLib.Option, DarkDialogButton.OkCancel);
                 if (result == DialogResult.Cancel)
                     return;
 
@@ -195,6 +203,7 @@ namespace FanCtrl
             optionManager.IsPlugin = mPluginCheckBox.Checked;
 
             optionManager.Language = mLanguageComboBox.SelectedIndex;
+            optionManager.Theme = (THEME_TYPE)mThemeComboBox.SelectedIndex;
             optionManager.IsFahrenheit = mFahrenheitCheckBox.Checked;
             optionManager.IsAnimation = mAnimationCheckBox.Checked;
             optionManager.IsMinimized = mMinimizeCheckBox.Checked;
@@ -219,7 +228,7 @@ namespace FanCtrl
 
         private void onResetButtonClick(object sender, EventArgs e)
         {
-            var result = MessageBox.Show(StringLib.OptionReset, StringLib.Option, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            var result = DarkMessageBox.ShowInformation(StringLib.OptionReset, StringLib.Option, DarkDialogButton.OkCancel);
             if (result == DialogResult.Cancel)
                 return;
 

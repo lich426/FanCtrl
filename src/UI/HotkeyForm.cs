@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class HotkeyForm : Form
+    public partial class HotkeyForm : ThemeForm
     {
         private const int WM_KEYDOWN = 0x100;
         private const int WM_SYSKEYDOWN = 0x104;

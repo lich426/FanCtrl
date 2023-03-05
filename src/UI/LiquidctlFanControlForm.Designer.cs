@@ -1,4 +1,7 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+using System.Windows.Forms;
+
+namespace FanCtrl
 {
     partial class LiquidctlFanControlForm
     {
@@ -29,13 +32,13 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LiquidctlFanControlForm));
-            this.mDeviceGroupBox = new System.Windows.Forms.GroupBox();
-            this.mAddressTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.mDeviceComboBox = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.mChannelTextBox = new System.Windows.Forms.TextBox();
-            this.mOKButton = new System.Windows.Forms.Button();
+            this.mDeviceGroupBox = new DarkGroupBox();
+            this.mAddressTextBox = new DarkTextBox();
+            this.label1 = new DarkLabel();
+            this.mDeviceComboBox = new DarkComboBox();
+            this.groupBox1 = new DarkGroupBox();
+            this.mChannelTextBox = new DarkTextBox();
+            this.mOKButton = new DarkButton();
             this.mDeviceGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +74,7 @@
             // 
             // mDeviceComboBox
             // 
-            this.mDeviceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mDeviceComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             this.mDeviceComboBox.FormattingEnabled = true;
             this.mDeviceComboBox.Location = new System.Drawing.Point(7, 21);
             this.mDeviceComboBox.Name = "mDeviceComboBox";
@@ -102,7 +105,6 @@
             this.mOKButton.Size = new System.Drawing.Size(151, 44);
             this.mOKButton.TabIndex = 2;
             this.mOKButton.Text = "button1";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // LiquidctlFanControlForm
@@ -130,12 +132,12 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox mDeviceGroupBox;
-        private System.Windows.Forms.TextBox mAddressTextBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox mDeviceComboBox;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox mChannelTextBox;
-        private System.Windows.Forms.Button mOKButton;
+        private DarkGroupBox mDeviceGroupBox;
+        private DarkTextBox mAddressTextBox;
+        private DarkLabel label1;
+        private DarkComboBox mDeviceComboBox;
+        private DarkGroupBox groupBox1;
+        private DarkTextBox mChannelTextBox;
+        private DarkButton mOKButton;
     }
 }

@@ -1,4 +1,5 @@
-﻿using FanCtrl.Resources;
+﻿using DarkUI.Forms;
+using FanCtrl.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FanCtrl
 {
-    public partial class PluginForm : Form
+    public partial class PluginForm : ThemeForm
     {
         public PluginForm()
         {
@@ -170,7 +171,7 @@ namespace FanCtrl
                 }
                 else
                 {
-                    MessageBox.Show(StringLib.Unable_to_open_socket);
+                    DarkMessageBox.ShowError(StringLib.Unable_to_open_socket, "", DarkDialogButton.Ok);
                 }
             }
         }
@@ -200,7 +201,7 @@ namespace FanCtrl
                     if (key.CompareTo(tempKey) == 0)
                     {
                         isExist = true;
-                        MessageBox.Show(StringLib.Duplicate_Key);
+                        DarkMessageBox.ShowError(StringLib.Duplicate_Key, "", DarkDialogButton.Ok);
                         break;
                     }
                 }
@@ -239,7 +240,7 @@ namespace FanCtrl
                         if (changeKey.CompareTo(tempKey) == 0)
                         {
                             isExist = true;
-                            MessageBox.Show(StringLib.Duplicate_Key);
+                            DarkMessageBox.ShowError(StringLib.Duplicate_Key, "", DarkDialogButton.Ok);
                             break;
                         }
                     }
@@ -277,7 +278,7 @@ namespace FanCtrl
                     if (key.CompareTo(tempKey) == 0)
                     {
                         isExist = true;
-                        MessageBox.Show(StringLib.Duplicate_Key);
+                        DarkMessageBox.ShowError(StringLib.Duplicate_Key, "", DarkDialogButton.Ok);
                         break;
                     }
                 }
@@ -316,7 +317,7 @@ namespace FanCtrl
                         if (changeKey.CompareTo(tempKey) == 0)
                         {
                             isExist = true;
-                            MessageBox.Show(StringLib.Duplicate_Key);
+                            DarkMessageBox.ShowError(StringLib.Duplicate_Key, "", DarkDialogButton.Ok);
                             break;
                         }
                     }
@@ -354,7 +355,7 @@ namespace FanCtrl
                     if (key.CompareTo(tempKey) == 0)
                     {
                         isExist = true;
-                        MessageBox.Show(StringLib.Duplicate_Key);
+                        DarkMessageBox.ShowError(StringLib.Duplicate_Key, "", DarkDialogButton.Ok);
                         break;
                     }
                 }
@@ -393,7 +394,7 @@ namespace FanCtrl
                         if (changeKey.CompareTo(tempKey) == 0)
                         {
                             isExist = true;
-                            MessageBox.Show(StringLib.Duplicate_Key);
+                            DarkMessageBox.ShowError(StringLib.Duplicate_Key, "", DarkDialogButton.Ok);
                             break;
                         }
                     }

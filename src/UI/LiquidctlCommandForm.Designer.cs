@@ -1,4 +1,6 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+
+namespace FanCtrl
 {
     partial class LiquidctlCommandForm
     {
@@ -29,9 +31,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LiquidctlCommandForm));
-            this.mCommandGroupBox = new System.Windows.Forms.GroupBox();
-            this.mCommandTextBox = new System.Windows.Forms.TextBox();
-            this.mOKButton = new System.Windows.Forms.Button();
+            this.mCommandGroupBox = new DarkGroupBox();
+            this.mCommandTextBox = new DarkTextBox();
+            this.mOKButton = new DarkButton();
             this.mCommandGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +61,6 @@
             this.mOKButton.Size = new System.Drawing.Size(142, 34);
             this.mOKButton.TabIndex = 1;
             this.mOKButton.Text = "button1";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // LiquidctlCommandForm
@@ -84,8 +85,8 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox mCommandGroupBox;
-        private System.Windows.Forms.TextBox mCommandTextBox;
-        private System.Windows.Forms.Button mOKButton;
+        private DarkGroupBox mCommandGroupBox;
+        private DarkTextBox mCommandTextBox;
+        private DarkButton mOKButton;
     }
 }

@@ -28,7 +28,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.5.7.0</ApplicationVersion>
+    <ApplicationVersion>1.5.8.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -90,6 +90,10 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DarkUI, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\DarkUI.dll</HintPath>
+    </Reference>
     <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\HidSharp.dll</HintPath>
@@ -305,6 +309,21 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringLib.ko.resx</DependentUpon>
+    </Compile>
+    <Compile Include="src\UI\Theme\ThemeListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\UI\Theme\ThemePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\UI\Theme\ThemeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\UI\Theme\ThemeHardwareLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\UI\Theme\ThemeLibLabel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="src\UI\ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>

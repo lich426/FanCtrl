@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class DonateForm : Form
+    public partial class DonateForm : ThemeForm
     {
         public DonateForm()
         {

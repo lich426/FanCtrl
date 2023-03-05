@@ -808,6 +808,42 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
+        ///   Theme :과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Theme {
+            get {
+                return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Dark과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Theme_Dark {
+            get {
+                return ResourceManager.GetString("Theme_Dark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Light과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Theme_Light {
+            get {
+                return ResourceManager.GetString("Theme_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   System과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Theme_System {
+            get {
+                return ResourceManager.GetString("Theme_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   FanCtrl과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Title {

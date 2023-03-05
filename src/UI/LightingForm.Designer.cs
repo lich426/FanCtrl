@@ -1,4 +1,6 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+
+namespace FanCtrl
 {
     partial class LightingForm
     {
@@ -29,10 +31,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LightingForm));
-            this.mHexDataGroupBox = new System.Windows.Forms.GroupBox();
-            this.mAddButton = new System.Windows.Forms.Button();
-            this.mOKButton = new System.Windows.Forms.Button();
-            this.mApplyButton = new System.Windows.Forms.Button();
+            this.mHexDataGroupBox = new DarkGroupBox();
+            this.mAddButton = new DarkButton();
+            this.mOKButton = new DarkButton();
+            this.mApplyButton = new DarkButton();
             this.mHexDataGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +55,6 @@
             this.mAddButton.Size = new System.Drawing.Size(71, 23);
             this.mAddButton.TabIndex = 4;
             this.mAddButton.Text = "Add";
-            this.mAddButton.UseVisualStyleBackColor = true;
             this.mAddButton.Click += new System.EventHandler(this.onAddButtonClick);
             // 
             // mOKButton
@@ -63,7 +64,6 @@
             this.mOKButton.Size = new System.Drawing.Size(117, 40);
             this.mOKButton.TabIndex = 2;
             this.mOKButton.Text = "OK";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // mApplyButton
@@ -73,7 +73,6 @@
             this.mApplyButton.Size = new System.Drawing.Size(117, 40);
             this.mApplyButton.TabIndex = 3;
             this.mApplyButton.Text = "Apply";
-            this.mApplyButton.UseVisualStyleBackColor = true;
             this.mApplyButton.Click += new System.EventHandler(this.onApplyButtonClick);
             // 
             // LightingForm
@@ -98,9 +97,9 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox mHexDataGroupBox;
-        private System.Windows.Forms.Button mOKButton;
-        private System.Windows.Forms.Button mApplyButton;
-        private System.Windows.Forms.Button mAddButton;
+        private DarkGroupBox mHexDataGroupBox;
+        private DarkButton mOKButton;
+        private DarkButton mApplyButton;
+        private DarkButton mAddButton;
     }
 }

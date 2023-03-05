@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class OSDForm : Form
+    public partial class OSDForm : ThemeForm
     {
         private List<OSDItem> mComboBoxItemList = new List<OSDItem>();
 
@@ -39,6 +39,8 @@ namespace FanCtrl
             mItemListView.Columns.Add("Item", 280);
 
             mDigitNumericUpDown.ValueChanged += onDigitNumericUpDownValueChanged;
+
+            mItemComboBox.DropDownHeight = 500;
 
             this.enableItemConrol(false);
 
@@ -199,7 +201,7 @@ namespace FanCtrl
         {
             //mItemComboBox.Enabled = isEnable;
             mDigitNumericUpDown.Enabled = isEnable;
-            mItemListView.Enabled = isEnable;
+            //mItemListView.Enabled = isEnable;
             mItemAddButton.Enabled = isEnable;
             mItemUpButton.Enabled = isEnable;
             mItemDownButton.Enabled = isEnable;

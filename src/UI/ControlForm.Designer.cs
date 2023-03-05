@@ -1,4 +1,7 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+using System.Windows.Forms;
+
+namespace FanCtrl
 {
     partial class ControlForm
     {
@@ -30,36 +33,36 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlForm));
-            this.mEnableCheckBox = new System.Windows.Forms.CheckBox();
-            this.mTempGroupBox = new System.Windows.Forms.GroupBox();
-            this.mTempComboBox = new System.Windows.Forms.ComboBox();
-            this.mFanGroupBox = new System.Windows.Forms.GroupBox();
-            this.mRemoveButton = new System.Windows.Forms.Button();
-            this.mAddButton = new System.Windows.Forms.Button();
-            this.mFanListView = new System.Windows.Forms.ListView();
-            this.mFanComboBox = new System.Windows.Forms.ComboBox();
-            this.mGraphGroupBox = new System.Windows.Forms.GroupBox();
-            this.mPresetLabel = new System.Windows.Forms.Label();
-            this.mUnitLabel = new System.Windows.Forms.Label();
-            this.mHysLabel = new System.Windows.Forms.Label();
-            this.mStepCheckBox = new System.Windows.Forms.CheckBox();
+            this.mEnableCheckBox = new DarkCheckBox();
+            this.mTempGroupBox = new DarkGroupBox();
+            this.mTempComboBox = new DarkComboBox();
+            this.mFanGroupBox = new DarkGroupBox();
+            this.mRemoveButton = new DarkButton();
+            this.mAddButton = new DarkButton();
+            this.mFanListView = new ThemeListView();
+            this.mFanComboBox = new DarkComboBox();
+            this.mGraphGroupBox = new DarkGroupBox();
+            this.mPresetLabel = new DarkLabel();
+            this.mUnitLabel = new DarkLabel();
+            this.mHysLabel = new DarkLabel();
+            this.mStepCheckBox = new DarkCheckBox();
             this.mGraph = new ZedGraph.ZedGraphControl();
-            this.mOKButton = new System.Windows.Forms.Button();
-            this.mApplyButton = new System.Windows.Forms.Button();
-            this.mHysNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.mModeGroupBox = new System.Windows.Forms.GroupBox();
-            this.mGameRadioButton = new System.Windows.Forms.RadioButton();
-            this.mPerformanceRadioButton = new System.Windows.Forms.RadioButton();
-            this.mSilenceRadioButton = new System.Windows.Forms.RadioButton();
-            this.mNormalRadioButton = new System.Windows.Forms.RadioButton();
-            this.mUnitComboBox = new System.Windows.Forms.ComboBox();
-            this.mPresetLoadButton = new System.Windows.Forms.Button();
-            this.mPresetSaveButton = new System.Windows.Forms.Button();
-            this.mAutoNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.mAutoLabel = new System.Windows.Forms.Label();
-            this.mDelayLabel = new System.Windows.Forms.Label();
-            this.mDelayNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.mDelayLabel2 = new System.Windows.Forms.Label();
+            this.mOKButton = new DarkButton();
+            this.mApplyButton = new DarkButton();
+            this.mHysNumericUpDown = new DarkNumericUpDown();
+            this.mModeGroupBox = new DarkGroupBox();
+            this.mGameRadioButton = new DarkRadioButton();
+            this.mPerformanceRadioButton = new DarkRadioButton();
+            this.mSilenceRadioButton = new DarkRadioButton();
+            this.mNormalRadioButton = new DarkRadioButton();
+            this.mUnitComboBox = new DarkComboBox();
+            this.mPresetLoadButton = new DarkButton();
+            this.mPresetSaveButton = new DarkButton();
+            this.mAutoNumericUpDown = new DarkNumericUpDown();
+            this.mAutoLabel = new DarkLabel();
+            this.mDelayLabel = new DarkLabel();
+            this.mDelayNumericUpDown = new DarkNumericUpDown();
+            this.mDelayLabel2 = new DarkLabel();
             this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mGraphGroupBox.SuspendLayout();
@@ -77,7 +80,6 @@
             this.mEnableCheckBox.Size = new System.Drawing.Size(185, 16);
             this.mEnableCheckBox.TabIndex = 0;
             this.mEnableCheckBox.Text = "Enable automatic fan control";
-            this.mEnableCheckBox.UseVisualStyleBackColor = true;
             // 
             // mTempGroupBox
             // 
@@ -91,7 +93,7 @@
             // 
             // mTempComboBox
             // 
-            this.mTempComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mTempComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             this.mTempComboBox.FormattingEnabled = true;
             this.mTempComboBox.Location = new System.Drawing.Point(7, 21);
             this.mTempComboBox.Name = "mTempComboBox";
@@ -118,7 +120,6 @@
             this.mRemoveButton.Size = new System.Drawing.Size(195, 58);
             this.mRemoveButton.TabIndex = 4;
             this.mRemoveButton.Text = "Remove";
-            this.mRemoveButton.UseVisualStyleBackColor = true;
             this.mRemoveButton.Click += new System.EventHandler(this.onRemoveButtonClick);
             // 
             // mAddButton
@@ -128,7 +129,6 @@
             this.mAddButton.Size = new System.Drawing.Size(67, 28);
             this.mAddButton.TabIndex = 3;
             this.mAddButton.Text = "Add";
-            this.mAddButton.UseVisualStyleBackColor = true;
             this.mAddButton.Click += new System.EventHandler(this.onAddButtonClick);
             // 
             // mFanListView
@@ -145,7 +145,7 @@
             // 
             // mFanComboBox
             // 
-            this.mFanComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mFanComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             this.mFanComboBox.FormattingEnabled = true;
             this.mFanComboBox.Location = new System.Drawing.Point(7, 20);
             this.mFanComboBox.Name = "mFanComboBox";
@@ -204,7 +204,6 @@
             this.mStepCheckBox.Size = new System.Drawing.Size(49, 16);
             this.mStepCheckBox.TabIndex = 13;
             this.mStepCheckBox.Text = "Step";
-            this.mStepCheckBox.UseVisualStyleBackColor = true;
             this.mStepCheckBox.CheckedChanged += new System.EventHandler(this.onStepCheckBoxCheckedChanged);
             // 
             // mGraph
@@ -230,7 +229,6 @@
             this.mOKButton.Size = new System.Drawing.Size(181, 47);
             this.mOKButton.TabIndex = 17;
             this.mOKButton.Text = "OK";
-            this.mOKButton.UseVisualStyleBackColor = true;
             this.mOKButton.Click += new System.EventHandler(this.onOKButtonClick);
             // 
             // mApplyButton
@@ -240,7 +238,6 @@
             this.mApplyButton.Size = new System.Drawing.Size(181, 47);
             this.mApplyButton.TabIndex = 16;
             this.mApplyButton.Text = "Apply";
-            this.mApplyButton.UseVisualStyleBackColor = true;
             this.mApplyButton.Click += new System.EventHandler(this.onApplyButtonClick);
             // 
             // mHysNumericUpDown
@@ -274,7 +271,6 @@
             this.mGameRadioButton.TabIndex = 8;
             this.mGameRadioButton.TabStop = true;
             this.mGameRadioButton.Text = "Game";
-            this.mGameRadioButton.UseVisualStyleBackColor = true;
             // 
             // mPerformanceRadioButton
             // 
@@ -285,7 +281,6 @@
             this.mPerformanceRadioButton.TabIndex = 7;
             this.mPerformanceRadioButton.TabStop = true;
             this.mPerformanceRadioButton.Text = "Performance";
-            this.mPerformanceRadioButton.UseVisualStyleBackColor = true;
             // 
             // mSilenceRadioButton
             // 
@@ -296,7 +291,6 @@
             this.mSilenceRadioButton.TabIndex = 6;
             this.mSilenceRadioButton.TabStop = true;
             this.mSilenceRadioButton.Text = "Silence";
-            this.mSilenceRadioButton.UseVisualStyleBackColor = true;
             // 
             // mNormalRadioButton
             // 
@@ -307,11 +301,10 @@
             this.mNormalRadioButton.TabIndex = 5;
             this.mNormalRadioButton.TabStop = true;
             this.mNormalRadioButton.Text = "Normal";
-            this.mNormalRadioButton.UseVisualStyleBackColor = true;
             // 
             // mUnitComboBox
             // 
-            this.mUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mUnitComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             this.mUnitComboBox.FormattingEnabled = true;
             this.mUnitComboBox.Location = new System.Drawing.Point(593, 58);
             this.mUnitComboBox.Name = "mUnitComboBox";
@@ -325,7 +318,6 @@
             this.mPresetLoadButton.Size = new System.Drawing.Size(57, 23);
             this.mPresetLoadButton.TabIndex = 9;
             this.mPresetLoadButton.Text = "Load";
-            this.mPresetLoadButton.UseVisualStyleBackColor = true;
             this.mPresetLoadButton.Click += new System.EventHandler(this.onPresetLoadButtonClick);
             // 
             // mPresetSaveButton
@@ -335,7 +327,6 @@
             this.mPresetSaveButton.Size = new System.Drawing.Size(57, 23);
             this.mPresetSaveButton.TabIndex = 10;
             this.mPresetSaveButton.Text = "Save";
-            this.mPresetSaveButton.UseVisualStyleBackColor = true;
             this.mPresetSaveButton.Click += new System.EventHandler(this.onPresetSaveButtonClick);
             // 
             // mAutoNumericUpDown
@@ -438,35 +429,35 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox mEnableCheckBox;
-        private System.Windows.Forms.GroupBox mTempGroupBox;
-        private System.Windows.Forms.ComboBox mTempComboBox;
-        private System.Windows.Forms.GroupBox mFanGroupBox;
-        private System.Windows.Forms.ListView mFanListView;
-        private System.Windows.Forms.ComboBox mFanComboBox;
-        private System.Windows.Forms.Button mRemoveButton;
-        private System.Windows.Forms.Button mAddButton;
-        private System.Windows.Forms.GroupBox mGraphGroupBox;
+        private DarkCheckBox mEnableCheckBox;
+        private DarkGroupBox mTempGroupBox;
+        private DarkComboBox mTempComboBox;
+        private DarkGroupBox mFanGroupBox;
+        private ThemeListView mFanListView;
+        private DarkComboBox mFanComboBox;
+        private DarkButton mRemoveButton;
+        private DarkButton mAddButton;
+        private DarkGroupBox mGraphGroupBox;
         private ZedGraph.ZedGraphControl mGraph;
-        private System.Windows.Forms.CheckBox mStepCheckBox;
-        private System.Windows.Forms.Button mOKButton;
-        private System.Windows.Forms.Button mApplyButton;
-        private System.Windows.Forms.NumericUpDown mHysNumericUpDown;
-        private System.Windows.Forms.Label mHysLabel;
-        private System.Windows.Forms.GroupBox mModeGroupBox;
-        private System.Windows.Forms.RadioButton mGameRadioButton;
-        private System.Windows.Forms.RadioButton mPerformanceRadioButton;
-        private System.Windows.Forms.RadioButton mSilenceRadioButton;
-        private System.Windows.Forms.RadioButton mNormalRadioButton;
-        private System.Windows.Forms.Label mUnitLabel;
-        private System.Windows.Forms.ComboBox mUnitComboBox;
-        private System.Windows.Forms.Label mPresetLabel;
-        private System.Windows.Forms.Button mPresetLoadButton;
-        private System.Windows.Forms.Button mPresetSaveButton;
-        private System.Windows.Forms.NumericUpDown mAutoNumericUpDown;
-        private System.Windows.Forms.Label mAutoLabel;
-        private System.Windows.Forms.Label mDelayLabel;
-        private System.Windows.Forms.NumericUpDown mDelayNumericUpDown;
-        private System.Windows.Forms.Label mDelayLabel2;
+        private DarkCheckBox mStepCheckBox;
+        private DarkButton mOKButton;
+        private DarkButton mApplyButton;
+        private DarkNumericUpDown mHysNumericUpDown;
+        private DarkLabel mHysLabel;
+        private DarkGroupBox mModeGroupBox;
+        private DarkRadioButton mGameRadioButton;
+        private DarkRadioButton mPerformanceRadioButton;
+        private DarkRadioButton mSilenceRadioButton;
+        private DarkRadioButton mNormalRadioButton;
+        private DarkLabel mUnitLabel;
+        private DarkComboBox mUnitComboBox;
+        private DarkLabel mPresetLabel;
+        private DarkButton mPresetLoadButton;
+        private DarkButton mPresetSaveButton;
+        private DarkNumericUpDown mAutoNumericUpDown;
+        private DarkLabel mAutoLabel;
+        private DarkLabel mDelayLabel;
+        private DarkNumericUpDown mDelayNumericUpDown;
+        private DarkLabel mDelayLabel2;
     }
 }

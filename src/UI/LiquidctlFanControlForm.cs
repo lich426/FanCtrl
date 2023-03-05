@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class LiquidctlFanControlForm : Form
+    public partial class LiquidctlFanControlForm : ThemeForm
     {
         public string DeviceName { get; set; }
 

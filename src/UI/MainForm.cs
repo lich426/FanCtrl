@@ -1,4 +1,6 @@
-﻿using FanCtrl.Resources;
+﻿using DarkUI.Config;
+using DarkUI.Controls;
+using FanCtrl.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +19,7 @@ using System.Windows.Forms;
 
 namespace FanCtrl
 {
-    public partial class MainForm : Form
+    public partial class MainForm : ThemeForm
     {
         private bool mIsExit = false;
         private bool mIsFirstLoad = true;
@@ -46,10 +48,6 @@ namespace FanCtrl
 
         public MainForm()
         {
-            if (OptionManager.getInstance().read() == false)
-            {
-                OptionManager.getInstance().write();
-            }
             Util.setLanguage(OptionManager.getInstance().Language);
 
             InitializeComponent();
@@ -124,6 +122,24 @@ namespace FanCtrl
             mGameToolStripMenuItem.Text = StringLib.Game;
             mShowToolStripMenuItem.Text = StringLib.Show;
             mExitToolStripMenuItem.Text = StringLib.Exit;
+        }
+
+        protected void setTheme()
+        {
+            var type = OptionManager.getInstance().getNowTheme();
+            if (type == THEME_TYPE.DARK)
+            {
+                ThemeProvider.Theme = new DarkTheme();
+            }
+            else
+            {
+                ThemeProvider.Theme = new LightTheme();
+            }
+            var preference = Convert.ToInt32(type == THEME_TYPE.DARK);
+            DwmSetWindowAttribute(this.Handle,
+                                  DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                                  ref preference, sizeof(uint));
+            BackColor = ThemeProvider.Theme.Colors.GreyBackground;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -438,6 +454,12 @@ namespace FanCtrl
                                           (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2);
                 mIsFirstShow = true;
             }
+
+            var type = OptionManager.getInstance().getNowTheme();
+            var preference = Convert.ToInt32(type == THEME_TYPE.DARK);
+            DwmSetWindowAttribute(this.Handle,
+                                  DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                                  ref preference, sizeof(uint));
         }
 
         private void onTrayMenuExit(object sender, EventArgs e)
@@ -498,15 +520,12 @@ namespace FanCtrl
                 if (tempList.Count == 0)
                     continue;
 
-                var libLabel = new Label();
+                var libLabel = new ThemeLibLabel(fontFamily, fontSize);
                 libLabel.Location = new System.Drawing.Point(15, pointY);
-                libLabel.Text = Define.cLibraryTypeString[i];
-                libLabel.AutoSize = true;
-                libLabel.ForeColor = Color.Red;
-                libLabel.Font = new Font(fontFamily, fontSize, FontStyle.Bold);
+                libLabel.Text = Define.cLibraryTypeString[i];                
                 mTempPanel.Controls.Add(libLabel);
 
-                var libLabel2 = new Label();
+                var libLabel2 = new DarkLabel();
                 libLabel2.Location = new System.Drawing.Point(5, pointY + 5);
                 libLabel2.Size = new System.Drawing.Size(mTempPanel.Width - 30, 2);
                 libLabel2.AutoSize = false;
@@ -520,16 +539,12 @@ namespace FanCtrl
                 {
                     var hardwareDevice = tempList[j];
 
-                    var hardwareLabel = new Label();
+                    var hardwareLabel = new ThemeHardwareLabel(fontFamily, fontSize);
                     hardwareLabel.Location = new System.Drawing.Point(25, pointY);
-                    hardwareLabel.AutoSize = true;
-                    hardwareLabel.Height = 20;
                     hardwareLabel.Text = hardwareDevice.Name;
-                    hardwareLabel.ForeColor = Color.Blue;
-                    hardwareLabel.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                     mTempPanel.Controls.Add(hardwareLabel);
 
-                    var hardwareLabel2 = new Label();
+                    var hardwareLabel2 = new DarkLabel();
                     hardwareLabel2.Location = new System.Drawing.Point(20, pointY + 5);
                     hardwareLabel2.Size = new System.Drawing.Size(190, 2);
                     hardwareLabel2.AutoSize = false;
@@ -543,7 +558,7 @@ namespace FanCtrl
                     {
                         var device = hardwareDevice.DeviceList[k];
 
-                        var label = new Label();
+                        var label = new DarkLabel();
                         label.Location = new System.Drawing.Point(0, pointY);
                         label.Size = new System.Drawing.Size(45, 23);
                         label.Text = "";
@@ -553,7 +568,7 @@ namespace FanCtrl
                         mTempPanel.Controls.Add(label);
                         mTempLabelList.Add(label);
 
-                        var textBox = new TextBox();
+                        var textBox = new DarkTextBox();
                         textBox.Location = new System.Drawing.Point(label.Right + 2, label.Top + fontPointY);
                         textBox.Size = new System.Drawing.Size(mTempPanel.Width - 70, 23);
                         textBox.Multiline = false;
@@ -598,15 +613,12 @@ namespace FanCtrl
                 if (fanList.Count == 0)
                     continue;
 
-                var libLabel = new Label();
+                var libLabel = new ThemeLibLabel(fontFamily, fontSize);
                 libLabel.Location = new System.Drawing.Point(15, pointY);
                 libLabel.Text = Define.cLibraryTypeString[i];
-                libLabel.AutoSize = true;
-                libLabel.ForeColor = Color.Red;
-                libLabel.Font = new Font(fontFamily, fontSize, FontStyle.Bold);
                 mFanPanel.Controls.Add(libLabel);
 
-                var libLabel2 = new Label();
+                var libLabel2 = new DarkLabel();
                 libLabel2.Location = new System.Drawing.Point(5, pointY + 5);
                 libLabel2.Size = new System.Drawing.Size(mFanPanel.Width - 30, 2);
                 libLabel2.AutoSize = false;
@@ -620,16 +632,12 @@ namespace FanCtrl
                 {
                     var hardwareDevice = fanList[j];
 
-                    var hardwareLabel = new Label();
+                    var hardwareLabel = new ThemeHardwareLabel(fontFamily, fontSize);
                     hardwareLabel.Location = new System.Drawing.Point(25, pointY);
-                    hardwareLabel.AutoSize = true;
-                    hardwareLabel.Height = 20;
                     hardwareLabel.Text = hardwareDevice.Name;
-                    hardwareLabel.ForeColor = Color.Blue;
-                    hardwareLabel.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                     mFanPanel.Controls.Add(hardwareLabel);
 
-                    var hardwareLabel2 = new Label();
+                    var hardwareLabel2 = new DarkLabel();
                     hardwareLabel2.Location = new System.Drawing.Point(20, pointY + 5);
                     hardwareLabel2.Size = new System.Drawing.Size(190, 2);
                     hardwareLabel2.AutoSize = false;
@@ -643,7 +651,7 @@ namespace FanCtrl
                     {
                         var device = hardwareDevice.DeviceList[k];
 
-                        var label = new Label();
+                        var label = new DarkLabel();
                         label.Location = new System.Drawing.Point(0, pointY);
                         label.Size = new System.Drawing.Size(67, 23);
                         label.Text = "";
@@ -653,7 +661,7 @@ namespace FanCtrl
                         mFanPanel.Controls.Add(label);
                         mFanLabelList.Add(label);
 
-                        var textBox = new TextBox();
+                        var textBox = new DarkTextBox();
                         textBox.Location = new System.Drawing.Point(label.Right + 2, label.Top + fontPointY);
                         textBox.Size = new System.Drawing.Size(mFanPanel.Width - 90, 23);
                         textBox.Multiline = false;
@@ -707,15 +715,12 @@ namespace FanCtrl
                 if (controlList.Count == 0)
                     continue;
 
-                var libLabel = new Label();
+                var libLabel = new ThemeLibLabel(fontFamily, fontSize);
                 libLabel.Location = new System.Drawing.Point(15, pointY);
                 libLabel.Text = Define.cLibraryTypeString[i];
-                libLabel.AutoSize = true;
-                libLabel.ForeColor = Color.Red;
-                libLabel.Font = new Font(fontFamily, fontSize, FontStyle.Bold);
                 mControlPanel.Controls.Add(libLabel);
 
-                var libLabel2 = new Label();
+                var libLabel2 = new DarkLabel();
                 libLabel2.Location = new System.Drawing.Point(5, pointY + 5);
                 libLabel2.Size = new System.Drawing.Size(mControlPanel.Width - 30, 2);
                 libLabel2.AutoSize = false;
@@ -729,16 +734,12 @@ namespace FanCtrl
                 {
                     var hardwareDevice = controlList[j];
 
-                    var hardwareLabel = new Label();
+                    var hardwareLabel = new ThemeHardwareLabel(fontFamily, fontSize);
                     hardwareLabel.Location = new System.Drawing.Point(25, pointY);
-                    hardwareLabel.AutoSize = true;
-                    hardwareLabel.Height = 20;
                     hardwareLabel.Text = hardwareDevice.Name;
-                    hardwareLabel.ForeColor = Color.Blue;
-                    hardwareLabel.Font = new Font(fontFamily, fontSize, FontStyle.Regular);
                     mControlPanel.Controls.Add(hardwareLabel);
 
-                    var hardwareLabel2 = new Label();
+                    var hardwareLabel2 = new DarkLabel();
                     hardwareLabel2.Location = new System.Drawing.Point(20, pointY + 5);
                     hardwareLabel2.Size = new System.Drawing.Size(190, 2);
                     hardwareLabel2.AutoSize = false;
@@ -796,7 +797,7 @@ namespace FanCtrl
                         int maxValue = device.getMaxSpeed();
                         mToolTip.SetToolTip(number, minValue + " ≤  value ≤ " + maxValue);
 
-                        var label = new Label();
+                        var label = new DarkLabel();
                         label.Location = new System.Drawing.Point(number.Right + 1, pointY);
                         label.Size = new System.Drawing.Size(15, 23);
                         label.Text = "%";
@@ -804,7 +805,7 @@ namespace FanCtrl
                         mControlPanel.Controls.Add(label);
                         mControlLabelList.Add(label);
 
-                        var textBox2 = new TextBox();
+                        var textBox2 = new DarkTextBox();
                         textBox2.Location = new System.Drawing.Point(label.Right + 7, label.Top + fontPointY);
                         textBox2.Size = new System.Drawing.Size(mControlPanel.Width - 95, 23);
                         textBox2.Multiline = false;
@@ -1006,6 +1007,7 @@ namespace FanCtrl
                         HWInfoManager.getInstance().write();
                     }
 
+                    this.setTheme();
                     this.reload();
                 }));
             }

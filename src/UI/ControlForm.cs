@@ -1,4 +1,6 @@
-﻿using FanCtrl.Resources;
+﻿using DarkUI.Config;
+using DarkUI.Forms;
+using FanCtrl.Resources;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,7 +18,7 @@ using ZedGraph;
 
 namespace FanCtrl
 {
-    public partial class ControlForm : Form
+    public partial class ControlForm : ThemeForm
     {
         private Size mLastSize = new Size(1124, 623);
         private Size mNormalLastSize = new Size(1124, 623);
@@ -143,6 +145,35 @@ namespace FanCtrl
             mLastSize.Height = this.Height;
             mNormalLastSize.Width = this.Width;
             mNormalLastSize.Height = this.Height;
+
+            mGraph.GraphPane.Fill.Color = ThemeProvider.Theme.Colors.GreyBackground;
+            mGraph.GraphPane.Chart.Fill.Brush = new SolidBrush(ThemeProvider.Theme.Colors.GreyBackground);
+            mGraph.GraphPane.Chart.Fill.Color = ThemeProvider.Theme.Colors.GreyBackground;
+            mGraph.GraphPane.Chart.Border.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.Border.Color = ThemeProvider.Theme.Colors.LightText;
+
+            mGraph.GraphPane.YAxis.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.YAxis.Scale.FontSpec.FontColor = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.YAxis.MajorTic.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.YAxis.MinorTic.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.YAxis.MajorGrid.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.YAxis.MinorGrid.Color = ThemeProvider.Theme.Colors.LightText;
+
+            // left line is not change color (Zedgraph bug)
+            if (OptionManager.getInstance().getNowTheme() == THEME_TYPE.DARK)
+            {
+                var pointList = new PointPairList();
+                pointList.Add(0, 0);
+                pointList.Add(0, 100);
+                mGraph.GraphPane.AddBar("", pointList, ThemeProvider.Theme.Colors.LightText);
+            }
+
+            mGraph.GraphPane.XAxis.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.XAxis.Scale.FontSpec.FontColor = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.XAxis.MajorTic.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.XAxis.MinorTic.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.XAxis.MajorGrid.Color = ThemeProvider.Theme.Colors.LightText;
+            mGraph.GraphPane.XAxis.MinorGrid.Color = ThemeProvider.Theme.Colors.LightText;
         }
 
         private void localizeComponent()
@@ -214,6 +245,9 @@ namespace FanCtrl
 
             mTempComboBox.SelectedIndexChanged += onTempComboBoxIndexChanged;
 
+            mTempComboBox.DropDownHeight = 500;
+            mFanComboBox.DropDownHeight = 500;
+
             mFanListView.Columns.Add("MyColumn", -2, HorizontalAlignment.Center);
             mFanListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             mFanListView.GridLines = true;
@@ -224,7 +258,7 @@ namespace FanCtrl
             mUnitComboBox.Items.Add("10");
             mUnitComboBox.SelectedIndex = 1;
             mUnitComboBox.SelectedIndexChanged += onUnitComboBoxIndexChanged;
-
+            
             mHysNumericUpDown.ValueChanged += onHysNumericValueChanged;
 
             mAutoNumericUpDown.ValueChanged += onAutoNumericUpDownValueChanged;
@@ -290,7 +324,7 @@ namespace FanCtrl
             mGraph.GraphPane.YAxis.Scale.Max = 100;
             mGraph.GraphPane.YAxis.Scale.Format = "0％";
             mGraph.GraphPane.YAxis.MajorGrid.IsVisible = true;
-            mGraph.GraphPane.YAxis.Type = AxisType.Linear;
+            mGraph.GraphPane.YAxis.Type = AxisType.Linear;            
 
             mGraph.GraphPane.CurveList.Clear();
 
@@ -300,7 +334,10 @@ namespace FanCtrl
             {
                 mPointList.Add(5 * i, 50);
             }
-            mLineItem = mGraph.GraphPane.AddCurve(StringLib.Graph, mPointList, Color.Blue, SymbolType.Circle);
+
+            var type = OptionManager.getInstance().getNowTheme();
+            var lineColor = (type == THEME_TYPE.DARK) ? Color.FromArgb(255, 82, 162, 242) : Color.Blue;
+            mLineItem = mGraph.GraphPane.AddCurve(StringLib.Graph, mPointList, lineColor, SymbolType.Circle);
             mLineItem.Line.Width = 2.0f;
             mLineItem.Symbol.Size = 10.0f;
             mLineItem.Symbol.Fill = new Fill(Color.White);
@@ -318,8 +355,9 @@ namespace FanCtrl
             };
             mGraph.GraphPane.GraphObjList.Add(mAutoPolyObj);
 
-            mNowPoint = new PointObj(50, 50, 10.0, 10.0, ZedGraph.SymbolType.Circle, Color.Red);
-            mNowPoint.Fill = new ZedGraph.Fill(Color.Red);
+            var pointColor = (type == THEME_TYPE.DARK) ? Color.FromArgb(255, 244, 75, 86) : Color.Red;
+            mNowPoint = new PointObj(50, 50, 10.0, 10.0, ZedGraph.SymbolType.Circle, pointColor);
+            mNowPoint.Fill = new ZedGraph.Fill(pointColor);
             mNowPoint.ZOrder = ZedGraph.ZOrder.A_InFront;
             mGraph.GraphPane.GraphObjList.Add(mNowPoint);
 
@@ -925,7 +963,7 @@ namespace FanCtrl
                 }
                 catch
                 {
-                    MessageBox.Show(StringLib.Failed_to_read_preset_file);
+                    DarkMessageBox.ShowError(StringLib.Failed_to_read_preset_file, "", DarkDialogButton.Ok);
                 }
             }
         }

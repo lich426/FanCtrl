@@ -1,4 +1,6 @@
-﻿namespace FanCtrl
+﻿using DarkUI.Controls;
+
+namespace FanCtrl
 {
     partial class MainForm
     {
@@ -30,15 +32,15 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.mTempGroupBox = new System.Windows.Forms.GroupBox();
-            this.mTempPanel = new System.Windows.Forms.Panel();
-            this.mFanGroupBox = new System.Windows.Forms.GroupBox();
+            this.mTempGroupBox = new DarkUI.Controls.DarkGroupBox();
+            this.mTempPanel = new FanCtrl.ThemePanel();
+            this.mFanGroupBox = new DarkUI.Controls.DarkGroupBox();
             this.mFanPanel = new System.Windows.Forms.Panel();
-            this.mControlGroupBox = new System.Windows.Forms.GroupBox();
+            this.mControlGroupBox = new DarkUI.Controls.DarkGroupBox();
             this.mControlPanel = new System.Windows.Forms.Panel();
-            this.mFanControlButton = new System.Windows.Forms.Button();
+            this.mFanControlButton = new DarkUI.Controls.DarkButton();
             this.mToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.mOptionButton = new System.Windows.Forms.Button();
+            this.mOptionButton = new DarkUI.Controls.DarkButton();
             this.mTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.mTrayMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mEnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,16 +54,16 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mMadeLabel1 = new System.Windows.Forms.Label();
-            this.mMadeLabel2 = new System.Windows.Forms.Label();
-            this.mOSDButton = new System.Windows.Forms.Button();
+            this.mMadeLabel1 = new DarkUI.Controls.DarkTitle();
+            this.mMadeLabel2 = new DarkUI.Controls.DarkTitle();
+            this.mOSDButton = new DarkUI.Controls.DarkButton();
             this.mLoadingPanel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.mReloadButton = new System.Windows.Forms.Button();
-            this.mHotKeyButton = new System.Windows.Forms.Button();
+            this.label1 = new DarkUI.Controls.DarkTitle();
+            this.mReloadButton = new DarkUI.Controls.DarkButton();
+            this.mHotKeyButton = new DarkUI.Controls.DarkButton();
             this.mDonatePictureBox = new System.Windows.Forms.PictureBox();
-            this.mLiquidctlButton = new System.Windows.Forms.Button();
-            this.mPluginButton = new System.Windows.Forms.Button();
+            this.mLiquidctlButton = new DarkUI.Controls.DarkButton();
+            this.mPluginButton = new DarkUI.Controls.DarkButton();
             this.mTempGroupBox.SuspendLayout();
             this.mFanGroupBox.SuspendLayout();
             this.mControlGroupBox.SuspendLayout();
@@ -72,6 +74,7 @@
             // 
             // mTempGroupBox
             // 
+            this.mTempGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mTempGroupBox.Controls.Add(this.mTempPanel);
             this.mTempGroupBox.Location = new System.Drawing.Point(12, 12);
             this.mTempGroupBox.Name = "mTempGroupBox";
@@ -90,6 +93,7 @@
             // 
             // mFanGroupBox
             // 
+            this.mFanGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mFanGroupBox.Controls.Add(this.mFanPanel);
             this.mFanGroupBox.Location = new System.Drawing.Point(290, 12);
             this.mFanGroupBox.Name = "mFanGroupBox";
@@ -108,6 +112,7 @@
             // 
             // mControlGroupBox
             // 
+            this.mControlGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mControlGroupBox.Controls.Add(this.mControlPanel);
             this.mControlGroupBox.Location = new System.Drawing.Point(568, 12);
             this.mControlGroupBox.Name = "mControlGroupBox";
@@ -128,10 +133,10 @@
             // 
             this.mFanControlButton.Location = new System.Drawing.Point(791, 71);
             this.mFanControlButton.Name = "mFanControlButton";
+            this.mFanControlButton.Padding = new System.Windows.Forms.Padding(1);
             this.mFanControlButton.Size = new System.Drawing.Size(83, 50);
             this.mFanControlButton.TabIndex = 8;
             this.mFanControlButton.Text = "Auto Fan Control";
-            this.mFanControlButton.UseVisualStyleBackColor = true;
             this.mFanControlButton.Click += new System.EventHandler(this.onFanControlButtonClick);
             // 
             // mToolTip
@@ -142,10 +147,10 @@
             // 
             this.mOptionButton.Location = new System.Drawing.Point(702, 71);
             this.mOptionButton.Name = "mOptionButton";
+            this.mOptionButton.Padding = new System.Windows.Forms.Padding(1);
             this.mOptionButton.Size = new System.Drawing.Size(83, 50);
             this.mOptionButton.TabIndex = 7;
             this.mOptionButton.Text = "Option";
-            this.mOptionButton.UseVisualStyleBackColor = true;
             this.mOptionButton.Click += new System.EventHandler(this.onOptionButtonClick);
             // 
             // mTrayIcon
@@ -245,6 +250,7 @@
             // mMadeLabel1
             // 
             this.mMadeLabel1.AutoSize = true;
+            this.mMadeLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mMadeLabel1.Location = new System.Drawing.Point(17, 82);
             this.mMadeLabel1.Name = "mMadeLabel1";
             this.mMadeLabel1.Size = new System.Drawing.Size(83, 12);
@@ -254,6 +260,7 @@
             // mMadeLabel2
             // 
             this.mMadeLabel2.AutoSize = true;
+            this.mMadeLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mMadeLabel2.Location = new System.Drawing.Point(15, 99);
             this.mMadeLabel2.Name = "mMadeLabel2";
             this.mMadeLabel2.Size = new System.Drawing.Size(125, 12);
@@ -264,10 +271,10 @@
             // 
             this.mOSDButton.Location = new System.Drawing.Point(613, 71);
             this.mOSDButton.Name = "mOSDButton";
+            this.mOSDButton.Padding = new System.Windows.Forms.Padding(1);
             this.mOSDButton.Size = new System.Drawing.Size(83, 50);
             this.mOSDButton.TabIndex = 6;
             this.mOSDButton.Text = "OSD (RTSS)";
-            this.mOSDButton.UseVisualStyleBackColor = true;
             this.mOSDButton.Click += new System.EventHandler(this.onOSDButtonClick);
             // 
             // mLoadingPanel
@@ -281,6 +288,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(403, 50);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 12);
@@ -291,20 +299,20 @@
             // 
             this.mReloadButton.Location = new System.Drawing.Point(435, 71);
             this.mReloadButton.Name = "mReloadButton";
+            this.mReloadButton.Padding = new System.Windows.Forms.Padding(1);
             this.mReloadButton.Size = new System.Drawing.Size(83, 50);
             this.mReloadButton.TabIndex = 4;
             this.mReloadButton.Text = "Reload";
-            this.mReloadButton.UseVisualStyleBackColor = true;
             this.mReloadButton.Click += new System.EventHandler(this.onReloadButtonClick);
             // 
             // mHotKeyButton
             // 
             this.mHotKeyButton.Location = new System.Drawing.Point(524, 71);
             this.mHotKeyButton.Name = "mHotKeyButton";
+            this.mHotKeyButton.Padding = new System.Windows.Forms.Padding(1);
             this.mHotKeyButton.Size = new System.Drawing.Size(83, 50);
             this.mHotKeyButton.TabIndex = 5;
             this.mHotKeyButton.Text = "Hotkey";
-            this.mHotKeyButton.UseVisualStyleBackColor = true;
             this.mHotKeyButton.Click += new System.EventHandler(this.onHotKeyButtonClick);
             // 
             // mDonatePictureBox
@@ -322,20 +330,20 @@
             // 
             this.mLiquidctlButton.Location = new System.Drawing.Point(346, 71);
             this.mLiquidctlButton.Name = "mLiquidctlButton";
+            this.mLiquidctlButton.Padding = new System.Windows.Forms.Padding(1);
             this.mLiquidctlButton.Size = new System.Drawing.Size(83, 50);
             this.mLiquidctlButton.TabIndex = 3;
             this.mLiquidctlButton.Text = "liquidctl Setting";
-            this.mLiquidctlButton.UseVisualStyleBackColor = true;
             this.mLiquidctlButton.Click += new System.EventHandler(this.onLiquidctlButtonClick);
             // 
             // mPluginButton
             // 
             this.mPluginButton.Location = new System.Drawing.Point(257, 71);
             this.mPluginButton.Name = "mPluginButton";
+            this.mPluginButton.Padding = new System.Windows.Forms.Padding(1);
             this.mPluginButton.Size = new System.Drawing.Size(83, 50);
             this.mPluginButton.TabIndex = 2;
             this.mPluginButton.Text = "Plugin";
-            this.mPluginButton.UseVisualStyleBackColor = true;
             this.mPluginButton.Click += new System.EventHandler(this.onPluginButtonClick);
             // 
             // MainForm
@@ -357,6 +365,7 @@
             this.Controls.Add(this.mHotKeyButton);
             this.Controls.Add(this.mPluginButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Location = new System.Drawing.Point(0, 0);
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -375,38 +384,38 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox mTempGroupBox;
-        private System.Windows.Forms.GroupBox mFanGroupBox;
-        private System.Windows.Forms.GroupBox mControlGroupBox;
-        private System.Windows.Forms.Button mFanControlButton;
+        private DarkGroupBox mTempGroupBox;
+        private DarkGroupBox mFanGroupBox;
+        private DarkGroupBox mControlGroupBox;
+        private DarkButton mFanControlButton;
         private System.Windows.Forms.ToolTip mToolTip;
-        private System.Windows.Forms.Button mOptionButton;
+        private DarkButton mOptionButton;
         private System.Windows.Forms.NotifyIcon mTrayIcon;
         private System.Windows.Forms.ContextMenuStrip mTrayMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem mShowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mExitToolStripMenuItem;
-        private System.Windows.Forms.Label mMadeLabel1;
+        private DarkTitle mMadeLabel1;
+        private DarkTitle mMadeLabel2;
+        private DarkTitle label1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mEnableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mNormalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mSilenceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mPerformanceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mGameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.Label mMadeLabel2;
-        private System.Windows.Forms.Button mOSDButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;        
+        private DarkButton mOSDButton;
         private System.Windows.Forms.ToolStripMenuItem mEnableOSDToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.Panel mLoadingPanel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel mTempPanel;
+        private System.Windows.Forms.Panel mLoadingPanel;        
+        private ThemePanel mTempPanel;
         private System.Windows.Forms.Panel mFanPanel;
         private System.Windows.Forms.Panel mControlPanel;
-        private System.Windows.Forms.Button mReloadButton;
-        private System.Windows.Forms.Button mHotKeyButton;
+        private DarkButton mReloadButton;
+        private DarkButton mHotKeyButton;
         private System.Windows.Forms.PictureBox mDonatePictureBox;
-        private System.Windows.Forms.Button mLiquidctlButton;
-        private System.Windows.Forms.Button mPluginButton;
+        private DarkButton mLiquidctlButton;
+        private DarkButton mPluginButton;
     }
 }
 
