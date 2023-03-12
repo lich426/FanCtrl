@@ -1,6 +1,7 @@
 ﻿using DarkUI.Config;
 using DarkUI.Forms;
 using FanCtrl.Resources;
+using HidSharp;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace FanCtrl
 {
     public partial class ControlForm : ThemeForm
     {
-        private Size mLastSize = new Size(1124, 623);
-        private Size mNormalLastSize = new Size(1124, 623);
+        private Size mLastSize = new Size(1219, 796);
+        private Size mNormalLastSize = new Size(1219, 796);
 
         private bool mIsUpdateGraph = true;
         private bool mIsResize = false;
@@ -243,14 +244,15 @@ namespace FanCtrl
             mPerformanceRadioButton.Click += onRadioButtonClick;
             mGameRadioButton.Click += onRadioButtonClick;
 
-            mTempComboBox.SelectedIndexChanged += onTempComboBoxIndexChanged;
+            //this.mAddTempListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
+            mAddTempListView.Columns.Add("MyColumn", 260, HorizontalAlignment.Center);
+            mAddTempListView.SelectedIndexChanged += onAddTempListViewIndexChanged;
 
-            mTempComboBox.DropDownHeight = 500;
-            mFanComboBox.DropDownHeight = 500;
+            //this.mAddFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
+            mAddFanListView.Columns.Add("MyColumn", 210, HorizontalAlignment.Center);
 
-            mFanListView.Columns.Add("MyColumn", -2, HorizontalAlignment.Center);
-            mFanListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
-            mFanListView.GridLines = true;
+            //this.mFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
+            mFanListView.Columns.Add("MyColumn", 260, HorizontalAlignment.Center);
             mFanListView.SelectedIndexChanged += onFanListViewIndexChanged;
 
             mUnitComboBox.Items.Add("1");
@@ -270,23 +272,12 @@ namespace FanCtrl
 
             for (int i = 0; i < tempBaseList.Count; i++)
             {
-                mTempComboBox.Items.Add(tempBaseList[i].Name);
+                mAddTempListView.Items.Add(tempBaseList[i].Name);
             }
 
             for (int i = 0; i < controlBaseList.Count; i++)
             {
-                mFanComboBox.Items.Add(controlBaseList[i].Name);
-            }
-
-            if (mTempComboBox.Items.Count > 0)
-            {
-                mTempComboBox.SelectedIndex = 0;
-                mSelectedTempIndex = 0;
-            }
-
-            if (mFanComboBox.Items.Count > 0)
-            {
-                mFanComboBox.SelectedIndex = 0;
+                mAddFanListView.Items.Add(controlBaseList[i].Name);
             }
         }
 
@@ -459,11 +450,17 @@ namespace FanCtrl
             mPerformanceRadioButton.Checked = (mModeType == MODE_TYPE.PERFORMANCE);
             mGameRadioButton.Checked = (mModeType == MODE_TYPE.GAME);
 
-            this.onTempComboBoxIndexChanged(null, EventArgs.Empty);
+            this.onAddTempListViewIndexChanged(null, EventArgs.Empty);
         }
 
-        private void onTempComboBoxIndexChanged(object sender, EventArgs e)
+        private void onAddTempListViewIndexChanged(object sender, EventArgs e)
         {
+            if (mAddTempListView.SelectedItems.Count == 0)
+            {
+                Console.WriteLine("mAddTempListView.SelectedItems.Count : {0}", mAddTempListView.SelectedItems.Count);
+                return;
+            }
+
             mPresetLabel.Visible = false;
             mPresetLoadButton.Visible = false;
             mPresetSaveButton.Visible = false;
@@ -481,14 +478,14 @@ namespace FanCtrl
             mSelectedFanData = null;
 
             mListViewBaseControlList.Clear();
-            mFanListView.BeginUpdate();
-            mFanListView.Clear();
+            mFanListView.Items.Clear();
 
-            mSelectedTempIndex = mTempComboBox.SelectedIndex;
+            mSelectedTempIndex = mAddTempListView.SelectedItems[0].Index;
+            Console.WriteLine("mAddTempListView.SelectedItems[0].Index : {0}", mSelectedTempIndex);
+
             var controlData = this.getControlData(mSelectedTempIndex);
             if(controlData == null)
             {
-                mFanListView.EndUpdate();
                 return;
             }
 
@@ -507,7 +504,6 @@ namespace FanCtrl
                 mListViewBaseControlList.Add(device);
                 mFanListView.Items.Add(device.Name);
             }
-            mFanListView.EndUpdate();
         }
 
         private void onStepCheckBoxCheckedChanged(object sender, EventArgs e)
@@ -607,9 +603,9 @@ namespace FanCtrl
 
         public void onUpdateTimer()
         {
-            if (mTempComboBox.Items.Count == 0 ||
+            if (mAddTempListView.Items.Count == 0 ||
                 mSelectedTempIndex == -1 ||
-                mFanComboBox.Items.Count == 0 ||
+                mAddFanListView.Items.Count == 0 ||
                 mSelectedFanData == null ||
                 mNowPoint == null ||
                 mIsUpdateGraph == false)
@@ -826,12 +822,12 @@ namespace FanCtrl
 
         private void onAddButtonClick(object sender, EventArgs e)
         {
-            if (mTempComboBox.Items.Count == 0 || mFanComboBox.Items.Count == 0)
+            if (mAddTempListView.SelectedItems.Count == 0 || mAddFanListView.SelectedItems.Count == 0)
                 return;
 
             int modeIndex = (int)mModeType;
             int tempIndex = mSelectedTempIndex;
-            int fanIndex = mFanComboBox.SelectedIndex;
+            int fanIndex = mAddFanListView.SelectedItems[0].Index;
 
             var tempBaseList = HardwareManager.getInstance().TempBaseList;
             var controlBaseList = HardwareManager.getInstance().ControlBaseList;
@@ -849,8 +845,6 @@ namespace FanCtrl
                 mControlDataList[modeIndex].Add(controlData);
             }
 
-            mFanListView.BeginUpdate();
-
             var fanData = this.getFanData(tempIndex, controlDevice.ID);
             if(fanData == null)
             {
@@ -858,10 +852,9 @@ namespace FanCtrl
                 controlData.FanDataList.Add(fanData);
 
                 mListViewBaseControlList.Add(controlDevice);
-                mFanListView.Items.Add(controlDevice.Name);
+                var item = mFanListView.Items.Add(controlDevice.Name);
+                item.SubItems.Add(controlDevice.Name);
             }
-
-            mFanListView.EndUpdate();
         }
 
         private void onRemoveButtonClick(object sender, EventArgs e)
@@ -880,9 +873,7 @@ namespace FanCtrl
             controlData.FanDataList.RemoveAt(itemIndex);
 
             mSelectedFanData = null;
-            mFanListView.BeginUpdate();
             mFanListView.Items.Remove(item);
-            mFanListView.EndUpdate();
         }
 
         private void onPresetLoadButtonClick(object sender, EventArgs e)

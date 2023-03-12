@@ -74,7 +74,6 @@ namespace FanCtrl
             // 
             // mTempGroupBox
             // 
-            this.mTempGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mTempGroupBox.Controls.Add(this.mTempPanel);
             this.mTempGroupBox.Location = new System.Drawing.Point(12, 12);
             this.mTempGroupBox.Name = "mTempGroupBox";
@@ -93,7 +92,6 @@ namespace FanCtrl
             // 
             // mFanGroupBox
             // 
-            this.mFanGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mFanGroupBox.Controls.Add(this.mFanPanel);
             this.mFanGroupBox.Location = new System.Drawing.Point(290, 12);
             this.mFanGroupBox.Name = "mFanGroupBox";
@@ -112,7 +110,6 @@ namespace FanCtrl
             // 
             // mControlGroupBox
             // 
-            this.mControlGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mControlGroupBox.Controls.Add(this.mControlPanel);
             this.mControlGroupBox.Location = new System.Drawing.Point(568, 12);
             this.mControlGroupBox.Name = "mControlGroupBox";
@@ -250,7 +247,6 @@ namespace FanCtrl
             // mMadeLabel1
             // 
             this.mMadeLabel1.AutoSize = true;
-            this.mMadeLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mMadeLabel1.Location = new System.Drawing.Point(17, 82);
             this.mMadeLabel1.Name = "mMadeLabel1";
             this.mMadeLabel1.Size = new System.Drawing.Size(83, 12);
@@ -260,7 +256,6 @@ namespace FanCtrl
             // mMadeLabel2
             // 
             this.mMadeLabel2.AutoSize = true;
-            this.mMadeLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mMadeLabel2.Location = new System.Drawing.Point(15, 99);
             this.mMadeLabel2.Name = "mMadeLabel2";
             this.mMadeLabel2.Size = new System.Drawing.Size(125, 12);
@@ -288,7 +283,6 @@ namespace FanCtrl
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(403, 50);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 12);
