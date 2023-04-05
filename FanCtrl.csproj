@@ -24,11 +24,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <SupportUrl>https://github.com/lich426/FanCtrl</SupportUrl>
+    <ErrorReportUrl>https://github.com/lich426/FanCtrl</ErrorReportUrl>
     <ProductName>FanCtrl</ProductName>
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.6.0.0</ApplicationVersion>
+    <ApplicationVersion>1.6.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -102,8 +104,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.15.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Win32.TaskScheduler">
       <HintPath>dll\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

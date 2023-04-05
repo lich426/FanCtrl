@@ -32,19 +32,31 @@ namespace FanCtrl
                 return;
             }
 
-            if (IsAdministrator() && TaskService.Instance.Connected)
+            bool isTaskConnected = false;
+            try
+            {
+                isTaskConnected = TaskService.Instance.Connected;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("StartupControl.StartupControl() : {0}", e.Message);
+            }
+
+            if (IsAdministrator() && isTaskConnected)
             {
                 IsAvailable = true;
 
-                Task task = GetTask();
+                var task = GetTask();
                 if (task != null)
                 {
-                    foreach (Action action in task.Definition.Actions)
+                    foreach (var action in task.Definition.Actions)
                     {
                         if (action.ActionType == TaskActionType.Execute && action is ExecAction execAction)
                         {
                             if (execAction.Path.Equals(Application.ExecutablePath, StringComparison.OrdinalIgnoreCase))
+                            {
                                 _startup = true;
+                            }
                         }
                     }
                 }
@@ -53,18 +65,21 @@ namespace FanCtrl
             {
                 try
                 {
-                    using (RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(RegistryPath))
+                    using (var registryKey = Registry.CurrentUser.OpenSubKey(RegistryPath))
                     {
                         string value = (string)registryKey?.GetValue(RegistryName);
 
                         if (value != null)
-                            _startup = value == Application.ExecutablePath;
+                        {
+                            _startup = (value == Application.ExecutablePath);
+                        }
                     }
 
                     IsAvailable = true;
                 }
-                catch (SecurityException)
+                catch (Exception e)
                 {
+                    Console.WriteLine("StartupControl.Startup() : {0}", e.Message);
                     IsAvailable = false;
                 }
             }
@@ -81,104 +96,136 @@ namespace FanCtrl
                 {
                     if (IsAvailable)
                     {
-                        if (TaskService.Instance.Connected)
+                        bool isTaskConnected = false;
+                        try
                         {
-                            if (value)
-                                CreateTask();
-                            else
-                                DeleteTask();
+                            isTaskConnected = TaskService.Instance.Connected;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("StartupControl.Startup() : {0}", e.Message);
+                        }
 
-                            _startup = value;
+                        if (isTaskConnected)
+                        {                            
+                            if (value)
+                            {
+                                if (CreateTask() == false)
+                                {
+                                    _startup = false;
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                DeleteTask();
+                            }                            
                         }
                         else
                         {
-                            try
+                            if (value)
                             {
-                                if (value)
-                                    CreateRegistryKey();
-                                else
-                                    DeleteRegistryKey();
-
-                                _startup = value;
+                                if (CreateRegistryKey() == false)
+                                {
+                                    _startup = false;
+                                    return;
+                                }
                             }
-                            catch (UnauthorizedAccessException)
+                            else
                             {
-                                throw new InvalidOperationException();
+                                DeleteRegistryKey();
                             }
                         }
+                        _startup = value;
                     }
                     else
                     {
-                        throw new InvalidOperationException();
+                        _startup = false;
                     }
                 }
             }
         }
 
-        private static bool IsAdministrator()
+        private bool IsAdministrator()
         {
             try
             {
-                WindowsIdentity identity = WindowsIdentity.GetCurrent();
-                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                var identity = WindowsIdentity.GetCurrent();
+                var principal = new WindowsPrincipal(identity);
 
                 return principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
-            catch
+            catch (Exception e)
             {
-                return false;
+                Console.WriteLine("StartupControl.IsAdministrator() : {0}", e.Message);
             }
+            return false;
         }
 
-        private static Task GetTask()
+        private Task GetTask()
         {
             try
             {
                 return TaskService.Instance.AllTasks.FirstOrDefault(x => x.Name.Equals(RegistryName, StringComparison.OrdinalIgnoreCase));
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                Console.WriteLine("StartupControl.GetTask() : {0}", e.Message);
             }
+            return null;
         }
 
-        private void CreateTask()
+        private bool CreateTask()
         {
-            TaskDefinition taskDefinition = TaskService.Instance.NewTask();
-            taskDefinition.RegistrationInfo.Description = "Starts FanCtrl on Windows startup.";
+            try
+            {
+                var taskDefinition = TaskService.Instance.NewTask();
+                taskDefinition.RegistrationInfo.Description = "Starts FanCtrl on Windows startup.";
 
-            var trigger = new LogonTrigger();
-            trigger.Delay = new TimeSpan(0, 0, DelayTime);
-            taskDefinition.Triggers.Add(trigger);
+                var trigger = new LogonTrigger();
+                trigger.Delay = new TimeSpan(0, 0, DelayTime);
+                taskDefinition.Triggers.Add(trigger);
 
-            taskDefinition.Settings.StartWhenAvailable = true;
-            taskDefinition.Settings.DisallowStartIfOnBatteries = false;
-            taskDefinition.Settings.StopIfGoingOnBatteries = false;
-            taskDefinition.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+                taskDefinition.Settings.StartWhenAvailable = true;
+                taskDefinition.Settings.DisallowStartIfOnBatteries = false;
+                taskDefinition.Settings.StopIfGoingOnBatteries = false;
+                taskDefinition.Settings.ExecutionTimeLimit = TimeSpan.Zero;
 
-            taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
-            taskDefinition.Principal.LogonType = TaskLogonType.InteractiveToken;
+                taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
+                taskDefinition.Principal.LogonType = TaskLogonType.InteractiveToken;
 
-            taskDefinition.Actions.Add(new ExecAction(Application.ExecutablePath, "", Path.GetDirectoryName(Application.ExecutablePath)));
+                taskDefinition.Actions.Add(new ExecAction(Application.ExecutablePath, "", Path.GetDirectoryName(Application.ExecutablePath)));
 
-            TaskService.Instance.RootFolder.RegisterTaskDefinition(RegistryName, taskDefinition);
+                TaskService.Instance.RootFolder.RegisterTaskDefinition(RegistryName, taskDefinition);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("StartupControl.CreateTask() : {0}", e.Message);
+            }
+            return false;
         }
 
-        private static void DeleteTask()
+        private void DeleteTask()
         {
-            Task task = GetTask();
+            var task = GetTask();
             task?.Folder.DeleteTask(task.Name, false);
         }
 
-        private static void CreateRegistryKey()
+        private bool CreateRegistryKey()
         {
-            RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            var registryKey = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            if (registryKey == null)
+            {
+                return false;
+            }
             registryKey?.SetValue(RegistryName, Application.ExecutablePath);
+            return true;
         }
 
-        private static void DeleteRegistryKey()
+        private void DeleteRegistryKey()
         {
-            RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            var registryKey = Registry.CurrentUser.CreateSubKey(RegistryPath);
             registryKey?.DeleteValue(RegistryName);
         }
     }
