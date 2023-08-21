@@ -348,6 +348,9 @@
   <data name="Silence" xml:space="preserve">
     <value>静かなモード</value>
   </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>スペイン語</value>
+  </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>最小化モードで始める</value>
   </data>

@@ -348,6 +348,9 @@
   <data name="Silence" xml:space="preserve">
     <value>Silence</value>
   </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Espagnol</value>
+  </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>Démarrage réduit</value>
   </data>

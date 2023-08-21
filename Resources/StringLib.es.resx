@@ -118,279 +118,279 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>추가</value>
+    <value>Añadir</value>
   </data>
   <data name="Align_digits" xml:space="preserve">
-    <value>      자릿수 :</value>
+    <value>Alinear los digitos:</value>
   </data>
   <data name="Apply" xml:space="preserve">
-    <value>적용</value>
+    <value>Aplicar</value>
   </data>
   <data name="Auto" xml:space="preserve">
-    <value>오토 :</value>
+    <value>Automático :</value>
   </data>
   <data name="Auto_Fan_Control" xml:space="preserve">
-    <value>팬 제어 설정</value>
+    <value>Control de ventiladores automático</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>취소</value>
+    <value>Cancelar</value>
   </data>
   <data name="Change_the_color" xml:space="preserve">
-    <value>색 변경을 하시겠습니까?</value>
+    <value>¿Desea cambiar el color?</value>
   </data>
   <data name="CLC_Lighting" xml:space="preserve">
-    <value>CLC 조명설정</value>
+    <value>Iluminación CLC</value>
   </data>
   <data name="Clients" xml:space="preserve">
-    <value>클라이언트</value>
+    <value>Clientes</value>
   </data>
   <data name="Color" xml:space="preserve">
-    <value>색 변경</value>
+    <value>Color</value>
   </data>
   <data name="Command" xml:space="preserve">
-    <value>커맨드</value>
+    <value>Comando</value>
   </data>
   <data name="Control" xml:space="preserve">
-    <value>제어</value>
+    <value>Control</value>
   </data>
   <data name="Default_color" xml:space="preserve">
-    <value>기본 색</value>
+    <value>Predeterminado</value>
   </data>
   <data name="Delay" xml:space="preserve">
-    <value>지연시간 :</value>
+    <value>Retraso:</value>
   </data>
   <data name="Delay_Time" xml:space="preserve">
-    <value>지연시간(초) :</value>
+    <value>Retraso (segundos)</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>후원하기(카카오페이)</value>
+    <value>Donar</value>
   </data>
   <data name="Duplicate_Key" xml:space="preserve">
-    <value>중복된 키가 있기 때문에 데이터를 추가할 수 없습니다!</value>
+    <value>¡La información no puede ser agregada porque hay llaves duplicadas!</value>
   </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
-    <value>자동 팬 제어 활성화</value>
+    <value>Habilitar control automático de ventiladores</value>
   </data>
   <data name="Enable_OSD" xml:space="preserve">
-    <value>OSD 활성화</value>
+    <value>Habilitar OSD (RTSS)</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>영어</value>
+    <value>Inglés</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>에러</value>
+    <value>Error</value>
   </data>
   <data name="ETC" xml:space="preserve">
-    <value>기타</value>
+    <value>ETC</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>종료</value>
+    <value>Salir</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>화씨온도표시 (°F)</value>
+    <value>Fahrenheit (°F)</value>
   </data>
   <data name="Failed_to_read_preset_file" xml:space="preserve">
-    <value>프리셋 파일 읽기를 실패 하였습니다!</value>
+    <value>¡Error al leer  el archivo preestablecido!</value>
   </data>
   <data name="Fan" xml:space="preserve">
-    <value>팬</value>
+    <value>Ventilador</value>
   </data>
   <data name="Fan_control" xml:space="preserve">
-    <value>팬 제어</value>
+    <value>Control de ventilador</value>
   </data>
   <data name="Fan_speed" xml:space="preserve">
-    <value>팬 속도</value>
+    <value>Velocidad de ventilador</value>
   </data>
   <data name="French" xml:space="preserve">
-    <value>프랑스어</value>
+    <value>Francés</value>
   </data>
   <data name="Game" xml:space="preserve">
-    <value>게임</value>
+    <value>Juego</value>
   </data>
   <data name="Graph" xml:space="preserve">
-    <value>그래프</value>
+    <value>Gráfico</value>
   </data>
   <data name="Groups" xml:space="preserve">
-    <value>그룹</value>
+    <value>Grupos</value>
   </data>
   <data name="HotKey" xml:space="preserve">
-    <value>핫키</value>
+    <value>Tecla de acceso rápido</value>
   </data>
   <data name="Hysteresis" xml:space="preserve">
-    <value>  이력 온도 : </value>
+    <value>Histéresis:</value>
   </data>
   <data name="Interval" xml:space="preserve">
-    <value>주기 설정</value>
+    <value>Intervalo</value>
   </data>
   <data name="IP_address" xml:space="preserve">
-    <value>IP 주소</value>
+    <value>Direccion IP</value>
   </data>
   <data name="Items" xml:space="preserve">
-    <value>아이템</value>
+    <value>Elementos</value>
   </data>
   <data name="Japanese" xml:space="preserve">
-    <value>일본어</value>
+    <value>Japonés</value>
   </data>
   <data name="Korean" xml:space="preserve">
-    <value>한국어</value>
+    <value>Coreano</value>
   </data>
   <data name="Kraken_Lighting" xml:space="preserve">
-    <value>Kraken 조명 설정</value>
+    <value>Iluminación Kraken</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>언어 :</value>
+    <value>Idioma:</value>
   </data>
   <data name="Library" xml:space="preserve">
-    <value>라이브러리</value>
+    <value>Libreria:</value>
   </data>
   <data name="Lighting" xml:space="preserve">
-    <value>조명</value>
+    <value>Iluminación</value>
   </data>
   <data name="liquidctl_Setting" xml:space="preserve">
-    <value>liquidctl 설정</value>
+    <value>Configuración de liquidctl</value>
   </data>
   <data name="Load" xml:space="preserve">
-    <value>로드</value>
+    <value>Cargar</value>
   </data>
   <data name="Localize" xml:space="preserve">
-    <value>ko</value>
+    <value>es</value>
   </data>
   <data name="Location" xml:space="preserve">
-    <value>파일위치</value>
+    <value>Ubicación</value>
   </data>
   <data name="Made1" xml:space="preserve">
-    <value>Made by 똥고집</value>
+    <value>Creado por Lich</value>
   </data>
   <data name="Made2" xml:space="preserve">
     <value>(lich426@gmail.com)</value>
   </data>
   <data name="Mode" xml:space="preserve">
-    <value>모드</value>
+    <value>Modo</value>
   </data>
   <data name="Normal" xml:space="preserve">
-    <value>일반</value>
+    <value>Normal</value>
   </data>
   <data name="Not_Match" xml:space="preserve">
-    <value>하드웨어와 저장된 설정 파일(Control.json) 내용이 일치하지 않습니다!</value>
+    <value>¡El hardware y el archivo Control.json no coinciden!</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>확인</value>
+    <value>OK</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>열기</value>
+    <value>Abrir</value>
   </data>
   <data name="Option" xml:space="preserve">
-    <value>옵션</value>
+    <value>Opción</value>
   </data>
   <data name="OptionChange" xml:space="preserve">
-    <value>라이브러리를 변경 하시겠습니까?</value>
+    <value>¿Desea cambiar la libreria?</value>
   </data>
   <data name="OptionReset" xml:space="preserve">
-    <value>재설정 하시겠습니까?</value>
+    <value>¿Desea reestablecer?</value>
   </data>
   <data name="Performance" xml:space="preserve">
-    <value>퍼포먼스</value>
+    <value>Rendimiento</value>
   </data>
   <data name="Plugin" xml:space="preserve">
-    <value>플러그인</value>
+    <value>Complemento</value>
   </data>
   <data name="Port" xml:space="preserve">
-    <value>포트 :</value>
+    <value>Puerto:</value>
   </data>
   <data name="Port_number" xml:space="preserve">
-    <value>포트 번호</value>
+    <value>Numero de puerto</value>
   </data>
   <data name="Preset" xml:space="preserve">
-    <value>프리셋 :</value>
+    <value>Preestablecido:</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>새로고침</value>
+    <value>Recargar</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>제거</value>
+    <value>Remover</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>초기화</value>
+    <value>Reestablecer</value>
   </data>
   <data name="RGBnFC_Lighting" xml:space="preserve">
-    <value>NZXT RGB＆Fan Controller 조명설정</value>
+    <value>Iluminación y control de ventiladores NZXT RGB</value>
   </data>
   <data name="Running" xml:space="preserve">
-    <value>동작 중</value>
+    <value>En ejecución</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>저장</value>
+    <value>Guardar</value>
   </data>
   <data name="Sensor" xml:space="preserve">
-    <value>센서</value>
+    <value>Sensor</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>서버</value>
+    <value>Servidor</value>
   </data>
   <data name="Server_Start" xml:space="preserve">
-    <value>시작</value>
+    <value>Iniciar</value>
   </data>
   <data name="Server_Stop" xml:space="preserve">
-    <value>종료</value>
+    <value>Detener</value>
   </data>
   <data name="Setting" xml:space="preserve">
-    <value>설정</value>
+    <value>Configuración</value>
   </data>
   <data name="Set_color" xml:space="preserve">
-    <value>색 변경</value>
+    <value>Ajustar color</value>
   </data>
   <data name="Show" xml:space="preserve">
-    <value>열기</value>
+    <value>Mostrar</value>
   </data>
   <data name="Show_system_time" xml:space="preserve">
-    <value>현재 시간 보기</value>
+    <value>Mostrar hora de sistema</value>
   </data>
   <data name="Silence" xml:space="preserve">
-    <value>사일런스</value>
+    <value>Silencio</value>
   </data>
   <data name="Spanish" xml:space="preserve">
-    <value>스페인어</value>
+    <value>español</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
-    <value>최소화 모드로 시작</value>
+    <value>Iniciar minimizado</value>
   </data>
   <data name="Start_with_Windows" xml:space="preserve">
-    <value>윈도우 시작 시 자동실행</value>
+    <value>Iniciar con Windows</value>
   </data>
   <data name="Step" xml:space="preserve">
-    <value>계단형</value>
+    <value>Incremento</value>
   </data>
   <data name="Stopped" xml:space="preserve">
-    <value>중지됨</value>
+    <value>Detenido</value>
   </data>
   <data name="Target_Temp" xml:space="preserve">
-    <value>타겟 온도 센서</value>
+    <value>Sensor de temperatura objetivo</value>
   </data>
   <data name="Temperature" xml:space="preserve">
-    <value>온도</value>
+    <value>Temperatura</value>
   </data>
   <data name="Theme" xml:space="preserve">
-    <value>테마 :</value>
+    <value>Tema :</value>
   </data>
   <data name="Theme_Dark" xml:space="preserve">
-    <value>다크</value>
+    <value>Oscuro</value>
   </data>
   <data name="Theme_Light" xml:space="preserve">
-    <value>라이트</value>
+    <value>Claro</value>
   </data>
   <data name="Theme_System" xml:space="preserve">
-    <value>시스템</value>
+    <value>Sistema</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>FanCtrl</value>
   </data>
   <data name="Tray_Icon_animation" xml:space="preserve">
-    <value>트레이아이콘 애니메이션</value>
+    <value>Animación de icono en bandeja</value>
   </data>
   <data name="Unable_to_open_socket" xml:space="preserve">
-    <value>소켓을 열 수 없습니다!</value>
+    <value>¡No se puede abrir el socket!</value>
   </data>
   <data name="Unit" xml:space="preserve">
-    <value>유닛 :</value>
+    <value>Unidad:</value>
   </data>
 </root>

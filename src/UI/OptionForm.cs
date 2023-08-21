@@ -90,6 +90,7 @@ namespace FanCtrl
             mLanguageComboBox.Items.Add(StringLib.Korean);
             mLanguageComboBox.Items.Add(StringLib.Japanese);
             mLanguageComboBox.Items.Add(StringLib.French);
+            mLanguageComboBox.Items.Add(StringLib.Spanish);
             mLanguageComboBox.SelectedIndex = OptionManager.getInstance().Language;
 
             mThemeComboBox.Items.Add(StringLib.Theme_System);
@@ -123,6 +124,37 @@ namespace FanCtrl
             mLibraryGroupBox.Text = StringLib.Library;
             mResetButton.Text = StringLib.Reset;
             mOKButton.Text = StringLib.OK;
+
+            int fontPointY = 0;
+            float fontSize = 9.0f;
+            FontFamily fontFamily = null;
+            try
+            {
+                fontFamily = new FontFamily("Gulim");
+                fontPointY = -5;
+            }
+            catch
+            {
+                fontFamily = FontFamily.GenericSansSerif;
+            }
+
+            // spanish
+            if (OptionManager.getInstance().Language == 4)
+            {
+                mKrakenButton.Font = new Font(fontFamily, 7.5f);
+                mCLCButton.Font = new Font(fontFamily, 7.5f);
+                mRGBnFCButton.Font = new Font(fontFamily, 7.5f);
+                mAnimationCheckBox.Font = new Font(fontFamily, 7.5f);
+                mStartupDelayLabel.Font = new Font(fontFamily, 6.5f);
+            }
+            else
+            {
+                mKrakenButton.Font = new Font(fontFamily, 9.0f);
+                mCLCButton.Font = new Font(fontFamily, 9.0f);
+                mRGBnFCButton.Font = new Font(fontFamily, 9.0f);
+                mAnimationCheckBox.Font = new Font(fontFamily, 9.0f);
+                mStartupDelayLabel.Font = new Font(fontFamily, 9.0f);
+            }
         }
 
         private void onOKButtonClick(object sender, EventArgs e)

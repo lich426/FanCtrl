@@ -30,7 +30,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.6.3.0</ApplicationVersion>
+    <ApplicationVersion>1.6.4.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -139,6 +139,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringLib.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\StringLib.es.Designer.cs">
+      <DependentUpon>StringLib.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="src\UI\ControlForm.cs">
       <SubType>Form</SubType>
@@ -327,6 +332,10 @@
     <Compile Include="src\UI\Theme\ThemeLibLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <EmbeddedResource Include="Resources\StringLib.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringLib.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\UI\ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -441,13 +450,16 @@ mkdir "$(TargetDir)locale"
 mkdir "$(TargetDir)locale\fr"
 mkdir "$(TargetDir)locale\ja"
 mkdir "$(TargetDir)locale\ko"
+mkdir "$(TargetDir)locale\es"
 copy /Y "$(TargetDir)fr\*.*" "$(TargetDir)locale\fr"
 copy /Y "$(TargetDir)ja\*.*" "$(TargetDir)locale\ja"
 copy /Y "$(TargetDir)ko\*.*" "$(TargetDir)locale\ko"
+copy /Y "$(TargetDir)es\*.*" "$(TargetDir)locale\es"
 timeout 1 &gt; NUL
 rmdir /S /Q "$(TargetDir)fr"
 rmdir /S /Q "$(TargetDir)ja"
 rmdir /S /Q "$(TargetDir)ko"
+rmdir /S /Q "$(TargetDir)es"
 del $(TargetName).pdb</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

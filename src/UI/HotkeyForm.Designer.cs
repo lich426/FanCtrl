@@ -32,26 +32,27 @@ namespace FanCtrl
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HotkeyForm));
-            this.mFanControlGroupBox = new DarkGroupBox();
-            this.mModeGameTextBox = new DarkTextBox();
-            this.mModeGameLabel = new DarkTitle();
-            this.mModePerformanceTextBox = new DarkTextBox();
-            this.mModePerformanceLabel = new DarkTitle();
-            this.mModeSilenceTextBox = new DarkTextBox();
-            this.mModeSilenceLabel = new DarkTitle();
-            this.mModeNormalTextBox = new DarkTextBox();
-            this.mModeNormalLabel = new DarkTitle();
-            this.mEnableFanControlTextBox = new DarkTextBox();
-            this.mEnableFanControlLabel = new DarkTitle();
-            this.mOSDGroupBox = new DarkGroupBox();
-            this.mEnableOSDTextBox = new DarkTextBox();
-            this.mEnableOSDLabel = new DarkTitle();
+            this.mFanControlGroupBox = new DarkUI.Controls.DarkGroupBox();
+            this.mModeGameTextBox = new DarkUI.Controls.DarkTextBox();
+            this.mModeGameLabel = new DarkUI.Controls.DarkTitle();
+            this.mModePerformanceTextBox = new DarkUI.Controls.DarkTextBox();
+            this.mModePerformanceLabel = new DarkUI.Controls.DarkTitle();
+            this.mModeSilenceTextBox = new DarkUI.Controls.DarkTextBox();
+            this.mModeSilenceLabel = new DarkUI.Controls.DarkTitle();
+            this.mModeNormalTextBox = new DarkUI.Controls.DarkTextBox();
+            this.mModeNormalLabel = new DarkUI.Controls.DarkTitle();
+            this.mEnableFanControlTextBox = new DarkUI.Controls.DarkTextBox();
+            this.mEnableFanControlLabel = new DarkUI.Controls.DarkTitle();
+            this.mOSDGroupBox = new DarkUI.Controls.DarkGroupBox();
+            this.mEnableOSDTextBox = new DarkUI.Controls.DarkTextBox();
+            this.mEnableOSDLabel = new DarkUI.Controls.DarkTitle();
             this.mFanControlGroupBox.SuspendLayout();
             this.mOSDGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // mFanControlGroupBox
             // 
+            this.mFanControlGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mFanControlGroupBox.Controls.Add(this.mModeGameTextBox);
             this.mFanControlGroupBox.Controls.Add(this.mModeGameLabel);
             this.mFanControlGroupBox.Controls.Add(this.mModePerformanceTextBox);
@@ -71,10 +72,13 @@ namespace FanCtrl
             // 
             // mModeGameTextBox
             // 
-            this.mModeGameTextBox.Location = new System.Drawing.Point(190, 138);
+            this.mModeGameTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.mModeGameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mModeGameTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mModeGameTextBox.Location = new System.Drawing.Point(264, 138);
             this.mModeGameTextBox.Name = "mModeGameTextBox";
             this.mModeGameTextBox.ReadOnly = true;
-            this.mModeGameTextBox.Size = new System.Drawing.Size(318, 21);
+            this.mModeGameTextBox.Size = new System.Drawing.Size(244, 21);
             this.mModeGameTextBox.TabIndex = 5;
             this.mModeGameTextBox.TabStop = false;
             // 
@@ -89,10 +93,13 @@ namespace FanCtrl
             // 
             // mModePerformanceTextBox
             // 
-            this.mModePerformanceTextBox.Location = new System.Drawing.Point(190, 107);
+            this.mModePerformanceTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.mModePerformanceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mModePerformanceTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mModePerformanceTextBox.Location = new System.Drawing.Point(264, 107);
             this.mModePerformanceTextBox.Name = "mModePerformanceTextBox";
             this.mModePerformanceTextBox.ReadOnly = true;
-            this.mModePerformanceTextBox.Size = new System.Drawing.Size(318, 21);
+            this.mModePerformanceTextBox.Size = new System.Drawing.Size(244, 21);
             this.mModePerformanceTextBox.TabIndex = 4;
             this.mModePerformanceTextBox.TabStop = false;
             // 
@@ -107,10 +114,13 @@ namespace FanCtrl
             // 
             // mModeSilenceTextBox
             // 
-            this.mModeSilenceTextBox.Location = new System.Drawing.Point(190, 76);
+            this.mModeSilenceTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.mModeSilenceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mModeSilenceTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mModeSilenceTextBox.Location = new System.Drawing.Point(264, 76);
             this.mModeSilenceTextBox.Name = "mModeSilenceTextBox";
             this.mModeSilenceTextBox.ReadOnly = true;
-            this.mModeSilenceTextBox.Size = new System.Drawing.Size(318, 21);
+            this.mModeSilenceTextBox.Size = new System.Drawing.Size(244, 21);
             this.mModeSilenceTextBox.TabIndex = 3;
             this.mModeSilenceTextBox.TabStop = false;
             // 
@@ -125,10 +135,13 @@ namespace FanCtrl
             // 
             // mModeNormalTextBox
             // 
-            this.mModeNormalTextBox.Location = new System.Drawing.Point(190, 47);
+            this.mModeNormalTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.mModeNormalTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mModeNormalTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mModeNormalTextBox.Location = new System.Drawing.Point(264, 47);
             this.mModeNormalTextBox.Name = "mModeNormalTextBox";
             this.mModeNormalTextBox.ReadOnly = true;
-            this.mModeNormalTextBox.Size = new System.Drawing.Size(318, 21);
+            this.mModeNormalTextBox.Size = new System.Drawing.Size(244, 21);
             this.mModeNormalTextBox.TabIndex = 2;
             this.mModeNormalTextBox.TabStop = false;
             // 
@@ -143,10 +156,13 @@ namespace FanCtrl
             // 
             // mEnableFanControlTextBox
             // 
-            this.mEnableFanControlTextBox.Location = new System.Drawing.Point(190, 18);
+            this.mEnableFanControlTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.mEnableFanControlTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mEnableFanControlTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mEnableFanControlTextBox.Location = new System.Drawing.Point(264, 18);
             this.mEnableFanControlTextBox.Name = "mEnableFanControlTextBox";
             this.mEnableFanControlTextBox.ReadOnly = true;
-            this.mEnableFanControlTextBox.Size = new System.Drawing.Size(318, 21);
+            this.mEnableFanControlTextBox.Size = new System.Drawing.Size(244, 21);
             this.mEnableFanControlTextBox.TabIndex = 1;
             this.mEnableFanControlTextBox.TabStop = false;
             // 
@@ -161,6 +177,7 @@ namespace FanCtrl
             // 
             // mOSDGroupBox
             // 
+            this.mOSDGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mOSDGroupBox.Controls.Add(this.mEnableOSDTextBox);
             this.mOSDGroupBox.Controls.Add(this.mEnableOSDLabel);
             this.mOSDGroupBox.Location = new System.Drawing.Point(13, 189);
@@ -172,10 +189,13 @@ namespace FanCtrl
             // 
             // mEnableOSDTextBox
             // 
-            this.mEnableOSDTextBox.Location = new System.Drawing.Point(190, 18);
+            this.mEnableOSDTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.mEnableOSDTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mEnableOSDTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.mEnableOSDTextBox.Location = new System.Drawing.Point(264, 18);
             this.mEnableOSDTextBox.Name = "mEnableOSDTextBox";
             this.mEnableOSDTextBox.ReadOnly = true;
-            this.mEnableOSDTextBox.Size = new System.Drawing.Size(318, 21);
+            this.mEnableOSDTextBox.Size = new System.Drawing.Size(244, 21);
             this.mEnableOSDTextBox.TabIndex = 6;
             this.mEnableOSDTextBox.TabStop = false;
             // 
@@ -197,6 +217,7 @@ namespace FanCtrl
             this.Controls.Add(this.mFanControlGroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Location = new System.Drawing.Point(0, 0);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "HotkeyForm";

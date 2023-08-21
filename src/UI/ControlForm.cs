@@ -188,7 +188,7 @@ namespace FanCtrl
             mGameRadioButton.Text = StringLib.Game;
             mTempGroupBox.Text = StringLib.Target_Temp;
             mFanGroupBox.Text = StringLib.Fan;
-            mAddButton.Text = StringLib.Add;
+            mAddButton.Text = "↓ " + StringLib.Add + " ↓";
             mRemoveButton.Text = StringLib.Remove;
             mGraphGroupBox.Text = StringLib.Graph;
             mPresetLabel.Text = StringLib.Preset;
@@ -226,6 +226,21 @@ namespace FanCtrl
                 mUnitComboBox.Left = mUnitComboBox.Left + 10;
                 mHysLabel.Left = mHysLabel.Left + 23;
             }
+
+            // Spanish
+            else if (OptionManager.getInstance().Language == 4)
+            {
+                mPresetLabel.Left = mPresetLabel.Left - 100;
+                mPresetLoadButton.Left = mPresetLoadButton.Left - 55;
+                mPresetSaveButton.Left = mPresetSaveButton.Left - 55;
+                mUnitLabel.Left = mUnitLabel.Left - 60;
+                mUnitComboBox.Left = mUnitComboBox.Left - 45;
+                mHysLabel.Left = mHysLabel.Left - 60;
+                mHysNumericUpDown.Left = mHysNumericUpDown.Left - 70;
+                mStepCheckBox.Left = mStepCheckBox.Left - 80;
+                mAutoLabel.Left = mAutoLabel.Left - 40;
+                mDelayLabel.Left = mDelayLabel.Left - 10;
+            }
         }
 
         private void initControl()
@@ -245,14 +260,17 @@ namespace FanCtrl
             mGameRadioButton.Click += onRadioButtonClick;
 
             //this.mAddTempListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
-            mAddTempListView.Columns.Add("MyColumn", 260, HorizontalAlignment.Center);
+            mAddTempListView.Columns.Add("1", 20, HorizontalAlignment.Center);
+            mAddTempListView.Columns.Add("2", 240, HorizontalAlignment.Left);
             mAddTempListView.SelectedIndexChanged += onAddTempListViewIndexChanged;
 
             //this.mAddFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
-            mAddFanListView.Columns.Add("MyColumn", 210, HorizontalAlignment.Center);
+            mAddFanListView.Columns.Add("1", 20, HorizontalAlignment.Center);
+            mAddFanListView.Columns.Add("2", 240, HorizontalAlignment.Left);
 
             //this.mFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Clickable;
-            mFanListView.Columns.Add("MyColumn", 260, HorizontalAlignment.Center);
+            mFanListView.Columns.Add("1", 20, HorizontalAlignment.Center);
+            mFanListView.Columns.Add("2", 240, HorizontalAlignment.Left);
             mFanListView.SelectedIndexChanged += onFanListViewIndexChanged;
 
             mUnitComboBox.Items.Add("1");
@@ -272,12 +290,20 @@ namespace FanCtrl
 
             for (int i = 0; i < tempBaseList.Count; i++)
             {
-                mAddTempListView.Items.Add(tempBaseList[i].Name);
+                var item = mAddTempListView.Items.Add("");
+                item.SubItems.Add(tempBaseList[i].Name);
+
+                var controlData = this.getControlData(i);
+                if (controlData != null && controlData.FanDataList.Count > 0)
+                {
+                    item.Text = "●";
+                }
             }
 
             for (int i = 0; i < controlBaseList.Count; i++)
             {
-                mAddFanListView.Items.Add(controlBaseList[i].Name);
+                var item = mAddFanListView.Items.Add("");
+                item.SubItems.Add(controlBaseList[i].Name);
             }
         }
 
@@ -451,6 +477,20 @@ namespace FanCtrl
             mGameRadioButton.Checked = (mModeType == MODE_TYPE.GAME);
 
             this.onAddTempListViewIndexChanged(null, EventArgs.Empty);
+
+            for (int i = 0; i < mAddTempListView.Items.Count; i++)
+            {
+                var item = mAddTempListView.Items[i];
+                var controlData = this.getControlData(i);
+                if (controlData != null && controlData.FanDataList.Count > 0)
+                {
+                    item.Text = "●";
+                }
+                else
+                {
+                    item.Text = "";
+                }
+            }
         }
 
         private void onAddTempListViewIndexChanged(object sender, EventArgs e)
@@ -458,6 +498,7 @@ namespace FanCtrl
             if (mAddTempListView.SelectedItems.Count == 0)
             {
                 Console.WriteLine("mAddTempListView.SelectedItems.Count : {0}", mAddTempListView.SelectedItems.Count);
+                setUseFanTextToAddFanListView();
                 return;
             }
 
@@ -486,6 +527,7 @@ namespace FanCtrl
             var controlData = this.getControlData(mSelectedTempIndex);
             if(controlData == null)
             {
+                setUseFanTextToAddFanListView();
                 return;
             }
 
@@ -502,8 +544,11 @@ namespace FanCtrl
 
                 var device = controlBaseMap[fanID];
                 mListViewBaseControlList.Add(device);
-                mFanListView.Items.Add(device.Name);
+
+                var item = mFanListView.Items.Add("");
+                item.SubItems.Add(device.Name);
             }
+            setUseFanTextToAddFanListView();
         }
 
         private void onStepCheckBoxCheckedChanged(object sender, EventArgs e)
@@ -639,7 +684,7 @@ namespace FanCtrl
         private ControlData getControlData(int tempIndex)
         {
             var tempBaseList = HardwareManager.getInstance().TempBaseList;
-            if (tempIndex >= tempBaseList.Count)
+            if (tempIndex >= tempBaseList.Count || tempIndex < 0)
                 return null;
 
             string id = tempBaseList[tempIndex].ID;
@@ -668,17 +713,15 @@ namespace FanCtrl
                 return null;
 
             var device = mListViewBaseControlList[fanIndex];
-            FanData fanData = null;
             for (int i = 0; i < controlData.FanDataList.Count; i++)
             {
-                var tempFanData = controlData.FanDataList[i];
-                if (tempFanData.ID.Equals(device.ID) == true)
+                var fanData = controlData.FanDataList[i];
+                if (fanData.ID.Equals(device.ID) == true)
                 {
-                    fanData = tempFanData;
-                    break;
+                    return fanData;
                 }
             }
-            return fanData;
+            return null;
         }
 
         private FanData getFanData(int tempIndex, string id)
@@ -687,17 +730,39 @@ namespace FanCtrl
             if (controlData == null)
                 return null;
 
-            FanData fanData = null;
             for (int i = 0; i < controlData.FanDataList.Count; i++)
             {
-                var tempFanData = controlData.FanDataList[i];
-                if (tempFanData.ID.Equals(id) == true)
+                var fanData = controlData.FanDataList[i];
+                if (fanData.ID.Equals(id) == true)
                 {
-                    fanData = tempFanData;
-                    break;
+                    return fanData;
                 }
             }
-            return fanData;
+            return null;
+        }
+
+        private void setUseFanTextToAddFanListView()
+        {
+            int tempIndex = mSelectedTempIndex;
+            var controlData = this.getControlData(tempIndex);
+            if (mAddTempListView.SelectedItems.Count == 0 || controlData == null || controlData.FanDataList.Count == 0)
+            {
+                for (int i = 0; i < mAddFanListView.Items.Count; i++)
+                {
+                    var item = mAddFanListView.Items[i];
+                    item.Text = "";
+                }
+                return;
+            }
+
+            var controlBaseList = HardwareManager.getInstance().ControlBaseList;
+            for (int i = 0; i < mAddFanListView.Items.Count; i++)
+            {
+                var item = mAddFanListView.Items[i];
+                var controlDevice = controlBaseList[i];
+                var fanData = this.getFanData(tempIndex, controlDevice.ID);
+                item.Text = (fanData != null) ? "●" : "";
+            }
         }
 
         private void onFanListViewIndexChanged(object sender, EventArgs e)
@@ -827,34 +892,44 @@ namespace FanCtrl
 
             int modeIndex = (int)mModeType;
             int tempIndex = mSelectedTempIndex;
-            int fanIndex = mAddFanListView.SelectedItems[0].Index;
 
             var tempBaseList = HardwareManager.getInstance().TempBaseList;
             var controlBaseList = HardwareManager.getInstance().ControlBaseList;
 
-            if (tempIndex >= tempBaseList.Count || fanIndex >= controlBaseList.Count)
+            if (tempIndex >= tempBaseList.Count || tempIndex < 0)
                 return;
 
             var tempDevice = tempBaseList[tempIndex];
-            var controlDevice = controlBaseList[fanIndex];
-
-            var controlData = this.getControlData(tempIndex);
-            if(controlData == null)
+            for (int i = 0; i < mAddFanListView.SelectedItems.Count; i++)
             {
-                controlData = new ControlData(tempDevice.ID);
-                mControlDataList[modeIndex].Add(controlData);
+                int fanIndex = mAddFanListView.SelectedItems[i].Index;
+                if (fanIndex >= controlBaseList.Count || fanIndex < 0)
+                    continue;
+
+                var controlDevice = controlBaseList[fanIndex];
+
+                var controlData = this.getControlData(tempIndex);
+                if (controlData == null)
+                {
+                    controlData = new ControlData(tempDevice.ID);
+                    mControlDataList[modeIndex].Add(controlData);
+                }
+
+                var fanData = this.getFanData(tempIndex, controlDevice.ID);
+                if (fanData == null)
+                {
+                    fanData = new FanData(controlDevice.ID, FanValueUnit.Size_5, true, 0, 0, 0);
+                    controlData.FanDataList.Add(fanData);
+
+                    mListViewBaseControlList.Add(controlDevice);
+                    var item = mFanListView.Items.Add("");
+                    item.SubItems.Add(controlDevice.Name);
+                }
             }
 
-            var fanData = this.getFanData(tempIndex, controlDevice.ID);
-            if(fanData == null)
-            {
-                fanData = new FanData(controlDevice.ID, FanValueUnit.Size_5, true, 0, 0, 0);
-                controlData.FanDataList.Add(fanData);
-
-                mListViewBaseControlList.Add(controlDevice);
-                var item = mFanListView.Items.Add(controlDevice.Name);
-                item.SubItems.Add(controlDevice.Name);
-            }
+            var tempItem = mAddTempListView.Items[tempIndex];
+            tempItem.Text = "●";
+            setUseFanTextToAddFanListView();
         }
 
         private void onRemoveButtonClick(object sender, EventArgs e)
@@ -874,6 +949,14 @@ namespace FanCtrl
 
             mSelectedFanData = null;
             mFanListView.Items.Remove(item);
+
+            if (controlData.FanDataList.Count == 0)
+            {
+                var tempItem = mAddTempListView.Items[mSelectedTempIndex];
+                tempItem.Text = "";
+            }
+
+            setUseFanTextToAddFanListView();
         }
 
         private void onPresetLoadButtonClick(object sender, EventArgs e)

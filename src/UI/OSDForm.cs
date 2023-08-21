@@ -104,6 +104,11 @@ namespace FanCtrl
             {
                 mDigitLabel.Left = mDigitLabel.Left - 40;
             }
+            // spanish
+            else if (OptionManager.getInstance().Language == 4)
+            {
+                mDigitLabel.Left = mDigitLabel.Left - 40;
+            }
         }
 
         private void onGroupListViewIndexChanged(object sender, EventArgs e)

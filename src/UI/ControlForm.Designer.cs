@@ -83,6 +83,7 @@ namespace FanCtrl
             // 
             // mTempGroupBox
             // 
+            this.mTempGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mTempGroupBox.Controls.Add(this.mAddTempListView);
             this.mTempGroupBox.Location = new System.Drawing.Point(12, 61);
             this.mTempGroupBox.Name = "mTempGroupBox";
@@ -93,6 +94,8 @@ namespace FanCtrl
             // 
             // mAddTempListView
             // 
+            this.mAddTempListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.mAddTempListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAddTempListView.FullRowSelect = true;
             this.mAddTempListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mAddTempListView.HideSelection = false;
@@ -106,6 +109,7 @@ namespace FanCtrl
             // 
             // mFanGroupBox
             // 
+            this.mFanGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mFanGroupBox.Controls.Add(this.mFanListView);
             this.mFanGroupBox.Controls.Add(this.mAddFanListView);
             this.mFanGroupBox.Controls.Add(this.mRemoveButton);
@@ -119,33 +123,36 @@ namespace FanCtrl
             // 
             // mFanListView
             // 
+            this.mFanListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.mFanListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFanListView.FullRowSelect = true;
             this.mFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mFanListView.HideSelection = false;
-            this.mFanListView.Location = new System.Drawing.Point(5, 181);
+            this.mFanListView.Location = new System.Drawing.Point(5, 199);
             this.mFanListView.MultiSelect = false;
             this.mFanListView.Name = "mFanListView";
-            this.mFanListView.Size = new System.Drawing.Size(292, 192);
+            this.mFanListView.Size = new System.Drawing.Size(292, 174);
             this.mFanListView.TabIndex = 7;
             this.mFanListView.UseCompatibleStateImageBehavior = false;
             this.mFanListView.View = System.Windows.Forms.View.Details;
             // 
             // mAddFanListView
             // 
+            this.mAddFanListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.mAddFanListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAddFanListView.FullRowSelect = true;
             this.mAddFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mAddFanListView.HideSelection = false;
             this.mAddFanListView.Location = new System.Drawing.Point(5, 20);
-            this.mAddFanListView.MultiSelect = false;
             this.mAddFanListView.Name = "mAddFanListView";
-            this.mAddFanListView.Size = new System.Drawing.Size(231, 155);
+            this.mAddFanListView.Size = new System.Drawing.Size(292, 136);
             this.mAddFanListView.TabIndex = 6;
             this.mAddFanListView.UseCompatibleStateImageBehavior = false;
             this.mAddFanListView.View = System.Windows.Forms.View.Details;
             // 
             // mRemoveButton
             // 
-            this.mRemoveButton.Location = new System.Drawing.Point(6, 379);
+            this.mRemoveButton.Location = new System.Drawing.Point(5, 379);
             this.mRemoveButton.Name = "mRemoveButton";
             this.mRemoveButton.Padding = new System.Windows.Forms.Padding(1);
             this.mRemoveButton.Size = new System.Drawing.Size(292, 31);
@@ -155,16 +162,17 @@ namespace FanCtrl
             // 
             // mAddButton
             // 
-            this.mAddButton.Location = new System.Drawing.Point(242, 20);
+            this.mAddButton.Location = new System.Drawing.Point(5, 162);
             this.mAddButton.Name = "mAddButton";
             this.mAddButton.Padding = new System.Windows.Forms.Padding(1);
-            this.mAddButton.Size = new System.Drawing.Size(55, 155);
+            this.mAddButton.Size = new System.Drawing.Size(290, 31);
             this.mAddButton.TabIndex = 3;
             this.mAddButton.Text = "Add";
             this.mAddButton.Click += new System.EventHandler(this.onAddButtonClick);
             // 
             // mGraphGroupBox
             // 
+            this.mGraphGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mGraphGroupBox.Controls.Add(this.mPresetLabel);
             this.mGraphGroupBox.Controls.Add(this.mUnitLabel);
             this.mGraphGroupBox.Controls.Add(this.mHysLabel);
@@ -180,6 +188,7 @@ namespace FanCtrl
             // mPresetLabel
             // 
             this.mPresetLabel.AutoSize = true;
+            this.mPresetLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mPresetLabel.Location = new System.Drawing.Point(144, 1);
             this.mPresetLabel.Name = "mPresetLabel";
             this.mPresetLabel.Size = new System.Drawing.Size(49, 12);
@@ -190,6 +199,7 @@ namespace FanCtrl
             // mUnitLabel
             // 
             this.mUnitLabel.AutoSize = true;
+            this.mUnitLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mUnitLabel.Location = new System.Drawing.Point(329, 1);
             this.mUnitLabel.Name = "mUnitLabel";
             this.mUnitLabel.Size = new System.Drawing.Size(34, 12);
@@ -200,6 +210,7 @@ namespace FanCtrl
             // mHysLabel
             // 
             this.mHysLabel.AutoSize = true;
+            this.mHysLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHysLabel.Location = new System.Drawing.Point(434, 1);
             this.mHysLabel.Name = "mHysLabel";
             this.mHysLabel.Size = new System.Drawing.Size(73, 12);
@@ -264,6 +275,7 @@ namespace FanCtrl
             // 
             // mModeGroupBox
             // 
+            this.mModeGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mModeGroupBox.Controls.Add(this.mGameRadioButton);
             this.mModeGroupBox.Controls.Add(this.mPerformanceRadioButton);
             this.mModeGroupBox.Controls.Add(this.mSilenceRadioButton);
@@ -362,6 +374,7 @@ namespace FanCtrl
             // mAutoLabel
             // 
             this.mAutoLabel.AutoSize = true;
+            this.mAutoLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAutoLabel.Location = new System.Drawing.Point(957, 62);
             this.mAutoLabel.Name = "mAutoLabel";
             this.mAutoLabel.Size = new System.Drawing.Size(38, 12);
@@ -372,6 +385,7 @@ namespace FanCtrl
             // mDelayLabel
             // 
             this.mDelayLabel.AutoSize = true;
+            this.mDelayLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mDelayLabel.Location = new System.Drawing.Point(1061, 62);
             this.mDelayLabel.Name = "mDelayLabel";
             this.mDelayLabel.Size = new System.Drawing.Size(45, 12);
@@ -395,6 +409,7 @@ namespace FanCtrl
             // mDelayLabel2
             // 
             this.mDelayLabel2.AutoSize = true;
+            this.mDelayLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mDelayLabel2.Location = new System.Drawing.Point(1161, 61);
             this.mDelayLabel2.Name = "mDelayLabel2";
             this.mDelayLabel2.Size = new System.Drawing.Size(23, 12);
