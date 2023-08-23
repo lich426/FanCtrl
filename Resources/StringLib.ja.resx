@@ -130,7 +130,7 @@
     <value>自動 :</value>
   </data>
   <data name="Auto_Fan_Control" xml:space="preserve">
-    <value>ファンの自動制御</value>
+    <value>ファン自動制御</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>キャンセル</value>
