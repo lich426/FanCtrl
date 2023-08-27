@@ -157,32 +157,45 @@ namespace FanCtrl
 
         public static void setLanguage(int language)
         {
-            // Language
-            switch (language)
+            try
             {
-                case 1:
-                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ko-KR");
-                    break;
+                // Language
+                switch (language)
+                {
+                    case 1:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("ko-KR");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ko-KR");
+                        break;
 
-                case 2:
-                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
-                    break;
+                    case 2:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("ja-JP");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                        break;
 
-                case 3:
-                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
-                    break;
+                    case 3:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
+                        break;
 
-                case 4:
-                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("es-ES");
-                    break;
+                    case 4:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("es-ES");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("es-ES");
+                        break;
 
-                case 5:
-                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ru-RU");
-                    break;
+                    case 5:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ru-RU");
+                        break;
 
-                default:
-                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                    break;
+                    default:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+                        break;
+                }
+            }
+            catch
+            {
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
             }
         }
     }

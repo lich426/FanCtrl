@@ -400,7 +400,7 @@
       <LastGenOutput>StringLib.ja.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\StringLib.ko.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.ko.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\StringLib.resx">
@@ -465,7 +465,7 @@ copy /Y "$(TargetDir)fr\*.*" "$(TargetDir)locale\fr"
 copy /Y "$(TargetDir)ja\*.*" "$(TargetDir)locale\ja"
 copy /Y "$(TargetDir)ko\*.*" "$(TargetDir)locale\ko"
 copy /Y "$(TargetDir)es\*.*" "$(TargetDir)locale\es"
-copy /Y "$(TargetDir)es\*.*" "$(TargetDir)locale\ru"
+copy /Y "$(TargetDir)ru\*.*" "$(TargetDir)locale\ru"
 timeout 1 &gt; NUL
 rmdir /S /Q "$(TargetDir)fr"
 rmdir /S /Q "$(TargetDir)ja"
