@@ -318,6 +318,9 @@
   <data name="Running" xml:space="preserve">
     <value>동작 중</value>
   </data>
+  <data name="Russian" xml:space="preserve">
+    <value>러시아어</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>저장</value>
   </data>

@@ -99,8 +99,23 @@ namespace FanCtrl
             mApplyButton.Text = StringLib.Apply;
             mOKButton.Text = StringLib.OK;
 
+            FontFamily fontFamily = null;
+            try
+            {
+                fontFamily = new FontFamily("Gulim");
+            }
+            catch
+            {
+                fontFamily = FontFamily.GenericSansSerif;
+            }
+
+            // japanese
+            if (OptionManager.getInstance().Language == 2)
+            {
+                mDigitLabel.Left = mDigitLabel.Left + 20;
+            }
             // french
-            if (OptionManager.getInstance().Language == 3)
+            else if (OptionManager.getInstance().Language == 3)
             {
                 mDigitLabel.Left = mDigitLabel.Left - 40;
             }
@@ -108,6 +123,12 @@ namespace FanCtrl
             else if (OptionManager.getInstance().Language == 4)
             {
                 mDigitLabel.Left = mDigitLabel.Left - 40;
+            }
+            // Russian
+            else if (OptionManager.getInstance().Language == 5)
+            {
+                mEnableCheckBox.Font = new Font(fontFamily, 7.2f);
+                mDigitLabel.Left = mDigitLabel.Left - 60;
             }
         }
 

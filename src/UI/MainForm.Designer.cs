@@ -74,6 +74,7 @@ namespace FanCtrl
             // 
             // mTempGroupBox
             // 
+            this.mTempGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mTempGroupBox.Controls.Add(this.mTempPanel);
             this.mTempGroupBox.Location = new System.Drawing.Point(12, 12);
             this.mTempGroupBox.Name = "mTempGroupBox";
@@ -92,6 +93,7 @@ namespace FanCtrl
             // 
             // mFanGroupBox
             // 
+            this.mFanGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mFanGroupBox.Controls.Add(this.mFanPanel);
             this.mFanGroupBox.Location = new System.Drawing.Point(290, 12);
             this.mFanGroupBox.Name = "mFanGroupBox";
@@ -110,6 +112,7 @@ namespace FanCtrl
             // 
             // mControlGroupBox
             // 
+            this.mControlGroupBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.mControlGroupBox.Controls.Add(this.mControlPanel);
             this.mControlGroupBox.Location = new System.Drawing.Point(568, 12);
             this.mControlGroupBox.Name = "mControlGroupBox";

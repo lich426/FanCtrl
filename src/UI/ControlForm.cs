@@ -202,6 +202,16 @@ namespace FanCtrl
             mOKButton.Text = StringLib.OK;
             mApplyButton.Text = StringLib.Apply;
 
+            FontFamily fontFamily = null;
+            try
+            {
+                fontFamily = new FontFamily("Gulim");
+            }
+            catch
+            {
+                fontFamily = FontFamily.GenericSansSerif;
+            }
+
             // Korean
             if (OptionManager.getInstance().Language == 1)
             {
@@ -211,11 +221,11 @@ namespace FanCtrl
             // Japanese
             else if (OptionManager.getInstance().Language == 2)
             {
-                mPresetLabel.Left = mPresetLabel.Left - 10;
+                mPresetLabel.Left = mPresetLabel.Left - 20;
                 mUnitLabel.Left = mUnitLabel.Left - 5;
-                mHysLabel.Left = mHysLabel.Left - 2;
+                mHysLabel.Left = mHysLabel.Left - 10;
                 mStepCheckBox.Left = mStepCheckBox.Left - 2;
-                mDelayLabel.Left = mDelayLabel.Left - 10;
+                mDelayLabel.Left = mDelayLabel.Left - 15;
             }
 
             // French
@@ -225,6 +235,7 @@ namespace FanCtrl
                 mUnitLabel.Left = mUnitLabel.Left + 5;
                 mUnitComboBox.Left = mUnitComboBox.Left + 10;
                 mHysLabel.Left = mHysLabel.Left + 23;
+                mPresetSaveButton.Font = new Font(fontFamily, 6.5f);
             }
 
             // Spanish
@@ -240,6 +251,29 @@ namespace FanCtrl
                 mStepCheckBox.Left = mStepCheckBox.Left - 80;
                 mAutoLabel.Left = mAutoLabel.Left - 40;
                 mDelayLabel.Left = mDelayLabel.Left - 10;
+            }
+
+            // Russian
+            else if (OptionManager.getInstance().Language == 5)
+            {
+                mEnableCheckBox.Font = new Font(fontFamily, 7.2f);
+                mSilenceRadioButton.Left = mSilenceRadioButton.Left + 10;
+                mGameRadioButton.Left = mGameRadioButton.Left + 50;
+
+                mPresetLabel.Left = mPresetLabel.Left - 170;
+                mPresetLoadButton.Left = mPresetLoadButton.Left - 105;
+                mPresetSaveButton.Left = mPresetSaveButton.Left - 105;
+                mUnitLabel.Left = mUnitLabel.Left - 100;
+                mUnitComboBox.Left = mUnitComboBox.Left - 95;
+                mHysLabel.Left = mHysLabel.Left - 100;
+                mHysNumericUpDown.Left = mHysNumericUpDown.Left - 80;
+                mStepCheckBox.Left = mStepCheckBox.Left - 80;
+                mAutoLabel.Left = mAutoLabel.Left - 25;
+                mAutoNumericUpDown.Left = mAutoNumericUpDown.Left - 15;
+                mDelayLabel.Left = mDelayLabel.Left - 30;
+
+                mPresetLoadButton.Font = new Font(fontFamily, 7.0f);
+                mPresetSaveButton.Font = new Font(fontFamily, 7.0f);
             }
         }
 

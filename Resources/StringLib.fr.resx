@@ -318,6 +318,9 @@
   <data name="Running" xml:space="preserve">
     <value>Courir</value>
   </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Russe</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Sauvegarder</value>
   </data>

@@ -1,6 +1,7 @@
 ﻿using DarkUI.Config;
 using DarkUI.Controls;
 using FanCtrl.Resources;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,11 +44,25 @@ namespace FanCtrl
 
         private bool mIsUserResize = true;
 
+        private bool mIsWindowUpdate = false;
+
+        private int mOriginWidth = 899;
         private int mOriginHeight = 169;
-        private int mNowHeight = 169;
+        private int mWidth = 899;
+        private int mHeight = 169;
+
+        private int mTempTop = 0;
+        private int mTempLeft = 0;
+        private int mTempWidth = 0;
+        private int mTempHeight = 0;
 
         public MainForm()
         {
+            if (read() == false)
+            {
+                write();
+            }
+
             Util.setLanguage(OptionManager.getInstance().Language);
 
             InitializeComponent();
@@ -57,8 +72,7 @@ namespace FanCtrl
 
             this.startHook();
 
-            this.MinimumSize = new Size(899, mOriginHeight);
-            this.MaximumSize = new Size(899, Int32.MaxValue);
+            this.MinimumSize = new Size(mOriginWidth, mOriginHeight);
 
             this.FormClosing += onClosing;
 
@@ -122,6 +136,26 @@ namespace FanCtrl
             mGameToolStripMenuItem.Text = StringLib.Game;
             mShowToolStripMenuItem.Text = StringLib.Show;
             mExitToolStripMenuItem.Text = StringLib.Exit;
+
+            FontFamily fontFamily = null;
+            try
+            {
+                fontFamily = new FontFamily("Gulim");
+            }
+            catch
+            {
+                fontFamily = FontFamily.GenericSansSerif;
+            }
+
+            // Russian
+            if (OptionManager.getInstance().Language == 5)
+            {
+                mFanControlButton.Font = new Font(fontFamily, 6.5f);
+            }
+            else
+            {
+                mFanControlButton.Font = new Font(fontFamily, 9.0f);
+            }
         }
 
         protected void setTheme()
@@ -160,8 +194,19 @@ namespace FanCtrl
                     return;
                 }
 
-                mNowHeight = this.Height;
+                mWidth = this.Width;
+                mHeight = this.Height;
                 this.resizeForm();
+            };
+
+            this.ResizeEnd += (s2, e2) =>
+            {
+                mIsWindowUpdate = true;
+                mTempLeft = this.Left;
+                mTempTop = this.Top;
+                mTempWidth = this.Width;
+                mTempHeight = this.Height;
+                this.write();
             };
 
             if (OptionManager.getInstance().IsMinimized == true)
@@ -216,7 +261,8 @@ namespace FanCtrl
             mTrayIcon.Icon = mFanIconList[0];
             mFanIconIndex = 0;
 
-            mNowHeight = mOriginHeight;
+            mWidth = mOriginWidth;
+            mHeight = mOriginHeight;
 
             this.resizeForm();
 
@@ -300,7 +346,18 @@ namespace FanCtrl
                 this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2,
                                           (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2);
             }
-                        
+
+            if (mIsWindowUpdate == true)
+            {
+                this.Left = mTempLeft;
+                this.Top = mTempTop;
+                this.Width = mTempWidth;
+                this.Height = mTempHeight;
+                mWidth = mTempWidth;
+                mHeight = mTempHeight;
+                resizeForm();
+            }
+
             this.Enabled = true;
         }
 
@@ -314,14 +371,14 @@ namespace FanCtrl
             int donatePictureBoxPoint = 81;
             int buttonPoint = 71;
 
-            int gap = mNowHeight - mOriginHeight;
+            int gapHeight = mHeight - mOriginHeight;
 
-            groupBoxHeight = groupBoxHeight + gap;
-            panelHeight = panelHeight + gap;
-            madeLabelPoint1 = madeLabelPoint1 + gap;
-            madeLabelPoint2 = madeLabelPoint2 + gap;
-            donatePictureBoxPoint = donatePictureBoxPoint + gap;
-            buttonPoint = buttonPoint + gap;
+            groupBoxHeight = groupBoxHeight + gapHeight;
+            panelHeight = panelHeight + gapHeight;
+            madeLabelPoint1 = madeLabelPoint1 + gapHeight;
+            madeLabelPoint2 = madeLabelPoint2 + gapHeight;
+            donatePictureBoxPoint = donatePictureBoxPoint + gapHeight;
+            buttonPoint = buttonPoint + gapHeight;
 
             mTempGroupBox.Height = groupBoxHeight;
             mFanGroupBox.Height = groupBoxHeight;
@@ -343,9 +400,51 @@ namespace FanCtrl
             mOptionButton.Top = buttonPoint;
             mFanControlButton.Top = buttonPoint;
 
+            //////////////////////////////////////////////////////////
+
+            int gapWidth = mWidth - mOriginWidth;
+            int divide = gapWidth / 3;
+
+            //mTempGroupBox.Left = 12 + divide;
+            mFanGroupBox.Left = 290 + divide;
+            mControlGroupBox.Left = 568 + (divide * 2);
+
+            mTempGroupBox.Width = 272 + divide;
+            mFanGroupBox.Width = 272 + divide;
+            mControlGroupBox.Width = 306 + divide;
+
+            mTempPanel.Width = 261 + divide;
+            mFanPanel.Width = 260 + divide;
+            mControlPanel.Width = 294 + divide;
+
+            mPluginButton.Left = 257 + gapWidth;
+            mLiquidctlButton.Left = 346 + gapWidth;
+            mReloadButton.Left = 435 + gapWidth;
+            mHotKeyButton.Left = 524 + gapWidth;
+            mOSDButton.Left = 613 + gapWidth;
+            mOptionButton.Left = 702 + gapWidth;
+            mFanControlButton.Left = 791 + gapWidth;
+
+            for (int i = 0; i < mTempNameTextBoxList.Count; i++)
+            {
+                mTempNameTextBoxList[i].Width = mTempPanel.Width - 70;
+            }
+
+            for (int i = 0; i < mFanNameTextBoxList.Count; i++)
+            {
+                mFanNameTextBoxList[i].Width = mFanPanel.Width - 90;
+            }
+
+            for (int i = 0; i < mControlNameTextBoxList.Count; i++)
+            {
+                mControlNameTextBoxList[i].Width = mControlPanel.Width - 95;
+            }
+
+            //////////////////////////////////////////////////////////
+
             mIsUserResize = false;
-            this.Width = this.MaximumSize.Width;
-            this.Height = mNowHeight;
+            this.Width = mWidth;
+            this.Height = mHeight;
         }
 
         private void onClosing(object sender, FormClosingEventArgs e)
@@ -474,7 +573,7 @@ namespace FanCtrl
                 mFanIconTimer.Dispose();
                 mFanIconTimer = null;
             }
-            
+
             mTrayIcon.Visible = false;
 
             mIsExit = true;
@@ -850,7 +949,7 @@ namespace FanCtrl
 
             int originPanelHeight = 35;
             int heightGap = tempHeight - originPanelHeight;
-            mNowHeight = mNowHeight + heightGap;
+            mHeight = mHeight + heightGap;
 
             this.resizeForm();
         }
@@ -1099,6 +1198,44 @@ namespace FanCtrl
             {
                 this.onReloadButtonClick(null, EventArgs.Empty);
             }
+        }
+
+        private string mLocationFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "Location.json";
+
+        private bool read()
+        {
+            try
+            {
+                var jsonString = File.ReadAllText(mLocationFileName);
+                var rootObject = JObject.Parse(jsonString);
+
+                mIsWindowUpdate = (rootObject.ContainsKey("IsWindowUpdate") == true) ? rootObject.Value<bool>("IsWindowUpdate") : false;
+                mTempLeft = (rootObject.ContainsKey("Left") == true) ? rootObject.Value<int>("Left") : 0;
+                mTempTop = (rootObject.ContainsKey("Top") == true) ? rootObject.Value<int>("Top") : 0;
+                mTempWidth = (rootObject.ContainsKey("Width") == true) ? rootObject.Value<int>("Width") : 899;
+                mTempHeight = (rootObject.ContainsKey("Height") == true) ? rootObject.Value<int>("Height") : 169;
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void write()
+        {
+            try
+            {
+                var rootObject = new JObject();
+                rootObject["IsWindowUpdate"] = mIsWindowUpdate;
+                rootObject["Left"] = mTempLeft;
+                rootObject["Top"] = mTempTop;
+                rootObject["Width"] = mTempWidth;
+                rootObject["Height"] = mTempHeight;
+
+                File.WriteAllText(mLocationFileName, rootObject.ToString());
+            }
+            catch { }
         }
 
         private const int WM_POWERBROADCAST = 0x218;

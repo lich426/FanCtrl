@@ -228,6 +228,10 @@ namespace FanCtrl
             {
                 return 4;
             }
+            else if (name.CompareTo("ru") == 0)
+            {
+                return 5;
+            }
             else
             {
                 return 0;

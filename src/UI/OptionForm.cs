@@ -91,6 +91,7 @@ namespace FanCtrl
             mLanguageComboBox.Items.Add(StringLib.Japanese);
             mLanguageComboBox.Items.Add(StringLib.French);
             mLanguageComboBox.Items.Add(StringLib.Spanish);
+            mLanguageComboBox.Items.Add(StringLib.Russian);
             mLanguageComboBox.SelectedIndex = OptionManager.getInstance().Language;
 
             mThemeComboBox.Items.Add(StringLib.Theme_System);
@@ -125,13 +126,10 @@ namespace FanCtrl
             mResetButton.Text = StringLib.Reset;
             mOKButton.Text = StringLib.OK;
 
-            int fontPointY = 0;
-            float fontSize = 9.0f;
             FontFamily fontFamily = null;
             try
             {
                 fontFamily = new FontFamily("Gulim");
-                fontPointY = -5;
             }
             catch
             {
@@ -147,13 +145,13 @@ namespace FanCtrl
                 mAnimationCheckBox.Font = new Font(fontFamily, 7.5f);
                 mStartupDelayLabel.Font = new Font(fontFamily, 6.5f);
             }
-            else
+            // Russian
+            else if (OptionManager.getInstance().Language == 5)
             {
-                mKrakenButton.Font = new Font(fontFamily, 9.0f);
-                mCLCButton.Font = new Font(fontFamily, 9.0f);
-                mRGBnFCButton.Font = new Font(fontFamily, 9.0f);
-                mAnimationCheckBox.Font = new Font(fontFamily, 9.0f);
-                mStartupDelayLabel.Font = new Font(fontFamily, 9.0f);
+                mKrakenButton.Font = new Font(fontFamily, 7.5f);
+                mCLCButton.Font = new Font(fontFamily, 7.5f);
+                mRGBnFCButton.Font = new Font(fontFamily, 7.5f);
+                mStartupDelayLabel.Font = new Font(fontFamily, 6.5f);
             }
         }
 

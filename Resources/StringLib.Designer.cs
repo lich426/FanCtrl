@@ -664,6 +664,15 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
+        ///   Russian과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Russian {
+            get {
+                return ResourceManager.GetString("Russian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Save과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Save {

@@ -1,5 +1,6 @@
 ﻿using FanCtrl.Resources;
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -71,6 +72,23 @@ namespace FanCtrl
             mModePerformanceLabel.Text = StringLib.Mode + " - " + StringLib.Performance + " :";
             mModeGameLabel.Text = StringLib.Mode + " - " + StringLib.Game + " :";
             mEnableOSDLabel.Text = StringLib.Enable_OSD + " :";
+
+            FontFamily fontFamily = null;
+            try
+            {
+                fontFamily = new FontFamily("Gulim");
+            }
+            catch
+            {
+                fontFamily = FontFamily.GenericSansSerif;
+            }
+
+            // Russian
+            if (OptionManager.getInstance().Language == 5)
+            {
+                mEnableFanControlLabel.Font = new Font(fontFamily, 6.5f);
+                mEnableOSDLabel.Font = new Font(fontFamily, 6.5f);
+            }
         }
 
         private void setTextBoxText(TextBox textBox, HotkeyData keyData)
