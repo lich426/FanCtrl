@@ -133,7 +133,7 @@
     <value>Автоматическое управление вентилятором</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Отменить</value>
+    <value>Отмена</value>
   </data>
   <data name="Change_the_color" xml:space="preserve">
     <value>Вы хотите изменить цвет?</value>
@@ -154,7 +154,7 @@
     <value>Контроль</value>
   </data>
   <data name="Default_color" xml:space="preserve">
-    <value>Цвет по умолчанию</value>
+    <value>По умолчанию</value>
   </data>
   <data name="Delay" xml:space="preserve">
     <value>Задержка :</value>
@@ -304,7 +304,7 @@
     <value>Предустановка :</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Перезагрузить</value>
+    <value>Перезагрузка  программы</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Удалить</value>
@@ -319,7 +319,7 @@
     <value>Работает</value>
   </data>
   <data name="Russian" xml:space="preserve">
-    <value>русский</value>
+    <value>Русский</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
@@ -352,7 +352,7 @@
     <value>Тихий</value>
   </data>
   <data name="Spanish" xml:space="preserve">
-    <value>испанский</value>
+    <value>Испанский</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>Запускать свернутым</value>
