@@ -130,7 +130,7 @@
     <value>自動 :</value>
   </data>
   <data name="Auto_Fan_Control" xml:space="preserve">
-    <value>ファン自動制御</value>
+    <value>自動制御設定</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>キャンセル</value>
@@ -364,7 +364,7 @@
     <value>階段状</value>
   </data>
   <data name="Stopped" xml:space="preserve">
-    <value>中止</value>
+    <value>停止中</value>
   </data>
   <data name="Target_Temp" xml:space="preserve">
     <value>監視する温度センサー</value>
