@@ -1224,7 +1224,7 @@ namespace FanCtrl
                         // remove auto mode control
                         mAutoControlDictionary.Remove(control.ID);
 
-                        Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
+                        //Console.WriteLine("manual mode : name({0}), value({1}), nextvalue({2})", control.Name, control.Value, control.NextValue);
 
                         if (control.Value == control.NextValue)
                         {
@@ -1238,7 +1238,7 @@ namespace FanCtrl
                     foreach (var keyPair in mAutoControlDictionary)
                     {
                         var control = keyPair.Value;
-                        Console.WriteLine("auto mode : name({0})", control.Name);
+                        //Console.WriteLine("auto mode : name({0})", control.Name);
                         control.stopTimer();
                         control.setAuto();
                     }
