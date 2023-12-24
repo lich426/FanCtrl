@@ -175,7 +175,7 @@
     <value>OSD 활성화</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>영어</value>
+    <value>English</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>에러</value>
@@ -202,7 +202,7 @@
     <value>팬 속도</value>
   </data>
   <data name="French" xml:space="preserve">
-    <value>프랑스어</value>
+    <value>Français</value>
   </data>
   <data name="Game" xml:space="preserve">
     <value>게임</value>
@@ -229,7 +229,7 @@
     <value>아이템</value>
   </data>
   <data name="Japanese" xml:space="preserve">
-    <value>일본어</value>
+    <value>日本語</value>
   </data>
   <data name="Korean" xml:space="preserve">
     <value>한국어</value>
@@ -319,7 +319,7 @@
     <value>동작 중</value>
   </data>
   <data name="Russian" xml:space="preserve">
-    <value>러시아어</value>
+    <value>Русский</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>저장</value>
@@ -352,7 +352,7 @@
     <value>사일런스</value>
   </data>
   <data name="Spanish" xml:space="preserve">
-    <value>스페인어</value>
+    <value>español</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>최소화 모드로 시작</value>

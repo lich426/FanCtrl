@@ -35,10 +35,10 @@ namespace FanCtrl
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlForm));
             this.mEnableCheckBox = new DarkUI.Controls.DarkCheckBox();
             this.mTempGroupBox = new DarkUI.Controls.DarkGroupBox();
-            this.mAddTempListView = new FanCtrl.ThemeListView();
+            this.mAddTempListView = new ThemeListView();
             this.mFanGroupBox = new DarkUI.Controls.DarkGroupBox();
-            this.mFanListView = new FanCtrl.ThemeListView();
-            this.mAddFanListView = new FanCtrl.ThemeListView();
+            this.mFanListView = new ThemeListView();
+            this.mAddFanListView = new ThemeListView();
             this.mRemoveButton = new DarkUI.Controls.DarkButton();
             this.mAddButton = new DarkUI.Controls.DarkButton();
             this.mGraphGroupBox = new DarkUI.Controls.DarkGroupBox();
@@ -93,9 +93,7 @@ namespace FanCtrl
             this.mTempGroupBox.Text = "Temperature Sensor";
             // 
             // mAddTempListView
-            // 
-            this.mAddTempListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.mAddTempListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            //
             this.mAddTempListView.FullRowSelect = true;
             this.mAddTempListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mAddTempListView.HideSelection = false;
@@ -123,8 +121,6 @@ namespace FanCtrl
             // 
             // mFanListView
             // 
-            this.mFanListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.mFanListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mFanListView.FullRowSelect = true;
             this.mFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mFanListView.HideSelection = false;
@@ -138,8 +134,6 @@ namespace FanCtrl
             // 
             // mAddFanListView
             // 
-            this.mAddFanListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.mAddFanListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAddFanListView.FullRowSelect = true;
             this.mAddFanListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mAddFanListView.HideSelection = false;
@@ -188,7 +182,6 @@ namespace FanCtrl
             // mPresetLabel
             // 
             this.mPresetLabel.AutoSize = true;
-            this.mPresetLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mPresetLabel.Location = new System.Drawing.Point(144, 1);
             this.mPresetLabel.Name = "mPresetLabel";
             this.mPresetLabel.Size = new System.Drawing.Size(49, 12);
@@ -199,7 +192,6 @@ namespace FanCtrl
             // mUnitLabel
             // 
             this.mUnitLabel.AutoSize = true;
-            this.mUnitLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mUnitLabel.Location = new System.Drawing.Point(329, 1);
             this.mUnitLabel.Name = "mUnitLabel";
             this.mUnitLabel.Size = new System.Drawing.Size(34, 12);
@@ -210,7 +202,6 @@ namespace FanCtrl
             // mHysLabel
             // 
             this.mHysLabel.AutoSize = true;
-            this.mHysLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mHysLabel.Location = new System.Drawing.Point(434, 1);
             this.mHysLabel.Name = "mHysLabel";
             this.mHysLabel.Size = new System.Drawing.Size(73, 12);
@@ -374,7 +365,6 @@ namespace FanCtrl
             // mAutoLabel
             // 
             this.mAutoLabel.AutoSize = true;
-            this.mAutoLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mAutoLabel.Location = new System.Drawing.Point(957, 62);
             this.mAutoLabel.Name = "mAutoLabel";
             this.mAutoLabel.Size = new System.Drawing.Size(38, 12);
@@ -385,7 +375,6 @@ namespace FanCtrl
             // mDelayLabel
             // 
             this.mDelayLabel.AutoSize = true;
-            this.mDelayLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mDelayLabel.Location = new System.Drawing.Point(1061, 62);
             this.mDelayLabel.Name = "mDelayLabel";
             this.mDelayLabel.Size = new System.Drawing.Size(45, 12);
@@ -409,7 +398,6 @@ namespace FanCtrl
             // mDelayLabel2
             // 
             this.mDelayLabel2.AutoSize = true;
-            this.mDelayLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mDelayLabel2.Location = new System.Drawing.Point(1161, 61);
             this.mDelayLabel2.Name = "mDelayLabel2";
             this.mDelayLabel2.Size = new System.Drawing.Size(23, 12);

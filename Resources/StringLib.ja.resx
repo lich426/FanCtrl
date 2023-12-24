@@ -175,7 +175,7 @@
     <value>OSD 使用 (RTSS)</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>英語</value>
+    <value>English</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>エラー</value>
@@ -202,7 +202,7 @@
     <value>ファンの速度</value>
   </data>
   <data name="French" xml:space="preserve">
-    <value>フランス語</value>
+    <value>Français</value>
   </data>
   <data name="Game" xml:space="preserve">
     <value>ゲームモード</value>
@@ -232,7 +232,7 @@
     <value>日本語</value>
   </data>
   <data name="Korean" xml:space="preserve">
-    <value>韓国語</value>
+    <value>한국어</value>
   </data>
   <data name="Kraken_Lighting" xml:space="preserve">
     <value>Kraken 照明</value>
@@ -319,7 +319,7 @@
     <value>実行中</value>
   </data>
   <data name="Russian" xml:space="preserve">
-    <value>ロシア語</value>
+    <value>Русский</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>
@@ -352,7 +352,7 @@
     <value>静音モード</value>
   </data>
   <data name="Spanish" xml:space="preserve">
-    <value>スペイン語</value>
+    <value>español</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
     <value>最小化して実行</value>

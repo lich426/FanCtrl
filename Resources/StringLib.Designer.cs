@@ -313,7 +313,7 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
-        ///   French과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Français과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string French {
             get {
@@ -394,7 +394,7 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
-        ///   Japanese과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   日本語과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Japanese {
             get {
@@ -403,7 +403,7 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
-        ///   Korean과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   한국어과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Korean {
             get {
@@ -664,7 +664,7 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
-        ///   Russian과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Русский과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Russian {
             get {
@@ -763,7 +763,7 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
-        ///   Spanish과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   español과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Spanish {
             get {

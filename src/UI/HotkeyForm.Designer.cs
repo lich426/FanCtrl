@@ -72,9 +72,7 @@ namespace FanCtrl
             // 
             // mModeGameTextBox
             // 
-            this.mModeGameTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.mModeGameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mModeGameTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeGameTextBox.Location = new System.Drawing.Point(264, 138);
             this.mModeGameTextBox.Name = "mModeGameTextBox";
             this.mModeGameTextBox.ReadOnly = true;
@@ -93,9 +91,7 @@ namespace FanCtrl
             // 
             // mModePerformanceTextBox
             // 
-            this.mModePerformanceTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.mModePerformanceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mModePerformanceTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModePerformanceTextBox.Location = new System.Drawing.Point(264, 107);
             this.mModePerformanceTextBox.Name = "mModePerformanceTextBox";
             this.mModePerformanceTextBox.ReadOnly = true;
@@ -114,9 +110,7 @@ namespace FanCtrl
             // 
             // mModeSilenceTextBox
             // 
-            this.mModeSilenceTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.mModeSilenceTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mModeSilenceTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeSilenceTextBox.Location = new System.Drawing.Point(264, 76);
             this.mModeSilenceTextBox.Name = "mModeSilenceTextBox";
             this.mModeSilenceTextBox.ReadOnly = true;
@@ -135,9 +129,7 @@ namespace FanCtrl
             // 
             // mModeNormalTextBox
             // 
-            this.mModeNormalTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.mModeNormalTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mModeNormalTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mModeNormalTextBox.Location = new System.Drawing.Point(264, 47);
             this.mModeNormalTextBox.Name = "mModeNormalTextBox";
             this.mModeNormalTextBox.ReadOnly = true;
@@ -156,9 +148,7 @@ namespace FanCtrl
             // 
             // mEnableFanControlTextBox
             // 
-            this.mEnableFanControlTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.mEnableFanControlTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mEnableFanControlTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mEnableFanControlTextBox.Location = new System.Drawing.Point(264, 18);
             this.mEnableFanControlTextBox.Name = "mEnableFanControlTextBox";
             this.mEnableFanControlTextBox.ReadOnly = true;
@@ -189,9 +179,7 @@ namespace FanCtrl
             // 
             // mEnableOSDTextBox
             // 
-            this.mEnableOSDTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.mEnableOSDTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mEnableOSDTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.mEnableOSDTextBox.Location = new System.Drawing.Point(264, 18);
             this.mEnableOSDTextBox.Name = "mEnableOSDTextBox";
             this.mEnableOSDTextBox.ReadOnly = true;
