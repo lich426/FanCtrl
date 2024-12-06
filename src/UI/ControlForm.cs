@@ -275,6 +275,25 @@ namespace FanCtrl
                 mPresetLoadButton.Font = new Font(fontFamily, 7.0f);
                 mPresetSaveButton.Font = new Font(fontFamily, 7.0f);
             }
+
+            // German
+            else if (OptionManager.getInstance().Language == 6)
+            {
+                mPresetLabel.Left = mPresetLabel.Left - 55;
+                mPresetLoadButton.Left = mPresetLoadButton.Left - 15;
+                mPresetSaveButton.Left = mPresetSaveButton.Left - 15;
+                mUnitLabel.Left = mUnitLabel.Left - 15;
+                mUnitComboBox.Left = mUnitComboBox.Left;
+                mHysLabel.Left = mHysLabel.Left - 10;
+                mHysNumericUpDown.Left = mHysNumericUpDown.Left - 15;
+                mStepCheckBox.Left = mStepCheckBox.Left - 25;
+                mAutoLabel.Left = mAutoLabel.Left - 25;
+                mAutoNumericUpDown.Left = mAutoNumericUpDown.Left - 25;
+                mDelayLabel.Left = mDelayLabel.Left - 40;
+
+                mPresetLoadButton.Font = new Font(fontFamily, 8.0f);
+                mPresetSaveButton.Font = new Font(fontFamily, 8.0f);
+            }
         }
 
         private void initControl()

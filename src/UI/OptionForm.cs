@@ -92,6 +92,7 @@ namespace FanCtrl
             mLanguageComboBox.Items.Add(StringLib.French);
             mLanguageComboBox.Items.Add(StringLib.Spanish);
             mLanguageComboBox.Items.Add(StringLib.Russian);
+            mLanguageComboBox.Items.Add(StringLib.German);
             mLanguageComboBox.SelectedIndex = OptionManager.getInstance().Language;
 
             mThemeComboBox.Items.Add(StringLib.Theme_System);
@@ -143,7 +144,7 @@ namespace FanCtrl
                 mCLCButton.Font = new Font(fontFamily, 7.5f);
                 mRGBnFCButton.Font = new Font(fontFamily, 7.5f);
                 mAnimationCheckBox.Font = new Font(fontFamily, 7.5f);
-                mStartupDelayLabel.Font = new Font(fontFamily, 6.5f);
+                mStartupDelayLabel.Left = mStartupDelayLabel.Left - 25;
             }
             // Russian
             else if (OptionManager.getInstance().Language == 5)
@@ -151,7 +152,16 @@ namespace FanCtrl
                 mKrakenButton.Font = new Font(fontFamily, 7.5f);
                 mCLCButton.Font = new Font(fontFamily, 7.5f);
                 mRGBnFCButton.Font = new Font(fontFamily, 7.5f);
-                mStartupDelayLabel.Font = new Font(fontFamily, 6.5f);
+                mStartupDelayLabel.Left = mStartupDelayLabel.Left - 10;
+            }
+            // German
+            else if (OptionManager.getInstance().Language == 6)
+            {
+                mKrakenButton.Font = new Font(fontFamily, 7.0f);
+                mCLCButton.Font = new Font(fontFamily, 7.0f);
+                mRGBnFCButton.Font = new Font(fontFamily, 7.0f);
+                mAnimationCheckBox.Font = new Font(fontFamily, 8.0f);
+                mStartupDelayLabel.Left = mStartupDelayLabel.Left - 25;
             }
         }
 

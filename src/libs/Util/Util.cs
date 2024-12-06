@@ -187,6 +187,11 @@ namespace FanCtrl
                         Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ru-RU");
                         break;
 
+                    case 6:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("de-DE");
+                        break;
+
                     default:
                         Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
                         Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");

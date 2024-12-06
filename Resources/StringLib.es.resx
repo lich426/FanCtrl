@@ -160,7 +160,7 @@
     <value>Retraso:</value>
   </data>
   <data name="Delay_Time" xml:space="preserve">
-    <value>Retraso (segundos)</value>
+    <value>Retraso(segundos)</value>
   </data>
   <data name="Donate" xml:space="preserve">
     <value>Donar</value>
@@ -395,5 +395,8 @@
   </data>
   <data name="Unit" xml:space="preserve">
     <value>Unidad:</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
   </data>
 </root>

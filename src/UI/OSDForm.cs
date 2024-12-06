@@ -130,6 +130,13 @@ namespace FanCtrl
                 mEnableCheckBox.Font = new Font(fontFamily, 7.2f);
                 mDigitLabel.Left = mDigitLabel.Left - 60;
             }
+            // German
+            else if (OptionManager.getInstance().Language == 6)
+            {
+                mGroupRemoveButton.Font = new Font(fontFamily, 8.5f);
+                mItemRemoveButton.Font = new Font(fontFamily, 8.5f);
+                mDigitLabel.Left = mDigitLabel.Left - 35;
+            }
         }
 
         private void onGroupListViewIndexChanged(object sender, EventArgs e)

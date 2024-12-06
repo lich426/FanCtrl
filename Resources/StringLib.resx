@@ -396,4 +396,7 @@
   <data name="Unit" xml:space="preserve">
     <value>Unit :</value>
   </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
 </root>

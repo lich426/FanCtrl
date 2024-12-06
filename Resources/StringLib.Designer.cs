@@ -331,6 +331,15 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
+        ///   Deutsch과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string German {
+            get {
+                return ResourceManager.GetString("German", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Graph과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Graph {
