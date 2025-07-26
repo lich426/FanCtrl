@@ -122,7 +122,16 @@ namespace FanCtrl.Resources {
                 return ResourceManager.GetString("Change_the_color", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   中文과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string Chinese {
+            get {
+                return ResourceManager.GetString("Chinese", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   CLC Lighting과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>

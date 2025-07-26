@@ -138,6 +138,9 @@
   <data name="Change_the_color" xml:space="preserve">
     <value>Do you want to change the color?</value>
   </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>中文</value>
+  </data>
   <data name="CLC_Lighting" xml:space="preserve">
     <value>CLC Lighting</value>
   </data>

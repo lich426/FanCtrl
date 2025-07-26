@@ -93,6 +93,7 @@ namespace FanCtrl
             mLanguageComboBox.Items.Add(StringLib.Spanish);
             mLanguageComboBox.Items.Add(StringLib.Russian);
             mLanguageComboBox.Items.Add(StringLib.German);
+            mLanguageComboBox.Items.Add(StringLib.Chinese);
             mLanguageComboBox.SelectedIndex = OptionManager.getInstance().Language;
 
             mThemeComboBox.Items.Add(StringLib.Theme_System);

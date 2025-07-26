@@ -31,7 +31,7 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - NZXT RGB & Fan Controller : NZXT RGB & Fan controller support<br>
 - HWiNFO : Communicated with [HWiNFO][17] to get sensor temperature and fan rpm ([Link][18]) <br>
 - liquidctl : [liquidctl][19] support<br>
-- Language : English, Korean, Japanese<br>
+- Language : English, Korean, Japanese, Chinese, German, Russian, Spanish<br>
 - Tray icon animation : tray icon animation starts when checked for automatic fan control activation.<br>
 - Fahrenheit : set the temperature to Fahrenheit.<br>
 - Start minimized : starts with minimal when the program runs.<br>
