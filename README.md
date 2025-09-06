@@ -79,6 +79,11 @@ How to use : [Link][20]
 ## Plugins
 How to use : [Link][21]
 
+## Windows Defender Exclusions
+<img width="1026" height="802" alt="1" src="https://github.com/user-attachments/assets/ddf4fcda-34b5-4a9e-819c-bdafc5b47d94" /><br>
+- Windows Security - Virus & threat protection - Manage settings - Add or remove exclusions - Add an exclusion - Add FanCtrl folder
+
+
 ## Using external Libraries
 Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
