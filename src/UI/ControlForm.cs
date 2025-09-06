@@ -294,6 +294,13 @@ namespace FanCtrl
                 mPresetLoadButton.Font = new Font(fontFamily, 8.0f);
                 mPresetSaveButton.Font = new Font(fontFamily, 8.0f);
             }
+
+            // Chinese
+            else if (OptionManager.getInstance().Language == 7)
+            {
+                mHysNumericUpDown.Left = mHysNumericUpDown.Left - 30;
+                mStepCheckBox.Left = mStepCheckBox.Left - 15;
+            }
         }
 
         private void initControl()

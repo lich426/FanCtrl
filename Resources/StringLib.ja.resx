@@ -163,7 +163,7 @@
     <value>遅延時間(秒) :</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>寄付 (Kakao Pay)</value>
+    <value>寄付</value>
   </data>
   <data name="Duplicate_Key" xml:space="preserve">
     <value>重複するキーがあるため、データを追加できません。</value>
@@ -398,5 +398,8 @@
   </data>
   <data name="German" xml:space="preserve">
     <value>Deutsch</value>
+  </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>中文</value>
   </data>
 </root>

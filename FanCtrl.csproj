@@ -30,7 +30,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.7.4.0</ApplicationVersion>
+    <ApplicationVersion>1.7.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -354,6 +354,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StringLib.es.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StringLib.zh.resx" />
     <EmbeddedResource Include="src\UI\ControlForm.resx">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -471,12 +472,14 @@ mkdir "$(TargetDir)locale\ko"
 mkdir "$(TargetDir)locale\es"
 mkdir "$(TargetDir)locale\ru"
 mkdir "$(TargetDir)locale\de"
+mkdir "$(TargetDir)locale\zh"
 copy /Y "$(TargetDir)fr\*.*" "$(TargetDir)locale\fr"
 copy /Y "$(TargetDir)ja\*.*" "$(TargetDir)locale\ja"
 copy /Y "$(TargetDir)ko\*.*" "$(TargetDir)locale\ko"
 copy /Y "$(TargetDir)es\*.*" "$(TargetDir)locale\es"
 copy /Y "$(TargetDir)ru\*.*" "$(TargetDir)locale\ru"
 copy /Y "$(TargetDir)de\*.*" "$(TargetDir)locale\de"
+copy /Y "$(TargetDir)zh\*.*" "$(TargetDir)locale\zh"
 timeout 1 &gt; NUL
 rmdir /S /Q "$(TargetDir)fr"
 rmdir /S /Q "$(TargetDir)ja"
@@ -484,6 +487,7 @@ rmdir /S /Q "$(TargetDir)ko"
 rmdir /S /Q "$(TargetDir)es"
 rmdir /S /Q "$(TargetDir)ru"
 rmdir /S /Q "$(TargetDir)de"
+rmdir /S /Q "$(TargetDir)zh"
 del $(TargetName).pdb</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

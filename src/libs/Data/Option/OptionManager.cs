@@ -232,6 +232,14 @@ namespace FanCtrl
             {
                 return 5;
             }
+            else if (name.CompareTo("de") == 0)
+            {
+                return 6;
+            }
+            else if (name.CompareTo("zh") == 0)
+            {
+                return 7;
+            }
             else
             {
                 return 0;

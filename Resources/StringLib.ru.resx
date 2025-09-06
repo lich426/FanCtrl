@@ -399,4 +399,7 @@
   <data name="German" xml:space="preserve">
     <value>Deutsch</value>
   </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>中文</value>
+  </data>
 </root>

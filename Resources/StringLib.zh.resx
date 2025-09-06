@@ -118,115 +118,115 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Hinzufügen</value>
+    <value>添加</value>
   </data>
   <data name="Align_digits" xml:space="preserve">
-    <value>Ziffern ausrichten :</value>
+    <value>数字位数：</value>
   </data>
   <data name="Apply" xml:space="preserve">
-    <value>Anwenden</value>
+    <value>应用</value>
   </data>
   <data name="Auto" xml:space="preserve">
-    <value>Auto :</value>
+    <value>自动：</value>
   </data>
   <data name="Auto_Fan_Control" xml:space="preserve">
-    <value>Auto Lüftersteuerung</value>
+    <value>自动风扇控制</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Abbrechen</value>
+    <value>取消</value>
   </data>
   <data name="Change_the_color" xml:space="preserve">
-    <value>Möchten Sie die Farbeinstellung ändern?</value>
+    <value>您想要更改颜色吗？</value>
   </data>
   <data name="CLC_Lighting" xml:space="preserve">
-    <value>CLC Beleuchtung</value>
+    <value>CLC照明</value>
   </data>
   <data name="Clients" xml:space="preserve">
-    <value>Dienste</value>
+    <value>客户端</value>
   </data>
   <data name="Color" xml:space="preserve">
-    <value>Farbe</value>
+    <value>颜色</value>
   </data>
   <data name="Command" xml:space="preserve">
-    <value>Befehl</value>
+    <value>命令</value>
   </data>
   <data name="Control" xml:space="preserve">
-    <value>Steuerung</value>
+    <value>控制</value>
   </data>
   <data name="Default_color" xml:space="preserve">
-    <value>Standardfarbe</value>
+    <value>默认颜色</value>
   </data>
   <data name="Delay" xml:space="preserve">
-    <value>Verzögerung :</value>
+    <value>延迟：</value>
   </data>
   <data name="Delay_Time" xml:space="preserve">
-    <value>Verzögerung(Sek.)</value>
+    <value>延迟（秒）：</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Spenden</value>
+    <value>捐赠</value>
   </data>
   <data name="Duplicate_Key" xml:space="preserve">
-    <value>Daten können nicht hinzugefügt werden, da ein doppelter Schlüssel vorhanden ist!</value>
+    <value>无法添加数据，因为存在重复的键！</value>
   </data>
   <data name="Enable_automatic_fan_control" xml:space="preserve">
-    <value>Automatische Lüftersteuerung aktivieren</value>
+    <value>启用自动风扇控制</value>
   </data>
   <data name="Enable_OSD" xml:space="preserve">
-    <value>OSD aktivieren (RTSS)</value>
+    <value>启用OSD（RTSS）</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>English</value>
+    <value>英语</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Fehler</value>
+    <value>错误</value>
   </data>
   <data name="ETC" xml:space="preserve">
-    <value>Usw.</value>
+    <value>ETC</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Beenden</value>
+    <value>退出</value>
   </data>
   <data name="Fahrenheit" xml:space="preserve">
-    <value>Fahrenheit (°F)</value>
+    <value>华氏度（°F）</value>
   </data>
   <data name="Failed_to_read_preset_file" xml:space="preserve">
-    <value>Beim Lesen der Einstellungsdatei ist ein Fehler aufgetreten!</value>
+    <value>无法读取预设文件！</value>
   </data>
   <data name="Fan" xml:space="preserve">
-    <value>Lüfter</value>
+    <value>风扇</value>
   </data>
   <data name="Fan_control" xml:space="preserve">
-    <value>Lüfter-Kontrolle</value>
+    <value>风扇控制</value>
   </data>
   <data name="Fan_speed" xml:space="preserve">
-    <value>Lüftergeschwindigkeit</value>
+    <value>风扇速度</value>
   </data>
   <data name="French" xml:space="preserve">
     <value>Français</value>
   </data>
   <data name="Game" xml:space="preserve">
-    <value>Spiel</value>
+    <value>游戏模式</value>
   </data>
   <data name="Graph" xml:space="preserve">
-    <value>Diagramm</value>
+    <value>图表</value>
   </data>
   <data name="Groups" xml:space="preserve">
-    <value>Gruppen</value>
+    <value>分组</value>
   </data>
   <data name="HotKey" xml:space="preserve">
-    <value>Tastenkombination</value>
+    <value>快捷键</value>
   </data>
   <data name="Hysteresis" xml:space="preserve">
-    <value>Hysterese:</value>
+    <value>滞后：</value>
   </data>
   <data name="Interval" xml:space="preserve">
-    <value>Intervall</value>
+    <value>间隔</value>
   </data>
   <data name="IP_address" xml:space="preserve">
-    <value>IP-Adresse</value>
+    <value>IP地址</value>
   </data>
   <data name="Items" xml:space="preserve">
-    <value>Elemente</value>
+    <value>项目</value>
   </data>
   <data name="Japanese" xml:space="preserve">
     <value>日本語</value>
@@ -235,166 +235,166 @@
     <value>한국어</value>
   </data>
   <data name="Kraken_Lighting" xml:space="preserve">
-    <value>Kraken Beleuchtung</value>
+    <value>Kraken Lighting</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Sprache :</value>
+    <value>语言：</value>
   </data>
   <data name="Library" xml:space="preserve">
-    <value>Bibliothek</value>
+    <value>库</value>
   </data>
   <data name="Lighting" xml:space="preserve">
-    <value>Beleuchtung</value>
+    <value>照明</value>
   </data>
   <data name="liquidctl_Setting" xml:space="preserve">
-    <value>Liquidctl Einstellung</value>
+    <value>liquidctl设置</value>
   </data>
   <data name="Load" xml:space="preserve">
-    <value>Laden</value>
+    <value>加载</value>
   </data>
   <data name="Localize" xml:space="preserve">
-    <value>de</value>
+    <value>zh</value>
   </data>
   <data name="Location" xml:space="preserve">
-    <value>Standort</value>
+    <value>位置</value>
   </data>
   <data name="Made1" xml:space="preserve">
-    <value>Made by Lich</value>
+    <value>制作者：Lich</value>
   </data>
   <data name="Made2" xml:space="preserve">
     <value>(lich426@gmail.com)</value>
   </data>
   <data name="Mode" xml:space="preserve">
-    <value>Modus</value>
+    <value>模式</value>
   </data>
   <data name="Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>普通模式</value>
   </data>
   <data name="Not_Match" xml:space="preserve">
-    <value>Die "hardware and Control.json" Datei wurde nicht gefunden!</value>
+    <value>硬件与Control.json文件不匹配！</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>确定</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Öffnen</value>
+    <value>打开</value>
   </data>
   <data name="Option" xml:space="preserve">
-    <value>Option</value>
+    <value>选项</value>
   </data>
   <data name="OptionChange" xml:space="preserve">
-    <value>Möchten Sie die Bibliothek ändern?</value>
+    <value>您想要更改库吗？</value>
   </data>
   <data name="OptionReset" xml:space="preserve">
-    <value>Möchten Sie wirklich zurücksetzen?</value>
+    <value>您想要重置吗？</value>
   </data>
   <data name="Performance" xml:space="preserve">
-    <value>Leistung</value>
+    <value>性能模式</value>
   </data>
   <data name="Plugin" xml:space="preserve">
-    <value>Plugin</value>
+    <value>插件</value>
   </data>
   <data name="Port" xml:space="preserve">
-    <value>Port :</value>
+    <value>端口：</value>
   </data>
   <data name="Port_number" xml:space="preserve">
-    <value>Port</value>
+    <value>端口</value>
   </data>
   <data name="Preset" xml:space="preserve">
-    <value>Voreinstellung :</value>
+    <value>预设：</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Neu laden</value>
+    <value>重新加载</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Entfernen</value>
+    <value>移除</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Zurücksetzen</value>
+    <value>重置</value>
   </data>
   <data name="RGBnFC_Lighting" xml:space="preserve">
-    <value>NZXT RGB＆Lüftersteuerung-Beleuchtung</value>
+    <value>NZXT RGB和风扇控制器照明</value>
   </data>
   <data name="Running" xml:space="preserve">
-    <value>Läuft</value>
+    <value>运行中</value>
   </data>
   <data name="Russian" xml:space="preserve">
     <value>Русский</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Speichern</value>
+    <value>保存</value>
   </data>
   <data name="Sensor" xml:space="preserve">
-    <value>Sensor</value>
+    <value>传感器</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Server</value>
+    <value>服务器</value>
   </data>
   <data name="Server_Start" xml:space="preserve">
-    <value>Start</value>
+    <value>启动</value>
   </data>
   <data name="Server_Stop" xml:space="preserve">
-    <value>Stop</value>
+    <value>停止</value>
   </data>
   <data name="Setting" xml:space="preserve">
-    <value>Einstellung</value>
+    <value>设置</value>
   </data>
   <data name="Set_color" xml:space="preserve">
-    <value>Farbauswahl</value>
+    <value>设置颜色</value>
   </data>
   <data name="Show" xml:space="preserve">
-    <value>Zeigen</value>
+    <value>显示</value>
   </data>
   <data name="Show_system_time" xml:space="preserve">
-    <value>Zeige Systemzeit</value>
+    <value>显示系统时间</value>
   </data>
   <data name="Silence" xml:space="preserve">
-    <value>Leise</value>
+    <value>静音模式</value>
   </data>
   <data name="Spanish" xml:space="preserve">
     <value>español</value>
   </data>
   <data name="Start_minimized" xml:space="preserve">
-    <value>Starte minimiert</value>
+    <value>启动时最小化</value>
   </data>
   <data name="Start_with_Windows" xml:space="preserve">
-    <value>Starte mit Windows</value>
+    <value>Windows开机启动</value>
   </data>
   <data name="Step" xml:space="preserve">
-    <value>Schritt</value>
+    <value>阶跃</value>
   </data>
   <data name="Stopped" xml:space="preserve">
-    <value>Angehalten</value>
+    <value>已停止</value>
   </data>
   <data name="Target_Temp" xml:space="preserve">
-    <value>Ziel-Temperatursensor</value>
+    <value>目标温度传感器</value>
   </data>
   <data name="Temperature" xml:space="preserve">
-    <value>Temperatur</value>
+    <value>温度</value>
   </data>
   <data name="Theme" xml:space="preserve">
-    <value>Theme :</value>
+    <value>主题：</value>
   </data>
   <data name="Theme_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>暗色主题</value>
   </data>
   <data name="Theme_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>亮色主题</value>
   </data>
   <data name="Theme_System" xml:space="preserve">
-    <value>System</value>
+    <value>跟随系统</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>FanCtrl</value>
   </data>
   <data name="Tray_Icon_animation" xml:space="preserve">
-    <value>Taskleisten-Symbol Animation</value>
+    <value>托盘图标动画</value>
   </data>
   <data name="Unable_to_open_socket" xml:space="preserve">
-    <value>Socket kann nicht geöffnet werden!</value>
+    <value>无法打开套接字！</value>
   </data>
   <data name="Unit" xml:space="preserve">
-    <value>Einheit :</value>
+    <value>单位：</value>
   </data>
   <data name="German" xml:space="preserve">
     <value>Deutsch</value>

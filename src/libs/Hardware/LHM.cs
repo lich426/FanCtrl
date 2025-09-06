@@ -31,6 +31,10 @@ namespace FanCtrl
             mComputer.IsGpuEnabled = OptionManager.getInstance().IsLHMGpu;
             mComputer.IsStorageEnabled = OptionManager.getInstance().IsLHMStorage;
             mComputer.IsMemoryEnabled = OptionManager.getInstance().IsLHMMemory;
+            mComputer.IsBatteryEnabled = false;
+            mComputer.IsNetworkEnabled = false;
+            mComputer.IsRing0Enabled = true;
+            mComputer.IsPsuEnabled = false;
 
             mComputer.Open();
             mComputer.Accept(this);
