@@ -402,4 +402,10 @@
   <data name="Chinese" xml:space="preserve">
     <value>中文</value>
   </data>
+  <data name="PawnIO_update" xml:space="preserve">
+    <value>PawnIO est dépassé, voulez-vous le mettre à jour ?</value>
+  </data>
+  <data name="PawnIO_install" xml:space="preserve">
+    <value>PawnIO n'est pas installé, voulez-vous l'installer ?</value>
+  </data>
 </root>

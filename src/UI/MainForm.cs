@@ -1,6 +1,7 @@
 ﻿using DarkUI.Config;
 using DarkUI.Controls;
 using FanCtrl.Resources;
+using LibreHardwareMonitor.PawnIo;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,22 @@ namespace FanCtrl
             }
 
             Util.setLanguage(OptionManager.getInstance().Language);
+
+            if (PawnIo.IsInstalled)
+            {
+                if (PawnIo.Version() < new Version(2, 0, 0, 0))
+                {
+                    DialogResult result = MessageBox.Show(StringLib.PawnIO_update, "FanCtrl", MessageBoxButtons.OKCancel);
+                    if (result == DialogResult.OK)
+                        Util.InstallPawnIO();
+                }
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show(StringLib.PawnIO_install, "FanCtrl", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                    Util.InstallPawnIO();
+            }
 
             InitializeComponent();
             this.localizeComponent();

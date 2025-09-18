@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -206,6 +208,34 @@ namespace FanCtrl
             catch
             {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            }
+        }
+
+        public static void InstallPawnIO()
+        {
+            string path = ExtractPawnIO();
+            if (!string.IsNullOrEmpty(path))
+            {
+                var process = Process.Start(new ProcessStartInfo(path, "-install"));
+                process?.WaitForExit();
+                File.Delete(path);
+            }
+        }
+
+        public static string ExtractPawnIO()
+        {
+            string destination = Path.Combine(Directory.GetCurrentDirectory(), "PawnIO_setup.exe");
+            try
+            {
+                Stream resourceStream = typeof(MainForm).Assembly.GetManifestResourceStream("FanCtrl.Resources.PawnIO_setup.exe");
+                FileStream fileStream = new FileStream(destination, FileMode.Create, FileAccess.Write);
+                resourceStream.CopyTo(fileStream);
+                fileStream.Close();
+                return destination;
+            }
+            catch
+            {
+                return null;
             }
         }
     }

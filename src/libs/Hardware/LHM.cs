@@ -33,7 +33,6 @@ namespace FanCtrl
             mComputer.IsMemoryEnabled = OptionManager.getInstance().IsLHMMemory;
             mComputer.IsBatteryEnabled = false;
             mComputer.IsNetworkEnabled = false;
-            mComputer.IsRing0Enabled = true;
             mComputer.IsPsuEnabled = false;
 
             mComputer.Open();
@@ -53,8 +52,21 @@ namespace FanCtrl
             }
         }
 
+        private string getSensorID(string id, Dictionary<string, HardwareDevice> map)
+        {
+            int index = 2;
+            string id2 = id;
+            while (map.ContainsKey(id2) == true)
+            {
+                id2 = string.Format("{0}({1})", id, index);
+                index++;
+            }
+            return id2.Length == 0 ? id : id2;
+        }
+
         public void createTemp(ref List<HardwareDevice> deviceList)
         {
+            var tempMap = new Dictionary<string, HardwareDevice>();
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Count; i++)
             {
@@ -68,9 +80,12 @@ namespace FanCtrl
                         continue;
 
                     string id = string.Format("{0}{1}", mIDPrefixTemperature, sensorArray[j].Identifier.ToString());
+                    id = this.getSensorID(id, tempMap);
+
                     string name = (sensorArray[j].Name.Length > 0) ? sensorArray[j].Name : "Temperature";
                     var sensor = new LHMTemp(id, sensorArray[j], name);
                     device.addDevice(sensor);
+                    tempMap.Add(id, device);
                 }
 
                 var subHardwareArray = hardwareArray[i].SubHardware;
@@ -83,9 +98,12 @@ namespace FanCtrl
                             continue;
 
                         string id = string.Format("{0}{1}", mIDPrefixTemperature, subSensorList[k].Identifier.ToString());
+                        id = this.getSensorID(id, tempMap);
+
                         string name = (subSensorList[k].Name.Length > 0) ? subSensorList[k].Name : "Temperature";
                         var sensor = new LHMTemp(id, subSensorList[k], name);
                         device.addDevice(sensor);
+                        tempMap.Add(id, device);
                     }
                 }
 
@@ -98,6 +116,7 @@ namespace FanCtrl
 
         public void createFan(ref List<HardwareDevice> deviceList)
         {
+            var tempMap = new Dictionary<string, HardwareDevice>();
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Count; i++)
             {
@@ -111,9 +130,12 @@ namespace FanCtrl
                         continue;
 
                     string id = string.Format("{0}{1}", mIDPrefixFan, sensorArray[j].Identifier.ToString());
+                    id = this.getSensorID(id, tempMap);
+
                     string name = (sensorArray[j].Name.Length > 0) ? sensorArray[j].Name : "Fan";
                     var sensor = new LHMFanSpeed(id, sensorArray[j], name);
                     device.addDevice(sensor);
+                    tempMap.Add(id, device);
                 }
 
                 var subHardwareArray = hardwareArray[i].SubHardware;
@@ -126,9 +148,12 @@ namespace FanCtrl
                             continue;
 
                         string id = string.Format("{0}{1}", mIDPrefixFan, subSensorList[k].Identifier.ToString());
+                        id = this.getSensorID(id, tempMap);
+
                         string name = (subSensorList[k].Name.Length > 0) ? subSensorList[k].Name : "Fan";
                         var sensor = new LHMFanSpeed(id, subSensorList[k], name);
                         device.addDevice(sensor);
+                        tempMap.Add(id, device);
                     }
                 }
 
@@ -141,6 +166,7 @@ namespace FanCtrl
 
         public void createControl(ref List<HardwareDevice> deviceList)
         {
+            var tempMap = new Dictionary<string, HardwareDevice>();
             var hardwareArray = mComputer.Hardware;
             for (int i = 0; i < hardwareArray.Count; i++)
             {
@@ -154,9 +180,12 @@ namespace FanCtrl
                         continue;
 
                     string id = string.Format("{0}{1}", mIDPrefixControl, sensorArray[j].Identifier.ToString());
+                    id = this.getSensorID(id, tempMap);
+
                     string name = (sensorArray[j].Name.Length > 0) ? sensorArray[j].Name : "Control";
                     var sensor = new LHMControl(id, sensorArray[j], name);
                     device.addDevice(sensor);
+                    tempMap.Add(id, device);
                 }
 
                 var subHardwareArray = hardwareArray[i].SubHardware;
@@ -169,9 +198,12 @@ namespace FanCtrl
                             continue;
 
                         string id = string.Format("{0}{1}", mIDPrefixControl, subSensorList[k].Identifier.ToString());
+                        id = this.getSensorID(id, tempMap);
+
                         string name = (subSensorList[k].Name.Length > 0) ? subSensorList[k].Name : "Control";
                         var sensor = new LHMControl(id, subSensorList[k], name);
                         device.addDevice(sensor);
+                        tempMap.Add(id, device);
                     }
                 }
 

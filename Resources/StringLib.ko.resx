@@ -402,4 +402,10 @@
   <data name="Chinese" xml:space="preserve">
     <value>中文</value>
   </data>
+  <data name="PawnIO_update" xml:space="preserve">
+    <value>PawnIO 드라이버가 오래되었습니다. 업데이트 하시겠습니까?</value>
+  </data>
+  <data name="PawnIO_install" xml:space="preserve">
+    <value>PawnIO 드라이버가 설치되지 않았습니다. 설치 하시겠습니까?</value>
+  </data>
 </root>

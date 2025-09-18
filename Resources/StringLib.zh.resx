@@ -175,7 +175,7 @@
     <value>启用OSD（RTSS）</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>英语</value>
+    <value>English</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>错误</value>
@@ -401,5 +401,11 @@
   </data>
   <data name="Chinese" xml:space="preserve">
     <value>中文</value>
+  </data>
+  <data name="PawnIO_update" xml:space="preserve">
+    <value>PawnIO 已过时，您想更新它吗？</value>
+  </data>
+  <data name="PawnIO_install" xml:space="preserve">
+    <value>PawnIO 尚未安装，是否要安装？</value>
   </data>
 </root>

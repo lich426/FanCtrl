@@ -592,6 +592,24 @@ namespace FanCtrl.Resources {
         }
         
         /// <summary>
+        ///   PawnIO is not installed, do you want to install it?과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string PawnIO_install {
+            get {
+                return ResourceManager.GetString("PawnIO_install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PawnIO is outdated, do you want to update it?과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        public static string PawnIO_update {
+            get {
+                return ResourceManager.GetString("PawnIO_update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Performance과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         public static string Performance {
