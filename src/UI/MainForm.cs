@@ -68,7 +68,7 @@ namespace FanCtrl
 
             if (PawnIo.IsInstalled)
             {
-                if (PawnIo.Version() < new Version(2, 0, 0, 0))
+                if (PawnIo.Version < new Version(2, 0, 0, 0))
                 {
                     DialogResult result = MessageBox.Show(StringLib.PawnIO_update, "FanCtrl", MessageBoxButtons.OKCancel);
                     if (result == DialogResult.OK)
