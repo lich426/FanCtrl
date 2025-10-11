@@ -37,8 +37,11 @@ namespace FanCtrl
         // EVGA CLC
         CLC = 0xb200,
 
-        // NZXT RGB & Fan Controller
+        // NZXT RGB & Fan Controller V1
         RGBAndFanController = 0x2009,
+
+        // NZXT RGB & Fan Controller V2 / Smart Device V2
+        RGBAndFanControllerV2 = 0x2019,
     }
 
     public class USBController
