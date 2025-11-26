@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LibreHardwareMonitor.Hardware;
-
+﻿
 namespace FanCtrl
 {
     public class PluginControl : BaseControl

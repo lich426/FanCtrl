@@ -31,7 +31,6 @@ namespace FanCtrl
 
         // Mutex
         private Mutex mISABusMutex = null;
-        private Mutex mSMBusMutex = null;
         private Mutex mPCIMutex = null;
 
         // LibreHardwareMonitor
@@ -95,9 +94,6 @@ namespace FanCtrl
 
             string mutexName = "Global\\Access_ISABUS.HTP.Method";
             this.createBusMutex(mutexName, ref mISABusMutex);
-
-            mutexName = "Global\\Access_SMBUS.HTP.Method";
-            this.createBusMutex(mutexName, ref mSMBusMutex);
 
             mutexName = "Global\\Access_PCI";
             this.createBusMutex(mutexName, ref mPCIMutex);
@@ -227,39 +223,6 @@ namespace FanCtrl
                 }
                 catch { }
                 this.unlockBus();
-            }
-
-            // DIMM thermal sensor
-            if (OptionManager.getInstance().IsDimm == true)
-            {
-                this.lockSMBus(0);
-                if (SMBusController.open() == true)
-                {
-                    int num = 1;
-                    var device = new HardwareDevice("DIMM");
-
-                    // 0x18 ~ 0x1F
-                    for (byte addr = 0x18; addr < 0x20; addr++)
-                    {
-                        byte data = SMBusController.smbusDetect(addr);
-                        if (data == addr)
-                        {
-                            var id = string.Format("DIMM/0/{0}", addr);
-                            var temp = new DimmTemp(id, "DIMM #" + num++, addr);
-                            temp.LockBus += lockSMBus;
-                            temp.UnlockBus += unlockSMBus;
-                            device.addDevice(temp);
-                        }
-                        Util.sleep(10);
-                    }
-
-                    if (device.DeviceList.Count > 0)
-                    {
-                        var tempList = TempList[(int)LIBRARY_TYPE.DIMM];
-                        tempList.Add(device);
-                    }
-                }
-                this.unlockSMBus();
             }
 
             // NZXT Kraken
@@ -744,18 +707,10 @@ namespace FanCtrl
             OSDSensorList.Clear();
             OSDSensorMap.Clear();
 
-            SMBusController.close();
-
             if (mISABusMutex != null)
             {
                 mISABusMutex.Close();
                 mISABusMutex = null;
-            }
-
-            if (mSMBusMutex != null)
-            {
-                mSMBusMutex.Close();
-                mSMBusMutex = null;
             }
 
             if (mPCIMutex != null)
@@ -858,28 +813,7 @@ namespace FanCtrl
             }
             catch { }
         }
-
-        private bool lockSMBus(int ms)
-        {
-            try
-            {
-                if (ms <= 0)
-                    return mSMBusMutex.WaitOne();
-                return mSMBusMutex.WaitOne(ms, false);
-            }
-            catch { }            
-            return false;
-        }
-
-        private void unlockSMBus()
-        {
-            try
-            {
-                mSMBusMutex.ReleaseMutex();
-            }
-            catch { }
-        }        
-        
+                
         private void createOSDSensor()
         {
             // Temp

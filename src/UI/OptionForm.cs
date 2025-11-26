@@ -1,16 +1,7 @@
 ﻿using DarkUI.Forms;
 using FanCtrl.Resources;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FanCtrl
@@ -68,8 +59,6 @@ namespace FanCtrl
             }
 
             mNvApiCheckBox.Checked = OptionManager.getInstance().IsNvAPIWrapper;
-
-            mDimmCheckBox.Checked = OptionManager.getInstance().IsDimm;
             
             mKrakenCheckBox.Checked = OptionManager.getInstance().IsKraken;
             mKrakenButton.Enabled = (HardwareManager.getInstance().KrakenList.Count > 0);
@@ -200,7 +189,6 @@ namespace FanCtrl
                 (mLHMCheckBox.Checked == true && optionManager.IsLHMMemory != mLHMMemoryCheckBox.Checked) ||
 
                 (optionManager.IsNvAPIWrapper != mNvApiCheckBox.Checked) ||
-                (optionManager.IsDimm != mDimmCheckBox.Checked) ||
                 (optionManager.IsKraken != mKrakenCheckBox.Checked) ||
                 (optionManager.IsCLC != mCLCCheckBox.Checked) ||
                 (optionManager.IsRGBnFC != mRGBnFCCheckBox.Checked) ||
@@ -228,9 +216,7 @@ namespace FanCtrl
             optionManager.IsLHMMemory = mLHMMemoryCheckBox.Checked;
 
             optionManager.IsNvAPIWrapper = mNvApiCheckBox.Checked;
-
-            optionManager.IsDimm = mDimmCheckBox.Checked;
-            
+                        
             optionManager.IsKraken = mKrakenCheckBox.Checked;
 
             optionManager.IsCLC = mCLCCheckBox.Checked;

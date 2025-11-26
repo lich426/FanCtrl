@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Collections.Generic;
 using LibreHardwareMonitor.Hardware;
 
 namespace FanCtrl

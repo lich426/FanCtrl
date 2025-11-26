@@ -7,12 +7,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security;
 using System.Security.Principal;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
-using Action = Microsoft.Win32.TaskScheduler.Action;
 
 namespace FanCtrl
 {

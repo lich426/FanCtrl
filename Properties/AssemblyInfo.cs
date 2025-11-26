@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // 어셈블리에 대한 일반 정보는 다음 특성 집합을 통해 
@@ -31,6 +30,6 @@ using System.Runtime.InteropServices;
 //
 // 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 번호를
 // 기본값으로 할 수 있습니다.
-[assembly: AssemblyVersion("1.7.7")]
-[assembly: AssemblyFileVersion("1.7.7")]
-[assembly: AssemblyInformationalVersion("1.7.7")]
+[assembly: AssemblyVersion("1.7.8")]
+[assembly: AssemblyFileVersion("1.7.8")]
+[assembly: AssemblyInformationalVersion("1.7.8")]

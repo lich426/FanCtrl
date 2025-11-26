@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Newtonsoft.Json;
+﻿using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using System.Threading;
 using Microsoft.Win32;
-using System.Runtime.InteropServices;
 
 namespace FanCtrl
 {
@@ -44,9 +37,6 @@ namespace FanCtrl
 
         // NvApiWrapper
         public bool IsNvAPIWrapper { get; set; }
-
-        // Dimm
-        public bool IsDimm { get; set; }
 
         // NZXT Kraken X2, X3
         public bool IsKraken { get; set; }
@@ -116,7 +106,6 @@ namespace FanCtrl
             IsLHMMemory = true;
 
             IsNvAPIWrapper = false;
-            IsDimm = false;
             IsKraken = false;
             IsCLC = false;
             IsRGBnFC = false;
@@ -149,7 +138,6 @@ namespace FanCtrl
                 IsLHMMemory = (rootObject.ContainsKey("IsLHMMemory") == true) ? rootObject.Value<bool>("IsLHMMemory") : true;
 
                 IsNvAPIWrapper = (rootObject.ContainsKey("IsNvAPIWrapper") == true) ? rootObject.Value<bool>("IsNvAPIWrapper") : false;
-                IsDimm = (rootObject.ContainsKey("IsDimm") == true) ? rootObject.Value<bool>("IsDimm") : false;
                 IsKraken = (rootObject.ContainsKey("IsKraken") == true) ? rootObject.Value<bool>("IsKraken") : false;
                 IsCLC = (rootObject.ContainsKey("IsCLC") == true) ? rootObject.Value<bool>("IsCLC") : false;
                 IsRGBnFC = (rootObject.ContainsKey("IsRGBnFC") == true) ? rootObject.Value<bool>("IsRGBnFC") : false;
@@ -187,8 +175,7 @@ namespace FanCtrl
                 rootObject["IsLHMStorage"] = IsLHMStorage;
                 rootObject["IsLHMMemory"] = IsLHMMemory;
 
-                rootObject["IsNvAPIWrapper"] = IsNvAPIWrapper;
-                rootObject["IsDimm"] = IsDimm;                
+                rootObject["IsNvAPIWrapper"] = IsNvAPIWrapper;         
                 rootObject["IsKraken"] = IsKraken;
                 rootObject["IsCLC"] = IsCLC;
                 rootObject["IsRGBnFC"] = IsRGBnFC;

@@ -30,7 +30,7 @@
     <PublisherName>Lich</PublisherName>
     <SuiteName>FanCtrl</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.7.7.0</ApplicationVersion>
+    <ApplicationVersion>1.7.8.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -168,16 +168,10 @@
       <DependentUpon>DonateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\libs\Controller\HidUSBController.cs" />
-    <Compile Include="src\libs\Controller\Kernel\AdvApi32.cs" />
-    <Compile Include="src\libs\Controller\Kernel\Kernel32.cs" />
-    <Compile Include="src\libs\Controller\Kernel\KernelDriver.cs" />
-    <Compile Include="src\libs\Controller\Kernel\Ring0.cs" />
     <Compile Include="src\libs\Controller\OSDController.cs" />
     <Compile Include="src\libs\Controller\ClientConnectorController.cs" />
     <Compile Include="src\libs\Controller\SiUSBController.cs" />
     <Compile Include="src\libs\Controller\SiUSBXp.cs" />
-    <Compile Include="src\libs\Controller\SMbusAmd.cs" />
-    <Compile Include="src\libs\Controller\SMBusIntel.cs" />
     <Compile Include="src\libs\Controller\ServerController.cs" />
     <Compile Include="src\libs\Controller\WinUSBController.cs" />
     <Compile Include="src\libs\Data\Control\ControlManager.cs" />
@@ -230,7 +224,6 @@
     <Compile Include="src\libs\Hardware\Sensor\CLCFanSpeed.cs" />
     <Compile Include="src\libs\Hardware\Sensor\CLCLiquidTemp.cs" />
     <Compile Include="src\libs\Hardware\Sensor\CLCPumpSpeed.cs" />
-    <Compile Include="src\libs\Hardware\Sensor\DimmTemp.cs" />
     <Compile Include="src\libs\Hardware\Sensor\NvAPIFanSpeed.cs" />
     <Compile Include="src\libs\Hardware\Sensor\NvAPITemp.cs" />
     <Compile Include="src\libs\Data\Option\OptionManager.cs" />
@@ -239,7 +232,6 @@
     <Compile Include="src\libs\Hardware\Sensor\KrakenLiquidTemp.cs" />
     <Compile Include="src\libs\Hardware\Sensor\KrakenPumpSpeed.cs" />
     <Compile Include="src\libs\Data\Option\StartupControl.cs" />
-    <Compile Include="src\libs\Controller\SMBusController.cs" />
     <Compile Include="src\libs\Controller\USBController.cs" />
     <Compile Include="src\libs\Hardware\OSD\OSDSensor.cs" />
     <Compile Include="src\libs\Hardware\Sensor\RGBnFCFanSpeed.cs" />
