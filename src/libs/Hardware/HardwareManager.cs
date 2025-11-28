@@ -479,26 +479,36 @@ namespace FanCtrl
                     var fanDevice = new HardwareDevice("NZXT RGB & Fan Controller");
                     var controlDevice = new HardwareDevice("NZXT RGB & Fan Controller");
                     uint num = 1;
-                    uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, USBProductID.RGBAndFanController);
-                    for (uint i = 0; i < devCount; i++)
+
+                    // Support both V1 (0x2009) and V2 (0x2019) RGB & Fan Controllers
+                    USBProductID[] supportedProductIDs = { 
+                        USBProductID.RGBAndFanController,     // V1 device
+                        USBProductID.RGBAndFanControllerV2    // V2 / Smart Device V2
+                    };
+
+                    foreach (var productID in supportedProductIDs)
                     {
-                        var rgb = new RGBnFC();
-                        if (rgb.start(i) == true)
+                        uint devCount = HidUSBController.getDeviceCount(USBVendorID.NZXT, productID);
+                        for (uint i = 0; i < devCount; i++)
                         {
-                            RGBnFCList.Add(rgb);
-
-                            for (int j = 0; j < RGBnFC.MAX_FAN_COUNT; j++)
+                            var rgb = new RGBnFC();
+                            if (rgb.start(i, productID) == true)
                             {
-                                var id = string.Format("NZXT/RGBnFC/{0}/Fan/{1}", i, j);
-                                var fan = new RGBnFCFanSpeed(id, rgb, j, num);
-                                fanDevice.addDevice(fan);
+                                RGBnFCList.Add(rgb);
 
-                                id = string.Format("NZXT/RGBnFC/{0}/Control/{1}", i, j);
-                                var control = new RGBnFCControl(id, rgb, j, num);
-                                controlDevice.addDevice(control);
-                                this.addChangeValue(control.getMinSpeed(), control, false);
+                                for (int j = 0; j < RGBnFC.MAX_FAN_COUNT; j++)
+                                {
+                                    var id = string.Format("NZXT/RGBnFC/{0}/Fan/{1}", i, j);
+                                    var fan = new RGBnFCFanSpeed(id, rgb, j, num);
+                                    fanDevice.addDevice(fan);
 
-                                num++;
+                                    id = string.Format("NZXT/RGBnFC/{0}/Control/{1}", i, j);
+                                    var control = new RGBnFCControl(id, rgb, j, num);
+                                    controlDevice.addDevice(control);
+                                    this.addChangeValue(control.getMinSpeed(), control, false);
+
+                                    num++;
+                                }
                             }
                         }
                     }

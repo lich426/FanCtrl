@@ -29,7 +29,7 @@ namespace FanCtrl
             }
         }
 
-        public bool start(uint index)
+        public bool start(uint index, USBProductID productID)
         {
             Monitor.Enter(mLock);
 
@@ -42,7 +42,8 @@ namespace FanCtrl
                 mFileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + string.Format("RGBnFC{0}.json", index + 1);
             }
 
-            mUSBController = new HidUSBController(USBVendorID.NZXT, USBProductID.RGBAndFanController);
+            // Support both V1 (0x2009) and V2 (0x2019) devices
+            mUSBController = new HidUSBController(USBVendorID.NZXT, productID);
             mUSBController.onRecvHandler += onRecv;
             if (mUSBController.start(index) == false)
             {
