@@ -12,7 +12,6 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - NZXT Kraken is support<br>
 - EVGA CLC is support<br>
 - NZXT RGB & Fan Controller is support<br>
-- DIMM thermal sensor is support<br>
 - liquidctl is support<br>
 
 ## Main
