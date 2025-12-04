@@ -16,22 +16,21 @@ FanCtrl is a software that allows you to automatically control the fan speed on 
 - liquidctl is support<br>
 
 ## Main
-![main](https://user-images.githubusercontent.com/26077884/109589538-cef82800-7b4d-11eb-8904-3e083d65e5f7.png)<br>
+<img width="1049" height="635" alt="image" src="https://github.com/user-attachments/assets/3ef35376-9118-46f4-a321-d901b511be37" /><br>
 - Show temperature, fan speed and fan control.<br>
 - The percentage of the fan control can be changed to simply control the pwm.(not saved) <br>
 - You can rename each item.<br>
 
 ## Option
-![option](https://user-images.githubusercontent.com/26077884/203925307-8f2e9655-db3e-4821-967b-718bc861de10.png)<br>
+<img width="211" height="801" alt="image" src="https://github.com/user-attachments/assets/2f4a8024-5e12-4ac6-97f7-2f53035c5894" /><br>
 - LibreHardwareMonitor : You can choose whether to use the library or not, and you can choose which devices are required for control.<br>
 - NvAPIWrapper : Allows you to add the NVIDIA graphics card control library.<br>
-- DIMM sensor : Support DIMM temperature sensor <br>
 - NZXT Kraken : NZXT Kraken support<br>
 - EVGA CLC : EVGA CLC support<br>
 - NZXT RGB & Fan Controller : NZXT RGB & Fan controller support<br>
 - HWiNFO : Communicated with [HWiNFO][17] to get sensor temperature and fan rpm ([Link][18]) <br>
 - liquidctl : [liquidctl][19] support<br>
-- Language : English, Korean, Japanese<br>
+- Language : English, Korean, Japanese, French, Spanish, Russian, Chinese<br>
 - Tray icon animation : tray icon animation starts when checked for automatic fan control activation.<br>
 - Fahrenheit : set the temperature to Fahrenheit.<br>
 - Start minimized : starts with minimal when the program runs.<br>
@@ -79,11 +78,6 @@ How to use : [Link][20]
 ## Plugins
 How to use : [Link][21]
 
-## Windows Defender Exclusions
-<img width="1026" height="802" alt="1" src="https://github.com/user-attachments/assets/ddf4fcda-34b5-4a9e-819c-bdafc5b47d94" /><br>
-- Windows Security - Virus & threat protection - Manage settings - Add or remove exclusions - Add an exclusion - Add FanCtrl folder
-
-
 ## Using external Libraries
 Sensor and Fan Control : [LibreHardwareMonitorLib][0]<br>
 Nvidia Graphic card Sensor and Fan Control : [NvAPIWrapper][3]<br>
@@ -104,8 +98,8 @@ liquidctl plugin : [liquidctl][19]<br>
 
 ## Donate
 <a href="https://paypal.me/lich426" target="_blank"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/pp-acceptance-large.png"/></a></td></tr></table><!-- PayPal Logo --></a><br><br>
- Bitcoin(BTC) : 3MqZ7rbA7xPM6Enx3Cs6vWjxaqcowCKk7i<br>
- Ethereum(ETH) : 0x8e3fa34a332255f9ec13e5d576aab728ba02f9cc<br>
+ Bitcoin(BTC) : bc1p36n3atpv7d477tpgxcn4rztvx7cst68lqn8qa6uhvxe803fu7akq3c9j0x<br>
+ Ethereum(ETH) : 0xE431Af19a04926d461B97cD190e10F817155ABcC<br>
 
 [0]: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 [1]: https://github.com/openhardwaremonitor/openhardwaremonitor
