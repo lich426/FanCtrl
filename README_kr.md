@@ -12,26 +12,24 @@ FanCtrl은 Desktop PC에서 팬을 제어하는 프로그램입니다.<br>
 - NZXT Kraken을 지원합니다.<br>
 - EVGA CLC를 지원합니다.<br>
 - NZXT RGB & Fan Controller를 지원합니다.<br>
-- DIMM 온도 센서를 지원합니다.(예 : 지스킬 램의 온도센서)<br>
 - liquidctl을 플러그인 형태로 지원합니다.
 
 ## 메인화면
-![main_kr](https://user-images.githubusercontent.com/26077884/109587942-44aec480-7b4b-11eb-99d9-c8b9c8709101.png)<br>
+<img width="1049" height="635" alt="image" src="https://github.com/user-attachments/assets/aa69344f-b15d-493c-b4a8-8cdf4f552c26" /><br>
 - 온도, 팬 속도, 팬 제어를 볼 수 있습니다.<br>
 - 팬 제어의 퍼센트를 변경해서 간단히 pwm 제어를 할 수 있습니다.(저장은 되지 않음)<br>
 - 각 항목의 이름을 변경 할 수 있습니다.<br>
 
 ## 옵션
-![1](https://user-images.githubusercontent.com/26077884/202845217-abef7d3d-982d-4b07-ba4e-626b4dda0261.png)<br>
+<img width="211" height="801" alt="image" src="https://github.com/user-attachments/assets/242517e3-6cb7-4c71-a95e-762275041d8a" /><br>
 - LibreHardwareMonitor : 라이브러리를 사용할 것인지 선택 가능하고, 제어에 필요한 디바이스를 선택 할 수 있습니다.<br>
 - NvAPIWrapper : NVIDIA 그래픽카드 제어 라이브러리인 NvAPIWrapper를 추가할 수 있습니다.<br>
-- DIMM sensor : DIMM 온도 센서를 지원합니다.(지스킬 램등)<br>
-- NZXT Kraken : NZXT Kraken X2, X3 지원 (Z3 시리즈 미지원)<br>
+- NZXT Kraken : NZXT Kraken X2, X3 지원 (Z3 시리즈 이후 버전 미지원, Z3 시리즈 이후 버전은 liquidctl을 사용하시면 됩니다)<br>
 - EVGA CLC : EVGA CLC 지원<br>
 - NZXT RGB & Fan Controller : NZXT RGB & Fan Controller 지원<br>
 - HWiNFO : [HWiNFO][17] 와 통신 해 센서 온도 및 rpm 가져옴 (참조 : [링크][18])<br>
 - [liquidctl][19]을 플러그인 형태로 지원합니다.<br>
-- 언어선택 : 영어, 한국어, 일본어<br>
+- 언어선택 : 영어, 한국어, 일본어, 프랑스어, 스페인어, 러시아어, 중국어<br>
 - 트레이아이콘 애니메이션 : 자동 팬 제어 활성화에 체크 시 트레이 아이콘에 팬이 돌아갑니다.<br>
 - 화씨온도표시 : 온도를 화씨온도로 합니다.<br>
 - 최소화 모드로 시작 : 프로그램 실행 시에 최소화로 시작됩니다.<br>
